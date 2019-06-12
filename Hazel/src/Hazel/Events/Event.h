@@ -2,13 +2,9 @@
 
 #include "hzpch.h"
 #include "Hazel/Core.h"
+#include "Hazel/Events/EventPool.h"
 
 namespace Hazel {
-
-	// Events in Hazel are currently blocking, meaning when an event occurs it
-	// immediately gets dispatched and must be dealt with right then an there.
-	// For the future, a better strategy might be to buffer events in an event
-	// bus and process them during the "event" part of the update stage.
 
 	enum class EventType
 	{
@@ -29,13 +25,26 @@ namespace Hazel {
 		EventCategoryMouseButton    = BIT(4)
 	};
 
-#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type; }\
+#define EVENT_CLASS_ALLOC(type) static void* operator new (size_t size)			\
+				{																\
+					HZ_CORE_TRACE("Calling new! type: {}, size: {}", #type, sizeof(type));\
+					MemoryPool<sizeof(type)>::Init();							\
+					return MemoryPool<sizeof(type)>::Allocate();				\
+				}																\
+				static void operator delete (void* ptr)							\
+				{																\
+					HZ_CORE_TRACE("Trying to delete type: {}, size: {}", #type, sizeof(type));\
+				}																\
+
+#define EVENT_CLASS_TYPE(type)  static EventType GetStaticType() { return EventType::##type; }\
 								virtual EventType GetEventType() const override { return GetStaticType(); }\
-								virtual const char* GetName() const override { return #type; }
+								virtual const char* GetName() const override { return #type; }\
+								EVENT_CLASS_ALLOC(type##Event)
+
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
-	class HAZEL_API Event
+	class Event
 	{
 	public:
 		bool Handled = false;
@@ -54,9 +63,9 @@ namespace Hazel {
 	class EventDispatcher
 	{
 		template<typename T>
-		using EventFn = std::function<bool(T&)>;
+		using EventFn = std::function<bool(T*)>;
 	public:
-		EventDispatcher(Event& event)
+		EventDispatcher(Event* event)
 			: m_Event(event)
 		{
 		}
@@ -64,15 +73,15 @@ namespace Hazel {
 		template<typename T>
 		bool Dispatch(EventFn<T> func)
 		{
-			if (m_Event.GetEventType() == T::GetStaticType())
+			if (m_Event->GetEventType() == T::GetStaticType())
 			{
-				m_Event.Handled = func(*(T*)&m_Event);
+				m_Event->Handled = func((T*)m_Event);
 				return true;
 			}
 			return false;
 		}
 	private:
-		Event& m_Event;
+		Event* m_Event;
 	};
 
 	inline std::ostream& operator<<(std::ostream& os, const Event& e)

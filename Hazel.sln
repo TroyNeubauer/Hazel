@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazel", "Hazel\Hazel.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "Hazel\vendor\imgui\ImGui.vcxproj", "{C0FF640D-2C14-8DBE-F595-301E616989EF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vulkan Test", "Vulkan Test\Vulkan Test.vcxproj", "{76FD41A3-E2B2-BA98-6BA7-B46FD75BB19C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -48,6 +50,12 @@ Global
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Dist|x64.Build.0 = Dist|x64
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.ActiveCfg = Release|x64
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.Build.0 = Release|x64
+		{76FD41A3-E2B2-BA98-6BA7-B46FD75BB19C}.Debug|x64.ActiveCfg = Debug|x64
+		{76FD41A3-E2B2-BA98-6BA7-B46FD75BB19C}.Debug|x64.Build.0 = Debug|x64
+		{76FD41A3-E2B2-BA98-6BA7-B46FD75BB19C}.Dist|x64.ActiveCfg = Dist|x64
+		{76FD41A3-E2B2-BA98-6BA7-B46FD75BB19C}.Dist|x64.Build.0 = Dist|x64
+		{76FD41A3-E2B2-BA98-6BA7-B46FD75BB19C}.Release|x64.ActiveCfg = Release|x64
+		{76FD41A3-E2B2-BA98-6BA7-B46FD75BB19C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

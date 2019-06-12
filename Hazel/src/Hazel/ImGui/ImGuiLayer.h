@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazel/Layer.h"
+#include "Hazel/Layer/Layer.h"
 
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/Events/KeyEvent.h"
@@ -8,27 +8,20 @@
 
 namespace Hazel {
 
-	class HAZEL_API ImGuiLayer : public Layer
+	//Represents the ImGui layer
+	//There are subclasses for each render API
+	class ImGuiLayer : public Layer
 	{
 	public:
-		ImGuiLayer();
-		~ImGuiLayer();
+		ImGuiLayer() : Layer("ImGuiLayer") {}
 
-		void OnAttach();
-		void OnDetach();
-		void OnUpdate();
-		void OnEvent(Event& event);
-	private:
-		bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& e);
-		bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
-		bool OnMouseMovedEvent(MouseMovedEvent& e);
-		bool OnMouseScrolledEvent(MouseScrolledEvent& e);
-		bool OnKeyPressedEvent(KeyPressedEvent& e);
-		bool OnKeyReleasedEvent(KeyReleasedEvent& e);
-		bool OnKeyTypedEvent(KeyTypedEvent& e);
-		bool OnWindowResizeEvent(WindowResizeEvent& e);
-	private:
-		float m_Time = 0.0f;
+		virtual void OnAttach() = 0;
+		virtual void OnDetach() = 0;
+		virtual void OnImGuiRender() = 0;
+		virtual void OnEvent(Event* event) = 0;
+
+		virtual void Begin() = 0;
+		virtual void End() = 0;
 	};
 
 }

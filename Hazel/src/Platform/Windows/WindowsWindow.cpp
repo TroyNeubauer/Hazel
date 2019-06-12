@@ -1,11 +1,13 @@
 #include "hzpch.h"
 #include "WindowsWindow.h"
 
+#include "Hazel/Application.h"
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/Events/MouseEvent.h"
 #include "Hazel/Events/KeyEvent.h"
+#include "Platform/OpenGL/OpenGLContext.h"
+#include "Platform/Vulkan/VulkanContext.h"
 
-#include <glad/glad.h>
 
 namespace Hazel {
 	
@@ -13,7 +15,7 @@ namespace Hazel {
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
-		HZ_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
+		HZ_CORE_ERROR("GLFW Error ({}): {}", error, description);
 	}
 
 	Window* Window::Create(const WindowProps& props)
@@ -37,7 +39,7 @@ namespace Hazel {
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
 
-		HZ_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
+		HZ_CORE_INFO("Creating window \"{0}\" ({1}, {2})", props.Title, props.Width, props.Height);
 
 		if (!s_GLFWInitialized)
 		{
@@ -47,13 +49,32 @@ namespace Hazel {
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
+		GraphicsAPIType api = props.API;
+		if (api == GraphicsAPI::NOT_CHOSEN) {
+			api = GraphicsAPI::OPEN_GL;
+			HZ_CORE_INFO("Selecting Open GL as the desired Graphics API");
+		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_Window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		HZ_CORE_ASSERT(status, "Failed to initialize Glad!");
+		HZ_ASSERT(GraphicsAPI::IsAvilable(api), "Graphics API is unavilable");
+
+		if (api == GraphicsAPI::VULKAN) {
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		}
+
+		m_Window = glfwCreateWindow(props.Width, props.Height, m_Data.Title, nullptr, nullptr);
+		if (api == GraphicsAPI::OPEN_GL)
+			m_Context = new OpenGLContext(m_Window);
+		else if (api == GraphicsAPI::VULKAN)
+			m_Context = new VulkanContext(m_Window);
+		else {
+			HZ_CRITICAL("Unsupported Graphics API {}", GraphicsAPI::ToString(api));
+			return;
+		}
+		GraphicsAPI::Set(api);
+
+		m_Context->Init();
+		
 		glfwSetWindowUserPointer(m_Window, &m_Data);
-		SetVSync(true);
 
 		// Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
@@ -61,15 +82,17 @@ namespace Hazel {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 			data.Width = width;
 			data.Height = height;
+			Application::Get().GetWindow().GetContext()->OnWindowResize(width, height);
 
-			WindowResizeEvent event(width, height);
+			WindowResizeEvent* event = new WindowResizeEvent(width, height);
 			data.EventCallback(event);
+			
 		});
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-			WindowCloseEvent event;
+			WindowCloseEvent* event = new WindowCloseEvent();
 			data.EventCallback(event);
 		});
 
@@ -81,19 +104,19 @@ namespace Hazel {
 			{
 				case GLFW_PRESS:
 				{
-					KeyPressedEvent event(key, 0);
+					KeyPressedEvent* event = new KeyPressedEvent(key, 0);
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					KeyReleasedEvent event(key);
+					KeyReleasedEvent* event = new KeyReleasedEvent(key);
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
-					KeyPressedEvent event(key, 1);
+					KeyPressedEvent* event = new KeyPressedEvent(key, 1);
 					data.EventCallback(event);
 					break;
 				}
@@ -104,7 +127,7 @@ namespace Hazel {
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-			KeyTypedEvent event(keycode);
+			KeyTypedEvent* event = new KeyTypedEvent(keycode);
 			data.EventCallback(event);
 		});
 
@@ -116,13 +139,13 @@ namespace Hazel {
 			{
 				case GLFW_PRESS:
 				{
-					MouseButtonPressedEvent event(button);
+					MouseButtonPressedEvent* event = new MouseButtonPressedEvent(button);
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					MouseButtonReleasedEvent event(button);
+					MouseButtonReleasedEvent* event = new MouseButtonReleasedEvent(button);
 					data.EventCallback(event);
 					break;
 				}
@@ -133,7 +156,7 @@ namespace Hazel {
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-			MouseScrolledEvent event((float)xOffset, (float)yOffset);
+			MouseScrolledEvent* event = new MouseScrolledEvent((float)xOffset, (float)yOffset);
 			data.EventCallback(event);
 		});
 
@@ -141,35 +164,25 @@ namespace Hazel {
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-			MouseMovedEvent event((float)xPos, (float)yPos);
+			MouseMovedEvent* event = new MouseMovedEvent((float)xPos, (float)yPos);
 			data.EventCallback(event);
 		});
 	}
 
 	void WindowsWindow::Shutdown()
 	{
+		m_Context->Destroy();
 		glfwDestroyWindow(m_Window);
+	}
+
+	void WindowsWindow::OnRender()
+	{
+		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
-	}
-
-	void WindowsWindow::SetVSync(bool enabled)
-	{
-		if (enabled)
-			glfwSwapInterval(1);
-		else
-			glfwSwapInterval(0);
-
-		m_Data.VSync = enabled;
-	}
-
-	bool WindowsWindow::IsVSync() const
-	{
-		return m_Data.VSync;
 	}
 
 }

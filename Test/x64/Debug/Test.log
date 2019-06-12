@@ -1,0 +1,6 @@
+﻿  Main.cpp
+c:\c++\hazel\test\main.cpp(6): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'size_t'
+  c:\c++\hazel\test\main.cpp(6): note: consider using '%zi' in the format string
+c:\c++\hazel\test\main.cpp(12): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'size_t'
+  c:\c++\hazel\test\main.cpp(12): note: consider using '%zi' in the format string
+  Test.vcxproj -> C:\C++\Hazel\x64\Debug\Test.exe
