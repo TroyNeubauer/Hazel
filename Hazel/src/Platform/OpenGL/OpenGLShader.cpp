@@ -3,8 +3,12 @@
 
 #include <glad/glad.h>
 
-namespace Hazel{
+#include "Hazel/System/File.h"
+#include "Hazel/System/Timer.h"
+
+namespace Hazel {
 	OpenGLShader::OpenGLShader(File& vertexSource, File& fragSource) {
+		Timer timer;
 		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
 		// Send the vertex shader source code to GL
@@ -97,6 +101,7 @@ namespace Hazel{
 		// Always detach shaders after a successful link.
 		glDetachShader(m_ID, vertexShader);
 		glDetachShader(m_ID, fragmentShader);
+		timer.Stop()->Print("Compiling and linking shader took", spdlog::level::level_enum::info);
 	}
 
 	void OpenGLShader::Bind() const

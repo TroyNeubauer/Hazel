@@ -1,11 +1,14 @@
 #include "hzpch.h"
+#include <Windows.h>
+
 #include "WindowsUtils.h"
 #include "Hazel/System/File.h"
 #include "Hazel/Util/Utils.h"
+#include "Hazel/System/System.h"
 
 #ifdef HZ_PLATFORM_WINDOWS
 namespace Hazel {
-	File::File(const char * path, bool sequential, FileError* error)
+	File::File(const char* path, bool sequential, FileError* error)
 	{
 		DWORD dwFlagsAndAttributes = sequential ? FILE_FLAG_SEQUENTIAL_SCAN : FILE_FLAG_RANDOM_ACCESS;
 		m_FileHandle = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, 
@@ -40,14 +43,39 @@ namespace Hazel {
 			char errorMessage[1024];
 			WindowsUtils::GetLastErrorMessage(errorMessage, sizeof(errorMessage));
 			//HZ_CORE_ERROR("Failed to get file length for file \"{0}\", error from GetFileSizeEx is: {1}", path, errorMessage);
-			*error = FileError::OTHER;
+			if(error)
+				*error = FileError::OTHER;
 			CloseHandle(m_FileHandle);
 			m_FileHandle = INVALID_FILE_HANDLE;
 			return;
 		}
 		m_Length = size.QuadPart;
 
+		HANDLE mappingHandle = CreateFileMappingA(m_FileHandle, nullptr, PAGE_READONLY, 0, 0, nullptr);
+		if (mappingHandle == INVALID_HANDLE_VALUE)
+		{
+			char errorMessage[1024];
+			WindowsUtils::GetLastErrorMessage(errorMessage, sizeof(errorMessage));
+			HZ_CORE_ERROR("Failed to create file mapping for file: \"{0}\", error from CreateFileMappingA is: {1}", path, errorMessage);
+			if (error)
+				*error = FileError::OTHER;
+			CloseHandle(m_FileHandle);
+			m_FileHandle = INVALID_FILE_HANDLE;
+			return;
+		}
 
+		m_Data = MapViewOfFile2(mappingHandle, GetCurrentProcess(), 0, nullptr, 0, 0, PAGE_READONLY);
+		if (m_Data == nullptr)
+		{
+			char errorMessage[1024];
+			WindowsUtils::GetLastErrorMessage(errorMessage, sizeof(errorMessage));
+			HZ_CORE_ERROR("Failed to map view of file: \"{0}\", error from MapViewOfFile2 is: {1}", path, errorMessage);
+			if (error)
+				*error = FileError::OTHER;
+			CloseHandle(m_FileHandle);
+			m_FileHandle = INVALID_FILE_HANDLE;
+			return;
+		}
 	}
 
 	File::File(File&& other)

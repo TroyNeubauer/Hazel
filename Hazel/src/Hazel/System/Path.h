@@ -2,9 +2,11 @@
 
 #include <string>
 
-#include "File.h"
 
 namespace Hazel {
+
+	class File;
+	enum FileError;
 	//A class that represents a path to a file or directory on disk
 	//Evuantaly it will be able to read from archives
 	class Path
@@ -16,8 +18,8 @@ namespace Hazel {
 		inline operator const char* () { return m_Path; }
 		inline const char* ToString() { return m_Path; }
 
-		File Open() { return File(m_Path, false, nullptr); }
-		File Open(bool sequential, FileError* error) { return File(m_Path, sequential, error); }
+		File Open();
+		File Open(bool sequential, FileError* error);
 
 	private:
 		const char* m_Path;

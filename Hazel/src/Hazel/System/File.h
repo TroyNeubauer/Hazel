@@ -21,6 +21,8 @@ namespace Hazel {
 		NONE = 0, FILE_NOT_FOUND, ACCESS_DENIED, TOO_MANY_FILES, OTHER
 	};
 
+	const char* FileErrorToString(FileError error);
+
 	//A class that uses fast, low-level API's to memory map a file for read only access and provide useful access to the data
 	//Be warned, a file handle will be opened upon constructing an instance of this object
 	class File

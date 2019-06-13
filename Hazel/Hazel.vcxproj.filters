@@ -19,6 +19,9 @@
     <Filter Include="src\Hazel\Renderer">
       <UniqueIdentifier>{9669EB43-824D-AC99-EBAD-A6ECD7B0961B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazel\System">
+      <UniqueIdentifier>{04DD9932-F0D5-B884-1908-9E0905609890}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazel\Util">
       <UniqueIdentifier>{3DC55DA8-2993-51AE-1227-C2D4FE932D13}</UniqueIdentifier>
     </Filter>
@@ -114,11 +117,35 @@
     <ClInclude Include="src\Hazel\MouseButtonCodes.h">
       <Filter>src\Hazel</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazel\Renderer\Buffer.h">
+      <Filter>src\Hazel\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Renderer\BufferImpl.h">
+      <Filter>src\Hazel\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazel\Renderer\GraphicsAPI.h">
       <Filter>src\Hazel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Renderer\GraphicsContext.h">
       <Filter>src\Hazel\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Renderer\Shader.h">
+      <Filter>src\Hazel\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Renderer\Texture.h">
+      <Filter>src\Hazel\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\System\File.h">
+      <Filter>src\Hazel\System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\System\Path.h">
+      <Filter>src\Hazel\System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\System\System.h">
+      <Filter>src\Hazel\System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\System\Timer.h">
+      <Filter>src\Hazel\System</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Util\CachedFunction.h">
       <Filter>src\Hazel\Util</Filter>
@@ -135,10 +162,16 @@
     <ClInclude Include="src\Hazel\Window.h">
       <Filter>src\Hazel</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLImGuiLayer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\PlatformUtils.h">
@@ -166,6 +199,9 @@
       <Filter>src\Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsInput.h">
+      <Filter>src\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsUtils.h">
       <Filter>src\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
@@ -1260,13 +1296,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazel\Renderer\Shader.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
-    <ClInclude Include="src\Hazel\System\HZFile.h" />
-    <ClInclude Include="src\Platform\Windows\WindowsUtils.h" />
-    <ClInclude Include="src\Hazel\System\System.h" />
-    <ClInclude Include="src\Hazel\System\File.h" />
-    <ClInclude Include="src\Hazel\System\Path.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazel\Application.cpp">
@@ -1296,6 +1325,15 @@
     <ClCompile Include="src\Hazel\Renderer\GraphicsContext.cpp">
       <Filter>src\Hazel\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazel\Renderer\Shader.cpp">
+      <Filter>src\Hazel\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazel\System\File.cpp">
+      <Filter>src\Hazel\System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazel\System\Path.cpp">
+      <Filter>src\Hazel\System</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazel\Util\CountTracker.cpp">
       <Filter>src\Hazel\Util</Filter>
     </ClCompile>
@@ -1309,6 +1347,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLImGuiLayer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\PlatformUtils.cpp">
@@ -1329,7 +1370,19 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanImGuiLayer.cpp">
       <Filter>src\Platform\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsFile.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsSystem.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsTimer.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsUtils.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
@@ -1338,11 +1391,5 @@
     <ClCompile Include="src\hzpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
-    <ClCompile Include="src\Hazel\Renderer\Shader.cpp" />
-    <ClCompile Include="src\Platform\Windows\HZWindowsFile.cpp" />
-    <ClCompile Include="src\Platform\Windows\WindowsUtils.cpp" />
-    <ClCompile Include="src\Platform\Windows\WindowsSystem.cpp" />
-    <ClCompile Include="src\Platform\Windows\WindowsFile.cpp" />
   </ItemGroup>
 </Project>

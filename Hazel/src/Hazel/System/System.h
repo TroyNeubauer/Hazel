@@ -5,8 +5,10 @@
 namespace Hazel {
 	class System
 	{
+	public:
 		static uint64_t PageSize();
 		static uint64_t AllocationGranularity();
+		static uint64_t PerformanceCounterResulution();
 
 		static uint32_t GetMinBitPosition(uint64_t value);
 		static uint64_t CountBits(uint64_t value);

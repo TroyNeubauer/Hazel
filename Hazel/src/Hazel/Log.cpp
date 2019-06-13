@@ -18,11 +18,18 @@ namespace Hazel {
 
 		auto coreStdOut = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 		coreStdOut->set_pattern(consolePattern);
+		coreStdOut->set_level(spdlog::level::level_enum::trace);
 		
 		auto coreFile = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/core.txt", true);
 		coreFile->set_pattern(filePattern);
+		coreFile->set_level(spdlog::level::level_enum::trace);
 
 		s_CoreLogger = new spdlog::logger("HAZEL", { coreStdOut, coreFile });
+#ifdef HZ_DEBUG
+		coreFile->set_level(spdlog::level::level_enum::trace);
+#else
+		coreFile->set_level(spdlog::level::level_enum::warn);
+#endif
 
 
 		auto clientStdOut = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();

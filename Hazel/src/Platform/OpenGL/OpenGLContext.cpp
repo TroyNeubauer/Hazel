@@ -16,7 +16,7 @@ namespace Hazel {
 		glfwSwapInterval(1);
 
 		HZ_CORE_ASSERT(status, "Failed to initialize Glad!");
-		HZ_INFO("Created OpenGL Version: {} Context", glGetString(GL_VERSION));
+		HZ_CORE_INFO("Created OpenGL Context, Version: {}", glGetString(GL_VERSION));
 	}
 
 	void OpenGLContext::SwapBuffers() {

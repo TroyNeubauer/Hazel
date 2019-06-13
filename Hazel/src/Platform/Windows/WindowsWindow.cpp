@@ -55,7 +55,7 @@ namespace Hazel {
 			HZ_CORE_INFO("Selecting Open GL as the desired Graphics API");
 		}
 
-		HZ_ASSERT(GraphicsAPI::IsAvilable(api), "Graphics API is unavilable");
+		HZ_CORE_ASSERT(GraphicsAPI::IsAvilable(api), "Graphics API is unavilable");
 
 		if (api == GraphicsAPI::VULKAN) {
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -67,7 +67,7 @@ namespace Hazel {
 		else if (api == GraphicsAPI::VULKAN)
 			m_Context = new VulkanContext(m_Window);
 		else {
-			HZ_CRITICAL("Unsupported Graphics API {}", GraphicsAPI::ToString(api));
+			HZ_CORE_CRITICAL("Unsupported Graphics API {}", GraphicsAPI::ToString(api));
 			return;
 		}
 		GraphicsAPI::Set(api);

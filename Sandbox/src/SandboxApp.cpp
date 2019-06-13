@@ -17,12 +17,7 @@ public:
 
 	virtual void OnUpdate() override
 	{
-		if (Hazel::Input::IsKeyPressed(HZ_KEY_SPACE)) {
-			char* c = new char[100];
-			c[7] = 'A';
-			c[43] = 'A';
-			delete[] c;
-		}
+
 	}
 
 	virtual void OnImGuiRender() override

@@ -8,6 +8,9 @@
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/ImGui/ImGuiLayer.h"
 #include "Hazel/Renderer/Shader.h"
+#include "Hazel/Renderer/Buffer.h"
+
+#include <memory>
 
 namespace Hazel {
 
@@ -34,7 +37,7 @@ namespace Hazel {
 
 
 		std::unique_ptr<Window> m_Window;
-		std::unique_ptr <Shader> m_Shader;
+		std::unique_ptr<Shader> m_Shader;
 		ImGuiLayer* m_ImGuiLayer;
 
 		std::vector<Event*> m_EventQueue;
@@ -42,7 +45,9 @@ namespace Hazel {
 		LayerStack m_LayerStack;
 		float m_LastTime = -1.0f;
 
-		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+		unsigned int m_VertexArray;
+		std::unique_ptr<VertexBuffer> vertexBuffer;
+		std::unique_ptr<IndexBuffer> indexBuffer;
 	private:
 		static Application* s_Instance;
 	};

@@ -116,7 +116,9 @@ project "Sandbox"
 		"Hazel/vendor/spdlog/include",
 		"Hazel/src",
 		"Hazel/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}"
 	}
 
 	libdirs
@@ -127,6 +129,8 @@ project "Sandbox"
 	links
 	{
 		"Hazel",
+		"kernel32.lib",
+		"Onecore.lib",
 		"opengl32.lib",
 		"vulkan.lib"
 	}

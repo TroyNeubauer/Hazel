@@ -1,12 +1,14 @@
 #include "hzpch.h"
+#ifdef HZ_PLATFORM_WINDOWS
 #include "Hazel/System/System.h"
+#include "Platform/Windows/WindowsUtils.h"
 
 #include <Windows.h>
 #include <intrin.h>
 
-#ifdef HZ_PLATFORM_WINDOWS
 namespace Hazel {
 	static SYSTEM_INFO info = {};
+	static uint64_t timerResulution = 0;
 
 	static inline void GetSystemInfo() {
 		if (info.dwPageSize == 0) {
@@ -22,6 +24,20 @@ namespace Hazel {
 	uint64_t System::AllocationGranularity() {
 		GetSystemInfo();
 		return info.dwAllocationGranularity;
+	}
+
+	uint64_t System::PerformanceCounterResulution()
+	{
+		if (timerResulution == 0) {
+			LARGE_INTEGER result;
+			if (QueryPerformanceFrequency(&result) == 0) {
+				char buf[1024];
+				WindowsUtils::GetLastErrorMessage(buf, sizeof(buf));
+				HZ_CORE_WARN("QueryPerformanceFrequency Returned 0! Error: {0}", buf);
+			}
+			return timerResulution = result.QuadPart;
+		} else
+			return timerResulution;
 	}
 
 	uint32_t System::GetMinBitPosition(uint64_t value) {
