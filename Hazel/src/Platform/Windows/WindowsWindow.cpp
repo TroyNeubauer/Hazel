@@ -5,18 +5,11 @@
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/Events/MouseEvent.h"
 #include "Hazel/Events/KeyEvent.h"
-#include "Platform/OpenGL/OpenGLContext.h"
-#include "Platform/Vulkan/VulkanContext.h"
+#include "Hazel/Context/ContextManager.h"
 
 
 namespace Hazel {
-	
-	static bool s_GLFWInitialized = false;
 
-	static void GLFWErrorCallback(int error, const char* description)
-	{
-		HZ_CORE_ERROR("GLFW Error ({}): {}", error, description);
-	}
 
 	Window* Window::Create(const WindowProps& props)
 	{
@@ -40,84 +33,61 @@ namespace Hazel {
 		m_Data.Height = props.Height;
 
 		HZ_CORE_INFO("Creating window \"{0}\" ({1}, {2})", props.Title, props.Width, props.Height);
-
-		if (!s_GLFWInitialized)
-		{
-			// TODO: glfwTerminate on system shutdown
-			int success = glfwInit();
-			HZ_CORE_ASSERT(success, "Could not intialize GLFW!");
-			glfwSetErrorCallback(GLFWErrorCallback);
-			s_GLFWInitialized = true;
-		}
-		GraphicsAPIType api = props.API;
-		if (api == GraphicsAPI::NOT_CHOSEN) {
-			api = GraphicsAPI::OPEN_GL;
-			HZ_CORE_INFO("Selecting Open GL as the desired Graphics API");
-		}
-
-		HZ_CORE_ASSERT(GraphicsAPI::IsAvilable(api), "Graphics API is unavilable");
+		GraphicsAPIType api = GraphicsAPI::Select();
+		GraphicsContext* context = ContextManager::Get()->GetContext();
 
 		if (api == GraphicsAPI::VULKAN) {
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		}
-
 		m_Window = glfwCreateWindow(props.Width, props.Height, m_Data.Title, nullptr, nullptr);
-		if (api == GraphicsAPI::OPEN_GL)
-			m_Context = new OpenGLContext(m_Window);
-		else if (api == GraphicsAPI::VULKAN)
-			m_Context = new VulkanContext(m_Window);
-		else {
-			HZ_CORE_CRITICAL("Unsupported Graphics API {}", GraphicsAPI::ToString(api));
-			return;
-		}
-		GraphicsAPI::Set(api);
-
-		m_Context->Init();
+		context->AddWindow(this);
+		context->EnsureInit();
 		
-		glfwSetWindowUserPointer(m_Window, &m_Data);
+		glfwSetWindowUserPointer(m_Window, this);
 
 		// Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-			data.Width = width;
-			data.Height = height;
-			Application::Get().GetWindow().GetContext()->OnWindowResize(width, height);
+			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
+			myWindow->m_Data.Width = width;
+			myWindow->m_Data.Height = height;
+
+			ContextManager::Get()->GetContext()->OnWindowResize(myWindow, width, height);
 
 			WindowResizeEvent* event = new WindowResizeEvent(width, height);
-			data.EventCallback(event);
+			myWindow->m_EventCallback(event);
 			
 		});
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowsWindow* myWindow = (WindowsWindow*) glfwGetWindowUserPointer(window);
 			WindowCloseEvent* event = new WindowCloseEvent();
-			data.EventCallback(event);
+			myWindow->m_EventCallback(event);
 		});
 
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
 
 			switch (action)
 			{
 				case GLFW_PRESS:
 				{
 					KeyPressedEvent* event = new KeyPressedEvent(key, 0);
-					data.EventCallback(event);
+					myWindow->m_EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					KeyReleasedEvent* event = new KeyReleasedEvent(key);
-					data.EventCallback(event);
+					myWindow->m_EventCallback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
 					KeyPressedEvent* event = new KeyPressedEvent(key, 1);
-					data.EventCallback(event);
+					myWindow->m_EventCallback(event);
 					break;
 				}
 			}
@@ -125,28 +95,28 @@ namespace Hazel {
 
 		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
 		{
+			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			KeyTypedEvent* event = new KeyTypedEvent(keycode);
-			data.EventCallback(event);
+			myWindow->m_EventCallback(event);
 		});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
+			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
 			switch (action)
 			{
 				case GLFW_PRESS:
 				{
 					MouseButtonPressedEvent* event = new MouseButtonPressedEvent(button);
-					data.EventCallback(event);
+					myWindow->m_EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					MouseButtonReleasedEvent* event = new MouseButtonReleasedEvent(button);
-					data.EventCallback(event);
+					myWindow->m_EventCallback(event);
 					break;
 				}
 			}
@@ -154,30 +124,38 @@ namespace Hazel {
 
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
+			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
 			MouseScrolledEvent* event = new MouseScrolledEvent((float)xOffset, (float)yOffset);
-			data.EventCallback(event);
+			myWindow->m_EventCallback(event);
 		});
 
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
+			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
 			MouseMovedEvent* event = new MouseMovedEvent((float)xPos, (float)yPos);
-			data.EventCallback(event);
+			myWindow->m_EventCallback(event);
 		});
+	}
+
+	void WindowsWindow::SetContextData(void* data)
+	{
+		m_ContextData = data;
+	}
+
+	void* WindowsWindow::GetContextData() const
+	{
+		return m_ContextData;
 	}
 
 	void WindowsWindow::Shutdown()
 	{
-		m_Context->Destroy();
+		ContextManager::Get()->GetContext()->RemoveWindow(this);
 		glfwDestroyWindow(m_Window);
 	}
 
 	void WindowsWindow::OnRender()
 	{
-		m_Context->SwapBuffers();
+		ContextManager::Get()->GetContext()->SwapBuffers();
 	}
 
 	void WindowsWindow::OnUpdate()

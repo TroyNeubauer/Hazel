@@ -2,6 +2,7 @@
 #include "hzpch.h"
 #include "VulkanContext.h"
 #include "VulkanHelper.h"
+#include "Platform/Vulkan/VulkanImGuiLayer.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -10,7 +11,10 @@
 
 namespace Hazel {
 
-	VulkanContext::VulkanContext(GLFWwindow* windowHandle) : m_WindowHandle(windowHandle) {}
+	VulkanContext::VulkanContext() 
+	{
+		Init();
+	}
 
 	void VulkanContext::SetupVulkan(const char** extensions, uint32_t extensions_count)
 	{
@@ -145,13 +149,13 @@ namespace Hazel {
 		}
 	}
 
-	void VulkanContext::SetupVulkanWindowData(VkSurfaceKHR surface, int width, int height)
+	void VulkanContext::SetupVulkanWindowData(ImGui_ImplVulkanH_WindowData* windowData, VkSurfaceKHR surface, int width, int height)
 	{
-		m_WindowData.Surface = surface;
+		windowData->Surface = surface;
 
 		// Check for WSI support
 		VkBool32 res;
-		vkGetPhysicalDeviceSurfaceSupportKHR(m_PhysicalDevice, m_QueueFamily, m_WindowData.Surface, &res);
+		vkGetPhysicalDeviceSurfaceSupportKHR(m_PhysicalDevice, m_QueueFamily, windowData->Surface, &res);
 		if (res != VK_TRUE)
 		{
 			fprintf(stderr, "Error no WSI support on physical device 0\n");
@@ -161,7 +165,7 @@ namespace Hazel {
 		// Select Surface Format
 		const VkFormat requestSurfaceImageFormat[] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM };
 		const VkColorSpaceKHR requestSurfaceColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-		m_WindowData.SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(m_PhysicalDevice, m_WindowData.Surface, requestSurfaceImageFormat, (size_t)IM_ARRAYSIZE(requestSurfaceImageFormat), requestSurfaceColorSpace);
+		windowData->SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(m_PhysicalDevice, windowData->Surface, requestSurfaceImageFormat, (size_t)IM_ARRAYSIZE(requestSurfaceImageFormat), requestSurfaceColorSpace);
 
 		// Select Present Mode
 #ifdef IMGUI_UNLIMITED_FRAME_RATE
@@ -169,58 +173,92 @@ namespace Hazel {
 #else
 		VkPresentModeKHR present_modes[] = { VK_PRESENT_MODE_FIFO_KHR };
 #endif
-		m_WindowData.PresentMode = ImGui_ImplVulkanH_SelectPresentMode(m_PhysicalDevice, m_WindowData.Surface, &present_modes[0], IM_ARRAYSIZE(present_modes));
+		windowData->PresentMode = ImGui_ImplVulkanH_SelectPresentMode(m_PhysicalDevice, windowData->Surface, &present_modes[0], IM_ARRAYSIZE(present_modes));
 		//printf("[vulkan] Selected PresentMode = %d\n", wd->PresentMode);
 
 		// Create SwapChain, RenderPass, Framebuffer, etc.
-		ImGui_ImplVulkanH_CreateWindowDataCommandBuffers(m_PhysicalDevice, m_Device, m_QueueFamily, &m_WindowData, m_Allocator);
-		ImGui_ImplVulkanH_CreateWindowDataSwapChainAndFramebuffer(m_PhysicalDevice, m_Device, &m_WindowData, m_Allocator, width, height);
+		ImGui_ImplVulkanH_CreateWindowDataCommandBuffers(m_PhysicalDevice, m_Device, m_QueueFamily, windowData, m_Allocator);
+		ImGui_ImplVulkanH_CreateWindowDataSwapChainAndFramebuffer(m_PhysicalDevice, m_Device, windowData, m_Allocator, width, height);
 	}
 
-	void VulkanContext::Init() {
+	void VulkanContext::PreInit() {
 		uint32_t extensions_count = 0;
 		const char** extensions = glfwGetRequiredInstanceExtensions(&extensions_count);
 		SetupVulkan(extensions, extensions_count);
+		HZ_CORE_TRACE("Vulkan initalization complete");
+	}
 
+	void VulkanContext::Init() {
+		//Nop since we need to do all vulkan initalization before creating a window
+	}
+
+	void VulkanContext::AddWindow(Window* window)
+	{
+		ImGui_ImplVulkanH_WindowData* windowData = new ImGui_ImplVulkanH_WindowData();
+		window->SetContextData(windowData);
 		// Create Window Surface
+		if (m_Handles.size())
+			HZ_CORE_ASSERT(false, "Only one window is supported for now");
+		GLFWwindow* nativeWindow = (GLFWwindow*) window->GetNativeWindow();
+		m_Handles.push_back(window);
 		VkSurfaceKHR surface;
-		VkResult err = glfwCreateWindowSurface(m_Instance, m_WindowHandle, m_Allocator, &surface);
+		VkResult err = glfwCreateWindowSurface(m_Instance, nativeWindow, m_Allocator, &surface);
 		check_vk_result(err);
 
 		// Create Framebuffers
 		int w, h;
-		glfwGetFramebufferSize(m_WindowHandle, &w, &h);
-		SetupVulkanWindowData(surface, w, h);
-		HZ_CORE_TRACE("Vulkan initalization complete");
+		glfwGetFramebufferSize(nativeWindow, &w, &h);
+		SetupVulkanWindowData(windowData, surface, w, h);
+		HZ_CORE_TRACE("Created Vulkan SurfaceKHR");
+	}
+
+	void VulkanContext::RemoveWindow(Window * window)
+	{
+		auto it = std::find(m_Handles.begin(), m_Handles.end(), window);
+		if (it != m_Handles.end()) {
+			ImGui_ImplVulkanH_WindowData* windowData = (ImGui_ImplVulkanH_WindowData*) (*it)->GetContextData();
+			ImGui_ImplVulkanH_DestroyWindowData(m_Instance, m_Device, windowData, m_Allocator);
+			delete windowData;
+			window->SetContextData(nullptr);
+			m_Handles.erase(it);
+		}
 	}
 
 	void VulkanContext::SwapBuffers() {
-		ImGui_ImplVulkanH_FrameData* fd = &m_WindowData.Frames[m_WindowData.FrameIndex];
-		VkPresentInfoKHR info = {};
-		info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-		info.waitSemaphoreCount = 1;
-		info.pWaitSemaphores = &fd->RenderCompleteSemaphore;
-		info.swapchainCount = 1;
-		info.pSwapchains = &m_WindowData.Swapchain;
-		info.pImageIndices = &m_WindowData.FrameIndex;
-		VkResult err = vkQueuePresentKHR(m_Queue, &info);
-		check_vk_result(err);
+		for (Window* window : m_Handles) {
+			ImGui_ImplVulkanH_WindowData* windowData = (ImGui_ImplVulkanH_WindowData*) window->GetContextData();
+			ImGui_ImplVulkanH_FrameData* fd = &windowData->Frames[windowData->FrameIndex];
+			VkPresentInfoKHR info = {};
+			info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+			info.waitSemaphoreCount = 1;
+			info.pWaitSemaphores = &fd->RenderCompleteSemaphore;
+			info.swapchainCount = 1;
+			info.pSwapchains = &windowData->Swapchain;
+			info.pImageIndices = &windowData->FrameIndex;
+			VkResult err = vkQueuePresentKHR(m_Queue, &info);
+			check_vk_result(err);
+
+		}
 	}
 	
-	void VulkanContext::OnWindowResize(int width, int height)
+	void VulkanContext::OnWindowResize(Window* window, int width, int height)
 	{
-		ImGui_ImplVulkanH_CreateWindowDataSwapChainAndFramebuffer(m_PhysicalDevice, m_Device, &m_WindowData, m_Allocator, width, height);
+		ImGui_ImplVulkanH_WindowData* windowData = (ImGui_ImplVulkanH_WindowData*) window->GetContextData();
+		ImGui_ImplVulkanH_CreateWindowDataSwapChainAndFramebuffer(m_PhysicalDevice, m_Device, windowData, m_Allocator, width, height);
 		HZ_CORE_INFO("Handling resize to [{}, {}]", width, height);
 	}
 
 	void VulkanContext::Destroy()
 	{
-		ImGui_ImplVulkanH_WindowData* wd = &m_WindowData;
-		ImGui_ImplVulkanH_DestroyWindowData(m_Instance, m_Device, wd, m_Allocator);
 		vkDestroyDescriptorPool(m_Device, m_DescriptorPool, m_Allocator);
 
 		vkDestroyDevice(m_Device, m_Allocator);
 		vkDestroyInstance(m_Instance, m_Allocator);
+	}
+
+	ImGuiLayer* VulkanContext::CreateImGuiLayer()
+	{
+		return new VulkanImGuiLayer();
 	}
 
 	GraphicsAPIType VulkanContext::GetAPIType() { return GraphicsAPI::VULKAN; }

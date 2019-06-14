@@ -61,6 +61,9 @@
     <Filter Include="vendor\glm\glm\gtx">
       <UniqueIdentifier>{B3A6A76B-9F8A-68C1-08EB-6214F4ED5243}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazel\Context">
+      <UniqueIdentifier>{f9ae1520-1096-4418-8fcf-f64027f5dc40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Hazel.h">
@@ -124,9 +127,6 @@
       <Filter>src\Hazel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Renderer\GraphicsAPI.h">
-      <Filter>src\Hazel\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazel\Renderer\GraphicsContext.h">
       <Filter>src\Hazel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Renderer\Shader.h">
@@ -1296,6 +1296,13 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazel\Context\GraphicsContext.h">
+      <Filter>src\Hazel\Context</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Context\ContextManager.h">
+      <Filter>src\Hazel\Context</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsContextManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazel\Application.cpp">
@@ -1310,19 +1317,16 @@
     <ClCompile Include="src\Hazel\Layer\DebugLayer.cpp">
       <Filter>src\Hazel\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazel\Layer\Layer.cpp">
-      <Filter>src\Hazel\Layer</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazel\Layer\LayerStack.cpp">
       <Filter>src\Hazel\Layer</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazel\Log.cpp">
       <Filter>src\Hazel</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazel\Renderer\GraphicsAPI.cpp">
+    <ClCompile Include="src\Hazel\Renderer\Buffer.cpp">
       <Filter>src\Hazel\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazel\Renderer\GraphicsContext.cpp">
+    <ClCompile Include="src\Hazel\Renderer\GraphicsAPI.cpp">
       <Filter>src\Hazel\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazel\Renderer\Shader.cpp">
@@ -1390,6 +1394,10 @@
     </ClCompile>
     <ClCompile Include="src\hzpch.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsContextManager.cpp" />
+    <ClCompile Include="src\Hazel\Context\ContextManager.cpp">
+      <Filter>src\Hazel\Context</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

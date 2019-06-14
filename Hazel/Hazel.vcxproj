@@ -76,7 +76,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>hzpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HZ_ENABLE_VULKAN;HZ_ENABLE_OPEN_GL;HZ_PLATFORM_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;GLFW_INCLUDE_NONE;HZ_ENABLE_DIRECTX_12;HZ_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HZ_PLATFORM_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;GLFW_INCLUDE_NONE;HZ_ENABLE_DIRECTX_12;HZ_ENABLE_OPEN_GL;HZ_ENABLE_VULKAN;HZ_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -96,7 +96,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>hzpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HZ_ENABLE_VULKAN;HZ_ENABLE_OPEN_GL;HZ_PLATFORM_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;GLFW_INCLUDE_NONE;HZ_ENABLE_DIRECTX_12;HZ_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HZ_PLATFORM_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;GLFW_INCLUDE_NONE;HZ_ENABLE_DIRECTX_12;HZ_ENABLE_OPEN_GL;HZ_ENABLE_VULKAN;HZ_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -120,7 +120,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>hzpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HZ_ENABLE_VULKAN;HZ_ENABLE_OPEN_GL;HZ_PLATFORM_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;GLFW_INCLUDE_NONE;HZ_ENABLE_DIRECTX_12;HZ_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HZ_PLATFORM_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;GLFW_INCLUDE_NONE;HZ_ENABLE_DIRECTX_12;HZ_ENABLE_OPEN_GL;HZ_ENABLE_VULKAN;HZ_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -140,6 +140,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Hazel\Context\ContextManager.h" />
     <ClInclude Include="src\Hazel.h" />
     <ClInclude Include="src\Hazel\Application.h" />
     <ClInclude Include="src\Hazel\Core.h" />
@@ -161,7 +162,7 @@
     <ClInclude Include="src\Hazel\Renderer\Buffer.h" />
     <ClInclude Include="src\Hazel\Renderer\BufferImpl.h" />
     <ClInclude Include="src\Hazel\Renderer\GraphicsAPI.h" />
-    <ClInclude Include="src\Hazel\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Hazel\Context\GraphicsContext.h" />
     <ClInclude Include="src\Hazel\Renderer\Shader.h" />
     <ClInclude Include="src\Hazel\Renderer\Texture.h" />
     <ClInclude Include="src\Hazel\System\File.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\Platform\Vulkan\VulkanContext.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanHelper.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanImGuiLayer.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsContextManager.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsUtils.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
@@ -554,14 +556,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazel\Application.cpp" />
+    <ClCompile Include="src\Hazel\Context\ContextManager.cpp" />
     <ClCompile Include="src\Hazel\Engine.cpp" />
     <ClCompile Include="src\Hazel\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Hazel\Layer\DebugLayer.cpp" />
-    <ClCompile Include="src\Hazel\Layer\Layer.cpp" />
     <ClCompile Include="src\Hazel\Layer\LayerStack.cpp" />
     <ClCompile Include="src\Hazel\Log.cpp" />
+    <ClCompile Include="src\Hazel\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Hazel\Renderer\GraphicsAPI.cpp" />
-    <ClCompile Include="src\Hazel\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="src\Hazel\Renderer\Shader.cpp" />
     <ClCompile Include="src\Hazel\System\File.cpp" />
     <ClCompile Include="src\Hazel\System\Path.cpp" />
@@ -577,6 +579,7 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanContext.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanHelper.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanImGuiLayer.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsContextManager.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsFile.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsSystem.cpp" />

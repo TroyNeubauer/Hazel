@@ -2,9 +2,7 @@
 
 #ifdef HZ_PLATFORM_WINDOWS
 
-#include "Hazel/System/Timer.h"
-#include "Hazel/System/File.h"
-#include "Hazel/System/Path.h"
+#include "Hazel/Context/ContextManager.h"
 
 #include <string>
 
@@ -19,6 +17,7 @@ int main(int argc, char** argv)
 	delete app;
 
 	Hazel::Log::DisableLogging();
+	Hazel::ContextManager::Destroy();
 }
 
 #endif

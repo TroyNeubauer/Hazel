@@ -16,6 +16,12 @@
 
 #include "Hazel/ImGui/ImGuiLayer.h"
 
+
+#include "Hazel/System/File.h"
+#include "Hazel/System/Path.h"
+#include "Hazel/System/System.h"
+#include "Hazel/System/Timer.h"
+
 // ---Entry Point---------------------
 #include "Hazel/EntryPoint.h"
 // -----------------------------------

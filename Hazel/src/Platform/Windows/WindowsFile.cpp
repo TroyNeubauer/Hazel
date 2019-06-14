@@ -10,6 +10,7 @@
 namespace Hazel {
 	File::File(const char* path, bool sequential, FileError* error)
 	{
+		uint64_t pageSize = System::PageSize();
 		DWORD dwFlagsAndAttributes = sequential ? FILE_FLAG_SEQUENTIAL_SCAN : FILE_FLAG_RANDOM_ACCESS;
 		m_FileHandle = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, 
 			NULL, OPEN_EXISTING, dwFlagsAndAttributes, NULL);
@@ -51,8 +52,8 @@ namespace Hazel {
 		}
 		m_Length = size.QuadPart;
 
-		HANDLE mappingHandle = CreateFileMappingA(m_FileHandle, nullptr, PAGE_READONLY, 0, 0, nullptr);
-		if (mappingHandle == INVALID_HANDLE_VALUE)
+		HANDLE viewHandle = CreateFileMappingA(m_FileHandle, nullptr, PAGE_READONLY, 0, 0, nullptr);
+		if (viewHandle == INVALID_HANDLE_VALUE)
 		{
 			char errorMessage[1024];
 			WindowsUtils::GetLastErrorMessage(errorMessage, sizeof(errorMessage));
@@ -64,7 +65,8 @@ namespace Hazel {
 			return;
 		}
 
-		m_Data = MapViewOfFile2(mappingHandle, GetCurrentProcess(), 0, nullptr, 0, 0, PAGE_READONLY);
+		//m_Data = MapViewOfFile2(m_FileViewHandle, GetCurrentProcess(), 0, nullptr, 0, 0, PAGE_READONLY);
+		m_Data = MapViewOfFile(viewHandle, FILE_MAP_READ, 0, 0, 0);
 		if (m_Data == nullptr)
 		{
 			char errorMessage[1024];
@@ -73,8 +75,34 @@ namespace Hazel {
 			if (error)
 				*error = FileError::OTHER;
 			CloseHandle(m_FileHandle);
+			CloseHandle(viewHandle);
 			m_FileHandle = INVALID_FILE_HANDLE;
 			return;
+		}
+		CloseHandle(viewHandle);
+
+		void* neededAddress = (char*) m_Data + m_Length;
+		if (m_Length % pageSize == 0)//There is no null byte since the string takes up an entire page
+		{
+			m_OtherPage = VirtualAlloc(neededAddress, pageSize, MEM_COMMIT | MEM_RESERVE, PAGE_READONLY);
+			if (neededAddress != m_OtherPage)
+			{	
+				if (m_OtherPage == nullptr) {
+					char errorMessage[1024];
+					WindowsUtils::GetLastErrorMessage(errorMessage, sizeof(errorMessage));
+					HZ_CORE_ERROR("Failed to allocate page for null terminator: error from VirtualAlloc is: {0}", errorMessage);
+				}
+				//The page couldn't be allocated where it needed to be
+				//So allocate a buffer big enough, release all the file handles, and then give the user the buffer
+				m_FreeData = true;
+				char* newData = (char*) malloc(m_Length + 1);
+				memcpy(newData, m_Data, m_Length);
+				newData[m_Length] = 0x00;//Ensure there is a null byte at the end
+				
+				CloseHandle(m_FileHandle);//We no longer need the file, all the data is safely in newData
+				UnmapViewOfFile(m_Data);
+				m_Data = newData;//Give the user access to the file
+			}
 		}
 	}
 
@@ -91,16 +119,24 @@ namespace Hazel {
 
 	File::~File()
 	{
-		if (m_Data && m_FreeData) {//In this case m_Data is the block we malloc'ed
-			//We only need to free m_Data because the file handle and view were destroyed in the constructor
-			free(m_Data);
-			m_Data = nullptr;
-		} else {
-			if (m_FileHandle != INVALID_FILE_HANDLE) {
-				CloseHandle(m_FileHandle);
-				m_FileHandle = INVALID_FILE_HANDLE;
+		if (!m_CompletedDeInit)
+		{
+			m_CompletedDeInit = true;
+			if (m_FreeData)
+			{	//In this case m_Data is the block we malloc'ed
+				//We only need to free m_Data because the file handle and view were destroyed in the constructor
+				free(m_Data);
 			}
-		}	
+			else
+			{
+				CloseHandle(m_FileHandle);
+				UnmapViewOfFile(m_Data);
+				if (m_OtherPage)//We allocated another page to get space for the null byte
+				{
+					VirtualFree(m_OtherPage, 0, MEM_RELEASE);
+				}
+			}
+		}
 
 	}
 }

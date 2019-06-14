@@ -6,6 +6,13 @@
 
 namespace Hazel {
 
+	struct WindowData
+	{
+		char* Title;
+		unsigned int Width, Height;
+		bool VSync;
+	};
+
 	class WindowsWindow : public Window
 	{
 	public:
@@ -19,25 +26,24 @@ namespace Hazel {
 		inline unsigned int GetHeight() const override { return m_Data.Height; }
 
 		// Window attributes
-		inline void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; }
+		inline void SetEventCallback(const EventCallbackFn& callback) override { m_EventCallback = callback; }
 
 		inline virtual void* GetNativeWindow() const { return m_Window; }
+		virtual void SetContextData(void* data) override;
+		virtual void* GetContextData() const override;
+
+		inline WindowData& GetData() { return m_Data; }
+
 	private:
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
-
-		struct WindowData
-		{
-			char* Title;
-			unsigned int Width, Height;
-			bool VSync;
-
-			EventCallbackFn EventCallback;
-		};
+		void* m_ContextData = nullptr;
 
 		WindowData m_Data;
+
+		EventCallbackFn m_EventCallback;
 	};
 
 }

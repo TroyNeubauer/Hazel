@@ -63,6 +63,7 @@ namespace Hazel {
 		void* m_Data;
 		//If mapping another page to write the null termination character fails, this
 		// will be true indicating that m_Data must be freed instead of closed
-		bool m_FreeData = false;
+		bool m_FreeData = false, m_CompletedDeInit = false;
+		void* m_OtherPage = nullptr;
 	};
 }

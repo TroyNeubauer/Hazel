@@ -78,6 +78,8 @@ project "Hazel"
 			"VK_USE_PLATFORM_WIN32_KHR",
 			"GLFW_INCLUDE_NONE",
 			"HZ_ENABLE_DIRECTX_12",
+			"HZ_ENABLE_OPEN_GL",
+			"HZ_ENABLE_VULKAN"
 		}
 
 	filter "configurations:Debug"

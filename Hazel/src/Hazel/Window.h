@@ -4,23 +4,22 @@
 
 #include "Hazel/Core.h"
 #include "Hazel/Events/Event.h"
-#include "Hazel/Renderer/GraphicsContext.h"
 #include "Hazel/Renderer/GraphicsAPI.h"
 
 namespace Hazel {
+
+	class GraphicsContext;
 
 	struct WindowProps
 	{
 		char* Title;
 		int Width;
 		int Height;
-		GraphicsAPIType API;
 
 		WindowProps(char* title = "Hazel Engine",
 			        int width = 1280,
-			        int height = 720,
-					GraphicsAPIType api = GraphicsAPI::Get())
-			: Title(title), Width(width), Height(height), API(api)
+			        int height = 720)
+			: Title(title), Width(width), Height(height)
 		{
 		}
 	};
@@ -46,11 +45,11 @@ namespace Hazel {
 
 		virtual void* GetNativeWindow() const = 0;
 
-		static Window* Create(const WindowProps& props = WindowProps());
-		inline GraphicsContext* GetContext() { return m_Context; }
+		virtual void SetContextData(void* data) = 0;
+		virtual void* GetContextData() const = 0;
 
-	protected:
-		GraphicsContext* m_Context;
+		static Window* Create(const WindowProps& props = WindowProps());
+
 	};
 
 }
