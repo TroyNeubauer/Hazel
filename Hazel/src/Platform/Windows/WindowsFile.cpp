@@ -12,6 +12,7 @@ namespace Hazel {
 	{
 		uint64_t pageSize = System::PageSize();
 		DWORD dwFlagsAndAttributes = sequential ? FILE_FLAG_SEQUENTIAL_SCAN : FILE_FLAG_RANDOM_ACCESS;
+
 		m_FileHandle = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, 
 			NULL, OPEN_EXISTING, dwFlagsAndAttributes, NULL);
 		
@@ -64,7 +65,7 @@ namespace Hazel {
 			m_FileHandle = INVALID_FILE_HANDLE;
 			return;
 		}
-
+		
 		//m_Data = MapViewOfFile2(m_FileViewHandle, GetCurrentProcess(), 0, nullptr, 0, 0, PAGE_READONLY);
 		m_Data = MapViewOfFile(viewHandle, FILE_MAP_READ, 0, 0, 0);
 		if (m_Data == nullptr)

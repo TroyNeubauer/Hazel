@@ -64,6 +64,9 @@
     <Filter Include="src\Hazel\Context">
       <UniqueIdentifier>{f9ae1520-1096-4418-8fcf-f64027f5dc40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Platform\None">
+      <UniqueIdentifier>{d24378eb-c21f-4142-8609-22d4a4f414ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Hazel.h">
@@ -1303,6 +1306,7 @@
       <Filter>src\Hazel\Context</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsContextManager.h" />
+    <ClInclude Include="src\Platform\NoAPI\NoAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazel\Application.cpp">

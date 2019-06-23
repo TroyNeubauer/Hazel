@@ -39,9 +39,10 @@ namespace Hazel {
 		VkPipelineCache              m_PipelineCache = nullptr;
 		VkDescriptorPool             m_DescriptorPool = nullptr;
 
-	private:
+	protected:
 		virtual void Init() override;
 		virtual void PreInit() override;
+	private:
 		void SetupVulkanWindowData(ImGui_ImplVulkanH_WindowData* windowData, VkSurfaceKHR surface, int width, int height);
 		void SetupVulkan(const char** extensions, uint32_t extensions_count);
 

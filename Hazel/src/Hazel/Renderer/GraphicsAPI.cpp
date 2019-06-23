@@ -36,7 +36,7 @@ namespace Hazel {
 	{
 		if (Get() == GraphicsAPI::NOT_CHOSEN)
 		{
-			GraphicsAPIType newAPI = NONE;
+			GraphicsAPIType newAPI = NOT_CHOSEN;
 			for (GraphicsAPIType api : s_APIPriority)
 			{
 				if (IsAvilable(api))
@@ -45,7 +45,7 @@ namespace Hazel {
 					break;
 				}
 			}
-			if (newAPI == NONE) {
+			if (newAPI == NOT_CHOSEN) {
 				HZ_CORE_ASSERT(false, "Unable to find sutiable Graphics API! Add some using GraphicsAPI::AddWantedAPI");
 			}
 			Set(newAPI);

@@ -32,23 +32,27 @@ namespace Hazel {
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
 
-		HZ_CORE_INFO("Creating window \"{0}\" ({1}, {2})", props.Title, props.Width, props.Height);
 		GraphicsAPIType api = GraphicsAPI::Select();
 		GraphicsContext* context = ContextManager::Get()->GetContext();
+		if (api != GraphicsAPI::NONE) {
+			HZ_CORE_INFO("Creating window \"{0}\" ({1}, {2})", props.Title, props.Width, props.Height);
 
-		if (api == GraphicsAPI::VULKAN) {
-			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+			if (api == GraphicsAPI::VULKAN) {
+				glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+			}
+			m_Window = glfwCreateWindow(props.Width, props.Height, m_Data.Title, nullptr, nullptr);
 		}
-		m_Window = glfwCreateWindow(props.Width, props.Height, m_Data.Title, nullptr, nullptr);
 		context->AddWindow(this);
 		context->EnsureInit();
+		if (api == GraphicsAPI::NONE) 
+			return;//The rest of this method is glfw stuff
 		
 		glfwSetWindowUserPointer(m_Window, this);
 
 		// Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 		{
-			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
+			WindowsWindow* myWindow = (WindowsWindow*) glfwGetWindowUserPointer(window);
 			myWindow->m_Data.Width = width;
 			myWindow->m_Data.Height = height;
 

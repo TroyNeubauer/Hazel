@@ -17,6 +17,12 @@ namespace Hazel {
 		HZ_CORE_INFO("Created OpenGL Context, Version: {}", glGetString(GL_VERSION));
 	}
 
+	void OpenGLContext::PreInit()
+	{
+		//Nop
+		//We cant do anything until the Open GL context is current
+	}
+
 	void OpenGLContext::SwapBuffers()
 	{
 		for(auto window : m_Handles)

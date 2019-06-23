@@ -1,3 +1,6 @@
-[Fri Jun 14 10:16:41 2019] [003192] HAZEL: Creating window "Hazel Engine" (1280, 720)
-[Fri Jun 14 10:16:42 2019] [003192] HAZEL: Created Vulkan device GeForce GTX 1050, type: DISCRETE_GPU
-[Fri Jun 14 10:17:18 2019] [003192] HAZEL: Destroying logging
+[Fri Jun 14 21:59:03 2019] [017468] HAZEL: Creating window "Hazel Engine" (1280, 720)
+[Fri Jun 14 21:59:03 2019] [017468] HAZEL: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
+[Fri Jun 14 21:59:03 2019] [017468] HAZEL: Reading shader files took 144.4 microseconds
+[Fri Jun 14 21:59:03 2019] [017468] HAZEL: Compiling and linking shader took 604.5 microseconds
+[Fri Jun 14 21:59:04 2019] [017468] HAZEL: Complete initialization took 1.295 seconds
+[Fri Jun 14 21:59:06 2019] [017468] HAZEL: Destroying logging

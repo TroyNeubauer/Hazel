@@ -3,6 +3,7 @@
 
 #include "Platform/OpenGL/OpenGLContext.h"
 #include "Platform/Vulkan/VulkanContext.h"
+#include "Platform/NoAPI/NoAPI.h"
 
 #include <GLFW/glfw3.h>
 
@@ -15,9 +16,11 @@ namespace Hazel {
 
 	WindowsContextManager::WindowsContextManager()
 	{
-		int success = glfwInit();
-		HZ_CORE_ASSERT(success, "Could not intialize GLFW!");
-		glfwSetErrorCallback(GLFWErrorCallback);
+		if (GraphicsAPI::Get() != GraphicsAPI::NONE) {
+			int success = glfwInit();
+			HZ_CORE_ASSERT(success, "Could not intialize GLFW!");
+			glfwSetErrorCallback(GLFWErrorCallback);
+		}
 	}
 
 	GraphicsContext* WindowsContextManager::GetContext()
@@ -28,6 +31,8 @@ namespace Hazel {
 				m_Context = new OpenGLContext();
 			else if (api == GraphicsAPI::VULKAN)
 				m_Context = new VulkanContext();
+			else if (api == GraphicsAPI::NONE)
+				m_Context = new NoAPIContext();
 			else {
 				HZ_CORE_CRITICAL("Unsupported Graphics API {}", GraphicsAPI::ToString(api));
 				return nullptr;
@@ -40,11 +45,11 @@ namespace Hazel {
 	{
 		if (m_Context) {
 			delete m_Context;
-			glfwTerminate();
+			if (GraphicsAPI::Get() != GraphicsAPI::NONE)
+			{
+				glfwTerminate();
+			}
 		}
 	}
-
-
-
 }
 

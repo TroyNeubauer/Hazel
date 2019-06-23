@@ -63,7 +63,7 @@ namespace Hazel {
 
 	Application::Application() 
 	{
-		GraphicsAPI::AddWantedAPI(GraphicsAPI::VULKAN);
+		GraphicsAPI::AddWantedAPI(GraphicsAPI::OPEN_GL);
 		HZ_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
@@ -73,7 +73,7 @@ namespace Hazel {
 		PushOverlay(m_ImGuiLayer);
 
 
-		/*glGenVertexArrays(1, &m_VertexArray);
+		glGenVertexArrays(1, &m_VertexArray);
 		glBindVertexArray(m_VertexArray);
 
 		float vertices[7 * 3] =
@@ -101,7 +101,7 @@ namespace Hazel {
 		uint32_t indices[3] = { 0, 1, 2 };
 		indexBuffer.reset(Buffer::CreateIndex(indices, 3));
 
-		m_Shader.reset(Shader::Create("shaders/test.vert", "shaders/test.frag"));*/
+		m_Shader.reset(Shader::Create("shaders/test.vert", "shaders/test.frag"));
 	}
 
 	Application::~Application()
@@ -177,9 +177,9 @@ namespace Hazel {
 		}
 		m_LastTime = now;
 
-		/*m_Shader->Bind();
+		m_Shader->Bind();
 		glBindVertexArray(m_VertexArray);
-		glDrawElements(GL_TRIANGLES, indexBuffer->Count(), GL_UNSIGNED_INT, nullptr);*/
+		glDrawElements(GL_TRIANGLES, indexBuffer->Count(), GL_UNSIGNED_INT, nullptr);
 
 		m_ImGuiLayer->Begin();
 		for (Layer* layer : m_LayerStack)
