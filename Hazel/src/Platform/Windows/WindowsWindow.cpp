@@ -34,17 +34,17 @@ namespace Hazel {
 
 		GraphicsAPIType api = GraphicsAPI::Select();
 		GraphicsContext* context = ContextManager::Get()->GetContext();
-		if (api != GraphicsAPI::NONE) {
+		if (api != GraphicsAPIType::NONE) {
 			HZ_CORE_INFO("Creating window \"{0}\" ({1}, {2})", props.Title, props.Width, props.Height);
 
-			if (api == GraphicsAPI::VULKAN) {
+			if (api == GraphicsAPIType::VULKAN) {
 				glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 			}
 			m_Window = glfwCreateWindow(props.Width, props.Height, m_Data.Title, nullptr, nullptr);
 		}
 		context->AddWindow(this);
 		context->EnsureInit();
-		if (api == GraphicsAPI::NONE) 
+		if (api == GraphicsAPIType::NONE)
 			return;//The rest of this method is glfw stuff
 		
 		glfwSetWindowUserPointer(m_Window, this);

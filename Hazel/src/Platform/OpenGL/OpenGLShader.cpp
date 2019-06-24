@@ -101,7 +101,7 @@ namespace Hazel {
 		// Always detach shaders after a successful link.
 		glDetachShader(m_ID, vertexShader);
 		glDetachShader(m_ID, fragmentShader);
-		timer.Stop()->Print("Compiling and linking shader took", spdlog::level::level_enum::info);
+		timer.Stop()->Print("Compiling and linking shader took", spdlog::level::level_enum::trace);
 	}
 
 	void OpenGLShader::Bind() const

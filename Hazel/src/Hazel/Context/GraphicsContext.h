@@ -12,12 +12,8 @@ namespace Hazel {
 	//AddWindow is called for each new window that is created and is called after PreInit but before Init
 	class GraphicsContext {
 	public:
-		GraphicsContext()
-		{
-			PreInit();
-		}
 
-		inline void EnsureInit()//Calls init if it hasnt been called already
+		inline void EnsureInit()//Calls init if it hasn't been called already
 		{
 			if (!m_Initialized)
 			{
@@ -35,8 +31,8 @@ namespace Hazel {
 
 		virtual ImGuiLayer* CreateImGuiLayer() = 0;
 	protected:
-		virtual void PreInit() {}
-		virtual void Init() {}
+		virtual void PreInit() = 0;
+		virtual void Init() = 0;
 		bool m_Initialized = false;
 	};
 }

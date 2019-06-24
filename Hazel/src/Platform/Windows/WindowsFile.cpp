@@ -39,6 +39,11 @@ namespace Hazel {
 			m_Data = nullptr;
 			return;
 		}
+#ifdef HZ_DEBUG
+		Log_fopen((FILE*) m_FileHandle, path, "rb", __FILE__, __LINE__);
+#elif HZ_RELEASE
+		Log_fopen((FILE*) m_FileHandle, path, "rb");
+#endif
 		LARGE_INTEGER size;
 		if (!GetFileSizeEx(m_FileHandle, &size))
 		{
@@ -123,6 +128,11 @@ namespace Hazel {
 		if (!m_CompletedDeInit)
 		{
 			m_CompletedDeInit = true;
+#ifdef HZ_DEBUG
+			Log_fclose((FILE*) m_FileHandle, 0, __FILE__, __LINE__);
+#elif HZ_RELEASE
+			Log_fclose((FILE*) m_FileHandle);
+#endif
 			if (m_FreeData)
 			{	//In this case m_Data is the block we malloc'ed
 				//We only need to free m_Data because the file handle and view were destroyed in the constructor

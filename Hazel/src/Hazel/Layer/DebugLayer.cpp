@@ -43,12 +43,8 @@ namespace Hazel {
 		m_FrameTime->Update();
 #endif
 	}
-
-
-char buffer[4096];
-#define DEBUG_TEXT(format, ...)								\
-	snprintf(buffer, sizeof(buffer), format, __VA_ARGS__);	\
-	ImGui::Text(buffer);									\
+	char buffer[1024];
+	bool showFileWindow = false;
 
 	void DebugLayer::OnImGuiRender()
 	{
@@ -62,11 +58,11 @@ char buffer[4096];
 		ImGui::SetNextWindowViewport(viewport->ID);
 		if (ImGui::Begin("Video Performance Overlay", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs))
 		{
-			DEBUG_TEXT("Average Frame Time %.2f (FPS: %d) | Frame Time %.2f (FPS: %.1f) ", lastSecondDelta / averageFPS * 1000.0f, averageFPS, Engine::GetDeltaTime() * 1000.0f, 1.0f / Engine::GetDeltaTime());
-			DEBUG_TEXT("Min FT: %.2f (FPS: %.1f) | Max FT: %.2f (FPS: %.1f)", min * 1000.0f, 1.0f / min, max * 1000.0f, 1.0f / max);
+			ImGui::Text("Average Frame Time %.2f (FPS: %d) | Frame Time %.2f (FPS: %.1f) ", lastSecondDelta / averageFPS * 1000.0f, averageFPS, Engine::GetDeltaTime() * 1000.0f, 1.0f / Engine::GetDeltaTime());
+			ImGui::Text("Min FT: %.2f (FPS: %.1f) | Max FT: %.2f (FPS: %.1f)", min * 1000.0f, 1.0f / min, max * 1000.0f, 1.0f / max);
 			
 #ifndef HZ_DIST
-			DEBUG_TEXT("Current Frame: %d", frames);
+			ImGui::Text("Current Frame: %d", frames);
 #endif
 			ImGui::End();
 		}
@@ -85,26 +81,43 @@ char buffer[4096];
 
 		viewport = ImGui::GetMainViewport();
 		ImGui::SetNextWindowViewport(viewport->ID);
-		if (ImGui::Begin("System Info Overlay", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs))
+		if (ImGui::Begin("System Info Overlay", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings))
 		{
 			double pVMem = processVMem.Get() / 1024.0 / 1024.0;
 			double sVMem = systemVMem.Get() / 1024.0 / 1024.0;
 			double tVMem = totalVMem.Get() / 1024.0 / 1024.0 / 1024.0;
-			DEBUG_TEXT("VMem Usage %.2f MB / %.1f MB (System) / %.3f GB (Total)", pVMem, sVMem, tVMem);
+			ImGui::Text("VMem Usage %.2f MB / %.1f MB (System) / %.3f GB (Total)", pVMem, sVMem, tVMem);
 			
 			double pMem = processMem.Get() / 1024.0 / 1024.0;
 			double sMem = systemMem.Get() / 1024.0 / 1024.0;
 			double tMem = totalMem.Get() / 1024.0 / 1024.0 / 1024.0;
-			DEBUG_TEXT("RAM Usage  %.2f MB / %.1f MB (System) / %.3f GB (Total)", pMem, sMem, tMem);
+			ImGui::Text("RAM Usage  %.2f MB / %.1f MB (System) / %.3f GB (Total)", pMem, sMem, tMem);
 
-			DEBUG_TEXT("CPU Usage %.1f / %.1f (System)", processCPU.Get(), systemCPU.Get());
+			ImGui::Text("CPU Usage %.1f / %.1f (System)", processCPU.Get(), systemCPU.Get());
+			
+			snprintf(buffer, sizeof(buffer), "Files Open %llu, Total Opened %llu, Total Closed %llu", FileTracker::GetCurrentlyOpenFilesCount(), FileTracker::GetOpenedFilesCount(), FileTracker::GetClosedFilesCount());
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+			if (ImGui::Button(buffer))
+				showFileWindow = !showFileWindow;
+			ImGui::PopStyleColor();
+			if (showFileWindow) {
+				ImGui::Begin("Files");
+				ImGui::Text("Open Files:");
+				for (auto& it : FileTracker::GetOpenFilePaths()) {
+					std::string path = it.second;
+					ImGui::Text("\t%s", path.c_str());
+				}
+				ImGui::Text("Closed Files:");
+				for (auto& path : FileTracker::GetClosedFilePaths()) {
+					ImGui::Text("\t%s", path.c_str());
+				}
+				ImGui::End();
+			}
+
 			ImGui::Text("");
-			DEBUG_TEXT("Files Open %llu, Total Opened %llu, Total Closed %llu", FileTracker::GetCurrentlyOpenFilesCount(), FileTracker::GetOpenedFilesCount(), FileTracker::GetClosedFilesCount());
-		
-			ImGui::Text("");
-			DEBUG_TEXT("Current Allocs %llu, Total Allocs %llu, Total Frees %llu", AllocTracker::GetCurrentAllocCount(), AllocTracker::GetTotalAllocCount(), AllocTracker::GetTotalFreeCount());
-			DEBUG_TEXT("Allocs/s %llu, Frees /s %llu", AllocTracker::GetAllocCountSec(), AllocTracker::GetFreeCountSec());
-			DEBUG_TEXT("Allocs/frame %llu, Frees /frame %llu", AllocTracker::GetAllocsPerFrame(), AllocTracker::GetFreesPerFrame());
+			ImGui::Text("Current Allocs %llu, Total Allocs %llu, Total Frees %llu", AllocTracker::GetCurrentAllocCount(), AllocTracker::GetTotalAllocCount(), AllocTracker::GetTotalFreeCount());
+			ImGui::Text("Allocs/s %llu, Frees /s %llu", AllocTracker::GetAllocCountSec(), AllocTracker::GetFreeCountSec());
+			ImGui::Text("Allocs/frame %llu, Frees /frame %llu", AllocTracker::GetAllocsPerFrame(), AllocTracker::GetFreesPerFrame());
 
 			window_pos = ImVec2(viewport->Pos.x + viewport->Size.x - ImGui::GetWindowWidth() - DISTANCE, viewport->Pos.y + DISTANCE);
 			ImGui::SetWindowPos(window_pos);

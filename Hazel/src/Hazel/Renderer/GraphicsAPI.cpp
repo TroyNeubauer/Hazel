@@ -5,18 +5,11 @@
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
 #include "Hazel/Context/ContextManager.h"
+#include "RenderCommand.h"
 
 namespace Hazel {
 
-	const GraphicsAPIType GraphicsAPI::NONE = "None";
-	const GraphicsAPIType GraphicsAPI::NOT_CHOSEN = "Not Chosen";
-	const GraphicsAPIType GraphicsAPI::OPEN_GL = "Open GL";
-	const GraphicsAPIType GraphicsAPI::VULKAN =	"Vulkan";
-	const GraphicsAPIType GraphicsAPI::DIRECTX_12 = "DirectX 12";
-	const GraphicsAPIType GraphicsAPI::METAL = "Metal";
-	const GraphicsAPIType GraphicsAPI::SOFTWARE = "Software";
-
-	GraphicsAPIType GraphicsAPI::s_API = GraphicsAPI::NOT_CHOSEN;
+	GraphicsAPIType GraphicsAPI::s_API = GraphicsAPIType::NOT_CHOSEN;
 	std::vector<void(*)(GraphicsAPIType, GraphicsAPIType)> GraphicsAPI::s_APISwitchListeners;
 	std::vector<GraphicsAPIType> GraphicsAPI::s_APIPriority;
 
@@ -34,9 +27,13 @@ namespace Hazel {
 
 	GraphicsAPIType GraphicsAPI::Select()
 	{
-		if (Get() == GraphicsAPI::NOT_CHOSEN)
+		if (Get() == GraphicsAPIType::NOT_CHOSEN)
 		{
-			GraphicsAPIType newAPI = NOT_CHOSEN;
+			if (s_APISwitchListeners.size() == 0)
+			{
+				s_APISwitchListeners.push_back(RenderCommand::OnAPIChange);
+			}
+			GraphicsAPIType newAPI = GraphicsAPIType::NOT_CHOSEN;
 			for (GraphicsAPIType api : s_APIPriority)
 			{
 				if (IsAvilable(api))
@@ -45,7 +42,7 @@ namespace Hazel {
 					break;
 				}
 			}
-			if (newAPI == NOT_CHOSEN) {
+			if (newAPI == GraphicsAPIType::NOT_CHOSEN) {
 				HZ_CORE_ASSERT(false, "Unable to find sutiable Graphics API! Add some using GraphicsAPI::AddWantedAPI");
 			}
 			Set(newAPI);
@@ -68,9 +65,9 @@ namespace Hazel {
 		{
 			if (newAPI != s_API)
 			{
-				s_API = newAPI;
 				for (auto listener : s_APISwitchListeners)//Notify the switch listeners that we are changing API's
 					listener(s_API, newAPI);
+				s_API = newAPI;
 				return true;
 			}
 		} else {
@@ -81,7 +78,18 @@ namespace Hazel {
 
 	const char* GraphicsAPI::ToString(GraphicsAPIType type)
 	{
-		return type;
+		switch (type)
+		{
+			case GraphicsAPIType::NONE:			return "None";
+			case GraphicsAPIType::NOT_CHOSEN:	return "Not Chosen";
+			case GraphicsAPIType::OPEN_GL:		return "Open GL";
+			case GraphicsAPIType::VULKAN:		return "Vulkan";
+			case GraphicsAPIType::DIRECTX_12:	return "DirectX 12";
+			case GraphicsAPIType::METAL:		return "Metal";
+			case GraphicsAPIType::SOFTWARE:		return "Software";
+			default: HZ_CORE_ASSERT(false, "Unknown API");
+		}
+		return "Unknown";
 	}
 
 	static bool isVuklanSupportedKnown = false, isVulkanSupported;
@@ -107,13 +115,36 @@ namespace Hazel {
 
 	bool GraphicsAPI::IsAvilable(GraphicsAPIType type) {
 #ifdef HZ_PLATFORM_WINDOWS
-		if (type == GraphicsAPI::OPEN_GL)			return true;
-		else if (type == GraphicsAPI::VULKAN)		return IsVulkanSupported();
-		else if (type == GraphicsAPI::DIRECTX_12)	return true;
-		else if (type == GraphicsAPI::NONE)			return true;
-#endif
-		else {
-			return false;
+		switch (type)
+		{
+		case Hazel::GraphicsAPIType::NONE:			return true;
+		case Hazel::GraphicsAPIType::OPEN_GL:		return true;
+		case Hazel::GraphicsAPIType::VULKAN:		return IsVulkanSupported();
+		case Hazel::GraphicsAPIType::DIRECTX_12:	return false;
+		case Hazel::GraphicsAPIType::METAL:			return false;
+		case Hazel::GraphicsAPIType::SOFTWARE:		return false;
 		}
+#elif HZ_PLATFORM_OSX
+		switch (type)
+		{
+		case Hazel::GraphicsAPIType::NONE:			return true;
+		case Hazel::GraphicsAPIType::OPEN_GL:		return true;
+		case Hazel::GraphicsAPIType::VULKAN:		return IsVulkanSupported();
+		case Hazel::GraphicsAPIType::DIRECTX_12:	return false;
+		case Hazel::GraphicsAPIType::METAL:			return true;
+		case Hazel::GraphicsAPIType::SOFTWARE:		return false;
+		}
+#elif HZ_PLATFORM_UNIX
+		switch (type)
+		{
+		case Hazel::GraphicsAPIType::NONE:			return true;
+		case Hazel::GraphicsAPIType::OPEN_GL:		return true;
+		case Hazel::GraphicsAPIType::VULKAN:		return IsVulkanSupported();
+		case Hazel::GraphicsAPIType::DIRECTX_12:	return false;
+		case Hazel::GraphicsAPIType::METAL:			return false;
+		case Hazel::GraphicsAPIType::SOFTWARE:		return false;
+		}
+#endif
+			return false;
 	}
 }

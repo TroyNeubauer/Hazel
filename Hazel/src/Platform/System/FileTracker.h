@@ -5,6 +5,8 @@
 #include "Hazel/Util/CountTracker.h"
 #include "Hazel/Core.h"
 
+#include <map>
+#include <string>
 
 namespace Hazel {
 	class FileTracker
@@ -16,7 +18,13 @@ namespace Hazel {
 
 		static unsigned long long GetOpenedFilesSec();//The number of files opened/closed in the last second
 		static unsigned long long GetClosedFilesSec();
-		static CountTracker& GetTracker();
+		static inline CountTracker& GetTracker() { return m_FileTracker; }
+		static inline std::map<FILE*, std::string>& GetOpenFilePaths() { return m_OpenFiles; }
+		static inline std::vector<std::string>& GetClosedFilePaths() { return m_ClosedFiles; }
+	private:
+		static std::map<FILE*, std::string> m_OpenFiles;
+		static std::vector<std::string> m_ClosedFiles;
+		static CountTracker m_FileTracker;
 	};
 }
 

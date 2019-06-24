@@ -4,20 +4,24 @@
 #include <glad/glad.h>
 
 #include "GraphicsAPI.h"
-#include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace Hazel {
 
 	enum class ShaderDataType {
 		None = 0,
-		Float, Float2, Float3, Float4, 
 		Float16, Float16_2, Float16_3, Float16_4, 
+		Float32, Float32_2, Float32_3, Float32_4,
 		Float64, Float64_2, Float64_3, Float64_4,
-		Int16, Int16_2, Int16_3, Int16_4,
-		Int, Int2, Int3, Int4,
-		Int64, Int64_2, Int64_3, Int64_4,
+		
 		Int8, Int8_2, Int8_3, Int8_4,
-		Mat3, Mat4, Bool
+		Int16, Int16_2, Int16_3, Int16_4,
+		Int32, Int32_2, Int32_3, Int32_4,
+		Int64, Int64_2, Int64_3, Int64_4,
+		
+		Mat3, Mat4, Bool,
+		//Constants for convience
+		Int = Int32, Int2 = Int32_2, Int3 = Int32_3, Int4 = Int32_4,
+		Float = Float32, Float2 = Float32_2, Float3 = Float32_3, Float4 = Float32_4,
 	};
 
 	size_t SizeOfShaderDataType(ShaderDataType type);
@@ -34,47 +38,7 @@ namespace Hazel {
 
 		BufferElement() {}
 
-		uint32_t GetElementCount() const
-		{
-			switch (Type)
-			{
-			case ShaderDataType::None:		return 0;
-			case ShaderDataType::Float:		return 1;
-			case ShaderDataType::Float2:	return 2;
-			case ShaderDataType::Float3:	return 3;
-			case ShaderDataType::Float4:	return 4;
-			case ShaderDataType::Float16:	return 1;
-			case ShaderDataType::Float16_2:	return 2;
-			case ShaderDataType::Float16_3:	return 3;
-			case ShaderDataType::Float16_4:	return 4;
-			case ShaderDataType::Float64:	return 1;
-			case ShaderDataType::Float64_2:	return 2;
-			case ShaderDataType::Float64_3:	return 3;
-			case ShaderDataType::Float64_4:	return 4;
-			case ShaderDataType::Int64:		return 1;
-			case ShaderDataType::Int64_2:	return 2;
-			case ShaderDataType::Int64_3:	return 3;
-			case ShaderDataType::Int64_4:	return 4;
-			case ShaderDataType::Int:		return 1;
-			case ShaderDataType::Int2:		return 2;
-			case ShaderDataType::Int3:		return 3;
-			case ShaderDataType::Int4:		return 4;
-			case ShaderDataType::Int16:		return 1;
-			case ShaderDataType::Int16_2:	return 2;
-			case ShaderDataType::Int16_3:	return 3;
-			case ShaderDataType::Int16_4:	return 4;
-			case ShaderDataType::Int8:		return 1;
-			case ShaderDataType::Int8_2:	return 2;
-			case ShaderDataType::Int8_3:	return 3;
-			case ShaderDataType::Int8_4:	return 4;
-			case ShaderDataType::Mat3:		return 3 * 3;
-			case ShaderDataType::Mat4:		return 4 * 4;
-			case ShaderDataType::Bool:		return 1;
-			default:
-				HZ_CORE_ASSERT(false, "Unknown ShaderDataType!");
-			}
-			return 0;
-		}
+		uint32_t GetElementCount() const;
 	};
 
 	class BufferLayout {
@@ -102,46 +66,36 @@ namespace Hazel {
 		uint32_t m_Stride = 0;
 	};
 
-
-	typedef GraphicsBuffer<float, BufferType::VERTEX> VertexBuffer;
-	typedef GraphicsBuffer<uint32_t, BufferType::INDEX> IndexBuffer;
-
-	class Buffer {
-	public:
-
-		template<typename T, BufferType type>
-		static GraphicsBuffer<T, type>* Create(T* data, uint64_t elements) {
-
-			if (GraphicsAPI::Get() == GraphicsAPI::OPEN_GL)
-				return new OpenGLBuffer<T, type>(data, elements);
-			else HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
-
-			return nullptr;
-		}
-
-		template<typename T>
-		static VertexBuffer* CreateVertex(T* data, uint64_t elements) {
-
-			if (GraphicsAPI::Get() == GraphicsAPI::OPEN_GL)
-				return new OpenGLBuffer<T, BufferType::VERTEX>(data, elements);
-			else HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
-
-			return nullptr;
-		}
-
-		template<typename T>
-		static IndexBuffer* CreateIndex(T* data, uint64_t elements) {
-			IndexBuffer* result = nullptr;
-			if (GraphicsAPI::Get() == GraphicsAPI::OPEN_GL)
-				result = new OpenGLBuffer<T, BufferType::INDEX>(data, elements);
-			else HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
-			if (result) {
-				BufferLayout layout = { { ShaderDataType::Int, "index" } };
-				result->SetLayout(layout);
-			}
-			return result;
-		}
+	enum BufferType
+	{
+		VERTEX, INDEX
 	};
+
+	template<typename T, BufferType type>
+	class Buffer
+	{
+	public:
+		Buffer() {}
+		virtual void SetData(T* data, uint64_t elements) = 0;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+
+		virtual uint32_t Count() const = 0;
+		inline size_t ElementSize() const { return sizeof(T); }
+		inline size_t Bytes() const { return ElementSize() * Count(); }
+
+		virtual void SetLayout(BufferLayout& layout) = 0;
+		virtual const BufferLayout& GetLayout() const = 0;
+
+		static Buffer<float, BufferType::VERTEX>* Create(float* data, uint64_t elements);
+		static Buffer<uint32_t, BufferType::INDEX>* Create(uint32_t* data, uint64_t elements);
+
+		virtual ~Buffer() {}
+	};
+
+	typedef Buffer<float, BufferType::VERTEX> VertexBuffer;
+	typedef Buffer<uint16_t, BufferType::INDEX> ShortIndexBuffer;
+	typedef Buffer<uint32_t, BufferType::INDEX> IndexBuffer;
 
 
 }

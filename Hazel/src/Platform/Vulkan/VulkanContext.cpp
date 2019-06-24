@@ -11,11 +11,6 @@
 
 namespace Hazel {
 
-	VulkanContext::VulkanContext() 
-	{
-		Init();
-	}
-
 	void VulkanContext::SetupVulkan(const char** extensions, uint32_t extensions_count)
 	{
 		VkResult err;
@@ -181,7 +176,8 @@ namespace Hazel {
 		ImGui_ImplVulkanH_CreateWindowDataSwapChainAndFramebuffer(m_PhysicalDevice, m_Device, windowData, m_Allocator, width, height);
 	}
 
-	void VulkanContext::PreInit() {
+	void VulkanContext::PreInit()
+	{
 		uint32_t extensions_count = 0;
 		const char** extensions = glfwGetRequiredInstanceExtensions(&extensions_count);
 		SetupVulkan(extensions, extensions_count);
@@ -224,8 +220,15 @@ namespace Hazel {
 		}
 	}
 
-	void VulkanContext::SwapBuffers() {
-		for (Window* window : m_Handles) {
+	VulkanContext::VulkanContext()
+	{
+		PreInit();
+	}
+
+	void VulkanContext::SwapBuffers()
+	{
+		for (Window* window : m_Handles)
+		{
 			ImGui_ImplVulkanH_WindowData* windowData = (ImGui_ImplVulkanH_WindowData*) window->GetContextData();
 			ImGui_ImplVulkanH_FrameData* fd = &windowData->Frames[windowData->FrameIndex];
 			VkPresentInfoKHR info = {};
@@ -261,5 +264,5 @@ namespace Hazel {
 		return new VulkanImGuiLayer();
 	}
 
-	GraphicsAPIType VulkanContext::GetAPIType() { return GraphicsAPI::VULKAN; }
+	GraphicsAPIType VulkanContext::GetAPIType() { return GraphicsAPIType::VULKAN; }
 }

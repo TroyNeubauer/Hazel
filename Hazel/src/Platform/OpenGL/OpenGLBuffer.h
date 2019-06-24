@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazel/Renderer/BufferImpl.h"
+#include "Hazel/Renderer/Buffer.h"
 
 namespace Hazel {
 
@@ -15,9 +15,8 @@ namespace Hazel {
 	}
 
 	template<typename T, BufferType TYPE>
-	class OpenGLBuffer : public GraphicsBuffer<T, TYPE> {
+	class OpenGLBuffer : public Buffer<T, TYPE> {
 	public:
-
 		OpenGLBuffer(T* data, uint64_t elements) {
 			glCreateBuffers(1, &m_BufferID);
 			glBindBuffer(GetTarget(TYPE), m_BufferID);
@@ -40,6 +39,11 @@ namespace Hazel {
 			m_Layout = layout;
 			if (TYPE == BufferType::VERTEX) {
 			}
+		}
+
+		virtual const BufferLayout& GetLayout() const
+		{
+			return m_Layout;
 		}
 
 		virtual ~OpenGLBuffer() {

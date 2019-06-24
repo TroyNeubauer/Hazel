@@ -16,7 +16,7 @@ namespace Hazel {
 
 	WindowsContextManager::WindowsContextManager()
 	{
-		if (GraphicsAPI::Get() != GraphicsAPI::NONE) {
+		if (GraphicsAPI::Get() != GraphicsAPIType::NONE) {
 			int success = glfwInit();
 			HZ_CORE_ASSERT(success, "Could not intialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
@@ -26,17 +26,13 @@ namespace Hazel {
 	GraphicsContext* WindowsContextManager::GetContext()
 	{
 		if (!m_Context) {
-			GraphicsAPIType api = GraphicsAPI::Get();
-			if (api == GraphicsAPI::OPEN_GL)
-				m_Context = new OpenGLContext();
-			else if (api == GraphicsAPI::VULKAN)
-				m_Context = new VulkanContext();
-			else if (api == GraphicsAPI::NONE)
-				m_Context = new NoAPIContext();
-			else {
-				HZ_CORE_CRITICAL("Unsupported Graphics API {}", GraphicsAPI::ToString(api));
-				return nullptr;
-			}
+			switch (GraphicsAPI::Get())
+			{
+				case GraphicsAPIType::OPEN_GL:	return m_Context = new OpenGLContext();
+				case GraphicsAPIType::NONE:		return m_Context = new NoAPIContext();
+				case GraphicsAPIType::VULKAN:	return m_Context = new VulkanContext();
+				default: HZ_CORE_CRITICAL("Unsupported Graphics API {}", GraphicsAPI::ToString(GraphicsAPI::Get()));
+			}	
 		}
 		return m_Context;
 	}
@@ -45,7 +41,7 @@ namespace Hazel {
 	{
 		if (m_Context) {
 			delete m_Context;
-			if (GraphicsAPI::Get() != GraphicsAPI::NONE)
+			if (GraphicsAPI::Get() != GraphicsAPIType::NONE)
 			{
 				glfwTerminate();
 			}

@@ -14,11 +14,10 @@ namespace Hazel {
 	void Log::Init()
 	{
 #if defined(HZ_DEBUG) || defined(HZ_RELEASE)
-		std::string consolePattern = "%^[%T] %n: %$%v", filePattern = "[%c] [%t] %n: %v";
+		std::string consolePattern = "%^[%T] %n: %$%v", filePattern = "%n-%t:[%D %H:%M %S.%e] %l: %v";
 
 		auto coreStdOut = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 		coreStdOut->set_pattern(consolePattern);
-		coreStdOut->set_level(spdlog::level::level_enum::trace);
 		
 		auto coreFile = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/core.txt", true);
 		coreFile->set_pattern(filePattern);
@@ -26,29 +25,25 @@ namespace Hazel {
 
 		s_CoreLogger = new spdlog::logger("HAZEL", { coreStdOut, coreFile });
 #ifdef HZ_DEBUG
-		coreFile->set_level(spdlog::level::level_enum::trace);
+		coreStdOut->set_level(spdlog::level::level_enum::trace);
 #else
-		coreFile->set_level(spdlog::level::level_enum::warn);
+		coreStdOut->set_level(spdlog::level::level_enum::warn);
 #endif
-
 
 		auto clientStdOut = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 		clientStdOut->set_pattern(consolePattern);
 
 		auto clientFile = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/client.txt", true);
 		clientFile->set_pattern(filePattern);
+		clientFile->set_level(spdlog::level::trace);
 
 		s_ClientLogger = new spdlog::logger("APP", { clientStdOut, clientFile });
 
 
 #ifdef HZ_DEBUG
-		coreFile->set_level(spdlog::level::trace);
-		coreStdOut->set_level(spdlog::level::trace);
-		s_ClientLogger->set_level(spdlog::level::trace);
+		clientStdOut->set_level(spdlog::level::trace);
 #else//HZ_RELEASE
-		coreFile->set_level(spdlog::level::trace);
-		coreStdOut->set_level(spdlog::level::warn);
-		s_ClientLogger->set_level(spdlog::level::warn);
+		clientStdOut->set_level(spdlog::level::warn);
 #endif
 #elif defined(HZ_DIST)
 
@@ -58,7 +53,7 @@ namespace Hazel {
 
 		auto clientStdOut = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 		s_ClientLogger = new spdlog::logger("APP", clientStdOut);
-		s_ClientLogger->set_level(spdlog::level::off);
+		s_ClientLogger->set_level(spdlog::level::warn);
 #else
 	#error
 #endif

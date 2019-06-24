@@ -23,12 +23,15 @@ namespace Hazel {
 		//We cant do anything until the Open GL context is current
 	}
 
+	OpenGLContext::OpenGLContext()
+	{
+		PreInit();
+	}
+
 	void OpenGLContext::SwapBuffers()
 	{
 		for(auto window : m_Handles)
 			glfwSwapBuffers((GLFWwindow*) window->GetNativeWindow());
-		glClearColor(0, 0, 0, 1);
-		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	void OpenGLContext::OnWindowResize(Window* window, int width, int height)
 	{
@@ -52,7 +55,7 @@ namespace Hazel {
 			m_Handles.erase(it);
 	}
 
-	GraphicsAPIType OpenGLContext::GetAPIType() { return GraphicsAPI::OPEN_GL; }
+	GraphicsAPIType OpenGLContext::GetAPIType() { return GraphicsAPIType::OPEN_GL; }
 
 	ImGuiLayer* OpenGLContext::CreateImGuiLayer()
 	{

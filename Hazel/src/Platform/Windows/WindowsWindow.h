@@ -27,6 +27,8 @@ namespace Hazel {
 
 		// Window attributes
 		inline void SetEventCallback(const EventCallbackFn& callback) override { m_EventCallback = callback; }
+		inline const EventCallbackFn& GetEventCallback() { return m_EventCallback; }
+
 
 		inline virtual void* GetNativeWindow() const { return m_Window; }
 		virtual void SetContextData(void* data) override;

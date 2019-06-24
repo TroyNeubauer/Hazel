@@ -9,6 +9,7 @@ struct GLFWwindow;
 namespace Hazel {
 	class OpenGLContext : public GraphicsContext {
 	public:
+		OpenGLContext();
 		virtual void SwapBuffers() override;
 		virtual void OnWindowResize(Window* window, int width, int height) override;
 		virtual void Destroy() override;

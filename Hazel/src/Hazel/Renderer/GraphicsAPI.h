@@ -1,11 +1,13 @@
 #pragma once
 
 namespace Hazel {
-	typedef const char* GraphicsAPIType;
+	enum class GraphicsAPIType
+	{
+		NONE, NOT_CHOSEN, OPEN_GL, VULKAN, DIRECTX_12, METAL, SOFTWARE
+	};
 
 	class GraphicsAPI {
 	public:
-		static const GraphicsAPIType NONE, NOT_CHOSEN, OPEN_GL, VULKAN, DIRECTX_12, METAL, SOFTWARE;
 		
 	public:
 		static bool IsAvilable(GraphicsAPIType type);
@@ -13,6 +15,8 @@ namespace Hazel {
 		static void AddListener(void(*listener)(GraphicsAPIType, GraphicsAPIType));
 
 		static void RemoveListener(void(*listener)(GraphicsAPIType, GraphicsAPIType));
+
+		inline static bool IsSelected() { return s_API != GraphicsAPIType::NOT_CHOSEN; }
 
 		//Picks a graphics API to use if one wasn't already selected and then returns the current API
 		static GraphicsAPIType Select();
