@@ -19,7 +19,7 @@ int Log_fclose(FILE* file, int result, const char* sourceFile, int line)
 	auto& map = Hazel::FileTracker::GetOpenFilePaths();
 	std::string path = map[file];
 	map.erase(file);
-	Hazel::FileTracker::GetClosedFilePaths().push_back(path);
+	Hazel::FileTracker::GetClosedFilePaths().insert(path);
 	if (result != EOF && file != NULL) {
 		Hazel::FileTracker::GetTracker().IncrementFinished();
 	} else {
@@ -58,7 +58,7 @@ int Log_fclose(FILE* file, int result)
 namespace Hazel {
 	CountTracker FileTracker::m_FileTracker;
 	std::map<FILE*, std::string> FileTracker::m_OpenFiles;
-	std::vector<std::string> FileTracker::m_ClosedFiles;
+	std::set<std::string> FileTracker::m_ClosedFiles;
 
 	unsigned long long FileTracker::GetCurrentlyOpenFilesCount() { return GetOpenedFilesCount() - GetClosedFilesCount(); }
 	

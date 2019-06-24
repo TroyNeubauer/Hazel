@@ -6,6 +6,7 @@
 #include "Hazel/Core.h"
 
 #include <map>
+#include <set>
 #include <string>
 
 namespace Hazel {
@@ -20,10 +21,10 @@ namespace Hazel {
 		static unsigned long long GetClosedFilesSec();
 		static inline CountTracker& GetTracker() { return m_FileTracker; }
 		static inline std::map<FILE*, std::string>& GetOpenFilePaths() { return m_OpenFiles; }
-		static inline std::vector<std::string>& GetClosedFilePaths() { return m_ClosedFiles; }
+		static inline std::set<std::string>& GetClosedFilePaths() { return m_ClosedFiles; }
 	private:
 		static std::map<FILE*, std::string> m_OpenFiles;
-		static std::vector<std::string> m_ClosedFiles;
+		static std::set<std::string> m_ClosedFiles;
 		static CountTracker m_FileTracker;
 	};
 }

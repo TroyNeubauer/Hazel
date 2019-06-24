@@ -15,7 +15,7 @@
 	//#define _wfopen_s(stream, path, access) _wfopen_s(stream, path, access); Log_fopen(*stream, "", "")
 	//#define fopen_s(stream, path, access) fopen_s(stream, path, access); Log_fopen(*stream, "", "")
 	#define fopen(path, access) Log_fopen(fopen(path, access))
-	#define fclose(file) Log_fclose(fclose(file))
+	#define fclose(file) Log_fclose(file, fclose(file))
 #else
 	//Dont track file open/closes
 #endif

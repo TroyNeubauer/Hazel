@@ -47,6 +47,9 @@ namespace Hazel {
 	class Event
 	{
 	public:
+		static void ClearAllocations();
+
+	public:
 		bool Handled = false;
 
 		virtual EventType GetEventType() const = 0;

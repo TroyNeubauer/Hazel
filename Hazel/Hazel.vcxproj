@@ -564,6 +564,7 @@
     <ClCompile Include="src\Hazel\Application.cpp" />
     <ClCompile Include="src\Hazel\Context\ContextManager.cpp" />
     <ClCompile Include="src\Hazel\Engine.cpp" />
+    <ClCompile Include="src\Hazel\Events\Event.cpp" />
     <ClCompile Include="src\Hazel\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Hazel\Layer\DebugLayer.cpp" />
     <ClCompile Include="src\Hazel\Layer\LayerStack.cpp" />

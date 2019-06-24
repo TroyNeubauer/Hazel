@@ -28,7 +28,17 @@ namespace Hazel {
 		}
 	}
 }
-//#define HZ_TRACK_ALLOCS
+#define HZ_TRACK_ALLOCS
+
+void* AllocTracker_Allocate(size_t bytes)
+{
+	return Hazel::AllocTracker::Alloc(bytes);
+}
+
+void AllocTracker_Free(void* ptr)
+{
+	Hazel::AllocTracker::Delete(ptr);
+}
 
 #ifdef HZ_TRACK_ALLOCS
 

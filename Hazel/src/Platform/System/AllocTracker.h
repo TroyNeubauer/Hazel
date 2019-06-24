@@ -4,6 +4,9 @@
 
 #ifndef HZ_DIST
 
+void* AllocTracker_Allocate(size_t bytes);
+void AllocTracker_Free(void* ptr);
+
 namespace Hazel {
 	class AllocTracker {
 	public:

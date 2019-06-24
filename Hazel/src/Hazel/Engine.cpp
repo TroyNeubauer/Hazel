@@ -15,6 +15,7 @@ namespace Hazel {
 	
 	float Engine::GetTime()
 	{
+		if (!Log::CanLog()) return 0.0f;
 		return (float) glfwGetTime();
 	}
 
