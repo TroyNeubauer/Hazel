@@ -1,6 +1,6 @@
-[Fri Jun 14 21:59:03 2019] [017468] HAZEL: Creating window "Hazel Engine" (1280, 720)
-[Fri Jun 14 21:59:03 2019] [017468] HAZEL: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
-[Fri Jun 14 21:59:03 2019] [017468] HAZEL: Reading shader files took 144.4 microseconds
-[Fri Jun 14 21:59:03 2019] [017468] HAZEL: Compiling and linking shader took 604.5 microseconds
-[Fri Jun 14 21:59:04 2019] [017468] HAZEL: Complete initialization took 1.295 seconds
-[Fri Jun 14 21:59:06 2019] [017468] HAZEL: Destroying logging
+HAZEL-016924:[06/23/19 22:01 32.626] info: Creating window "Hazel Engine" (1280, 720)
+HAZEL-016924:[06/23/19 22:01 33.351] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
+HAZEL-016924:[06/23/19 22:01 33.616] info: Reading shader files shaders/test.vert, shaders/test.frag
+HAZEL-016924:[06/23/19 22:01 33.618] info: Reading shader files shaders/blue.vert, shaders/blue.frag
+HAZEL-016924:[06/23/19 22:01 33.620] info: Complete initialization took 1.264 seconds
+HAZEL-016924:[06/23/19 22:01 59.894] info: Destroying logging
