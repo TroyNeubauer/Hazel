@@ -6,7 +6,10 @@
 # Files
 *.user
 
-**/Sandbox/imgui.ini
+Sandbox/imgui.ini
+Sandbox/imgui_log.txt
+Sandbox/test.dat
+Sandbox/1page.dat
 
 **/*.sln
 **/*.vcxproj
