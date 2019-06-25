@@ -1,4 +1,5 @@
 #pragma once
+#ifdef HZ_ENABLE_OPEN_GL
 
 #include <vector>
 
@@ -26,3 +27,5 @@ namespace Hazel {
 		bool m_init = false;
 	};
 }
+
+#endif

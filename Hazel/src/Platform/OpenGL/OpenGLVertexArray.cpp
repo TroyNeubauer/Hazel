@@ -1,4 +1,6 @@
 #include "hzpch.h"
+#ifdef HZ_ENABLE_OPEN_GL
+
 #include "OpenGLVertexArray.h"
 
 #include <glad/glad.h>
@@ -116,3 +118,4 @@ namespace Hazel {
 
 }
 
+#endif

@@ -1,4 +1,6 @@
 #include "hzpch.h"
+#ifdef HZ_ENABLE_VULKAN
+
 #include "VulkanHelper.h"
 
 void check_vk_result(VkResult err)
@@ -53,3 +55,5 @@ char* ErrorToString(VkResult error) {
 		return "UNKNOWN_ERROR";
 	}
 }
+
+#endif

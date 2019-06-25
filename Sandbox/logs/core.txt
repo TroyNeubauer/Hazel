@@ -1,6 +1,6 @@
-HAZEL-14628:[06/25/19 10:04 28.729] info: Creating window "Hazel Engine" (1280, 720)
-HAZEL-14628:[06/25/19 10:04 29.152] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
-HAZEL-14628:[06/25/19 10:04 29.889] info: Reading shader files shaders/test.vert, shaders/test.frag
-HAZEL-14628:[06/25/19 10:04 29.910] info: Reading shader files shaders/blue.vert, shaders/blue.frag
-HAZEL-14628:[06/25/19 10:04 29.927] info: Complete initialization took 1.375 seconds
-HAZEL-14628:[06/25/19 10:04 42.583] info: Destroying logging
+HAZEL-9296:[06/25/19 15:08 08.551] info: Press any key to exit
+HAZEL-9296:[06/25/19 15:08 09.054] info: Reading shader files shaders/test.vert, shaders/test.frag
+HAZEL-9296:[06/25/19 15:08 09.061] info: Reading shader files shaders/blue.vert, shaders/blue.frag
+HAZEL-9296:[06/25/19 15:08 09.089] info: Complete initialization took 540.01 milliseconds
+HAZEL-9296:[06/25/19 15:08 17.459] info: Keypress detected. Closing windows
+HAZEL-9296:[06/25/19 15:08 17.460] info: Destroying logging

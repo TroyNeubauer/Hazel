@@ -1,4 +1,5 @@
 #pragma once
+#ifdef HZ_ENABLE_VULKAN
 
 #include <vulkan/vulkan.h>
 
@@ -8,3 +9,4 @@ char* DeviceTypeToString(VkPhysicalDeviceType type);
 char* ErrorToString(VkResult error);
 
 
+#endif

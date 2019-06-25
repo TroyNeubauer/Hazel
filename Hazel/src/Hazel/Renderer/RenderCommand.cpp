@@ -15,12 +15,12 @@ namespace Hazel {
 		}
 		switch (newAPI)
 		{
-		case GraphicsAPIType::OPEN_GL:
-			s_RendererAPI = new OpenGLRendererAPI();
-			break;
-		case GraphicsAPIType::NONE:
-			s_RendererAPI = new NoAPIRendererAPI();
-			break;
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
+		case GraphicsAPIType::NONE:		s_RendererAPI = new NoAPIRendererAPI();  break;
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+		case GraphicsAPIType::OPEN_GL:	s_RendererAPI = new OpenGLRendererAPI(); break;
+#endif
 		default:
 			HZ_CORE_ASSERT(false, "Unable to create RendererAPI implementation for API: {}", GraphicsAPI::ToString(newAPI));
 		}

@@ -1,4 +1,5 @@
 #pragma once
+#ifdef HZ_ENABLE_OPEN_GL
 
 #include "Hazel/Renderer/VertexArray.h"
 
@@ -29,3 +30,6 @@ namespace Hazel {
 	};
 
 }
+
+
+#endif

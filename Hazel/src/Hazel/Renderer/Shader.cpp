@@ -30,12 +30,17 @@ namespace Hazel {
 		timer.Stop()->Print("Reading shader files took", spdlog::level::level_enum::trace);
 		GraphicsAPIType api = GraphicsAPI::Get();
 		Shader* result = nullptr;
-		if (api == GraphicsAPIType::OPEN_GL)
-			result = new OpenGLShader(vertexFile, fragmentFile);
-		else if (api == GraphicsAPIType::NONE)
-			result = new NoAPIShader(vertexFile, fragmentFile);
-		else
-			HZ_CORE_ASSERT(false, "Unsupported graphics API for creating a shader: {0}", GraphicsAPI::ToString(api));
+		switch (api)
+		{
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
+			case Hazel::GraphicsAPIType::NONE:			result = new NoAPIShader(vertexFile, fragmentFile);  break;
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+			case Hazel::GraphicsAPIType::OPEN_GL:	result = new OpenGLShader(vertexFile, fragmentFile); break;
+#endif
+			default:
+				HZ_CORE_ASSERT(false, "Unsupported graphics API for creating a shader: {0}", GraphicsAPI::ToString(api));
+		}
 		
 		if (result)
 			HZ_CORE_TRACE("Shader initalization complete");

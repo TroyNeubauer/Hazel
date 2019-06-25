@@ -1,4 +1,5 @@
 #pragma once
+#ifdef HZ_ENABLE_OPEN_GL
 
 #include "Hazel/Renderer/RendererAPI.h"
 
@@ -11,3 +12,5 @@ namespace Hazel {
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) override;
 	};
 }
+
+#endif

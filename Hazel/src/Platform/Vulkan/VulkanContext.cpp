@@ -1,5 +1,7 @@
 
 #include "hzpch.h"
+#ifdef HZ_ENABLE_VULKAN
+
 #include "VulkanContext.h"
 #include "VulkanHelper.h"
 #include "Platform/Vulkan/VulkanImGuiLayer.h"
@@ -266,3 +268,5 @@ namespace Hazel {
 
 	GraphicsAPIType VulkanContext::GetAPIType() { return GraphicsAPIType::VULKAN; }
 }
+
+#endif

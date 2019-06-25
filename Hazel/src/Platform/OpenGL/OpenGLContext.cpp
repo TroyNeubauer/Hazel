@@ -1,5 +1,7 @@
 
 #include "hzpch.h"
+#ifdef HZ_ENABLE_OPEN_GL
+
 #include "OpenGLContext.h"
 #include "Platform/OpenGL/OpenGLImGuiLayer.h"
 
@@ -62,3 +64,5 @@ namespace Hazel {
 		return new OpenGLImGuiLayer();
 	}
 }
+
+#endif

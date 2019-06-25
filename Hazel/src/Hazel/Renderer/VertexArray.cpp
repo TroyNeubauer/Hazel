@@ -9,8 +9,12 @@ namespace Hazel {
 	{
 		switch (GraphicsAPI::Get())
 		{
-			case GraphicsAPIType::OPEN_GL:	return new OpenGLVertexArray();
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
 			case GraphicsAPIType::NONE:		return new NoAPIVertexArray();
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+			case GraphicsAPIType::OPEN_GL:	return new OpenGLVertexArray();
+#endif
 			default: HZ_CORE_ASSERT(false, "Cannot create vertex buffer from API");
 		}
 		return nullptr;

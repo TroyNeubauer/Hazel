@@ -1,4 +1,6 @@
 #include "hzpch.h"
+#ifdef HZ_ENABLE_VULKAN
+
 #include "Hazel/ImGui/ImGuiLayer.h"
 #include "VulkanImGuiLayer.h"
 #include "VulkanHelper.h"
@@ -194,3 +196,5 @@ namespace Hazel {
 	}
 
 }
+
+#endif

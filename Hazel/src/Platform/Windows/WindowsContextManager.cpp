@@ -28,9 +28,15 @@ namespace Hazel {
 		if (!m_Context) {
 			switch (GraphicsAPI::Get())
 			{
-				case GraphicsAPIType::OPEN_GL:	return m_Context = new OpenGLContext();
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
 				case GraphicsAPIType::NONE:		return m_Context = new NoAPIContext();
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+				case GraphicsAPIType::OPEN_GL:	return m_Context = new OpenGLContext();
+#endif
+#ifdef HZ_ENABLE_VULKAN
 				case GraphicsAPIType::VULKAN:	return m_Context = new VulkanContext();
+#endif
 				default: HZ_CORE_CRITICAL("Unsupported Graphics API {}", GraphicsAPI::ToString(GraphicsAPI::Get()));
 			}	
 		}

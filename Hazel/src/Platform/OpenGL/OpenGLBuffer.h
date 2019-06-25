@@ -1,4 +1,5 @@
 #pragma once
+#ifdef HZ_ENABLE_OPEN_GL
 
 #include "Hazel/Renderer/Buffer.h"
 
@@ -58,3 +59,5 @@ namespace Hazel {
 	};
 
 }
+
+#endif

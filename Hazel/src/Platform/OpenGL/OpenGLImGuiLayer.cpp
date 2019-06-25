@@ -1,4 +1,6 @@
 #include "hzpch.h"
+#ifdef HZ_ENABLE_OPEN_GL
+
 #include "Hazel/ImGui/ImGuiLayer.h"
 #include "OpenGLImGuiLayer.h"
 
@@ -76,3 +78,5 @@ namespace Hazel {
 	}
 
 }
+
+#endif

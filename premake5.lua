@@ -52,7 +52,7 @@ project "Hazel"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.Vulkan}"
+		"%{IncludeDir.Vulkan}",
 	}
 
 	links 
@@ -60,26 +60,43 @@ project "Hazel"
 		"GLFW",
 		"Glad",
 		"ImGui",
-		"Pdh.lib"
 	}
 
 	defines
 	{
 		"HZ_ENABLE_VULKAN",
-		"HZ_ENABLE_OPEN_GL"
+		"HZ_ENABLE_OPEN_GL",
+		"HZ_ENABLE_GRAPHICS_API_NONE",
+		"GLFW_INCLUDE_NONE",
 	}
 
+	systemversion "latest"
 	filter "system:windows"
-		systemversion "latest"
+
+		links "Pdh.lib"
 
 		defines
 		{
 			"HZ_PLATFORM_WINDOWS",
 			"VK_USE_PLATFORM_WIN32_KHR",
-			"GLFW_INCLUDE_NONE",
 			"HZ_ENABLE_DIRECTX_12",
-			"HZ_ENABLE_OPEN_GL",
-			"HZ_ENABLE_VULKAN"
+		}
+
+
+	filter "system:linux"
+
+		defines
+		{
+			"HZ_PLATFORM_UNIX",
+			"HZ_PLATFORM_LINUX",
+		}
+
+	filter "system:macosx"
+
+		defines
+		{
+			"HZ_PLATFORM_UNIX",
+			"HZ_PLATFORM_OSX",
 		}
 
 	filter "configurations:Debug"
@@ -90,12 +107,14 @@ project "Hazel"
 	filter "configurations:Release"
 		defines "HZ_RELEASE"
 		runtime "Release"
-		optimize "on"
+		optimize "speed"
+		inlining "auto"
 
 	filter "configurations:Dist"
 		defines "HZ_DIST"
 		runtime "Release"
-		optimize "on"
+		optimize "speed"
+		inlining "auto"
 
 project "Sandbox"
 	location "Sandbox"
@@ -120,7 +139,7 @@ project "Sandbox"
 		"Hazel/vendor",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}"
+		"%{IncludeDir.Glad}",
 	}
 
 	libdirs
@@ -128,14 +147,7 @@ project "Sandbox"
 		"Hazel/vendor/Vulkan/lib"
 	}
 
-	links
-	{
-		"Hazel",
-		"kernel32.lib",
-		"Onecore.lib",
-		"opengl32.lib",
-		"vulkan.lib"
-	}
+	links "Hazel"
 
 	filter "system:windows"
 		systemversion "latest"
@@ -143,6 +155,14 @@ project "Sandbox"
 		defines
 		{
 			"HZ_PLATFORM_WINDOWS"
+		}
+
+		links
+		{
+			"kernel32.lib",
+			"Onecore.lib",
+			"opengl32.lib",
+			"vulkan.lib",
 		}
 
 	filter "configurations:Debug"
@@ -153,12 +173,15 @@ project "Sandbox"
 	filter "configurations:Release"
 		defines "HZ_RELEASE"
 		runtime "Release"
-		optimize "on"
+		optimize "speed"
+		inlining "auto"
+
 
 	filter "configurations:Dist"
 		defines "HZ_DIST"
 		runtime "Release"
-		optimize "on"
+		optimize "speed"
+		inlining "auto"
 
 project "Vulkan Test"
 	location "Vulkan Test"
@@ -175,7 +198,7 @@ project "Vulkan Test"
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
 		"Hazel/vendor/glm/glm/**.hpp",
-		"Hazel/vendor/glm/glm/**.inl"
+		"Hazel/vendor/glm/glm/**.inl",
 	}
 
 	includedirs
@@ -188,14 +211,14 @@ project "Vulkan Test"
 
 	libdirs
 	{
-		"Hazel/vendor/Vulkan/lib"
+		"Hazel/vendor/Vulkan/lib",
 	}
 
 	links
 	{
 		"GLFW",
 		"vulkan.lib",
-		"Pdh.lib"
+		"Pdh.lib",
 	}
 
 	filter "system:windows"

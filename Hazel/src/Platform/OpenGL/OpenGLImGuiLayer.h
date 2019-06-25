@@ -1,4 +1,6 @@
 #pragma once
+#ifdef HZ_ENABLE_OPEN_GL
+
 #include "Hazel/ImGui/ImGuiLayer.h"
 
 namespace Hazel {
@@ -16,3 +18,5 @@ namespace Hazel {
 		void OnImGuiRender() override;
 	};
 }
+
+#endif

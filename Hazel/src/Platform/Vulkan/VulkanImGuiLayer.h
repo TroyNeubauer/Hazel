@@ -1,4 +1,5 @@
 #pragma once
+#ifdef HZ_ENABLE_VULKAN
 
 #include "Hazel/ImGui/ImGuiLayer.h"
 
@@ -24,3 +25,6 @@ namespace Hazel {
 		VulkanContext* m_Context;
 	};
 }
+
+
+#endif

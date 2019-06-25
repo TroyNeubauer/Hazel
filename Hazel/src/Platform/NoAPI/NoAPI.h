@@ -1,5 +1,5 @@
 #pragma once
-
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
 
 #include <vector>
 
@@ -138,3 +138,6 @@ namespace Hazel {
 		unsigned int m_ID;
 	};
 }
+
+
+#endif

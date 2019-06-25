@@ -1,4 +1,5 @@
 #pragma once
+#ifdef HZ_ENABLE_VULKAN
 
 #include <vulkan/vulkan.h>
 #include <vector>
@@ -50,3 +51,5 @@ namespace Hazel {
 		bool m_init = false;
 	};
 }
+
+#endif

@@ -43,7 +43,11 @@ namespace Hazel {
 				}
 			}
 			if (newAPI == GraphicsAPIType::NOT_CHOSEN) {
-				HZ_CORE_ASSERT(false, "Unable to find sutiable Graphics API! Add some using GraphicsAPI::AddWantedAPI");
+				if (s_APIPriority.size() == 0) {
+					HZ_CORE_ASSERT(false, "Unable to find a sutiable Graphics API! Add some using GraphicsAPI::AddWantedAPI");
+				} else {
+					HZ_CORE_ASSERT(false, "Unable to find a sutiable Graphics API!");
+				}
 			}
 			Set(newAPI);
 		}
@@ -92,7 +96,7 @@ namespace Hazel {
 		return "Unknown";
 	}
 
-	static bool isVuklanSupportedKnown = false, isVulkanSupported;
+	static bool isVuklanSupportedKnown = false, isVulkanSupported = false;
 
 	static bool IsVulkanSupported() {
 		if (isVuklanSupportedKnown)
@@ -105,46 +109,37 @@ namespace Hazel {
 		int result = vkCreateInstance(&pCreateInfo, nullptr, &instance);
 		isVuklanSupportedKnown = true;
 		if (!instance || result != VK_SUCCESS)
-			return isVulkanSupported = false;
+			isVulkanSupported = false;
 		else
 		{
 			vkDestroyInstance(instance, nullptr);
-			return isVulkanSupported = true;
+			isVulkanSupported = true;
 		}
+		return isVulkanSupported;
 	}
 
 	bool GraphicsAPI::IsAvilable(GraphicsAPIType type) {
-#ifdef HZ_PLATFORM_WINDOWS
 		switch (type)
 		{
-		case Hazel::GraphicsAPIType::NONE:			return true;
-		case Hazel::GraphicsAPIType::OPEN_GL:		return true;
-		case Hazel::GraphicsAPIType::VULKAN:		return IsVulkanSupported();
-		case Hazel::GraphicsAPIType::DIRECTX_12:	return false;
-		case Hazel::GraphicsAPIType::METAL:			return false;
-		case Hazel::GraphicsAPIType::SOFTWARE:		return false;
-		}
-#elif HZ_PLATFORM_OSX
-		switch (type)
-		{
-		case Hazel::GraphicsAPIType::NONE:			return true;
-		case Hazel::GraphicsAPIType::OPEN_GL:		return true;
-		case Hazel::GraphicsAPIType::VULKAN:		return IsVulkanSupported();
-		case Hazel::GraphicsAPIType::DIRECTX_12:	return false;
-		case Hazel::GraphicsAPIType::METAL:			return true;
-		case Hazel::GraphicsAPIType::SOFTWARE:		return false;
-		}
-#elif HZ_PLATFORM_UNIX
-		switch (type)
-		{
-		case Hazel::GraphicsAPIType::NONE:			return true;
-		case Hazel::GraphicsAPIType::OPEN_GL:		return true;
-		case Hazel::GraphicsAPIType::VULKAN:		return IsVulkanSupported();
-		case Hazel::GraphicsAPIType::DIRECTX_12:	return false;
-		case Hazel::GraphicsAPIType::METAL:			return false;
-		case Hazel::GraphicsAPIType::SOFTWARE:		return false;
-		}
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
+			case Hazel::GraphicsAPIType::NONE:			return true;
 #endif
+#ifdef HZ_ENABLE_OPEN_GL
+			case Hazel::GraphicsAPIType::OPEN_GL:		return true;
+#endif
+#ifdef HZ_ENABLE_VULKAN
+			case Hazel::GraphicsAPIType::VULKAN:		return IsVulkanSupported();
+#endif
+#ifdef HZ_ENABLE_DIRECTX_12
+			case Hazel::GraphicsAPIType::DIRECTX_12:	return true;
+#endif
+#ifdef HZ_ENABLE_METAL
+			case Hazel::GraphicsAPIType::METAL:			return false;
+#endif
+#ifdef HZ_ENABLE_SOFTWARE_RENDERER
+			case Hazel::GraphicsAPIType::SOFTWARE:		return false;
+#endif
+		}
 			return false;
 	}
 }
