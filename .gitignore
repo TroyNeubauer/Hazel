@@ -1,10 +1,14 @@
 # Directories
-.vs/
-bin/
-bin-int/
+**/.vs/
+**/bin/
+**/bin-int/
 
 # Files
 *.user
 
-Sandbox/imgui.ini
+**/Sandbox/imgui.ini
 
+**/*.sln
+**/*.vcxproj
+**/*.vcxproj.user
+**/*.vcxproj.filters
