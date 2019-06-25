@@ -4,6 +4,7 @@
 #include "WindowsUtils.h"
 #include "Hazel/System/File.h"
 #include "Hazel/Util/Utils.h"
+#include "Platform/System/FileTrackerFunctions.h"
 #include "Hazel/System/System.h"
 
 #ifdef HZ_PLATFORM_WINDOWS
@@ -42,7 +43,7 @@ namespace Hazel {
 #ifdef HZ_DEBUG
 		Log_fopen((FILE*) m_FileHandle, path, "rb", __FILE__, __LINE__);
 #elif HZ_RELEASE
-		Log_fopen((FILE*) m_FileHandle, path, "rb");
+		Log_fopen((FILE*) m_FileHandle, path);
 #endif
 		LARGE_INTEGER size;
 		if (!GetFileSizeEx(m_FileHandle, &size))
@@ -131,7 +132,7 @@ namespace Hazel {
 #ifdef HZ_DEBUG
 			Log_fclose((FILE*) m_FileHandle, 0, __FILE__, __LINE__);
 #elif HZ_RELEASE
-			Log_fclose((FILE*) m_FileHandle);
+			Log_fclose((FILE*) m_FileHandle, 0);
 #endif
 			if (m_FreeData)
 			{	//In this case m_Data is the block we malloc'ed

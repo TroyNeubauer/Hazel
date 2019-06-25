@@ -28,7 +28,7 @@ int Log_fclose(FILE* file, int result, const char* sourceFile, int line)
 	return result;
 }
 #elif defined(HZ_RELEASE)
-FILE* Log_fopen(FILE* result)
+FILE* Log_fopen(FILE* result, const char* path)
 {
 	auto& map = Hazel::FileTracker::GetOpenFilePaths();
 	if (result != NULL) {
@@ -45,7 +45,7 @@ int Log_fclose(FILE* file, int result)
 	auto& map = Hazel::FileTracker::GetOpenFilePaths();
 	std::string path = map[file];
 	map.erase(file);
-	Hazel::FileTracker::GetClosedFilePaths().push_back(path);
+	Hazel::FileTracker::GetClosedFilePaths().insert(path);
 	if (result != EOF) {
 		Hazel::FileTracker::GetTracker().IncrementFinished();
 	} else {

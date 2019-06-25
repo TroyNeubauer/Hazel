@@ -225,6 +225,12 @@
     <ClInclude Include="..\Hazel\vendor\glm\glm\ext\matrix_clip_space.inl">
       <Filter>Hazel\vendor\glm\glm\ext</Filter>
     </ClInclude>
+    <ClInclude Include="..\Hazel\vendor\glm\glm\ext\matrix_common.hpp">
+      <Filter>Hazel\vendor\glm\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Hazel\vendor\glm\glm\ext\matrix_common.inl">
+      <Filter>Hazel\vendor\glm\glm\ext</Filter>
+    </ClInclude>
     <ClInclude Include="..\Hazel\vendor\glm\glm\ext\matrix_double2x2.hpp">
       <Filter>Hazel\vendor\glm\glm\ext</Filter>
     </ClInclude>
