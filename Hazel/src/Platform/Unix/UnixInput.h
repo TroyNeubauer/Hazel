@@ -1,11 +1,11 @@
 #pragma once
-#ifdef HZ_PLATFORM_WINDOWS
+#ifdef HZ_PLATFORM_UNIX
 
 #include "Hazel/Input.h"
 
 namespace Hazel {
 
-	class WindowsInput : public Input
+	class UnixInput : public Input
 	{
 	protected:
 		virtual bool IsKeyPressedImpl(int keycode) override;

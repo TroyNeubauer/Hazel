@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include "Platform/System/FileTrackerOverride.h"
 #include "Platform/System/AllocTracker.h"
 
@@ -19,3 +19,4 @@
 #ifdef HZ_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif
+*/

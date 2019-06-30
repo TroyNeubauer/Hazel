@@ -3,7 +3,11 @@
 #include "hzpch.h"
 #include "Hazel/Core.h"
 
+#include <functional>
+#include <algorithm>
+
 #include <math.h>
+#include <float.h>
 
 namespace Hazel {
 

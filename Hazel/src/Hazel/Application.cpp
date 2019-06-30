@@ -13,6 +13,7 @@
 #include "Hazel/System/System.h"
 #include "Hazel/Renderer/RenderCommand.h"
 #include "Hazel/Renderer/Renderer.h"
+#include "Platform/System/AllocTracker.h"
 
 namespace Hazel {
 

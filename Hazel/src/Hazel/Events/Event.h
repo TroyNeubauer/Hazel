@@ -3,6 +3,8 @@
 #include "hzpch.h"
 #include "Hazel/Core.h"
 #include "Hazel/Events/EventPool.h"
+#include <stdint.h>
+#include <sstream>
 
 namespace Hazel {
 
@@ -25,21 +27,21 @@ namespace Hazel {
 		EventCategoryMouseButton    = BIT(4)
 	};
 
-#define EVENT_CLASS_ALLOC(type) static void* operator new (size_t size)			\
-				{																\
-					HZ_CORE_TRACE("Calling new! type: {}, size: {}", #type, sizeof(type));\
-					MemoryPool<sizeof(type)>::Init();							\
-					return MemoryPool<sizeof(type)>::Allocate();				\
-				}																\
-				static void operator delete (void* ptr)							\
-				{																\
-					HZ_CORE_TRACE("Trying to delete type: {}, size: {}", #type, sizeof(type));\
-				}																\
 
-#define EVENT_CLASS_TYPE(type)  static EventType GetStaticType() { return EventType::##type; }\
-								virtual EventType GetEventType() const override { return GetStaticType(); }\
-								virtual const char* GetName() const override { return #type; }\
-								EVENT_CLASS_ALLOC(type##Event)
+#define EVENT_CLASS_TYPE(type)  static EventType GetStaticType() { return EventType::type; }						\
+								virtual EventType GetEventType() const override { return GetStaticType(); }			\
+								virtual const char* GetName() const override { return #type; }						\
+																													\
+								static void* operator new (std::size_t size)												\
+								{																					\
+									MemoryPool<sizeof(type##Event)>::Init();										\
+									return MemoryPool<sizeof(type##Event)>::Allocate();								\
+								}																					\
+								static void operator delete (void* ptr)												\
+								{																					\
+									HZ_CORE_TRACE("Trying to delete event");										\
+								}																					\
+
 
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }

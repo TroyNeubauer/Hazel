@@ -10,15 +10,6 @@
 #include "Hazel/Renderer/VertexArray.h"
 #include "Hazel/Renderer/RendererAPI.h"
 
-#ifdef HZ_PLATFORM_WINDOWS
-	#include "Platform/Windows/WindowsWindow.h"
-	#include <conio.h>
-#else
-	#error
-#endif
-
-struct GLFWwindow;
-
 namespace Hazel {
 	class NoAPIRendererAPI : public RendererAPI
 	{
@@ -67,13 +58,13 @@ namespace Hazel {
 		virtual void Bind() const override {}
 		virtual void Unbind() const override {}
 
-		virtual size_t Bytes() const override { return 0; }
+		virtual size_t Bytes() const override;
 
-		virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override { m_IndexBuffer = indexBuffer; }
-		virtual void AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer) override { m_VertexBuffers.push_back(vertexBuffer); }
+		virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
+		virtual void AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer) override;
 	
-		virtual const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const { return m_VertexBuffers; }
-		virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const { return m_IndexBuffer; }
+		virtual const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const;
+		virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const;
 	
 	private:
 		std::vector<std::shared_ptr<VertexBuffer>> m_VertexBuffers;
@@ -84,39 +75,16 @@ namespace Hazel {
 	class NoAPIContext : public GraphicsContext
 	{
 	public:
-		NoAPIContext()
-		{
-			PreInit();
-			HZ_CORE_TRACE("Creating NoAPI Context");
-			HZ_CORE_INFO("Press any key to exit");
-		}
+		NoAPIContext();
 
-		virtual void SwapBuffers() override {
-#ifdef HZ_PLATFORM_WINDOWS
-			if (_kbhit()) {
-				if(m_Windows.size())
-					HZ_CORE_INFO("Keypress detected. Closing windows");
-				for (Window* window : m_Windows) {
-					WindowsWindow* myWindow = (WindowsWindow*) window;
-					WindowCloseEvent* event = new WindowCloseEvent();
-					(myWindow->GetEventCallback())(event);
-				}
-				m_Windows.clear();
-			}
-#endif
-		}
+		virtual void SwapBuffers() override;
 		virtual void OnWindowResize(Window* window, int width, int height) override {}
 		virtual void Destroy() override {}
-		virtual void AddWindow(Window* window) override { m_Windows.push_back(window); }
-		virtual void RemoveWindow(Window* window) override 
-		{
-			auto it = std::find(m_Windows.begin(), m_Windows.end(), window);
-			if (it != m_Windows.end())
-				m_Windows.erase(it);
-		}
+		virtual void AddWindow(Window* window) override;
+		virtual void RemoveWindow(Window* window) override;
 
-		virtual GraphicsAPIType GetAPIType() override { return GraphicsAPIType::NONE; }
-		virtual ImGuiLayer* CreateImGuiLayer() override { return new NoAPIImGuiLayer(); }
+		virtual GraphicsAPIType GetAPIType() override;
+		virtual ImGuiLayer* CreateImGuiLayer() override;
 	protected:
 		virtual void Init() override {}
 		virtual void PreInit() override {}

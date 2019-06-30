@@ -60,23 +60,23 @@ namespace Hazel {
 	std::map<FILE*, std::string> FileTracker::m_OpenFiles;
 	std::set<std::string> FileTracker::m_ClosedFiles;
 
-	unsigned long long FileTracker::GetCurrentlyOpenFilesCount() { return GetOpenedFilesCount() - GetClosedFilesCount(); }
+	uint64_t FileTracker::GetCurrentlyOpenFilesCount() { return GetOpenedFilesCount() - GetClosedFilesCount(); }
 	
-	unsigned long long FileTracker::GetOpenedFilesCount()
+	uint64_t FileTracker::GetOpenedFilesCount()
 	{
 		return m_FileTracker.GetTotalStarted();
 	}
-	unsigned long long FileTracker::GetClosedFilesCount()
+	uint64_t FileTracker::GetClosedFilesCount()
 	{
 		return m_FileTracker.GetTotalFinished();
 	}
 
-	unsigned long long FileTracker::GetOpenedFilesSec()
+	uint64_t FileTracker::GetOpenedFilesSec()
 	{
 		return m_FileTracker.GetStartedSec();
 	}
 
-	unsigned long long FileTracker::GetClosedFilesSec()
+	uint64_t FileTracker::GetClosedFilesSec()
 	{
 		return m_FileTracker.GetFinishedSec();
 	}

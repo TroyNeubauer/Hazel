@@ -12,11 +12,11 @@ namespace Hazel {
 
 	struct WindowProps
 	{
-		char* Title;
+		const char* Title;
 		int Width;
 		int Height;
 
-		WindowProps(char* title = "Hazel Engine",
+		WindowProps(const char* title = "Hazel Engine",
 			        int width = 1280,
 			        int height = 720)
 			: Title(title), Width(width), Height(height)

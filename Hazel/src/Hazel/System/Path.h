@@ -6,7 +6,11 @@
 namespace Hazel {
 
 	class File;
-	enum FileError;
+	
+	enum FileError
+	{
+		NONE = 0, FILE_NOT_FOUND, ACCESS_DENIED, TOO_MANY_FILES, NOT_ENOUGH_MEMORY, OTHER
+	};
 	//A class that represents a path to a file or directory on disk
 	//Evuantaly it will be able to read from archives
 	class Path

@@ -1,7 +1,5 @@
 #include "hzpch.h"
-#ifdef HZ_PLATFORM_WINDOWS
-
-#include "WindowsContextManager.h"
+#include "UnixContextManager.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
 #include "Platform/Vulkan/VulkanContext.h"
@@ -16,7 +14,7 @@ namespace Hazel {
 		HZ_CORE_ERROR("GLFW Error ({}): {}", error, description);
 	}
 
-	WindowsContextManager::WindowsContextManager()
+	UnixContextManager::UnixContextManager()
 	{
 		if (GraphicsAPI::Get() != GraphicsAPIType::NONE) {
 			int success = glfwInit();
@@ -25,7 +23,7 @@ namespace Hazel {
 		}
 	}
 
-	GraphicsContext* WindowsContextManager::GetContext()
+	GraphicsContext* UnixContextManager::GetContext()
 	{
 		if (!m_Context) {
 			switch (GraphicsAPI::Get())
@@ -45,7 +43,7 @@ namespace Hazel {
 		return m_Context;
 	}
 
-	WindowsContextManager::~WindowsContextManager()
+	UnixContextManager::~UnixContextManager()
 	{
 		if (m_Context) {
 			delete m_Context;
@@ -57,4 +55,3 @@ namespace Hazel {
 	}
 }
 
-#endif

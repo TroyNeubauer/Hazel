@@ -9,17 +9,14 @@
 	#include <Windows.h>
 	typedef HANDLE FILE_HANDLE;
 	const FILE_HANDLE INVALID_FILE_HANDLE = INVALID_HANDLE_VALUE;
-#elif HZ_PLATFORM_UNIX
+#elif defined(HZ_PLATFORM_UNIX)
 	typedef int FILE_HANDLE;
 	const FILE_HANDLE INVALID_FILE_HANDLE = 0;
+#else
+	#error
 #endif
 
 namespace Hazel {
-
-	enum FileError
-	{
-		NONE = 0, FILE_NOT_FOUND, ACCESS_DENIED, TOO_MANY_FILES, OTHER
-	};
 
 	const char* FileErrorToString(FileError error);
 

@@ -25,18 +25,18 @@ namespace Hazel {
 
 
 #ifndef HZ_DIST
-// Core log macros
-#define HZ_CORE_TRACE(...)		::Hazel::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define HZ_CORE_INFO(...)		::Hazel::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define HZ_CORE_WARN(...)		::Hazel::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define HZ_CORE_ERROR(...)		::Hazel::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define HZ_CORE_CRITICAL(...)	::Hazel::Log::GetCoreLogger()->critical(__VA_ARGS__)
-#else//Srtip out logging in dist builds
-#define HZ_CORE_TRACE(...)
-#define HZ_CORE_INFO(...)
-#define HZ_CORE_WARN(...)
-#define HZ_CORE_ERROR(...)
-#define HZ_CORE_CRITICAL(...)
+	// Core log macros
+	#define HZ_CORE_TRACE(...)		::Hazel::Log::GetCoreLogger()->trace(__VA_ARGS__)
+	#define HZ_CORE_INFO(...)		::Hazel::Log::GetCoreLogger()->info(__VA_ARGS__)
+	#define HZ_CORE_WARN(...)		::Hazel::Log::GetCoreLogger()->warn(__VA_ARGS__)
+	#define HZ_CORE_ERROR(...)		::Hazel::Log::GetCoreLogger()->error(__VA_ARGS__)
+	#define HZ_CORE_CRITICAL(...)	::Hazel::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#else //Srtip out logging in dist builds
+	#define HZ_CORE_TRACE(...)
+	#define HZ_CORE_INFO(...)
+	#define HZ_CORE_WARN(...)
+	#define HZ_CORE_ERROR(...)
+	#define HZ_CORE_CRITICAL(...)
 #endif
 
 // Client log macros

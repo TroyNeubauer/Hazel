@@ -30,8 +30,8 @@ namespace Hazel {
 #ifndef HZ_DIST
 		Graph* m_FrameTime;
 
-		CachedFunction<unsigned long long> processVMem, systemVMem, totalVMem;
-		CachedFunction<unsigned long long> processMem, systemMem, totalMem;
+		CachedFunction<uint64_t> processVMem, systemVMem, totalVMem;
+		CachedFunction<uint64_t> processMem, systemMem, totalMem;
 		CachedFunction<float> processCPU, systemCPU;
 #endif
 	};

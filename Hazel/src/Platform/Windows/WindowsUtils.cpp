@@ -1,4 +1,6 @@
 #include "hzpch.h"
+#ifdef HZ_PLATFORM_WINDOWS
+
 #include "WindowsUtils.h"
 
 namespace Hazel {
@@ -16,3 +18,5 @@ namespace Hazel {
 		}
 	}
 }
+
+#endif

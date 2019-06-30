@@ -3,6 +3,8 @@
 
 #include "OpenGLVertexArray.h"
 
+#include "Hazel/Core.h"
+
 #include <glad/glad.h>
 
 namespace Hazel {

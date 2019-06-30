@@ -1,15 +1,15 @@
 #pragma once
-#ifdef HZ_PLATFORM_WINDOWS
+#ifdef HZ_PLATFORM_UNIX
 
 #include "Hazel/Context/ContextManager.h"
 
 namespace Hazel {
-	class WindowsContextManager : public ContextManager
+	class UnixContextManager : public ContextManager
 	{
 	public:
-		WindowsContextManager();
+		UnixContextManager();
 		virtual GraphicsContext* GetContext() override;
-		virtual ~WindowsContextManager();
+		virtual ~UnixContextManager();
 
 	private:
 		GraphicsContext* m_Context = nullptr;

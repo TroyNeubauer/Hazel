@@ -2,6 +2,8 @@
 #ifdef HZ_ENABLE_OPEN_GL
 
 #include "Hazel/Renderer/Buffer.h"
+#include "Hazel/Core.h"
+#include "Hazel/Log.h"
 
 namespace Hazel {
 

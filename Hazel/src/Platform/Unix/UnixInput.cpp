@@ -1,30 +1,30 @@
 #include "hzpch.h"
-#ifdef HZ_PLATFORM_WINDOWS
+#ifdef HZ_PLATFORM_UNIX
 
-#include "WindowsInput.h"
+#include "UnixInput.h"
 
 #include "Hazel/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace Hazel {
 
-	Input* Input::s_Instance = new WindowsInput();
+	Input* Input::s_Instance = new UnixInput();
 
-	bool WindowsInput::IsKeyPressedImpl(int keycode)
+	bool UnixInput::IsKeyPressedImpl(int keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool WindowsInput::IsMouseButtonPressedImpl(int button)
+	bool UnixInput::IsMouseButtonPressedImpl(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state = glfwGetMouseButton(window, button);
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> WindowsInput::GetMousePositionImpl()
+	std::pair<float, float> UnixInput::GetMousePositionImpl()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		double xpos, ypos;
@@ -33,13 +33,13 @@ namespace Hazel {
 		return { (float)xpos, (float)ypos };
 	}
 
-	float WindowsInput::GetMouseXImpl()
+	float UnixInput::GetMouseXImpl()
 	{
 		auto[x, y] = GetMousePositionImpl();
 		return x;
 	}
 
-	float WindowsInput::GetMouseYImpl()
+	float UnixInput::GetMouseYImpl()
 	{
 		auto[x, y] = GetMousePositionImpl();
 		return y;

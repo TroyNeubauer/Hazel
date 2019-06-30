@@ -1,5 +1,5 @@
 #pragma once
-#ifdef HZ_PLATFORM_WINDOWS
+#ifdef HZ_PLATFORM_UNIX
 
 #include "Hazel/Window.h"
 
@@ -14,11 +14,11 @@ namespace Hazel {
 		bool VSync;
 	};
 
-	class WindowsWindow : public Window
+	class UnixWindow : public Window
 	{
 	public:
-		WindowsWindow(const WindowProps& props);
-		virtual ~WindowsWindow();
+		UnixWindow(const WindowProps& props);
+		virtual ~UnixWindow();
 
 		virtual void OnUpdate() override;
 		virtual void OnRender() override;

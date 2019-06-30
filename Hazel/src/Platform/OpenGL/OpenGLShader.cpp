@@ -7,6 +7,7 @@
 
 #include "Hazel/System/File.h"
 #include "Hazel/System/Timer.h"
+#include "Hazel/Core.h"
 
 namespace Hazel {
 	OpenGLShader::OpenGLShader(File& vertexSource, File& fragSource) {

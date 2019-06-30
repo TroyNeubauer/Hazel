@@ -2,6 +2,7 @@
 #ifdef HZ_ENABLE_VULKAN
 
 #include "VulkanHelper.h"
+#include "Hazel/Core.h"
 
 void check_vk_result(VkResult err)
 {

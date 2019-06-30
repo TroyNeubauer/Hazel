@@ -33,8 +33,8 @@ project "Hazel"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	pchheader "hzpch.h"
-	pchsource "Hazel/src/hzpch.cpp"
+	--pchheader "hzpch.h"
+	--pchsource "Hazel/src/hzpch.cpp"
 
 	files
 	{
@@ -64,13 +64,14 @@ project "Hazel"
 
 	defines
 	{
-		"HZ_ENABLE_VULKAN",
-		"HZ_ENABLE_OPEN_GL",
 		"HZ_ENABLE_GRAPHICS_API_NONE",
+		"HZ_ENABLE_OPEN_GL",
+		--"HZ_ENABLE_VULKAN",
 		"GLFW_INCLUDE_NONE",
 	}
 
 	systemversion "latest"
+
 	filter "system:windows"
 
 		links "Pdh.lib"
@@ -84,6 +85,13 @@ project "Hazel"
 
 
 	filter "system:linux"
+	
+		libdirs
+		{
+			"/usr/lib/x86_64-linux-gnu/",
+		}
+	
+		links "libX11.a"
 
 		defines
 		{
@@ -142,12 +150,13 @@ project "Sandbox"
 		"%{IncludeDir.Glad}",
 	}
 
-	libdirs
+	links 
 	{
-		"Hazel/vendor/Vulkan/lib"
+		"Hazel",
+		"GLFW",
+		"Glad",
+		"ImGui",
 	}
-
-	links "Hazel"
 
 	filter "system:windows"
 		systemversion "latest"
@@ -164,6 +173,25 @@ project "Sandbox"
 			"opengl32.lib",
 			"vulkan.lib",
 		}
+
+	filter "system:linux"
+		systemversion "latest"
+		
+		libdirs
+		{
+			"/usr/lib/x86_64-linux-gnu/",
+		}
+
+		defines
+		{
+			"HZ_PLATFORM_UNIX"
+		}
+		
+		links
+		{
+			"libX11.a",
+		}
+
 
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
@@ -183,51 +211,3 @@ project "Sandbox"
 		optimize "speed"
 		inlining "auto"
 
-project "Vulkan Test"
-	location "Vulkan Test"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "on"
-
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		"Hazel/vendor/glm/glm/**.hpp",
-		"Hazel/vendor/glm/glm/**.inl",
-	}
-
-	includedirs
-	{
-		"Hazel/vendor/spdlog/include",
-		"%{IncludeDir.Vulkan}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.glm}",
-	}
-
-	libdirs
-	{
-		"Hazel/vendor/Vulkan/lib",
-	}
-
-	links
-	{
-		"GLFW",
-		"vulkan.lib",
-		"Pdh.lib",
-	}
-
-	filter "system:windows"
-		systemversion "latest"
-
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "on"
-
-	filter "configurations:Release"
-		runtime "Release"
-		optimize "on"

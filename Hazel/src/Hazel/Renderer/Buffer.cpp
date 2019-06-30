@@ -54,7 +54,7 @@ namespace Hazel {
 		return 0;
 	}
 
-
+	template <>
 	VertexBuffer* Buffer<float, BufferType::VERTEX>::Create(float* data, uint64_t elements) {
 		switch (GraphicsAPI::Get())
 		{
@@ -69,6 +69,7 @@ namespace Hazel {
 		return nullptr;
 	}
 
+	template <>
 	IndexBuffer* Buffer<uint32_t, BufferType::INDEX>::Create(uint32_t* data, uint64_t elements) {
 		switch (GraphicsAPI::Get())
 		{

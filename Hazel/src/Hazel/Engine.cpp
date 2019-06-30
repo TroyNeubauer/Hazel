@@ -1,5 +1,6 @@
 #include "hzpch.h"
 #include "Engine.h"
+#include "Log.h"
 
 #include <GLFW/glfw3.h>
 

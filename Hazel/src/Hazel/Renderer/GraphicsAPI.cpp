@@ -56,7 +56,7 @@ namespace Hazel {
 
 	void GraphicsAPI::AddWantedAPI(GraphicsAPIType type)
 	{
-		auto& it = std::find(s_APIPriority.begin(), s_APIPriority.end(), type);
+		const auto& it = std::find(s_APIPriority.begin(), s_APIPriority.end(), type);
 		if (it != s_APIPriority.end()) {
 			s_APIPriority.erase(it);
 		}

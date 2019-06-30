@@ -1,4 +1,5 @@
 #pragma once
+#ifdef HZ_PLATFORM_WINDOWS
 
 #include <Windows.h>
 
@@ -8,3 +9,5 @@ namespace Hazel {
 		static void GetLastErrorMessage(char* buf, unsigned int capacity);
 	};
 }
+
+#endif

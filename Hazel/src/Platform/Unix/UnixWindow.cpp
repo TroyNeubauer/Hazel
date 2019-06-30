@@ -1,7 +1,7 @@
 #include "hzpch.h"
-#ifdef HZ_PLATFORM_WINDOWS
+#ifdef HZ_PLATFORM_UNIX
 
-#include "WindowsWindow.h"
+#include "UnixWindow.h"
 
 #include "Hazel/Application.h"
 #include "Hazel/Events/ApplicationEvent.h"
@@ -15,22 +15,22 @@ namespace Hazel {
 
 	Window* Window::Create(const WindowProps& props)
 	{
-		return new WindowsWindow(props);
+		return new UnixWindow(props);
 	}
 
-	WindowsWindow::WindowsWindow(const WindowProps& props)
+	UnixWindow::UnixWindow(const WindowProps& props)
 	{
 		Init(props);
 	}
 
-	WindowsWindow::~WindowsWindow()
+	UnixWindow::~UnixWindow()
 	{
 		Shutdown();
 	}
 
-	void WindowsWindow::Init(const WindowProps& props)
+	void UnixWindow::Init(const WindowProps& props)
 	{
-		m_Data.Title = props.Title;
+		m_Data.Title = const_cast<char*>(props.Title);
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
 
@@ -54,7 +54,7 @@ namespace Hazel {
 		// Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 		{
-			WindowsWindow* myWindow = (WindowsWindow*) glfwGetWindowUserPointer(window);
+			UnixWindow* myWindow = (UnixWindow*) glfwGetWindowUserPointer(window);
 			myWindow->m_Data.Width = width;
 			myWindow->m_Data.Height = height;
 
@@ -67,14 +67,14 @@ namespace Hazel {
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 		{
-			WindowsWindow* myWindow = (WindowsWindow*) glfwGetWindowUserPointer(window);
+			UnixWindow* myWindow = (UnixWindow*) glfwGetWindowUserPointer(window);
 			WindowCloseEvent* event = new WindowCloseEvent();
 			myWindow->m_EventCallback(event);
 		});
 
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
-			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
+			UnixWindow* myWindow = (UnixWindow*)glfwGetWindowUserPointer(window);
 
 			switch (action)
 			{
@@ -101,7 +101,7 @@ namespace Hazel {
 
 		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
 		{
-			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
+			UnixWindow* myWindow = (UnixWindow*)glfwGetWindowUserPointer(window);
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			KeyTypedEvent* event = new KeyTypedEvent(keycode);
@@ -110,7 +110,7 @@ namespace Hazel {
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 		{
-			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
+			UnixWindow* myWindow = (UnixWindow*)glfwGetWindowUserPointer(window);
 			switch (action)
 			{
 				case GLFW_PRESS:
@@ -130,45 +130,44 @@ namespace Hazel {
 
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
 		{
-			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
+			UnixWindow* myWindow = (UnixWindow*)glfwGetWindowUserPointer(window);
 			MouseScrolledEvent* event = new MouseScrolledEvent((float)xOffset, (float)yOffset);
 			myWindow->m_EventCallback(event);
 		});
 
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
 		{
-			WindowsWindow* myWindow = (WindowsWindow*)glfwGetWindowUserPointer(window);
+			UnixWindow* myWindow = (UnixWindow*)glfwGetWindowUserPointer(window);
 			MouseMovedEvent* event = new MouseMovedEvent((float)xPos, (float)yPos);
 			myWindow->m_EventCallback(event);
 		});
 	}
 
-	void WindowsWindow::SetContextData(void* data)
+	void UnixWindow::SetContextData(void* data)
 	{
 		m_ContextData = data;
 	}
 
-	void* WindowsWindow::GetContextData() const
+	void* UnixWindow::GetContextData() const
 	{
 		return m_ContextData;
 	}
 
-	void WindowsWindow::Shutdown()
+	void UnixWindow::Shutdown()
 	{
 		ContextManager::Get()->GetContext()->RemoveWindow(this);
 		glfwDestroyWindow(m_Window);
 	}
 
-	void WindowsWindow::OnRender()
+	void UnixWindow::OnRender()
 	{
 		ContextManager::Get()->GetContext()->SwapBuffers();
 	}
 
-	void WindowsWindow::OnUpdate()
+	void UnixWindow::OnUpdate()
 	{
 		glfwPollEvents();
 	}
-
 }
 
 

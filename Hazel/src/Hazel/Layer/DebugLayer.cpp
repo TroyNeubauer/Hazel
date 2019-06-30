@@ -2,8 +2,9 @@
 #include "DebugLayer.h"
 #include "Hazel/Engine.h"
 
-#include "Platform/PlatformUtils.h"
+#include "Hazel/System/System.h"
 #include "Platform/System/FileTracker.h"
+#include "Platform/System/AllocTracker.h"
 
 #include <imgui.h>
 #include <GLFW/glfw3.h>
@@ -11,14 +12,14 @@
 namespace Hazel {
 	DebugLayer::DebugLayer()
 #ifndef HZ_DIST
-	  : processVMem(PlatformUtils::GetProcessVirtualMemoryUsage, 0.5f),
-		systemVMem(PlatformUtils::GetSystemVirtualMemoryUsage, 0.5f),
-		totalVMem(PlatformUtils::GetTotalMachineVirtualMemory, 0.5f),
-		processMem(PlatformUtils::GetProcessPhysicalMemoryUsage, 0.5f),
-		systemMem(PlatformUtils::GetSystemPhysicalMemoryUsage, 0.5f),
-		totalMem(PlatformUtils::GetTotalMachinePhysicalMemory, 0.5f),
-		processCPU(PlatformUtils::GetProcessCPUUsagePercent, 0.5f),
-		systemCPU(PlatformUtils::GetSystemCPUUsagePercent, 0.5f)
+	  : processVMem(System::GetProcessVirtualMemoryUsage, 0.5f),
+		systemVMem(System::GetSystemVirtualMemoryUsage, 0.5f),
+		totalVMem(System::GetTotalMachineVirtualMemory, 0.5f),
+		processMem(System::GetProcessPhysicalMemoryUsage, 0.5f),
+		systemMem(System::GetSystemPhysicalMemoryUsage, 0.5f),
+		totalMem(System::GetTotalMachinePhysicalMemory, 0.5f),
+		processCPU(System::GetProcessCPUUsagePercent, 0.5f),
+		systemCPU(System::GetSystemCPUUsagePercent, 0.5f)
 #endif
 	{}
 
@@ -115,9 +116,9 @@ namespace Hazel {
 			}
 
 			ImGui::Text("");
-			ImGui::Text("Current Allocs %llu, Total Allocs %llu, Total Frees %llu", AllocTracker::GetCurrentAllocCount(), AllocTracker::GetTotalAllocCount(), AllocTracker::GetTotalFreeCount());
-			ImGui::Text("Allocs/s %llu, Frees /s %llu", AllocTracker::GetAllocCountSec(), AllocTracker::GetFreeCountSec());
-			ImGui::Text("Allocs/frame %llu, Frees /frame %llu", AllocTracker::GetAllocsPerFrame(), AllocTracker::GetFreesPerFrame());
+			ImGui::Text("Current Allocs %lu, Total Allocs %lu, Total Frees %lu", AllocTracker::GetCurrentAllocCount(), AllocTracker::GetTotalAllocCount(), AllocTracker::GetTotalFreeCount());
+			ImGui::Text("Allocs/s %lu, Frees /s %lu", AllocTracker::GetAllocCountSec(), AllocTracker::GetFreeCountSec());
+			ImGui::Text("Allocs/frame %lu, Frees /frame %lu", AllocTracker::GetAllocsPerFrame(), AllocTracker::GetFreesPerFrame());
 
 			window_pos = ImVec2(viewport->Pos.x + viewport->Size.x - ImGui::GetWindowWidth() - DISTANCE, viewport->Pos.y + DISTANCE);
 			ImGui::SetWindowPos(window_pos);
@@ -129,7 +130,7 @@ namespace Hazel {
 	void DebugLayer::OnAttach()
 	{
 #ifndef HZ_DIST
-		Hazel::PlatformUtils::Init();
+		Hazel::System::Init();
 		m_FrameTime = new Graph("Frame Time", []() { return Engine::GetDeltaTime(); }, 5, 60);
 		m_FrameTime->SetDataMode(GraphDataMode::CurrentValue);
 		m_FrameTime->SetDisplayMode(GraphDisplayMode::Linear);
