@@ -15,3 +15,7 @@ Sandbox/1page.dat
 **/*.vcxproj
 **/*.vcxproj.user
 **/*.vcxproj.filters
+
+
+**/.project
+**/.workspace

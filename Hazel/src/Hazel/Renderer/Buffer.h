@@ -36,8 +36,6 @@ namespace Hazel {
 		BufferElement(ShaderDataType type, const char* name, bool normalized = false)
 			: Name(name), Type(type), Size(SizeOfShaderDataType(type)), Offset(0), Normalized(normalized) {}
 
-		BufferElement() {}
-
 		uint32_t GetElementCount() const;
 	};
 

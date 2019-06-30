@@ -1,6 +1,6 @@
 #include <Hazel.h>
 
-#include "imgui/imgui.h"
+#include <imgui/imgui.h>
 
 #include <stdio.h>
 
@@ -44,9 +44,9 @@ public:
 
 		float vertices[7 * 3] =
 		{
-			-0.75f, -0.25f, 0.0f, 0.1f, 0.9f, 1.0f, 1.0f,
-			-0.5f,  -0.25f, 0.0f, 0.0f, 0.1f, 0.9f, 1.0f,
-			-0.625f, 0.25f, 0.0f, 1.0f, 0.9f, 0.2f, 1.0f,
+			-0.75f, -0.25f, -1.0f, 0.1f, 0.9f, 1.0f, 1.0f,
+			-0.5f,  -0.25f, -1.0f, 0.0f, 0.1f, 0.9f, 1.0f,
+			-0.625f, 0.25f, -1.0f, 1.0f, 0.9f, 0.2f, 1.0f,
 		};
 		std::shared_ptr<Hazel::VertexBuffer> m_VertexBuffer;
 		m_VertexBuffer.reset(Hazel::VertexBuffer::Create(vertices, 7 * 3));
@@ -66,45 +66,36 @@ public:
 
 
 		m_Shader.reset(Hazel::Shader::Create("shaders/test.vert", "shaders/test.frag"));
-
-		m_SquareVA.reset(Hazel::VertexArray::Create());
-
-		float squareVertices[3 * 4] =
-		{
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-		};
-		std::shared_ptr<Hazel::VertexBuffer> squareVB;
-		squareVB.reset(Hazel::VertexBuffer::Create(squareVertices, 3 * 4));
-
-		Hazel::BufferLayout squareLayout = {
-			{ Hazel::ShaderDataType::Float3, "a_Position" }
-		};
-		squareVB->SetLayout(squareLayout);
-		m_SquareVA->AddVertexBuffer(squareVB);
-
-		uint32_t squareIndices[6] = { 0, 1, 2, 1, 3, 2 };
-		std::shared_ptr<Hazel::IndexBuffer> squareIB;
-		squareIB.reset(Hazel::IndexBuffer::Create(squareIndices, 6));
-		m_SquareVA->SetIndexBuffer(squareIB);
-
-		m_BlueShader.reset(Hazel::Shader::Create("shaders/blue.vert", "shaders/blue.frag"));
 	}
+
+	glm::vec3 cameraPos = {0, 0, 0};
 
 	virtual void Render() override
 	{
+		if(Hazel::Input::IsKeyPressed(HZ_KEY_W))
+			cameraPos.z -= 0.01f;
+		if (Hazel::Input::IsKeyPressed(HZ_KEY_S))
+			cameraPos.z += 0.01f;
+		if (Hazel::Input::IsKeyPressed(HZ_KEY_A))
+			cameraPos.x -= 0.01f;
+		if (Hazel::Input::IsKeyPressed(HZ_KEY_D))
+			cameraPos.x += 0.01f;
+
+		glm::mat4 projectionMatrix = glm::perspective(glm::radians(70.0f), 1280.0f / 720.0f, 0.1f, 100.0f);
+		glm::mat4 viewMatrix(1.0f);
+		viewMatrix = glm::translate(viewMatrix, -cameraPos);
+
+		glm::mat4 vpMatrix = projectionMatrix * viewMatrix;
+		
 		Hazel::Renderer::BeginScene();
 		{
 			Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 			Hazel::RenderCommand::Clear();
 
-			m_Shader->Bind();
-			Hazel::Renderer::Submit(m_VertexArray);
 
-			m_BlueShader->Bind();
-			Hazel::Renderer::Submit(m_SquareVA);
+			m_Shader->Bind();
+			m_Shader->SetUniform("u_VP", vpMatrix);
+			Hazel::Renderer::Submit(m_VertexArray);
 		}
 		Hazel::Renderer::EndScene();
 		//Renderer::Flush();
@@ -116,9 +107,9 @@ public:
 	}
 
 private:
-	std::shared_ptr<Hazel::Shader> m_Shader, m_BlueShader;
+	std::shared_ptr<Hazel::Shader> m_Shader;
 
-	std::shared_ptr<Hazel::VertexArray> m_VertexArray, m_SquareVA;
+	std::shared_ptr<Hazel::VertexArray> m_VertexArray;
 
 };
 

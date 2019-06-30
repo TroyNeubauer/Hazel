@@ -33,8 +33,8 @@ project "Hazel"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	--pchheader "hzpch.h"
-	--pchsource "Hazel/src/hzpch.cpp"
+	pchheader "hzpch.h"
+	pchsource "Hazel/src/hzpch.cpp"
 
 	files
 	{
@@ -66,8 +66,9 @@ project "Hazel"
 	{
 		"HZ_ENABLE_GRAPHICS_API_NONE",
 		"HZ_ENABLE_OPEN_GL",
-		--"HZ_ENABLE_VULKAN",
+		"HZ_ENABLE_VULKAN",
 		"GLFW_INCLUDE_NONE",
+		"GLM_FORCE_INTRINSICS",
 	}
 
 	systemversion "latest"
@@ -153,13 +154,20 @@ project "Sandbox"
 	links 
 	{
 		"Hazel",
-		"GLFW",
-		"Glad",
-		"ImGui",
+	}
+
+	defines
+	{
+		"GLM_FORCE_INTRINSICS",
 	}
 
 	filter "system:windows"
 		systemversion "latest"
+
+		libdirs
+		{
+			"Hazel/vendor/Vulkan/lib"
+		}
 
 		defines
 		{

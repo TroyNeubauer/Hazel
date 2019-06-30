@@ -53,8 +53,6 @@ namespace Hazel {
 			
 			return this;
 		}
-	private:
-		uint64_t Difference();
 		
 	private:
 		TimeType start, end;

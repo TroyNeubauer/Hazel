@@ -24,11 +24,6 @@ namespace Hazel {
 
 	uint64_t Timer::Nanos()
 	{
-		return Difference();
-	}
-
-	uint64_t Timer::Difference()
-	{
 		uint64_t seconds = end.tv_sec - start.tv_sec;
 		return 1000000000ULL * seconds + end.tv_nsec - start.tv_nsec;
 	}

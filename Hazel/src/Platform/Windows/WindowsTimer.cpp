@@ -28,12 +28,7 @@ namespace Hazel {
 
 	uint64_t Timer::Nanos()
 	{
-		return Difference() * 1000000000ULL / System::PerformanceCounterResulution();
-	}
-
-	uint64_t Timer::Difference()
-	{
-		return end.QuadPart - start.QuadPart;
+		return end.QuadPart - start.QuadPart * 1000000000ULL / System::PerformanceCounterResulution();
 	}
 
 }

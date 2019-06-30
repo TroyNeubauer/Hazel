@@ -1,5 +1,6 @@
 #include "hzpch.h"
 #include "Log.h"
+#include "Core.h"
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"

@@ -97,6 +97,13 @@ namespace Hazel {
 	public:
 		NoAPIShader(File& vertexSource, File& fragSource) {}
 
+		virtual void SetUniform(std::string name, float f) {}
+		virtual void SetUniform(std::string name, glm::vec2& vec) {}
+		virtual void SetUniform(std::string name, glm::vec3& vec) {}
+		virtual void SetUniform(std::string name, glm::vec4& vec) {}
+		virtual void SetUniform(std::string name, glm::mat3& mat) {}
+		virtual void SetUniform(std::string name, glm::mat4& mat) {}
+
 		virtual void Bind() const override {}
 
 		virtual void UnBind() const override {}

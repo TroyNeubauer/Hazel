@@ -128,7 +128,7 @@ namespace Hazel {
 		return (float)(percent * 100.0);
 	}
 
-	uint32_t PlatformUtils::GetProcessorCount() {
+	uint32_t System::GetProcessorCount() {
 		return numProcessors;
 	}
 

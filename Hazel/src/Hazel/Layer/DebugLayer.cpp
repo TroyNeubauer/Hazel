@@ -49,7 +49,6 @@ namespace Hazel {
 
 	void DebugLayer::OnImGuiRender()
 	{
-		ImGui::ShowDemoWindow();
 		const float DISTANCE = 10.0f;
 		Update();
 		ImGuiViewport* viewport = ImGui::GetMainViewport();

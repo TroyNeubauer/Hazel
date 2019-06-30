@@ -1,4 +1,5 @@
 #include "hzpch.h"
+#ifdef HZ_PLATFORM_UNIX
 #include "UnixContextManager.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
@@ -55,3 +56,4 @@ namespace Hazel {
 	}
 }
 
+#endif

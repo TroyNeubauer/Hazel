@@ -3,8 +3,6 @@
 
 #include "OpenGLShader.h"
 
-#include <glad/glad.h>
-
 #include "Hazel/System/File.h"
 #include "Hazel/System/Timer.h"
 #include "Hazel/Core.h"
@@ -100,10 +98,25 @@ namespace Hazel {
 			HZ_CORE_ASSERT(false, "{0}", infoLog.data());
 			return;
 		}
-
 		// Always detach shaders after a successful link.
 		glDetachShader(m_ID, vertexShader);
 		glDetachShader(m_ID, fragmentShader);
+
+		//Get uniform locations
+		int count, length, size;
+		GLenum type;
+		glGetProgramiv(m_ID, GL_ACTIVE_UNIFORMS, &count);
+		
+		char name[128];
+		for (int i = 0; i < count; i++)
+		{
+			glGetActiveUniform(m_ID, i, sizeof(name), &length, &size, &type, name);
+			m_UniformCache[std::string(name, length)] = glGetUniformLocation(m_ID, name);
+#ifdef HZ_DEBUG
+			m_UniformTypes[std::string(name, length)] = type;
+#endif
+		}
+
 		timer.Stop()->Print("Compiling and linking shader took", spdlog::level::level_enum::trace);
 	}
 
@@ -121,6 +134,59 @@ namespace Hazel {
 	{
 		glDeleteProgram(m_ID);
 	}
+
+	void OpenGLShader::CheckUniformType(std::string& name, GLenum type)
+	{
+#ifdef HZ_DEBUG
+		if (m_UniformTypes.find(name) != m_UniformTypes.end()) {
+			GLenum knownType = m_UniformTypes[name];
+			if (knownType != type) {
+				HZ_CORE_ASSERT(false, "Uniform type mismatch! Expected {} but got {}", knownType, type);
+			}
+		} else {
+			HZ_WARN("Unknown uniform: {}", name);
+		}
+#endif
+	}
+
+	
+
+	void OpenGLShader::SetUniform(std::string name, float f) 
+	{
+		CheckUniformType(name, GL_FLOAT);
+		glUniform1f(GetUniformLocation(name), f);
+	}
+	
+	void OpenGLShader::SetUniform(std::string name, glm::vec2& vec) 
+	{
+		CheckUniformType(name, GL_FLOAT_VEC2);
+		glUniform2f(GetUniformLocation(name), vec.x, vec.y);
+	}
+	
+	void OpenGLShader::SetUniform(std::string name, glm::vec3& vec) 
+	{
+		CheckUniformType(name, GL_FLOAT_VEC3);
+		glUniform3f(GetUniformLocation(name), vec.x, vec.y, vec.z);
+	}
+	
+	void OpenGLShader::SetUniform(std::string name, glm::vec4& vec) 
+	{
+		CheckUniformType(name, GL_FLOAT_VEC4);
+		glUniform4f(GetUniformLocation(name), vec.x, vec.y, vec.z, vec.w);
+	}
+	
+	void OpenGLShader::SetUniform(std::string name, glm::mat3& mat) 
+	{
+		CheckUniformType(name, GL_FLOAT_MAT3);
+		glUniformMatrix3fv(GetUniformLocation(name), 1, false, &(mat[0].x));
+	}
+	
+	void OpenGLShader::SetUniform(std::string name, glm::mat4& mat) 
+	{
+		CheckUniformType(name, GL_FLOAT_MAT4);
+		glUniformMatrix4fv(GetUniformLocation(name), 1, false, &(mat[0].x));
+	}
+
 
 }
 
