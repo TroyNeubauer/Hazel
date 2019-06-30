@@ -10,12 +10,13 @@ Sandbox/imgui.ini
 Sandbox/imgui_log.txt
 Sandbox/test.dat
 Sandbox/1page.dat
+Sandbox/logs/
 
 **/*.sln
 **/*.vcxproj
 **/*.vcxproj.user
 **/*.vcxproj.filters
 
-
+#make
 **/.project
 **/.workspace
