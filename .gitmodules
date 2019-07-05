@@ -13,3 +13,6 @@
 	path = Hazel/vendor/glm
 	url = https://github.com/g-truc/glm.git
 	branch = stable
+[submodule "Hazel/vendor/FastNoiseSIMD"]
+	path = Hazel/vendor/FastNoiseSIMD
+	url = https://github.com/TroyNeubauer/FastNoiseSIMD.git
