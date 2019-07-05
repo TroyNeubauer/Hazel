@@ -143,48 +143,66 @@ namespace Hazel {
 			if (knownType != type) {
 				HZ_CORE_ASSERT(false, "Uniform type mismatch! Expected {} but got {}", knownType, type);
 			}
-		} else {
-			HZ_WARN("Unknown uniform: {}", name);
 		}
 #endif
 	}
 
 	
 
-	void OpenGLShader::SetUniform(std::string name, float f) 
+	void OpenGLShader::SetUniform(std::string& name, const float f)
 	{
 		CheckUniformType(name, GL_FLOAT);
-		glUniform1f(GetUniformLocation(name), f);
+		int location = GetUniformLocation(name);
+		if (location != -1)
+			glUniform1f(location, f);
+	}
+
+	void OpenGLShader::SetUniform(std::string& name, const int value)
+	{
+		CheckUniformType(name, GL_SAMPLER_2D);
+		int location = GetUniformLocation(name);
+		if (location != -1)
+			glUniform1i(location, value);
 	}
 	
-	void OpenGLShader::SetUniform(std::string name, glm::vec2& vec) 
+	void OpenGLShader::SetUniform(std::string& name, const glm::vec2& vec)
 	{
 		CheckUniformType(name, GL_FLOAT_VEC2);
-		glUniform2f(GetUniformLocation(name), vec.x, vec.y);
+		int location = GetUniformLocation(name);
+		if (location != -1)
+			glUniform2f(location, vec.x, vec.y);
 	}
 	
-	void OpenGLShader::SetUniform(std::string name, glm::vec3& vec) 
+	void OpenGLShader::SetUniform(std::string& name, const glm::vec3& vec)
 	{
 		CheckUniformType(name, GL_FLOAT_VEC3);
-		glUniform3f(GetUniformLocation(name), vec.x, vec.y, vec.z);
+		int location = GetUniformLocation(name);
+		if (location != -1)
+			glUniform3f(location, vec.x, vec.y, vec.z);
 	}
 	
-	void OpenGLShader::SetUniform(std::string name, glm::vec4& vec) 
+	void OpenGLShader::SetUniform(std::string& name, const glm::vec4& vec)
 	{
 		CheckUniformType(name, GL_FLOAT_VEC4);
-		glUniform4f(GetUniformLocation(name), vec.x, vec.y, vec.z, vec.w);
+		int location = GetUniformLocation(name);
+		if (location != -1)
+			glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
 	}
 	
-	void OpenGLShader::SetUniform(std::string name, glm::mat3& mat) 
+	void OpenGLShader::SetUniform(std::string& name, const glm::mat3& mat)
 	{
 		CheckUniformType(name, GL_FLOAT_MAT3);
-		glUniformMatrix3fv(GetUniformLocation(name), 1, false, &(mat[0].x));
+		int location = GetUniformLocation(name);
+		if (location != -1)
+			glUniformMatrix3fv(location, 1, false, &(mat[0].x));
 	}
 	
-	void OpenGLShader::SetUniform(std::string name, glm::mat4& mat) 
+	void OpenGLShader::SetUniform(std::string& name, const glm::mat4& mat)
 	{
 		CheckUniformType(name, GL_FLOAT_MAT4);
-		glUniformMatrix4fv(GetUniformLocation(name), 1, false, &(mat[0].x));
+		int location = GetUniformLocation(name);
+		if(location != -1)
+			glUniformMatrix4fv(location, 1, false, &(mat[0].x));
 	}
 
 

@@ -18,7 +18,7 @@
 namespace Hazel {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
-	File::File(const char* path, bool sequential, FileError* error)
+	File::File(const char* path, bool sequential, FileError* error) : m_Path(path)
 	{
 		uint64_t pageSize = System::PageSize();
 		m_FileHandle = open(path, O_RDONLY);

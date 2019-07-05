@@ -12,12 +12,13 @@ namespace Hazel {
 	public:
 		OpenGLShader(File& vertexSource, File& fragSource);
 
-		virtual void SetUniform(std::string name, float f);
-		virtual void SetUniform(std::string name, glm::vec2& vec);
-		virtual void SetUniform(std::string name, glm::vec3& vec);
-		virtual void SetUniform(std::string name, glm::vec4& vec);
-		virtual void SetUniform(std::string name, glm::mat3& mat);
-		virtual void SetUniform(std::string name, glm::mat4& mat);
+		virtual void SetUniform(std::string& name, const float value);
+		virtual void SetUniform(std::string& name, const int value);
+		virtual void SetUniform(std::string& name, const glm::vec2& vec);
+		virtual void SetUniform(std::string& name, const glm::vec3& vec);
+		virtual void SetUniform(std::string& name, const glm::vec4& vec);
+		virtual void SetUniform(std::string& name, const glm::mat3& mat);
+		virtual void SetUniform(std::string& name, const glm::mat4& mat);
 
 		virtual void Bind() const;
 
@@ -28,8 +29,10 @@ namespace Hazel {
 	private:
 		inline int GetUniformLocation(std::string& name)
 		{
-			if (m_UniformCache.find(name) == m_UniformCache.end())
-				HZ_CORE_ASSERT(false, "Invalid uniform {}", name);
+			if (m_UniformCache.find(name) == m_UniformCache.end()) {
+				HZ_CORE_WARN("Invalid uniform {}", name);
+				return -1;
+			}
 			return m_UniformCache[name];
 		}
 		void CheckUniformType(std::string&, GLenum type);

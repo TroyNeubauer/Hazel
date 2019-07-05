@@ -79,10 +79,11 @@ namespace Hazel {
 #ifndef HZ_DIST
 			AllocTracker::BeginFrame();//Begin tracking for the next frame
 #endif
+			DispatchEvents();
+			Update();
 			Engine::Update();
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
-			DispatchEvents();
 			DoRenderPass();
 		}
 	}

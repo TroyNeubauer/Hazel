@@ -2,6 +2,8 @@
 #include "Platform/System/FileTrackerOverride.h"
 #include "Platform/System/AllocTracker.h"
 
+#include "Hazel/glm.h"
+
 #include <iostream>
 #include <memory>
 #include <utility>

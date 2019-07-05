@@ -30,6 +30,8 @@ namespace Hazel {
 		inline void SetEventCallback(const EventCallbackFn& callback) override { m_EventCallback = callback; }
 		inline const EventCallbackFn& GetEventCallback() { return m_EventCallback; }
 
+		virtual void ShowCursor(bool shown) override;
+
 
 		inline virtual void* GetNativeWindow() const { return m_Window; }
 		virtual void SetContextData(void* data) override;

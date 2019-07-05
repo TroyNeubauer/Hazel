@@ -8,10 +8,10 @@
 #include "Hazel/Events/MouseEvent.h"
 #include "Hazel/Events/KeyEvent.h"
 #include "Hazel/Context/ContextManager.h"
+#include "Hazel/Input.h"
 
 
 namespace Hazel {
-
 
 	Window* Window::Create(const WindowProps& props)
 	{
@@ -143,6 +143,14 @@ namespace Hazel {
 		});
 	}
 
+	void WindowsWindow::ShowCursor(bool shown)
+	{
+		if (shown)
+			glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		else
+			glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+
 	void WindowsWindow::SetContextData(void* data)
 	{
 		m_ContextData = data;
@@ -167,6 +175,7 @@ namespace Hazel {
 	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();
+		Input::NextFrame();
 	}
 
 }

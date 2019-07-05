@@ -1,27 +1,22 @@
 #pragma once
 
 #include "Hazel/Core.h"
+#include <glm/vec2.hpp>
 
 namespace Hazel {
 
 	class Input
 	{
 	public:
-		inline static bool IsKeyPressed(int keycode) { return s_Instance->IsKeyPressedImpl(keycode); }
+		static bool IsKeyPressed(int keycode);
+		static bool IsMouseButtonPressed(int button);
 
-		inline static bool IsMouseButtonPressed(int button) { return s_Instance->IsMouseButtonPressedImpl(button); }
-		inline static std::pair<float, float> GetMousePosition() { return s_Instance->GetMousePositionImpl(); }
-		inline static float GetMouseX() { return s_Instance->GetMouseXImpl(); }
-		inline static float GetMouseY() { return s_Instance->GetMouseYImpl(); }
-	protected:
-		virtual bool IsKeyPressedImpl(int keycode) = 0;
+		static inline glm::vec2 GetMousePosition() { return s_MousePos; }
+		static inline glm::vec2 GetMouseDelta() { return s_MouseDelta; }
 
-		virtual bool IsMouseButtonPressedImpl(int button) = 0;
-		virtual std::pair<float, float> GetMousePositionImpl() = 0;
-		virtual float GetMouseXImpl() = 0;
-		virtual float GetMouseYImpl() = 0;
+		static void NextFrame();
 	private:
-		static Input* s_Instance;
+		static glm::vec2 s_MousePos, s_LastMousePos, s_MouseDelta;
 	};
 
 }

@@ -10,8 +10,9 @@
 #include "Hazel/System/System.h"
 
 namespace Hazel {
-	File::File(const char* path, bool sequential, FileError* error)
+	File::File(const char* path, bool sequential, FileError* error) : m_Path(path)
 	{
+		
 		uint64_t pageSize = System::PageSize();
 		DWORD dwFlagsAndAttributes = sequential ? FILE_FLAG_SEQUENTIAL_SCAN : FILE_FLAG_RANDOM_ACCESS;
 
@@ -114,7 +115,7 @@ namespace Hazel {
 		}
 	}
 
-	File::File(File&& other)
+	File::File(File&& other) : m_Path(other.GetPath())
 	{
 		other.m_Length = this->m_Length;
 		other.m_FileHandle = this->m_FileHandle;

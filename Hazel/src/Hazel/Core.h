@@ -1,5 +1,6 @@
 #pragma once
 #include "Hazel/Log.h"
+#include <memory>
 
 #if defined(HZ_DEBUG) && (!defined(HZ_ENABLE_ASSERTS))
 	#define HZ_ENABLE_ASSERTS
@@ -27,4 +28,21 @@
 #define BIT(x) (1 << x)
 
 #define HZ_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+
+namespace Hazel {
+
+	template<typename T>
+	inline std::shared_ptr<T> sp(T* ptr)
+	{
+		return std::shared_ptr<T>(ptr);
+	}
+
+	template<typename T>
+	inline std::unique_ptr<T> up(T* ptr)
+	{
+		return std::uniqie_ptr<T>(ptr);
+	}
+
+
+}
 

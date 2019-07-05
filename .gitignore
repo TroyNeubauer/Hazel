@@ -12,6 +12,10 @@ Sandbox/test.dat
 Sandbox/1page.dat
 Sandbox/logs/
 
+Sandbox/pics/
+Sandbox/pics - OLD/
+Sandbox/pics.zip
+
 **/*.sln
 **/*.vcxproj
 **/*.vcxproj.user

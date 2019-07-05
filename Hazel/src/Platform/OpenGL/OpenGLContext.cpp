@@ -34,6 +34,10 @@ namespace Hazel {
 	{
 		for(auto window : m_Handles)
 			glfwSwapBuffers((GLFWwindow*) window->GetNativeWindow());
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR) {
+			HZ_CORE_ERROR("Open GL error! {}", error);
+		}
 	}
 	void OpenGLContext::OnWindowResize(Window* window, int width, int height)
 	{

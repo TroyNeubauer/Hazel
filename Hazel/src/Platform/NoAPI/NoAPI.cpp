@@ -41,12 +41,12 @@ namespace Hazel {
 		return 0;
 	}
 
-	void NoAPIVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
+	void NoAPIVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer)
 	{
 		m_IndexBuffer = indexBuffer;
 	}
 	
-	void NoAPIVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
+	void NoAPIVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer> vertexBuffer)
 	{
 		m_VertexBuffers.push_back(vertexBuffer);
 	}

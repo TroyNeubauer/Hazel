@@ -50,9 +50,13 @@ namespace Hazel {
 		//Returns the first byte of this file with a null termination character at the end
 		inline char* const AsString() { return (char*) Data(); }
 
+		inline Path GetPath() { return m_Path; }
+
 		~File();
 
 	private:
+		Path m_Path;
+
 		uint64_t m_Length;
 		//The platform dependent location of the file
 		FILE_HANDLE m_FileHandle = INVALID_FILE_HANDLE;

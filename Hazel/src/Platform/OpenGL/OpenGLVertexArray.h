@@ -15,8 +15,10 @@ namespace Hazel {
 
 		virtual size_t Bytes() const override;
 
-		virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer) override;
-		virtual void AddVertexBuffer(const std::shared_ptr<VertexBuffer>& buffer) override;
+		virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer> buffer) override;
+		virtual void AddVertexBuffer(const std::shared_ptr<VertexBuffer> buffer) override;
+
+		virtual void CalculateNormals() override;
 
 		virtual const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const;
 		virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const;

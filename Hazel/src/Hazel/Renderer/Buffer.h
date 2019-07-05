@@ -5,6 +5,8 @@
 
 #include "GraphicsAPI.h"
 
+#include <string>
+
 namespace Hazel {
 
 	enum class ShaderDataType {
@@ -27,7 +29,7 @@ namespace Hazel {
 	size_t SizeOfShaderDataType(ShaderDataType type);
 
 	struct BufferElement {
-		const char* Name;
+		std::string Name;
 		ShaderDataType Type;
 		uint32_t Size;
 		uint32_t Offset;
@@ -43,6 +45,7 @@ namespace Hazel {
 	public:
 		BufferLayout(const std::initializer_list<BufferElement>& elements) : m_Elements(elements)
 		{
+			m_Stride = 0;
 			for (auto& element : m_Elements) {
 				element.Offset = m_Stride;
 				m_Stride += element.Size;
@@ -61,7 +64,7 @@ namespace Hazel {
 
 	private:
 		std::vector<BufferElement> m_Elements;
-		uint32_t m_Stride = 0;
+		uint32_t m_Stride;
 	};
 
 	enum BufferType
@@ -69,24 +72,32 @@ namespace Hazel {
 		VERTEX, INDEX
 	};
 
+	enum MapAccess
+	{
+		READ_ONLY, WRITE_ONLY, READ_WRITE
+	};
+
 	template<typename T, BufferType type>
 	class Buffer
 	{
 	public:
 		Buffer() {}
-		virtual void SetData(T* data, uint64_t elements) = 0;
+		virtual void SetData(T* data, uint64_t bytes) = 0;
+
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
+		virtual void* Map(MapAccess access) = 0;
+		virtual void Unmap(void* buffer) = 0;
 
-		virtual uint32_t Count() const = 0;
-		inline size_t ElementSize() const { return sizeof(T); }
-		inline size_t Bytes() const { return ElementSize() * Count(); }
+		inline uint32_t Count() const { return Bytes() / ElementSize(); }
+		inline uint64_t ElementSize() const { return sizeof(T); }
+		virtual uint64_t Bytes() const = 0;
 
 		virtual void SetLayout(BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
-		static Buffer<float, BufferType::VERTEX>* Create(float* data, uint64_t elements);
-		static Buffer<uint32_t, BufferType::INDEX>* Create(uint32_t* data, uint64_t elements);
+		static Buffer<float, BufferType::VERTEX>* Create(float* data, uint64_t bytes);
+		static Buffer<uint32_t, BufferType::INDEX>* Create(uint32_t* data, uint64_t bytes);
 
 		virtual ~Buffer() {}
 	};

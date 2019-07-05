@@ -1,6 +1,10 @@
 #include "hzpch.h"
 #include "OpenGLUtils.h"
 
+#include "Hazel/System/Timer.h"
+
+#include "FreeImage.h"
+
 namespace Hazel {
 	GLenum OpenGLUtils::ShaderDataTypeToGLType(ShaderDataType type) {
 		switch (type)
@@ -42,6 +46,156 @@ namespace Hazel {
 		}
 		return 0;
 	}
+
+	unsigned int OpenGLUtils::Load2DTexture(File& file, TextureBuilder& builder)
+	{
+		Hazel::Timer timer;
+
+		if (file.Data() == nullptr)
+			return false;
+
+		FIMEMORY* memory = FreeImage_OpenMemory((BYTE*) file.Data(), file.Length());
+		if (!memory) {
+			HZ_CORE_WARN("Failed to open memory for file \"{}\"", file.GetPath().ToString());
+			return 0;
+		}
+		//check the file signature and deduce its format
+		FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
+		fif = FreeImage_GetFileTypeFromMemory(memory, file.Length());
+
+
+
+
+
+
+		if (fif == FIF_UNKNOWN)
+			fif = FreeImage_GetFIFFromFilename(file.GetPath());
+		if (fif == FIF_UNKNOWN) {
+			HZ_CORE_WARN("Unknown image file \"{}\"", file.GetPath().ToString());
+			return 0;
+		}
+
+
+		//check that the plugin has reading capabilities and load the file
+		FIBITMAP* dib = nullptr;
+		if (FreeImage_FIFSupportsReading(fif))
+			dib = FreeImage_LoadFromMemory(fif, memory);
+		else {
+			HZ_CORE_WARN("Freeimage plugin cannot read file \"{}\"", file.GetPath().ToString());
+			return 0;
+		}
+
+		//if the image failed to load, return failure
+		if (!dib) {
+			HZ_CORE_WARN("Failed to decode image file \"{}\"", file.GetPath().ToString());
+			return 0;
+		}
+
+		//Determine the Open GL image type
+		FREE_IMAGE_TYPE type = FreeImage_GetImageType(dib);
+		GLenum imageFormat = 0;
+		switch (type)
+		{
+			case FIT_BITMAP://! standard image			: 1-, 4-, 8-, 16-, 24-, 32-bit
+			{
+				unsigned int bpp = FreeImage_GetBPP(dib);
+				unsigned int redM = FreeImage_GetRedMask(dib), greenM = FreeImage_GetGreenMask(dib), blueM = FreeImage_GetBlueMask(dib);
+				if (!redM || !greenM || !blueM) {
+					HZ_CORE_ASSERT(false, "Image \"{}\" missing one RGB component R:0x{:x}, G:0x{:x}, B:0x{:x}", file.GetPath().ToString(), redM, greenM, blueM);
+					goto end;
+				}
+				if (bpp == 24) {
+					if (blueM == 0xFF0000 && greenM == 0xFF00 && redM == 0xFF) {
+#ifdef HZ_LITTLE_ENDIAN
+						imageFormat = GL_RGB;
+#else
+						imageFormat = GL_BGR;
+#endif
+					} else if (redM == 0xFF0000 && greenM == 0xFF00 && blueM == 0xFF) {
+#ifdef HZ_LITTLE_ENDIAN
+						imageFormat = GL_BGR;
+#else
+						imageFormat = GL_RGB;
+#endif
+					} else {
+						HZ_CORE_ASSERT(false, "Unknown image format Image \"{}\"", file.GetPath().ToString());
+						goto end;
+					}
+				} else if (bpp == 32) {
+					if (blueM == 0xFF0000 && greenM == 0xFF00 && redM == 0xFF) {
+#ifdef HZ_LITTLE_ENDIAN
+						imageFormat = GL_RGBA;
+#else
+						imageFormat = GL_BGRA;
+#endif
+					} else if (redM == 0xFF0000 && greenM == 0xFF00 && blueM == 0xFF) {
+#ifdef HZ_LITTLE_ENDIAN
+						imageFormat = GL_BGRA;
+#else
+						imageFormat = GL_RGBA;
+#endif
+					} else {
+						HZ_CORE_ASSERT(false, "Unknown image format Image \"{}\"", file.GetPath().ToString());
+						goto end;
+					}
+				} else {
+					HZ_CORE_ASSERT(false, "Unknown bits per pixel {}, Image \"{}\"", bpp, file.GetPath().ToString());
+					goto end;
+				}
+				break;
+			}
+			default:
+				HZ_CORE_ASSERT(false, "Unknown image type! {}, Image: \"{}\"", (int) type, file.GetPath().ToString());
+				goto end;
+		}
+
+		BYTE* bits = FreeImage_GetBits(dib);
+		unsigned int width = FreeImage_GetWidth(dib), height = FreeImage_GetHeight(dib);
+
+		if ((bits == 0) || (width == 0) || (height == 0))
+			return false;
+
+		//generate an OpenGL texture ID for this texture
+		GLuint id;
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &id);
+		glBindTexture(GL_TEXTURE_2D, id);
+
+		//store the texture data for OpenGL use
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, imageFormat, GL_UNSIGNED_BYTE, bits);
+		if (builder.IsMipmap()) {
+			glGenerateMipmap(GL_TEXTURE_2D);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			if (builder.IsAnisotropic()) {
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, 4.0f);
+			}
+		} else if (builder.IsNearest()) {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		} else {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		}
+		
+		if (builder.IsClampEdges()) {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		} else {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
+
+	end:
+		//Free FreeImage's copy of the data
+		FreeImage_Unload(dib);
+		FreeImage_CloseMemory(memory);
+
+		timer.Stop()->Print("Reading texture took");
+		return id;
+	}
+
 
 }
 

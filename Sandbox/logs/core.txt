@@ -1,5 +1,11 @@
-HAZEL-36236:[06/30/19 18:39 16.590] info: Creating window "Hazel Engine" (1280, 720)
-HAZEL-36236:[06/30/19 18:39 17.199] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
-HAZEL-36236:[06/30/19 18:39 17.421] info: Reading shader files shaders/test.vert, shaders/test.frag
-HAZEL-36236:[06/30/19 18:39 17.426] info: Complete initialization took 3072.942 seconds
-HAZEL-36236:[06/30/19 18:39 31.494] info: Destroying logging
+HAZEL-19120:[07/04/19 23:43 03.635] info: Creating window "Hazel Engine" (1280, 720)
+HAZEL-19120:[07/04/19 23:43 04.687] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
+HAZEL-19120:[07/04/19 23:43 04.980] info: Reading shader files shaders/test.vert, shaders/test.frag
+HAZEL-19120:[07/04/19 23:43 04.981] info: Reading texture file assets/img/grass.png
+HAZEL-19120:[07/04/19 23:43 05.069] info: Reading texture took 87.45 milliseconds
+HAZEL-19120:[07/04/19 23:43 05.069] info: Reading texture file assets/img/red.png
+HAZEL-19120:[07/04/19 23:43 05.147] info: Reading texture took 77.98 milliseconds
+HAZEL-19120:[07/04/19 23:43 05.176] info: Dont with first
+HAZEL-19120:[07/04/19 23:43 05.218] warning: Generating terrain took 70.32 milliseconds
+HAZEL-19120:[07/04/19 23:43 05.220] info: Complete initialization took 1.785 seconds
+HAZEL-19120:[07/04/19 23:46 39.204] info: Destroying logging

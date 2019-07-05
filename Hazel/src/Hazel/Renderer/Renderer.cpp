@@ -5,7 +5,7 @@
 namespace Hazel {
 	void Renderer::BeginScene()
 	{
-
+		RenderCommand::Begin();
 	}
 
 	void Renderer::EndScene()

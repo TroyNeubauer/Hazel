@@ -23,6 +23,11 @@ namespace Hazel {
 			s_RendererAPI->Clear();
 		}
 
+		static inline void Begin()
+		{
+			s_RendererAPI->Begin();
+		}
+
 
 		static void OnAPIChange(GraphicsAPIType origionalAPI, GraphicsAPIType newAPI);
 
