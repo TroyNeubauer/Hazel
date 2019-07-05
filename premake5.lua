@@ -18,17 +18,24 @@ IncludeDir["Glad"] = "Hazel/vendor/Glad/include"
 IncludeDir["ImGui"] = "Hazel/vendor/imgui"
 IncludeDir["glm"] = "Hazel/vendor/glm"
 IncludeDir["Vulkan"] = "Hazel/vendor/Vulkan/include"
+IncludeDir["freeimage"] = "Hazel/vendor/freeimage/Source"
+IncludeDir["FastNoiseSIMD"] = "Hazel/vendor/FastNoiseSIMD/FastNoiseSIMD"
 
 include "Hazel/vendor/GLFW"
 include "Hazel/vendor/Glad"
 include "Hazel/vendor/imgui"
+include "Hazel/vendor/freeimage"
+include "Hazel/vendor/FastNoiseSIMD"
 
 project "Hazel"
 	location "Hazel"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "on" 
+	intrinsics "on"
+
+	vectorextensions "AVX"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -53,6 +60,23 @@ project "Hazel"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Vulkan}",
+		"%{IncludeDir.freeimage}",
+		"%{IncludeDir.FastNoiseSIMD}",
+
+		"Hazel/vendor/freeimage/Source/",
+		"Hazel/vendor/freeimage/Source/FreeImage",
+		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
+		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
+		"Hazel/vendor/freeimage/Source/LibPNG",
+		"Hazel/vendor/freeimage/Source/Metadata",
+		"Hazel/vendor/freeimage/Source/OpenEXR",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Half",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Iex",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IexMath",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IlmImf",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IlmThread",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Imath",
+		"Hazel/vendor/freeimage/Source/ZLib",
 	}
 
 	links 
@@ -60,6 +84,8 @@ project "Hazel"
 		"GLFW",
 		"Glad",
 		"ImGui",
+		"freeimage",
+		"FastNoiseSIMD",
 	}
 
 	defines
@@ -69,6 +95,8 @@ project "Hazel"
 		"HZ_ENABLE_VULKAN",
 		"GLFW_INCLUDE_NONE",
 		"GLM_FORCE_INTRINSICS",
+		"HZ_GLFW_INPUT",
+		"FREEIMAGE_LIB",
 	}
 
 	systemversion "latest"
@@ -82,6 +110,7 @@ project "Hazel"
 			"HZ_PLATFORM_WINDOWS",
 			"VK_USE_PLATFORM_WIN32_KHR",
 			"HZ_ENABLE_DIRECTX_12",
+			"HZ_LITTLE_ENDIAN",
 		}
 
 
@@ -112,18 +141,24 @@ project "Hazel"
 		defines "HZ_DEBUG"
 		runtime "Debug"
 		symbols "on"
+		floatingpoint "Strict"
+
 
 	filter "configurations:Release"
 		defines "HZ_RELEASE"
 		runtime "Release"
 		optimize "speed"
 		inlining "auto"
+		floatingpoint "Fast"
+
 
 	filter "configurations:Dist"
 		defines "HZ_DIST"
 		runtime "Release"
 		optimize "speed"
 		inlining "auto"
+		floatingpoint "Fast"
+
 
 project "Sandbox"
 	location "Sandbox"
@@ -131,6 +166,7 @@ project "Sandbox"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "on"
+	vectorextensions "AVX"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -149,6 +185,21 @@ project "Sandbox"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
+		"%{IncludeDir.freeimage}",
+		"Hazel/vendor/freeimage/Source/",
+		"Hazel/vendor/freeimage/Source/FreeImage",
+		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
+		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
+		"Hazel/vendor/freeimage/Source/LibPNG",
+		"Hazel/vendor/freeimage/Source/Metadata",
+		"Hazel/vendor/freeimage/Source/OpenEXR",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Half",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Iex",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IexMath",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IlmImf",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IlmThread",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Imath",
+		"Hazel/vendor/freeimage/Source/ZLib",
 	}
 
 	links 
@@ -159,6 +210,7 @@ project "Sandbox"
 	defines
 	{
 		"GLM_FORCE_INTRINSICS",
+		"FREEIMAGE_LIB"
 	}
 
 	filter "system:windows"
@@ -171,7 +223,8 @@ project "Sandbox"
 
 		defines
 		{
-			"HZ_PLATFORM_WINDOWS"
+			"HZ_PLATFORM_WINDOWS",
+			"HZ_LITTLE_ENDIAN",
 		}
 
 		links
@@ -205,12 +258,14 @@ project "Sandbox"
 		defines "HZ_DEBUG"
 		runtime "Debug"
 		symbols "on"
+		floatingpoint "Strict"
 
 	filter "configurations:Release"
 		defines "HZ_RELEASE"
 		runtime "Release"
 		optimize "speed"
 		inlining "auto"
+		floatingpoint "Fast"
 
 
 	filter "configurations:Dist"
@@ -218,4 +273,79 @@ project "Sandbox"
 		runtime "Release"
 		optimize "speed"
 		inlining "auto"
+		floatingpoint "Fast"
+
+
+
+project "ImGui Test"
+	location "ImGui Test"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+	vectorextensions "AVX"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"%{prj.name}/src",
+		"Hazel/vendor/spdlog/include",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.ImGui}",
+	}
+
+	links 
+	{
+		"GLFW",
+		"Glad",
+		"ImGui",
+	}
+
+	defines
+	{
+		"GLFW_INCLUDE_NONE",
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+
+		links
+		{
+			"kernel32.lib",
+			"Onecore.lib",
+			"opengl32.lib",
+		}
+
+
+	filter "configurations:Debug"
+		defines "HZ_DEBUG"
+		runtime "Debug"
+		symbols "on"
+		floatingpoint "Strict"
+
+	filter "configurations:Release"
+		defines "HZ_RELEASE"
+		runtime "Release"
+		optimize "speed"
+		inlining "auto"
+		floatingpoint "Fast"
+
+
+	filter "configurations:Dist"
+		defines "HZ_DIST"
+		runtime "Release"
+		optimize "speed"
+		inlining "auto"
+		floatingpoint "Fast"
 
