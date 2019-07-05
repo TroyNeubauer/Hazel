@@ -16,6 +16,8 @@ Sandbox/pics/
 Sandbox/pics - OLD/
 Sandbox/pics.zip
 
+ImGui Test/imgui.ini
+
 **/*.sln
 **/*.vcxproj
 **/*.vcxproj.user
