@@ -24,3 +24,8 @@ Sandbox/pics.zip
 #make
 **/.project
 **/.workspace
+
+**/*.sln
+**/*.vcxproj
+**/*.vcxproj.user
+**/*.vcxproj.filters
