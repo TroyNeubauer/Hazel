@@ -34,6 +34,7 @@ project "Hazel"
 	cppdialect "C++17"
 	staticruntime "on" 
 	intrinsics "on"
+	systemversion "latest"
 
 	vectorextensions "AVX"
 
@@ -99,7 +100,6 @@ project "Hazel"
 		"FREEIMAGE_LIB",
 	}
 
-	systemversion "latest"
 
 	filter "system:windows"
 
@@ -282,7 +282,10 @@ project "ImGui Test"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "on" 
+	intrinsics "on"
+	systemversion "latest"
+
 	vectorextensions "AVX"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -290,49 +293,57 @@ project "ImGui Test"
 
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/include/**.h",
+		"%{prj.name}/src/*.h",
+		"%{prj.name}/src/*.cpp",
+		"%{prj.name}/src/Glad/glad.c",
+		"%{prj.name}/src/GLFW/context.c",
+		"%{prj.name}/src/GLFW/init.c",
+		"%{prj.name}/src/GLFW/input.c",
+		"%{prj.name}/src/GLFW/monitor.c",
+		"%{prj.name}/src/GLFW/vulkan.c",
+		"%{prj.name}/src/GLFW/window.c",
+		"%{prj.name}/src/GLFW/win32_init.c",
+		"%{prj.name}/src/GLFW/win32_joystick.c",
+		"%{prj.name}/src/GLFW/win32_monitor.c",
+		"%{prj.name}/src/GLFW/win32_time.c",
+		"%{prj.name}/src/GLFW/win32_thread.c",
+		"%{prj.name}/src/GLFW/win32_window.c",
+		"%{prj.name}/src/GLFW/wgl_context.c",
+		"%{prj.name}/src/GLFW/egl_context.c",
+		"%{prj.name}/src/GLFW/osmesa_context.c"
 	}
 
 	includedirs
 	{
 		"%{prj.name}/src",
+		"%{prj.name}/include",
 		"Hazel/vendor/spdlog/include",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}",
-	}
-
-	links 
-	{
-		"GLFW",
-		"Glad",
-		"ImGui",
 	}
 
 	defines
 	{
-		"GLFW_INCLUDE_NONE",
+		"_GLFW_WIN32",
 	}
 
-	filter "system:windows"
-		systemversion "latest"
 
+	filter "system:windows"
 
 		links
 		{
-			"kernel32.lib",
-			"Onecore.lib",
-			"opengl32.lib",
+			"Pdh.lib",
 		}
 
+		defines
+		{
+		}
 
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
 		runtime "Debug"
 		symbols "on"
 		floatingpoint "Strict"
+
 
 	filter "configurations:Release"
 		defines "HZ_RELEASE"
@@ -348,4 +359,3 @@ project "ImGui Test"
 		optimize "speed"
 		inlining "auto"
 		floatingpoint "Fast"
-

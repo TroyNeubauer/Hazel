@@ -2,14 +2,19 @@
 // If you are new to dear imgui, see examples/README.txt and documentation at the top of imgui.cpp.
 // (GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan graphics context creation, etc.)
 
-#include "imgui.h"
-#include "examples/imgui_impl_glfw.h"
-#include "examples/imgui_impl_opengl3.h"
+#include <imgui.h>
+
+#define IMGUI_IMPL_OPENGL_LOADER_GLAD
+#include "examples/imgui_impl_opengl3.cpp"
+#include "examples/imgui_impl_glfw.cpp"
+
+
 #include <stdio.h>
 
 #include <glad/glad.h>  // Initialize with gladLoadGL()
 
 // Include glfw3.h after our OpenGL definitions
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 
