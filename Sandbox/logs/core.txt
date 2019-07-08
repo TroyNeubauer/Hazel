@@ -1,15 +1,15 @@
-HAZEL-16212:[07/08/19 04:04 00.228] info: Creating window "Hazel Engine" (1280, 720)
-HAZEL-16212:[07/08/19 04:04 00.667] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
-HAZEL-16212:[07/08/19 04:04 00.916] info: Reading shader files shaders/test.vert, shaders/test.frag
-HAZEL-16212:[07/08/19 04:04 00.920] info: Reading texture file assets/img/red.png
-HAZEL-16212:[07/08/19 04:04 00.922] info: Reading texture took 818.5 microseconds
-HAZEL-16212:[07/08/19 04:04 00.961] info: Dont with first
-HAZEL-16212:[07/08/19 04:04 01.108] info: Reading texture file assets/img/grass.png
-HAZEL-16212:[07/08/19 04:04 01.278] info: Reading texture took 169.40 milliseconds
-HAZEL-16212:[07/08/19 04:04 01.279] warning: Generating terrain took 355.59 milliseconds
-HAZEL-16212:[07/08/19 04:04 01.292] info: Dont with first
-HAZEL-16212:[07/08/19 04:04 01.293] info: Reading texture file assets/img/grass.png
-HAZEL-16212:[07/08/19 04:04 01.467] info: Reading texture took 173.59 milliseconds
-HAZEL-16212:[07/08/19 04:04 01.468] warning: Generating terrain took 189.07 milliseconds
-HAZEL-16212:[07/08/19 04:04 01.469] info: Complete initialization took 1.367 seconds
-HAZEL-16212:[07/08/19 04:05 18.962] info: Destroying logging
+HAZEL-3408:[07/08/19 10:23 22.454] info: Creating window "Hazel Engine" (1280, 720)
+HAZEL-3408:[07/08/19 10:23 23.249] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
+HAZEL-3408:[07/08/19 10:23 23.594] info: Reading shader files shaders/test.vert, shaders/test.frag
+HAZEL-3408:[07/08/19 10:23 23.595] info: Reading texture file assets/img/red.png
+HAZEL-3408:[07/08/19 10:23 23.603] info: Reading texture took 1.09 milliseconds
+HAZEL-3408:[07/08/19 10:23 23.644] info: Dont with first
+HAZEL-3408:[07/08/19 10:23 23.834] info: Reading texture file assets/img/grass.png
+HAZEL-3408:[07/08/19 10:23 24.073] info: Reading texture took 234.53 milliseconds
+HAZEL-3408:[07/08/19 10:23 24.076] warning: Generating terrain took 473.15 milliseconds
+HAZEL-3408:[07/08/19 10:23 24.126] info: Dont with first
+HAZEL-3408:[07/08/19 10:23 24.128] info: Reading texture file assets/img/grass.png
+HAZEL-3408:[07/08/19 10:23 24.368] info: Reading texture took 238.36 milliseconds
+HAZEL-3408:[07/08/19 10:23 24.381] warning: Generating terrain took 284.27 milliseconds
+HAZEL-3408:[07/08/19 10:23 24.385] info: Complete initialization took 2.195 seconds
+HAZEL-3408:[07/08/19 10:24 24.835] info: Destroying logging
