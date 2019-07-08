@@ -37,6 +37,8 @@
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Renderer/VertexArray.h"
 
+#include "Hazel/Enviorment/Light.h"
+
 
 //glm
 #define GLM_FORCE_INTRINSICS

@@ -3,9 +3,12 @@
 #include "RenderCommand.h"
 
 namespace Hazel {
-	void Renderer::BeginScene()
+
+	Renderer::SceneData* Renderer::s_SceneData = new SceneData;
+	void Renderer::BeginScene(Camera& camera, std::vector<Light>& lights)
 	{
 		RenderCommand::Begin();
+		s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 	}
 
 	void Renderer::EndScene()
@@ -13,10 +16,16 @@ namespace Hazel {
 
 	}
 
-	void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray)
+	void Renderer::Submit(const Mesh& mesh)
 	{
-		vertexArray->Bind();
-		RenderCommand::DrawIndexed(vertexArray);
+		
+		mesh.Shader->Bind();
+		mesh.Shader->UploadUniformMat4("u_ViewProjectionMatrix", s_SceneData->ViewProjectionMatrix);
+		mesh.Shader->UploadUniformMat4("u_Model", translate(mesh.Position));
+
+		mesh.Texture->Bind();
+		mesh.VertexArray->Bind();
+		RenderCommand::DrawIndexed(mesh.VertexArray);
 	}
 
 }

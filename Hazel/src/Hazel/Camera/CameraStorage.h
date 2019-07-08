@@ -7,7 +7,7 @@ namespace Hazel {
 	{
 	public:
 		//Updates the view matrix
-		virtual void Update() = 0;
+		virtual void RecalculateViewMatrix() = 0;
 
 		virtual const vec3 GetPosition() = 0;
 		virtual const quat GetRotation() = 0;
@@ -24,8 +24,8 @@ namespace Hazel {
 	class DefaultCameraStorage : public CameraStorage
 	{
 	public:
-		DefaultCameraStorage() { Update(); }
-		virtual void Update() { m_ViewMatrix = toMat4(m_Rotation) * translate(-m_Posirion); }
+		DefaultCameraStorage() { RecalculateViewMatrix(); }
+		virtual void RecalculateViewMatrix() { m_ViewMatrix = toMat4(m_Rotation) * translate(-m_Posirion); }
 
 		inline virtual const vec3 GetPosition() override { return m_Posirion; }
 		inline virtual const quat GetRotation() override { return m_Rotation; }
@@ -46,8 +46,8 @@ namespace Hazel {
 	{
 	public:
 		EulerCameraStorage() 
-			: m_Posirion(0.0f), m_Pitch(0.0f), m_Yaw(0.0f) { Update(); }
-		virtual void Update()
+			: m_Posirion(0.0f), m_Pitch(0.0f), m_Yaw(0.0f) { RecalculateViewMatrix(); }
+		virtual void RecalculateViewMatrix()
 		{
 			m_ViewMatrix = identity<mat4>();
 			m_ViewMatrix = rotate(m_ViewMatrix, -m_Pitch, vec3(1.0f, 0.0f, 0.0f));

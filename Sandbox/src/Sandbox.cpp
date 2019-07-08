@@ -15,7 +15,6 @@ Sandbox* sandbox;
 std::random_device rd;
 std::mt19937 eng(rd());
 
-vec3 lightPosition = vec3(15000.0f, 100000.0f, -1000.0f), lightColor = { 0.1f, 0.3f, 0.9f };
 bool paused = false;
 
 float GetTime()
@@ -34,6 +33,8 @@ float GetHeight()
 
 Sandbox::Sandbox()
 {
+	m_Lights.push_back({ vec3(15000.0f, 100000.0f, -1000.0f), vec3(0.1f, 0.3f, 0.9f) });
+
 	sandbox = this;
 	PushLayer(new ExampleLayer());
 	PushOverlay(new Hazel::DebugLayer());
@@ -41,30 +42,29 @@ Sandbox::Sandbox()
 	//HZ_WARN("warn");
 	//HZ_ERROR("error");
 
-	m_VertexArray.reset(Hazel::VertexArray::Create());
+	std::shared_ptr<Hazel::VertexArray> targetArray = Hazel::sp(Hazel::VertexArray::Create());
 
 	const float diameter = 25.0f;
 
 	Hazel::BufferLayout layout = {
-	{ Hazel::ShaderDataType::Float3, "a_Position" },
-	{ Hazel::ShaderDataType::Float3, "a_Normal" },
-	{ Hazel::ShaderDataType::Float2, "a_TextCoords" },
-	{ Hazel::ShaderDataType::Float, "a_Brown" },
+		{ Hazel::ShaderDataType::Float3, "a_Position" },
+		{ Hazel::ShaderDataType::Float3, "a_Normal" },
+		{ Hazel::ShaderDataType::Float2, "a_TextCoords" },
+		{ Hazel::ShaderDataType::Float, "a_Brown" },
 	};
 	float vertices[9 * 5] =
 	{
-			0.0f,              3.0f, 0.0f,              0.0f, 1.0f, 0.0f,   0.5f, 1.0f,    0.0f,// Center point
-																						   
-			-diameter / 2.0f,  0.0f, -diameter / 2.0f,  0.0f, 1.0f, 0.0f,   0.0f, 0.0f,    0.0f,
-			-diameter / 2.0f,  0.0f,  diameter / 2.0f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,    0.0f,
-			 diameter / 2.0f,  0.0f,  diameter / 2.0f,  0.0f, 1.0f, 0.0f,   0.0f, 0.0f,    0.0f,
-			 diameter / 2.0f,  0.0f, -diameter / 2.0f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,    0.0f,
+			       0.0f,       3.0f,        0.0f,       0.0f, 1.0f, 0.0f,    0.5f, 1.0f,    0.0f,// Center point																						   
+			-diameter / 2.0f,  0.0f, -diameter / 2.0f,  0.0f, 1.0f, 0.0f,    0.0f, 0.0f,    0.0f,
+			-diameter / 2.0f,  0.0f,  diameter / 2.0f,  0.0f, 1.0f, 0.0f,    1.0f, 0.0f,    0.0f,
+			 diameter / 2.0f,  0.0f,  diameter / 2.0f,  0.0f, 1.0f, 0.0f,    0.0f, 0.0f,    0.0f,
+			 diameter / 2.0f,  0.0f, -diameter / 2.0f,  0.0f, 1.0f, 0.0f,    1.0f, 0.0f,    0.0f,
 	};
 	std::shared_ptr<Hazel::VertexBuffer> m_VertexBuffer;
 	m_VertexBuffer.reset(Hazel::VertexBuffer::Create(vertices, sizeof(vertices)));
 
 	m_VertexBuffer->SetLayout(layout);
-	m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+	targetArray->AddVertexBuffer(m_VertexBuffer);
 
 
 	uint32_t indices[3 * 4] =
@@ -76,20 +76,25 @@ Sandbox::Sandbox()
 	};
 	std::shared_ptr<Hazel::IndexBuffer> m_IndexBuffer;
 	m_IndexBuffer.reset(Hazel::IndexBuffer::Create(indices, sizeof(indices)));
-	m_VertexArray->SetIndexBuffer(m_IndexBuffer);
-	m_VertexArray->CalculateNormals();
+	targetArray->SetIndexBuffer(m_IndexBuffer);
+	targetArray->CalculateNormals();
 
 
-	m_Shader.reset(Hazel::Shader::Create("shaders/test.vert", "shaders/test.frag"));
+	std::shared_ptr<Hazel::Shader> shader = Hazel::sp(Hazel::Shader::Create("shaders/test.vert", "shaders/test.frag"));
 
 	m_Camera.reset(new Hazel::FPSCamera(50.0f));
-	m_Camera->GetStorage().SetPosition(vec3(0.0f, 2.0f, 10.0f));
-	m_Camera->ForceUpdate();
+	m_Camera->SetPosition(vec3(0.0f, 2.0f, 10.0f));
+	m_Camera->RecalculateViewMatrix();
 
-	m_GrassTexture.reset(Hazel::Texture2D::Load("assets/img/grass.png", Hazel::TextureBuilder::Default()));
-	m_TargetTexture.reset(Hazel::Texture2D::Load("assets/img/red.png", Hazel::TextureBuilder::Default()));
+	std::shared_ptr<Hazel::Texture2D> redTexture = Hazel::sp(Hazel::Texture2D::Load("assets/img/red.png", Hazel::TextureBuilder::Default()));
 
-	m_terrain = new Terrain(-30000.0f, 30000.0f, -30000.0f, 30000.0f, -2.0f, 8, 200.0f);
+	m_terrain = new Terrain(shader, -30000.0f, 30000.0f, -30000.0f, 30000.0f, -2.0f, 8, 200.0f);
+	m_terrain2 = new Terrain(shader, -600.0f, -175.0f, -600.0f, -175.0f, 40.0f, 4, 30.0f);
+
+	vec3 positions[4] = { vec3(-100, 5, -100), vec3(100, 5, -100), vec3(-100, 5, 100) , vec3(100, 5, 100) };
+	for (int i = 0; i < 4; i++) {
+		m_Meshes.emplace_back(targetArray, shader, redTexture, positions[i]);
+	}
 }
 
 std::ostream& operator<<(std::ostream& os, const vec3& vec) { return os << '[' << vec.x << ", " << vec.y << ", " << vec.z << ", " << ']'; }
@@ -110,9 +115,9 @@ void Sandbox::Update()
 		std::uniform_real_distribution<float> zDist(0.0f, displacement);
 		vec3 pos(xDist(eng), y, zDist(eng));
 		vec3 rot(pitch(eng), yaw(eng), roll(eng));
-		m_Camera->GetStorage().SetPosition(pos);
-		m_Camera->GetStorage().SetEulerAngles(rot);
-		m_Camera->ForceUpdate();
+		m_Camera->SetPosition(pos);
+		m_Camera->SetEulerAngles(rot);
+		m_Camera->RecalculateViewMatrix();
 	}
 	else
 	{
@@ -125,65 +130,58 @@ void Sandbox::Render()
 	if (launching && !generating) {
 		vec3 pos = m_Camera->GetStorage().GetPosition();
 		pos.y = GetHeight();
-		m_Camera->GetStorage().SetPosition(pos);
-		m_Camera->GetStorage().Update();
+		m_Camera->SetPosition(pos);
+		m_Camera->RecalculateViewMatrix();
 	}
 	Application::Get().GetWindow().ShowCursor(paused | generating);
-	Hazel::Renderer::BeginScene();
-	{
-		Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-		Hazel::RenderCommand::Clear();
 
-		m_Shader->Bind();
+	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+	Hazel::RenderCommand::Clear();
 
-		m_Shader->SetUniform(std::string("u_VP"), m_Camera->GetVPMatrix());
-		//m_Shader->SetUniform(std::string("u_LightPosition"), lightPosition);
-		//m_Shader->SetUniform(std::string("u_LightColor"), lightColor);
+	Hazel::Renderer::BeginScene(*m_Camera, m_Lights);
 
-		
-		m_Shader->SetUniform("u_Model", identity<mat4>());
-		m_GrassTexture->Bind();
-		Hazel::Renderer::Submit(m_terrain->GetArray());
-		
-		vec3 positions[4] = {vec3(-100, 5, -100), vec3(100, 5, -100), vec3(-100, 5, 100) , vec3(100, 5, 100) };
-		for (int i = 0; i < 4; i++) {
-			m_Shader->SetUniform("u_Model", translate(positions[i]));
-			m_TargetTexture->Bind();
-			Hazel::Renderer::Submit(m_VertexArray);
-		}
-		if (generating)
-		{
-			//generating = false;// for generating one frame
-			int width = GetWindow().GetWidth(), height = GetWindow().GetHeight();
-			uint8_t* bytes = new uint8_t[3 * width * height];
-			glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, bytes);
-			glFinish();
-			FIBITMAP* bitmap = FreeImage_ConvertFromRawBits(bytes, width, height, 3 * width, 24, 0xff0000, 0xff00, 0xff);
-			
-			char pngName[128], altitudeName[128];
-			std::uniform_int_distribution nameDist(0, 1000000);
-			int name = nameDist(eng);
-			snprintf(pngName, sizeof(pngName), "pics/%d.png", name);
-			snprintf(altitudeName, sizeof(altitudeName), "pics/%d.txt", name);
-			if (!FreeImage_Save(FIF_PNG, bitmap, pngName))
-			{
-				HZ_WARN("Failed to save file {}", pngName);
-			}
-			else
-			{
-				FILE* file = fopen(altitudeName, "wb");
-				fprintf(file, "%.2f\n", m_Camera->GetStorage().GetPosition().y);
-				fclose(file);
-			}
-			glFinish();
+	//m_Shader->SetUniform(std::string("u_LightPosition"), lightPosition);
+	//m_Shader->SetUniform(std::string("u_LightColor"), lightColor);
+	Hazel::Renderer::Submit(*m_terrain);
+	Hazel::Renderer::Submit(*m_terrain2);
 
-			FreeImage_Unload(bitmap);
-			delete[] bytes;
-		
-		}
-	}
 	Hazel::Renderer::EndScene();
 	//Renderer::Flush();
+	
+	for (auto& mesh : m_Meshes) {
+		Hazel::Renderer::Submit(mesh);
+	}
+	if (generating)
+	{
+		//generating = false;// for generating one frame
+		int width = GetWindow().GetWidth(), height = GetWindow().GetHeight();
+		uint8_t* bytes = new uint8_t[3 * width * height];
+		glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, bytes);
+		glFinish();
+		FIBITMAP* bitmap = FreeImage_ConvertFromRawBits(bytes, width, height, 3 * width, 24, 0xff0000, 0xff00, 0xff);
+			
+		char pngName[128], altitudeName[128];
+		std::uniform_int_distribution nameDist(0, 1000000);
+		int name = nameDist(eng);
+		snprintf(pngName, sizeof(pngName), "pics/%d.png", name);
+		snprintf(altitudeName, sizeof(altitudeName), "pics/%d.txt", name);
+		if (!FreeImage_Save(FIF_PNG, bitmap, pngName))
+		{
+			HZ_WARN("Failed to save file {}", pngName);
+		}
+		else
+		{
+			FILE* file = fopen(altitudeName, "wb");
+			fprintf(file, "%.2f\n", m_Camera->GetPosition().y);
+			fclose(file);
+		}
+		glFinish();
+
+		FreeImage_Unload(bitmap);
+		delete[] bytes;
+		
+		
+	}
 }
 
 Sandbox::~Sandbox()

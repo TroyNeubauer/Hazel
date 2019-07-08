@@ -103,13 +103,13 @@ namespace Hazel {
 	public:
 		NoAPIShader(File& vertexSource, File& fragSource) : m_ID(0) {}
 
-		virtual void SetUniform(std::string& name, const float value) {}
-		virtual void SetUniform(std::string& name, const int value) {}
-		virtual void SetUniform(std::string& name, const glm::vec2& vec) {}
-		virtual void SetUniform(std::string& name, const glm::vec3& vec) {}
-		virtual void SetUniform(std::string& name, const glm::vec4& vec) {}
-		virtual void SetUniform(std::string& name, const glm::mat3& mat) {}
-		virtual void SetUniform(std::string& name, const glm::mat4& mat) {}
+		virtual void UploadUniformFloat(const std::string& name, const float value) {}
+		virtual void UploadUniformInt(const std::string& name, const int value) {}
+		virtual void UploadUniformVec2(const std::string& name, const glm::vec2& vec) {}
+		virtual void UploadUniformVec3(const std::string& name, const glm::vec3& vec) {}
+		virtual void UploadUniformVec4(const std::string& name, const glm::vec4& vec) {}
+		virtual void UploadUniformMat3(const std::string& name, const glm::mat3& mat) {}
+		virtual void UploadUniformMat4(const std::string& name, const glm::mat4& mat) {}
 
 		virtual void Bind() const override {}
 

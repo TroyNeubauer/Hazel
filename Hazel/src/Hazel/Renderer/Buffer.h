@@ -51,7 +51,7 @@ namespace Hazel {
 				m_Stride += element.Size;
 			}
 		}
-		BufferLayout() {}
+		BufferLayout() : m_Stride(0) {}
 
 		std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
 		std::vector<BufferElement>::iterator end() { return m_Elements.end(); }

@@ -20,6 +20,6 @@ void main()
 	difuseLighting = max(difuseLighting, 0.0f);//No negitive lighting
 
 	color = vec4(difuseLighting * u_LightColor, 1.0f) * albedo;
-	color = mix(albedo, vec4(122f/255f, 64f/255f, 2f/255f, 1.0f), v_Brown);
+	color = mix(albedo, vec4(122.0f/255.0f, 64.0f/255.0f, 2.0f/255.0f, 1.0f), v_Brown);
 	color.a = 1.0f;
 }

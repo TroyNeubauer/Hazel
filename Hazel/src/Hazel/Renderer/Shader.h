@@ -9,16 +9,13 @@ namespace Hazel {
 	class Shader {
 	public:
 
-		template<typename T>
-		void SetUniform(const char* name, T& value) { SetUniform(std::string(name), value); }
-
-		virtual void SetUniform(std::string& name, const float value) = 0;
-		virtual void SetUniform(std::string& name, const int value) = 0;
-		virtual void SetUniform(std::string& name, const glm::vec2& vec) = 0;
-		virtual void SetUniform(std::string& name, const glm::vec3& vec) = 0;
-		virtual void SetUniform(std::string& name, const glm::vec4& vec) = 0;
-		virtual void SetUniform(std::string& name, const glm::mat3& mat) = 0;
-		virtual void SetUniform(std::string& name, const glm::mat4& mat) = 0;
+		virtual void UploadUniformFloat(const std::string& name, const float value) = 0;
+		virtual void UploadUniformInt(const std::string& name, const int value) = 0;
+		virtual void UploadUniformVec2(const std::string& name, const glm::vec2& vec) = 0;
+		virtual void UploadUniformVec3(const std::string& name, const glm::vec3& vec) = 0;
+		virtual void UploadUniformVec4(const std::string& name, const glm::vec4& vec) = 0;
+		virtual void UploadUniformMat3(const std::string& name, const glm::mat3& mat) = 0;
+		virtual void UploadUniformMat4(const std::string& name, const glm::mat4& mat) = 0;
 		
 
 		virtual void Bind() const = 0;

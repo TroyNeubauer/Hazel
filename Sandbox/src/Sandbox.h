@@ -4,11 +4,13 @@
 #include <imgui/imgui.h>
 
 #include "Terrain.h"
+#include "Hazel/Mesh/Mesh.h"
+
+#include <vector>
 
 extern bool launching;
 extern float launchTime;
 
-extern vec3 lightPosition, lightColor;
 extern bool paused, generating;
 
 float GetTime();
@@ -28,11 +30,13 @@ public:
 
 private:
 	friend class ExampleLayer;
-	std::shared_ptr<Hazel::Shader> m_Shader;
-	std::shared_ptr<Hazel::VertexArray> m_VertexArray;
 	std::shared_ptr<Hazel::FPSCamera> m_Camera;
-	std::shared_ptr<Hazel::Texture2D> m_GrassTexture, m_TargetTexture;
 	Terrain* m_terrain;
+	Terrain* m_terrain2;
+
+	std::vector<Hazel::Mesh> m_Meshes;
+	std::vector<Hazel::Light> m_Lights;
+
 };
 
 extern Sandbox* sandbox;

@@ -8,7 +8,7 @@
 #include "Hazel/Core.h"
 
 namespace Hazel {
-	OpenGLShader::OpenGLShader(File& vertexSource, File& fragSource) {
+	OpenGLShader::OpenGLShader(File& vertexSource, File& fragSource) : m_ID(-1) {
 		Timer timer;
 		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
@@ -135,7 +135,7 @@ namespace Hazel {
 		glDeleteProgram(m_ID);
 	}
 
-	void OpenGLShader::CheckUniformType(std::string& name, GLenum type)
+	void OpenGLShader::CheckUniformType(const std::string& name, GLenum type)
 	{
 #ifdef HZ_DEBUG
 		if (m_UniformTypes.find(name) != m_UniformTypes.end()) {
@@ -145,11 +145,9 @@ namespace Hazel {
 			}
 		}
 #endif
-	}
+	}	
 
-	
-
-	void OpenGLShader::SetUniform(std::string& name, const float f)
+	void OpenGLShader::UploadUniformFloat(const std::string& name, const float f)
 	{
 		CheckUniformType(name, GL_FLOAT);
 		int location = GetUniformLocation(name);
@@ -157,7 +155,7 @@ namespace Hazel {
 			glUniform1f(location, f);
 	}
 
-	void OpenGLShader::SetUniform(std::string& name, const int value)
+	void OpenGLShader::UploadUniformInt(const std::string& name, const int value)
 	{
 		CheckUniformType(name, GL_SAMPLER_2D);
 		int location = GetUniformLocation(name);
@@ -165,7 +163,7 @@ namespace Hazel {
 			glUniform1i(location, value);
 	}
 	
-	void OpenGLShader::SetUniform(std::string& name, const glm::vec2& vec)
+	void OpenGLShader::UploadUniformVec2(const std::string& name, const glm::vec2& vec)
 	{
 		CheckUniformType(name, GL_FLOAT_VEC2);
 		int location = GetUniformLocation(name);
@@ -173,7 +171,7 @@ namespace Hazel {
 			glUniform2f(location, vec.x, vec.y);
 	}
 	
-	void OpenGLShader::SetUniform(std::string& name, const glm::vec3& vec)
+	void OpenGLShader::UploadUniformVec3(const std::string& name, const glm::vec3& vec)
 	{
 		CheckUniformType(name, GL_FLOAT_VEC3);
 		int location = GetUniformLocation(name);
@@ -181,7 +179,7 @@ namespace Hazel {
 			glUniform3f(location, vec.x, vec.y, vec.z);
 	}
 	
-	void OpenGLShader::SetUniform(std::string& name, const glm::vec4& vec)
+	void OpenGLShader::UploadUniformVec4(const std::string& name, const glm::vec4& vec)
 	{
 		CheckUniformType(name, GL_FLOAT_VEC4);
 		int location = GetUniformLocation(name);
@@ -189,20 +187,20 @@ namespace Hazel {
 			glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
 	}
 	
-	void OpenGLShader::SetUniform(std::string& name, const glm::mat3& mat)
+	void OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& mat)
 	{
 		CheckUniformType(name, GL_FLOAT_MAT3);
 		int location = GetUniformLocation(name);
 		if (location != -1)
-			glUniformMatrix3fv(location, 1, false, &(mat[0].x));
+			glUniformMatrix3fv(location, 1, false, value_ptr(mat));
 	}
 	
-	void OpenGLShader::SetUniform(std::string& name, const glm::mat4& mat)
+	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& mat)
 	{
 		CheckUniformType(name, GL_FLOAT_MAT4);
 		int location = GetUniformLocation(name);
 		if(location != -1)
-			glUniformMatrix4fv(location, 1, false, &(mat[0].x));
+			glUniformMatrix4fv(location, 1, false, value_ptr(mat));
 	}
 
 

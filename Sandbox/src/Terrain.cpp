@@ -11,10 +11,11 @@ static float Lerp(float min, float max, float f)
 
 FastNoiseSIMD* noise = nullptr;
 
-Terrain::Terrain(float minX, float maxX, float minZ, float maxZ, float baseY, unsigned int detail, float unitsPerTexture)
+Terrain::Terrain(std::shared_ptr<Hazel::Shader> shader, float minX, float maxX, float minZ, float maxZ, float baseY, unsigned int detail, float unitsPerTexture)
 {
+	this->Shader = shader;
 	Hazel::Timer timer;
-	m_Array.reset(Hazel::VertexArray::Create());
+	VertexArray.reset(Hazel::VertexArray::Create());
 	if (!noise)
 		noise = FastNoiseSIMD::NewFastNoiseSIMD();
 
@@ -43,15 +44,19 @@ Terrain::Terrain(float minX, float maxX, float minZ, float maxZ, float baseY, un
 	float* vertices = initalVertices;
 	uint32_t* indices = initalIndices;
 	
+	float centerX = (minX + maxX) / 2.0f, centerZ = (minZ + maxZ) / 2.0f;
+	float rangeX = maxX - minX, rangeZ = maxZ - minZ;
+	this->Position = { centerX, baseY, centerZ };
+
 	float u = 0.0f, v = 0.0f;
 	float texIncrement = squareLength / unitsPerTexture;
 	int heightIndex = 0;
 	for (int zIt = 0; zIt < verticesPerSide; zIt++) {//Write vertex
 		u = 0.0f;
 		for (int xIt = 0; xIt < verticesPerSide; xIt++) {
-			float x = Lerp(minX, maxX, (float) xIt / (float) rowsPerSide);
-			float y = 100.0f * heights[heightIndex] + baseY;
-			float z = Lerp(minZ, maxZ, (float) zIt / (float) rowsPerSide);
+			float x = Lerp(-rangeX / 2.0f, rangeX / 2.0f, (float) xIt / (float) rowsPerSide);
+			float y = 100.0f * heights[heightIndex];
+			float z = Lerp(-rangeZ / 2.0f, rangeZ / 2.0f, (float) zIt / (float) rowsPerSide);
 
 			*vertices++ = x;
 			*vertices++ = y;
@@ -88,10 +93,13 @@ Terrain::Terrain(float minX, float maxX, float minZ, float maxZ, float baseY, un
 	
 	auto vertexBuffer = Hazel::sp(Hazel::VertexBuffer::Create(initalVertices, vertexCount * layout.GetStride()));
 	vertexBuffer->SetLayout(layout);
-	m_Array->AddVertexBuffer(vertexBuffer);
-	
-	m_Array->SetIndexBuffer(Hazel::sp(Hazel::IndexBuffer::Create(initalIndices, indexCount * sizeof(uint32_t))));
-	m_Array->CalculateNormals();
+	VertexArray->AddVertexBuffer(vertexBuffer);
+
+	VertexArray->SetIndexBuffer(Hazel::sp(Hazel::IndexBuffer::Create(initalIndices, indexCount * sizeof(uint32_t))));
+	VertexArray->CalculateNormals();
+
+	Texture.reset(Hazel::Texture2D::Load("assets/img/grass.png"));
+
 	timer.Stop()->Print("Generating terrain took", spdlog::level::warn);
 
 	delete[] heights;

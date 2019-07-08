@@ -10,7 +10,7 @@ out vec3 v_Normal;
 out vec3 v_ToLightVector;
 out float v_Brown;
 
-uniform mat4 u_VP;
+uniform mat4 u_ViewProjectionMatrix;
 uniform mat4 u_Model;
 
 uniform vec3 u_LightPosition;
@@ -20,6 +20,6 @@ void main()
 	v_Brown = a_Brown;
 	v_TextCoords = a_TextCoords;
 	v_Normal = a_Normal;
-	gl_Position = u_VP * u_Model * vec4(a_Position, 1.0f);
+	gl_Position = u_ViewProjectionMatrix * u_Model * vec4(a_Position, 1.0f);
 	v_ToLightVector = u_LightPosition - a_Position;
 }
