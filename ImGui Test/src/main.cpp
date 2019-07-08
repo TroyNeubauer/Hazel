@@ -16,6 +16,7 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include "imgui_memory_editor.h"
+#include "MapViewer.h"
 
 
 static void glfw_error_callback(int error, const char* description)
@@ -24,6 +25,7 @@ static void glfw_error_callback(int error, const char* description)
 }
 
 static MemoryEditor editor;
+static MapViewer viewer(0.0f, 0.0f, 40000.0f);
 
 int main(int, char**)
 {
@@ -90,8 +92,9 @@ int main(int, char**)
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		char data[1024];
-		editor.DrawWindow("Map", data, sizeof(data));
+		char data[8];
+		editor.DrawWindow("Editor", data, sizeof(data));
+		viewer.DrawWindow("Map");
 
 		// Rendering
 		ImGui::Render();
