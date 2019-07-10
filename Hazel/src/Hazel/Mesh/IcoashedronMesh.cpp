@@ -2,16 +2,33 @@
 #include "IcoashedronMesh.h"
 #include "Hazel/glm.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 namespace Hazel {
 
-	const float X = .525731112119133606f;
-	const float Z = .850650808352039932f;
-	const float N = 0.0f;
-	const float O = 1.0f;
 
-	IcoashedronMesh::IcoashedronMesh(Path texture)
+	static void CalculateTexCoords(std::vector<float>& vertices)
 	{
+		for (int i = 0; i < vertices.size(); )
+		{
+			vec3 pos(vertices[i++], vertices[i++], vertices[i++]);
+			pos = normalize(pos);
+			i += 3;//Skip normal			
+
+			float u = 0.5 + atan2(pos.z, pos.x) / (2 * M_PI);
+			float v = 0.5 - asin(pos.y) / M_PI;
+
+			vertices[i++] = u;
+			vertices[i++] = v;
+		}
+	}
+
+	IcoashedronMesh::IcoashedronMesh(Path texture, float radius)
+	{
+		const float X = .525731112119133606f	* radius;
+		const float Z = .850650808352039932f	* radius;
+		const float N = 0.0f					* radius;
 		//http://en.wikipedia.org/wiki/Icosahedron
 
 		Hazel::BufferLayout layout =
@@ -21,21 +38,23 @@ namespace Hazel {
 			{ Hazel::ShaderDataType::Float2, "a_TextCoords" },
 		};
 
-		float initalVertices[8 * 12] =
+		std::vector<float> initalVertices =
 		{
-			-X,  N,  Z,    N,  O,  N,    N,   N,
-			 X,  N,  Z,	   N,  O,  N,    N,   N,
-			-X,  N, -Z,    N,  O,  N,    N,   N,
-			 X,  N, -Z,	   N,  O,  N,    N,   N,
-			 N,  Z,  X,    N,  O,  N,    N,   N,
-			 N,  Z, -X,	   N,  O,  N,    N,   N,
-			 N, -Z,  X,	   N,  O,  N,    N,   N,
-			 N, -Z, -X,	   N,  O,  N,    N,   N,
-			 Z,  X,  N,	   N,  O,  N,    N,   N,
-			-Z,  X,  N,	   N,  O,  N,    N,   N,
-			 Z, -X,  N,	   N,  O,  N,    N,   N,
-			-Z, -X,  N,	   N,  O,  N,    N,   N,
+			-X,  N,  Z,    0,  1,  0,    0,   0,
+			 X,  N,  Z,	   0,  1,  0,    0,   0,
+			-X,  N, -Z,    0,  1,  0,    0,   0,
+			 X,  N, -Z,	   0,  1,  0,    0,   0,
+			 N,  Z,  X,    0,  1,  0,    0,   0,
+			 N,  Z, -X,	   0,  1,  0,    0,   0,
+			 N, -Z,  X,	   0,  1,  0,    0,   0,
+			 N, -Z, -X,	   0,  1,  0,    0,   0,
+			 Z,  X,  N,	   0,  1,  0,    0,   0,
+			-Z,  X,  N,	   0,  1,  0,    0,   0,
+			 Z, -X,  N,	   0,  1,  0,    0,   0,
+			-Z, -X,  N,	   0,  1,  0,    0,   0,
 		};
+
+		CalculateTexCoords(initalVertices);
 	
 		uint32_t initalIndices[3 * 20] = 
 		{ 
@@ -46,9 +65,8 @@ namespace Hazel {
 		};
 
 		this->VertexArray = sp(VertexArray::Create());
-	
-		std::shared_ptr<VertexBuffer> vertexBuffer = sp(VertexBuffer::Create(initalVertices, sizeof(initalVertices)));
-
+		
+		std::shared_ptr<VertexBuffer> vertexBuffer = sp(VertexBuffer::Create(initalVertices.data(), sizeof(float) * initalVertices.size()));
 	
 		vertexBuffer->SetLayout(layout);
 		VertexArray->AddVertexBuffer(vertexBuffer);
@@ -64,7 +82,16 @@ namespace Hazel {
 
 	void IcoashedronMesh::Subdivide(int divitions)
 	{
+		/*std::vector<float> newVertices;//8 floats per vertex
+		
+		float* oldVertices = (float*) VertexArray->GetVertexBuffers()[0]->Map(MapAccess::READ_ONLY);
 
+		uint32_t* oldIndices = (uint32_t*) VertexArray->GetIndexBuffer()->Map(MapAccess::READ_ONLY);
+		int oldIndexCount = VertexArray->GetIndexBuffer()->Count();
+
+		
+		CalculateTexCoords(newVertices);
+		VertexArray->GetVertexBuffers()[0]->SetData(newVertices.data(), sizeof(float) * newVertices.size());*/
 	}
 }
 

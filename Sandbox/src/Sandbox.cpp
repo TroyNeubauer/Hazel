@@ -96,8 +96,8 @@ Sandbox::Sandbox()
 		m_Meshes.push_back(Hazel::sp(new Hazel::Mesh(targetArray, shader, redTexture, positions[i])));
 	}
 
-	Hazel::IcoashedronMesh* mesh = new Hazel::IcoashedronMesh("assets/material/rusted_iron/albedo.png");
-
+	Hazel::IcoashedronMesh* mesh = new Hazel::IcoashedronMesh("assets/material/rusted_iron/albedo.png", 10.0f);
+	mesh->Subdivide(3);
 	m_Meshes.push_back(Hazel::sp(mesh));
 	mesh->Position = { 0.0f, 10.0f, -5.0f };
 }
@@ -150,12 +150,22 @@ void Sandbox::Render()
 	Hazel::Renderer::Submit(*m_terrain);
 	Hazel::Renderer::Submit(*m_terrain2);
 
-	Hazel::Renderer::EndScene();
-	//Renderer::Flush();
+	if (Hazel::Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_5))
+	{
+		glPolygonMode(GL_FRONT, GL_LINE);
+		glPolygonMode(GL_BACK, GL_LINE);
+	}
 	
 	for (auto& mesh : m_Meshes) {
 		Hazel::Renderer::Submit(*mesh);
 	}
+	glPolygonMode(GL_FRONT, GL_FILL);
+	glPolygonMode(GL_BACK, GL_FILL);
+	
+	Hazel::Renderer::EndScene();
+	//Renderer::Flush();
+
+
 	if (generating)
 	{
 		//generating = false;// for generating one frame

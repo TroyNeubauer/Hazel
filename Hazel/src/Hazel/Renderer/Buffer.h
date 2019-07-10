@@ -90,6 +90,7 @@ namespace Hazel {
 		virtual void Unmap(void* buffer) = 0;
 
 		inline uint32_t Count() const { return Bytes() / ElementSize(); }
+		inline uint32_t VertexCount() const { return Bytes() / GetLayout().GetStride(); }
 		inline uint64_t ElementSize() const { return sizeof(T); }
 		virtual uint64_t Bytes() const = 0;
 
