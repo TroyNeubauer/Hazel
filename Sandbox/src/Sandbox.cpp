@@ -93,8 +93,13 @@ Sandbox::Sandbox()
 
 	vec3 positions[4] = { vec3(-100, 5, -100), vec3(100, 5, -100), vec3(-100, 5, 100) , vec3(100, 5, 100) };
 	for (int i = 0; i < 4; i++) {
-		m_Meshes.emplace_back(targetArray, shader, redTexture, positions[i]);
+		m_Meshes.push_back(Hazel::sp(new Hazel::Mesh(targetArray, shader, redTexture, positions[i])));
 	}
+
+	Hazel::IcoashedronMesh* mesh = new Hazel::IcoashedronMesh("assets/material/rusted_iron/albedo.png");
+
+	m_Meshes.push_back(Hazel::sp(mesh));
+	mesh->Position = { 0.0f, 10.0f, -5.0f };
 }
 
 std::ostream& operator<<(std::ostream& os, const vec3& vec) { return os << '[' << vec.x << ", " << vec.y << ", " << vec.z << ", " << ']'; }
@@ -149,7 +154,7 @@ void Sandbox::Render()
 	//Renderer::Flush();
 	
 	for (auto& mesh : m_Meshes) {
-		Hazel::Renderer::Submit(mesh);
+		Hazel::Renderer::Submit(*mesh);
 	}
 	if (generating)
 	{

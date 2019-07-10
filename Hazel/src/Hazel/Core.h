@@ -2,7 +2,7 @@
 #include "Hazel/Log.h"
 #include <memory>
 
-#if defined(HZ_DEBUG) && (!defined(HZ_ENABLE_ASSERTS))
+#if (defined(HZ_DEBUG) || defined(HZ_RELEASE)) && (!defined(HZ_ENABLE_ASSERTS))
 	#define HZ_ENABLE_ASSERTS
 #endif
 

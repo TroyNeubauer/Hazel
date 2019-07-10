@@ -39,6 +39,9 @@
 
 #include "Hazel/Enviorment/Light.h"
 
+#include "Hazel/Mesh/Mesh.h"
+#include "Hazel/Mesh/IcoashedronMesh.h"
+
 
 //glm
 #define GLM_FORCE_INTRINSICS
@@ -50,3 +53,7 @@
 
 //freeimage
 #include <FreeImage.h>
+
+//std
+#include <memory>
+

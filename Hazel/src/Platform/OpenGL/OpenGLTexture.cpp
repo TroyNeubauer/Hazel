@@ -1,5 +1,6 @@
 #include "hzpch.h"
 #include "OpenGLTexture.h"
+#include "OpenGLUtils.h"
 
 namespace Hazel {
 
@@ -11,17 +12,17 @@ namespace Hazel {
 
 	void OpenGLTexture2D::Bind() const
 	{
-		glBindTexture(GL_TEXTURE_2D, m_ID);
+		GLCall(glBindTexture(GL_TEXTURE_2D, m_ID));
 	}
 
 	void OpenGLTexture2D::Unbind() const
 	{
-		glBindTexture(GL_TEXTURE_2D, 0);
+		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
-		glDeleteTextures(1, &m_ID);
+		GLCall(glDeleteTextures(1, &m_ID));
 	}
 
 }

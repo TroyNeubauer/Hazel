@@ -99,7 +99,7 @@ Terrain::Terrain(std::shared_ptr<Hazel::Shader> shader, float minX, float maxX, 
 	VertexArray->CalculateNormals();
 
 	Texture.reset(Hazel::Texture2D::Load("assets/img/grass.png"));
-
+	HZ_CORE_WARN("Finished generating {} vertices, {} bytes of memory", vertexCount, indexCount * sizeof(uint32_t) + vertexCount * layout.GetStride());
 	timer.Stop()->Print("Generating terrain took", spdlog::level::warn);
 
 	delete[] heights;

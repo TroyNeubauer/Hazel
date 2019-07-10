@@ -46,7 +46,7 @@ namespace Hazel {
 	{
 	public:
 		EulerCameraStorage() 
-			: m_Posirion(0.0f), m_Pitch(0.0f), m_Yaw(0.0f) { RecalculateViewMatrix(); }
+			: m_Posirion(0.0f), m_Pitch(0.0f), m_Yaw(0.0f), m_Roll(0.0f) { RecalculateViewMatrix(); }
 		virtual void RecalculateViewMatrix()
 		{
 			m_ViewMatrix = identity<mat4>();

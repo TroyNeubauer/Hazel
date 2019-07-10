@@ -4,7 +4,6 @@
 #include <imgui/imgui.h>
 
 #include "Terrain.h"
-#include "Hazel/Mesh/Mesh.h"
 
 #include <vector>
 
@@ -34,7 +33,7 @@ private:
 	Terrain* m_terrain;
 	Terrain* m_terrain2;
 
-	std::vector<Hazel::Mesh> m_Meshes;
+	std::vector<std::shared_ptr<Hazel::Mesh>> m_Meshes;
 	std::vector<Hazel::Light> m_Lights;
 
 };
