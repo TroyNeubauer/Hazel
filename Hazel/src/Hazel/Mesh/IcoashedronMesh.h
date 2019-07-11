@@ -9,7 +9,8 @@ namespace Hazel {
 	public:
 		IcoashedronMesh(Path texture, float radius = 1.0f);
 		void Subdivide(int divitions);
-
+	private:
+		float m_Radius;
 	};
 
 }

@@ -1,22 +1,22 @@
-HAZEL-22060:[07/10/19 00:16 00.754] info: Creating window "Hazel Engine" (1280, 720)
-HAZEL-22060:[07/10/19 00:16 01.228] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
-HAZEL-22060:[07/10/19 00:16 01.423] info: Reading shader files shaders/test.vert, shaders/test.frag
-HAZEL-22060:[07/10/19 00:16 01.424] info: Reading texture file assets/img/red.png
-HAZEL-22060:[07/10/19 00:16 01.425] info: Reading texture took 324.0 microseconds
-HAZEL-22060:[07/10/19 00:16 01.437] info: Dont with first
-HAZEL-22060:[07/10/19 00:16 01.466] info: Reading texture file assets/img/grass.png
-HAZEL-22060:[07/10/19 00:16 01.528] info: Reading texture took 61.53 milliseconds
-HAZEL-22060:[07/10/19 00:16 01.528] warning: Finished generating 66049 vertices, 3950628 bytes of memory
-HAZEL-22060:[07/10/19 00:16 01.529] warning: Generating terrain took 104.56 milliseconds
-HAZEL-22060:[07/10/19 00:16 01.573] info: Dont with first
-HAZEL-22060:[07/10/19 00:16 01.573] info: Reading texture file assets/img/grass.png
-HAZEL-22060:[07/10/19 00:16 01.648] info: Reading texture took 74.78 milliseconds
-HAZEL-22060:[07/10/19 00:16 01.649] warning: Finished generating 289 vertices, 16548 bytes of memory
-HAZEL-22060:[07/10/19 00:16 01.651] warning: Generating terrain took 120.44 milliseconds
-HAZEL-22060:[07/10/19 00:16 01.685] info: Reading texture file assets/img/grass.png
-HAZEL-22060:[07/10/19 00:16 01.765] info: Reading texture took 79.92 milliseconds
-HAZEL-22060:[07/10/19 00:16 01.765] info: Reading shader files shaders/pbr.vert, shaders/pbr.frag
-HAZEL-22060:[07/10/19 00:16 01.790] info: Reading texture file assets/material/rusted_iron/albedo.png
-HAZEL-22060:[07/10/19 00:16 02.261] info: Reading texture took 470.46 milliseconds
-HAZEL-22060:[07/10/19 00:16 02.262] info: Complete initialization took 1.630 seconds
-HAZEL-22060:[07/10/19 00:16 09.835] info: Destroying logging
+HAZEL-6532:[07/10/19 22:43 38.131] info: Creating window "Hazel Engine" (1280, 720)
+HAZEL-6532:[07/10/19 22:43 39.213] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
+HAZEL-6532:[07/10/19 22:43 39.512] info: Reading shader files shaders/test.vert, shaders/test.frag
+HAZEL-6532:[07/10/19 22:43 39.524] info: Reading texture file assets/img/red.png
+HAZEL-6532:[07/10/19 22:43 39.529] info: Reading texture took 3.92 milliseconds
+HAZEL-6532:[07/10/19 22:43 39.573] info: Dont with first
+HAZEL-6532:[07/10/19 22:43 39.789] info: Reading texture file assets/img/grass.png
+HAZEL-6532:[07/10/19 22:43 40.058] info: Reading texture took 265.19 milliseconds
+HAZEL-6532:[07/10/19 22:43 40.060] warning: Finished generating 66049 vertices, 3950628 bytes of memory
+HAZEL-6532:[07/10/19 22:43 40.060] warning: Generating terrain took 531.24 milliseconds
+HAZEL-6532:[07/10/19 22:43 40.063] info: Dont with first
+HAZEL-6532:[07/10/19 22:43 40.067] info: Reading texture file assets/img/grass.png
+HAZEL-6532:[07/10/19 22:43 40.295] info: Reading texture took 224.96 milliseconds
+HAZEL-6532:[07/10/19 22:43 40.299] warning: Finished generating 289 vertices, 16548 bytes of memory
+HAZEL-6532:[07/10/19 22:43 40.299] warning: Generating terrain took 237.60 milliseconds
+HAZEL-6532:[07/10/19 22:43 40.305] info: Reading texture file assets/img/grass.png
+HAZEL-6532:[07/10/19 22:43 40.507] info: Reading texture took 201.70 milliseconds
+HAZEL-6532:[07/10/19 22:43 40.509] info: Reading shader files shaders/pbr.vert, shaders/pbr.frag
+HAZEL-6532:[07/10/19 22:43 40.512] info: Reading texture file assets/material/rusted_iron/albedo.png
+HAZEL-6532:[07/10/19 22:43 41.753] info: Reading texture took 1.241 seconds
+HAZEL-6532:[07/10/19 22:43 41.768] info: Complete initialization took 3.955 seconds
+HAZEL-6532:[07/10/19 22:44 08.534] info: Destroying logging

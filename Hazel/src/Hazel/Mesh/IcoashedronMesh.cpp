@@ -4,6 +4,7 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <map>
 
 namespace Hazel {
 
@@ -25,6 +26,7 @@ namespace Hazel {
 	}
 
 	IcoashedronMesh::IcoashedronMesh(Path texture, float radius)
+		: m_Radius(radius)
 	{
 		const float X = .525731112119133606f	* radius;
 		const float Z = .850650808352039932f	* radius;
@@ -80,18 +82,78 @@ namespace Hazel {
 		this->Texture = sp(Texture2D::Load(texture, TextureBuilder::Default().ClampEdges()));
 	}
 
-	void IcoashedronMesh::Subdivide(int divitions)
+	using Lookup=std::map<std::pair<uint32_t, uint32_t>, uint32_t>;
+
+	vec3 GetPosition(std::vector<float>& vertices, int index)
 	{
-		/*std::vector<float> newVertices;//8 floats per vertex
-		
-		float* oldVertices = (float*) VertexArray->GetVertexBuffers()[0]->Map(MapAccess::READ_ONLY);
+		index *= 8;//8 floats per vertex
+		return vec3(vertices[index], vertices[index + 1], vertices[index + 2]);
+	}
 
-		uint32_t* oldIndices = (uint32_t*) VertexArray->GetIndexBuffer()->Map(MapAccess::READ_ONLY);
-		int oldIndexCount = VertexArray->GetIndexBuffer()->Count();
+	uint32_t vertex_for_edge(Lookup& lookup, std::vector<float>& vertices, uint32_t first, uint32_t second, float radius)
+	{
+		Lookup::key_type key(first, second);
+		if (key.first > key.second)
+			std::swap(key.first, key.second);
+
+		auto inserted = lookup.insert({ key, vertices.size() / 8 });
+		if (inserted.second)//The vertex doesnt exist
+		{
+			vec3 edge0 = GetPosition(vertices, first);
+			vec3 edge1 = GetPosition(vertices, second);
+			vec3 point = radius * normalize(edge0 + edge1);
+			
+			vertices.push_back(point.x);
+			vertices.push_back(point.y);
+			vertices.push_back(point.z);
+
+			vertices.push_back(0.0f); vertices.push_back(1.0f); vertices.push_back(0.0f);//Normal
+			vertices.push_back(0.0f); vertices.push_back(0.0f);//Texture Coordinate
+		}
+
+		return inserted.first->second;
+	}
+
+	void IcoashedronMesh::Subdivide(int divisions)
+	{
+		const std::shared_ptr<VertexBuffer>& vertexBuffer = VertexArray->GetVertexBuffers()[0];
+		const std::shared_ptr<IndexBuffer>& indexBuffer = VertexArray->GetIndexBuffer();
+
+		for (int count = 0; count < divisions; count++)
+		{
+			float* oldVertices = (float*) vertexBuffer->Map(MapAccess::READ_ONLY);
+			uint32_t* oldIndices = (uint32_t*) indexBuffer->Map(MapAccess::READ_ONLY);
+
+			std::vector<float> vertices(oldVertices, oldVertices + vertexBuffer->Count());//Start with existing points
+			std::vector<uint32_t> indices;
+
+			Lookup lookup;
+
+			for (int i = 0; i < indexBuffer->Count(); )
+			{
+				std::array<uint32_t, 3> mid;
+				uint32_t a = oldIndices[i++], b = oldIndices[i++], c = oldIndices[i++];
+				//Calculate the three new points
+				mid[0] = vertex_for_edge(lookup, vertices, a, b, m_Radius);
+				mid[1] = vertex_for_edge(lookup, vertices, b, c, m_Radius);
+				mid[2] = vertex_for_edge(lookup, vertices, c, a, m_Radius);
+			
+				//Add the 4 new triangles
+					 indices.push_back(a); indices.push_back(mid[0]); indices.push_back(mid[2]);
+					 indices.push_back(b); indices.push_back(mid[1]); indices.push_back(mid[0]);
+					 indices.push_back(c); indices.push_back(mid[2]); indices.push_back(mid[1]);
+				indices.push_back(mid[0]); indices.push_back(mid[1]); indices.push_back(mid[2]);
+			}
 
 		
-		CalculateTexCoords(newVertices);
-		VertexArray->GetVertexBuffers()[0]->SetData(newVertices.data(), sizeof(float) * newVertices.size());*/
+			CalculateTexCoords(vertices);
+			vertexBuffer->SetData(vertices);
+			indexBuffer->SetData(indices);
+
+		}
+		
+
+		VertexArray->CalculateNormals();
 	}
 }
 

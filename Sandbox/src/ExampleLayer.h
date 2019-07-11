@@ -33,56 +33,55 @@ public:
 
 	virtual void OnEvent(Hazel::Event* event) override
 	{
-		if (event->GetEventType() == Hazel::EventType::KeyReleased)
-		{
-			Hazel::KeyReleasedEvent* keyReleased = reinterpret_cast<Hazel::KeyReleasedEvent*>(event);
-			if (keyReleased)
-			{
-				if (keyReleased->GetKeyCode() == HZ_KEY_ESCAPE)
-					paused = !paused;
+		Hazel::EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<Hazel::KeyPressedEvent>(HZ_BIND_EVENT_FN(ExampleLayer::KeyPressed));
+		dispatcher.Dispatch<Hazel::KeyReleasedEvent>(HZ_BIND_EVENT_FN(ExampleLayer::KeyReleased));
+	}
 
-			}
+	bool KeyReleased(Hazel::KeyReleasedEvent* event)
+	{
+		if (event->GetKeyCode() == HZ_KEY_ESCAPE)
+			paused = !paused;
+		return false;
+	}
+
+	bool KeyPressed(Hazel::KeyPressedEvent* event)
+	{
+		int code = event->GetKeyCode();
+		if (code == HZ_KEY_L)//Launch
+		{
+			launching = true;
+			launchTime = Hazel::Engine::GetTime();
 		}
-		if (event->GetEventType() == Hazel::EventType::KeyPressed) {
-			Hazel::KeyPressedEvent* keyPressed = reinterpret_cast<Hazel::KeyPressedEvent*>(event);
-			if (keyPressed)
+		else if (code == HZ_KEY_C)//Cancel
+		{
+			if (launching)
 			{
-				int code = keyPressed->GetKeyCode();
-				if (code == HZ_KEY_L)//Launch
+				launching = false;
+				if (sandbox->m_Camera->GetStorage().GetPosition().y > 30.0f)
 				{
-					launching = true;
-					launchTime = Hazel::Engine::GetTime();
-				}
-				else if (code == HZ_KEY_C)//Cancel
-				{
-					if (launching)
-					{
-						launching = false;
-						if (sandbox->m_Camera->GetStorage().GetPosition().y > 30.0f)
-						{
-							vec3 pos = sandbox->m_Camera->GetStorage().GetPosition();
-							pos.y = 10.0f;
-							sandbox->m_Camera->GetStorage().SetPosition(pos);
-							sandbox->m_Camera->ForceUpdate();
-						}
-					}
-				}
-				else if (code == HZ_KEY_G)
-				{
-					generating = !generating;
-				}
-				else if (code == HZ_KEY_J)
-				{
-					sandbox->m_Camera->GetStorage().SetPosition(vec3(0.0f, 6900.0f, 0.0f));
-					sandbox->m_Camera->ForceUpdate();
-				}
-				else if (code == HZ_KEY_R)
-				{
-					sandbox->m_Camera->GetStorage().SetEulerAngles(vec3(0.0f, 0.0f, 0.0f));
+					vec3 pos = sandbox->m_Camera->GetStorage().GetPosition();
+					pos.y = 10.0f;
+					sandbox->m_Camera->GetStorage().SetPosition(pos);
 					sandbox->m_Camera->ForceUpdate();
 				}
 			}
 		}
+		else if (code == HZ_KEY_G)
+		{
+			generating = !generating;
+		}
+		else if (code == HZ_KEY_J)
+		{
+			sandbox->m_Camera->GetStorage().SetPosition(vec3(0.0f, 6900.0f, 0.0f));
+			sandbox->m_Camera->ForceUpdate();
+		}
+		else if (code == HZ_KEY_R)
+		{
+			sandbox->m_Camera->GetStorage().SetEulerAngles(vec3(0.0f, 0.0f, 0.0f));
+			sandbox->m_Camera->ForceUpdate();
+		}
+		return false;
 	}
 
 };
