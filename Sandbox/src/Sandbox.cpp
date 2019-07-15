@@ -4,22 +4,51 @@
 
 #include <iostream>
 #include <random>
+#include <filesystem>
 
 #include "ExampleLayer.h"
 
 
-bool launching, generating;
+bool launching;
 float launchTime;
 Sandbox* sandbox;
+int toGo = 0;
 
 std::random_device rd;
 std::mt19937 eng(rd());
 
 bool paused = false;
 
+float currentTime;
+
+
+void Sandbox::StopLaunch()
+{
+	launching = false;
+	if (m_Camera->GetStorage().GetPosition().y > 30.0f)
+	{
+		vec3 pos = m_Camera->GetStorage().GetPosition();
+		pos.y = 10.0f;
+		m_Camera->GetStorage().SetPosition(pos);
+		m_Camera->ForceUpdate();
+	}
+}
+
+void Sandbox::StartLaunch()
+{
+	launching = true;
+	launchTime = Hazel::Engine::GetTime();
+}
+
+void NextCaptureFrame()
+{
+	std::uniform_real_distribution<float> timeStep(0.1f, 1.6f);
+	currentTime += timeStep(eng);
+}
+
 float GetTime()
 {
-	return Hazel::Engine::GetTime() - launchTime;
+	return currentTime;
 }
 
 float GetHeight()
@@ -41,10 +70,11 @@ Sandbox::Sandbox()
 	HZ_INFO("Created app");
 	//HZ_WARN("warn");
 	//HZ_ERROR("error");
+	std::filesystem::directory_iterator();
 
 	std::shared_ptr<Hazel::VertexArray> targetArray = Hazel::sp(Hazel::VertexArray::Create());
 
-	const float diameter = 25.0f;
+	const float diameter = 30.0f;
 
 	Hazel::BufferLayout layout = {
 		{ Hazel::ShaderDataType::Float3, "a_Position" },
@@ -96,25 +126,24 @@ Sandbox::Sandbox()
 		m_Meshes.push_back(Hazel::sp(new Hazel::Mesh(targetArray, shader, redTexture, positions[i])));
 	}
 
-	Hazel::IcoashedronMesh* mesh = new Hazel::IcoashedronMesh("assets/material/rusted_iron/albedo.png", 10.0f);
-	mesh->Subdivide(3);
-	m_Meshes.push_back(Hazel::sp(mesh));
-	mesh->Position = { 0.0f, 10.0f, -5.0f };
+	//Hazel::IcoashedronMesh* mesh = new Hazel::IcoashedronMesh("assets/material/rusted_iron/albedo.png", 10.0f);
+	//mesh->Subdivide(3);
+	//m_Meshes.push_back(Hazel::sp(mesh));
+	//mesh->Position = { 0.0f, 10.0f, -5.0f };
 }
 
 std::ostream& operator<<(std::ostream& os, const vec3& vec) { return os << '[' << vec.x << ", " << vec.y << ", " << vec.z << ", " << ']'; }
 
 void Sandbox::Update()
 {
-	if (generating)
+	if (toGo)
 	{
 		std::uniform_real_distribution<float> altitude(0.0f, 6000.0f);
 		float y = altitude(eng);
-		float displacement = y / 6000.0f * 1000.0f;
-
-		std::uniform_real_distribution<float> pitch(radians(-110.0f), radians(-70.0f));
+		float displacement = y / 6000.0f * 200.0f;
+		std::uniform_real_distribution<float> pitch(radians(-95.0f), radians(-85.0f));
 		std::uniform_real_distribution<float> yaw(radians(0.0f), radians(360.0f));
-		std::uniform_real_distribution<float> roll(radians(-20.0f), radians(20.0f));
+		std::uniform_real_distribution<float> roll(radians(0.0f), radians(0.0f));
 
 		std::uniform_real_distribution<float> xDist(0.0f, displacement);
 		std::uniform_real_distribution<float> zDist(0.0f, displacement);
@@ -132,13 +161,13 @@ void Sandbox::Update()
 
 void Sandbox::Render()
 {
-	if (launching && !generating) {
+	if (launching && !toGo) {
 		vec3 pos = m_Camera->GetStorage().GetPosition();
 		pos.y = GetHeight();
 		m_Camera->SetPosition(pos);
 		m_Camera->RecalculateViewMatrix();
 	}
-	Application::Get().GetWindow().ShowCursor(paused | generating);
+	Application::Get().GetWindow().ShowCursor(paused | toGo);
 
 	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 	Hazel::RenderCommand::Clear();
@@ -148,9 +177,9 @@ void Sandbox::Render()
 	//m_Shader->SetUniform(std::string("u_LightPosition"), lightPosition);
 	//m_Shader->SetUniform(std::string("u_LightColor"), lightColor);
 	Hazel::Renderer::Submit(*m_terrain);
-	Hazel::Renderer::Submit(*m_terrain2);
+	//Hazel::Renderer::Submit(*m_terrain2);
 
-	if (Hazel::Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_5))
+	if (Hazel::Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_5) || Hazel::Input::IsKeyPressed(HZ_KEY_H))
 	{
 		glPolygonMode(GL_FRONT, GL_LINE);
 		glPolygonMode(GL_BACK, GL_LINE);
@@ -165,16 +194,14 @@ void Sandbox::Render()
 	Hazel::Renderer::EndScene();
 	//Renderer::Flush();
 
-
-	if (generating)
+	if (toGo)
 	{
-		//generating = false;// for generating one frame
 		int width = GetWindow().GetWidth(), height = GetWindow().GetHeight();
 		uint8_t* bytes = new uint8_t[3 * width * height];
 		glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, bytes);
 		glFinish();
 		FIBITMAP* bitmap = FreeImage_ConvertFromRawBits(bytes, width, height, 3 * width, 24, 0xff0000, 0xff00, 0xff);
-			
+		
 		char pngName[128], altitudeName[128];
 		std::uniform_int_distribution nameDist(0, 1000000);
 		int name = nameDist(eng);
@@ -194,9 +221,12 @@ void Sandbox::Render()
 
 		FreeImage_Unload(bitmap);
 		delete[] bytes;
-		
-		
+		if (toGo != -1)
+		{
+			toGo--;
+		}
 	}
+	NextCaptureFrame();
 }
 
 Sandbox::~Sandbox()

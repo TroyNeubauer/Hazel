@@ -21,7 +21,21 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
-		ImGui::Begin("Light Settings");
+		ImGui::Begin("Camera Info");
+		if (ImGui::Button("Generate 1000 pictures"))
+		{
+			toGo = 1000;
+		}
+		if (ImGui::Button("Generate 5000 pictures"))
+		{
+			toGo = 5000;
+		}
+		if (ImGui::Button("Zip images"))
+		{
+
+		}
+		ImGui::Text("Pictures remaining %d", toGo);
+		
 		//ImGui::DragFloat3("Light Position", &lightPosition.x, 0.5f);
 		//ImGui::DragFloat3("Light Color", &lightColor.x, 0.01f, 0.0f, 1.0f);
 		ImGui::Text("Altitude: %.1f", sandbox->m_Camera->GetStorage().GetPosition().y);
@@ -50,26 +64,21 @@ public:
 		int code = event->GetKeyCode();
 		if (code == HZ_KEY_L)//Launch
 		{
-			launching = true;
-			launchTime = Hazel::Engine::GetTime();
+			sandbox->StartLaunch();
 		}
 		else if (code == HZ_KEY_C)//Cancel
 		{
 			if (launching)
 			{
-				launching = false;
-				if (sandbox->m_Camera->GetStorage().GetPosition().y > 30.0f)
-				{
-					vec3 pos = sandbox->m_Camera->GetStorage().GetPosition();
-					pos.y = 10.0f;
-					sandbox->m_Camera->GetStorage().SetPosition(pos);
-					sandbox->m_Camera->ForceUpdate();
-				}
+				sandbox->StopLaunch();
 			}
 		}
 		else if (code == HZ_KEY_G)
 		{
-			generating = !generating;
+			if (toGo)
+				toGo = 0;
+			else
+				toGo = -1;
 		}
 		else if (code == HZ_KEY_J)
 		{

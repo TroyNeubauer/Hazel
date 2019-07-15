@@ -151,7 +151,6 @@ namespace Hazel {
 			indexBuffer->SetData(indices);
 
 		}
-		
 
 		VertexArray->CalculateNormals();
 	}

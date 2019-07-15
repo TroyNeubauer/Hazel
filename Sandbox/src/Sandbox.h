@@ -10,7 +10,9 @@
 extern bool launching;
 extern float launchTime;
 
-extern bool paused, generating;
+extern bool paused;
+extern int toGo;
+
 
 float GetTime();
 
@@ -24,6 +26,8 @@ public:
 	virtual void Update() override;
 
 	virtual void Render() override;
+	void StopLaunch();
+	void StartLaunch();
 
 	~Sandbox();
 

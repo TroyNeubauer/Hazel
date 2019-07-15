@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "CameraController.h"
 
+#include "Hazel/Engine.h"
 #include "Camera.h"
 #include "Hazel/Input.h"
 #include "Hazel/KeyCodes.h"
@@ -58,7 +59,7 @@ namespace Hazel {
 			update = true;
 			move = normalize(move);
 			move *= MOVE_AMOUNT;
-			pos += move;
+			pos += move * Engine::GetDeltaTime();
 			camera.SetPosition(pos);
 		}
 
