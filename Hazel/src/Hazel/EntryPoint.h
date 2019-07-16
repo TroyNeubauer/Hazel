@@ -1,9 +1,11 @@
 #pragma once
 
+#include <stdio.h>
 #include "Hazel/Context/ContextManager.h"
 #include "Hazel/System/Timer.h"
 
 #include <string>
+#include "Hazel/Util/StringUtils.h"
 
 #ifdef HZ_PLATFORM_WINDOWS
 
@@ -13,6 +15,10 @@ int main(int argc, char** argv)
 {
 	Hazel::Timer timer;
 	Hazel::Log::Init();
+	char result[128];
+	Hazel::FileSystem::NormalizePath("C:/test/../other/test/test/../Troy", result, sizeof(result));
+	
+	return 0;
 	
 	auto app = Hazel::CreateApplication(argc, argv);
 	timer.Stop()->Print("Complete initialization took");

@@ -2,6 +2,7 @@
 
 #include "Hazel/EntryPoint.h"
 
+
 #include <iostream>
 #include <random>
 #include <filesystem>
@@ -63,7 +64,6 @@ float GetHeight()
 Sandbox::Sandbox()
 {
 	m_Lights.push_back({ vec3(15000.0f, 100000.0f, -1000.0f), vec3(0.1f, 0.3f, 0.9f) });
-
 	sandbox = this;
 	PushLayer(new ExampleLayer());
 	PushOverlay(new Hazel::DebugLayer());

@@ -20,12 +20,15 @@ IncludeDir["glm"] = "Hazel/vendor/glm"
 IncludeDir["Vulkan"] = "Hazel/vendor/Vulkan/include"
 IncludeDir["freeimage"] = "Hazel/vendor/freeimage/Source"
 IncludeDir["FastNoiseSIMD"] = "Hazel/vendor/FastNoiseSIMD/FastNoiseSIMD"
+IncludeDir["str"] = "Hazel/vendor/ocornut_str"
 
 include "Hazel/vendor/GLFW"
 include "Hazel/vendor/Glad"
 include "Hazel/vendor/imgui"
 include "Hazel/vendor/freeimage"
 include "Hazel/vendor/FastNoiseSIMD"
+include "Hazel/vendor/ocornut_str"
+
 
 project "Hazel"
 	location "Hazel"
@@ -63,6 +66,7 @@ project "Hazel"
 		"%{IncludeDir.Vulkan}",
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.FastNoiseSIMD}",
+		"%{IncludeDir.str}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -87,6 +91,7 @@ project "Hazel"
 		"ImGui",
 		"freeimage",
 		"FastNoiseSIMD",
+		"str",
 	}
 
 	defines
@@ -186,6 +191,8 @@ project "Sandbox"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
+		"%{IncludeDir.str}",
+
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
 		"Hazel/vendor/freeimage/Source/FreeImageToolkit",

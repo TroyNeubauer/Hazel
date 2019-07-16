@@ -16,8 +16,7 @@ namespace Hazel {
 		uint64_t pageSize = System::PageSize();
 		DWORD dwFlagsAndAttributes = sequential ? FILE_FLAG_SEQUENTIAL_SCAN : FILE_FLAG_RANDOM_ACCESS;
 
-		m_FileHandle = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, 
-			NULL, OPEN_EXISTING, dwFlagsAndAttributes, NULL);
+		m_FileHandle = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, dwFlagsAndAttributes, NULL);
 		
 		if (m_FileHandle == INVALID_HANDLE_VALUE)
 		{
