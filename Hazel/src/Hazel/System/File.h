@@ -16,55 +16,104 @@
 	#error
 #endif
 
+
 namespace Hazel {
 
-	const char* FileErrorToString(FileError error);
-
-	//A class that uses fast, low-level API's to memory map a file for read only access and provide useful access to the data
+	//A class that uses fast, low-level API's quiclky access files
 	//Be warned, a file handle will be opened upon constructing an instance of this object
 	class File
 	{
 	public:
-		File(const char* path, bool sequential, FileError* error);
-		inline File(const char* path) : File(path, true, nullptr) {}
-		
-		inline File(std::string path, bool sequential, FileError* error) : File(path.c_str(), sequential, error) {}
-		inline File(std::string path) : File(path, true, nullptr) {}
+		static File* Open(Path& path, FileOpenOptions options = DEFAULT_OPTIONS, FileError* error = nullptr);
+
+		File(Path& path, FileOpenOptions options) : m_Path(path), m_Length((uint64_t) -1),
+			m_Read(options & FileOpenOptions::READ), m_Write(options& FileOpenOptions::WRITE), m_Append(options & FileOpenOptions::APPEND) {}
 
 		//No copying
 		File(File& other) = delete;
 		File(File&& other);
 
-		inline bool IsValid() { return m_FileHandle != INVALID_FILE_HANDLE; }
-
-		//Returns the amount of bytes the file consumes
+		//Returns the length of the file in bytes
 		inline uint64_t Length() { return m_Length; }
 
+		inline bool CanRead() { return m_Read; }
+		inline bool CanWrite() { return m_Write; }
+
+		virtual void Save() = 0;
+
+		template<typename T>
+		inline void Write(T* data, uint64_t elements, uint64_t offset = 0) { Write(static_cast<void*>(data), sizeof(T) * elements, offset); }
+		virtual void Write(void* data, uint64_t bytes, uint64_t offset = 0) = 0;
+
+		template<typename T>
+		inline void Read(T* data, uint64_t elements, uint64_t offset = 0) { Read(static_cast<void*>(data), sizeof(T) * elements, offset); }
+		virtual void Read(void* data, uint64_t bytes, uint64_t offset = 0) = 0;
+
+
+		//Returns true if calling Data() is allowed. This is the case for memory mapped files or files backed by a block of memory
+		//If this returns false then Calling Data et all. will return null
+		virtual bool HasDirectAccess() = 0;
+
 		//Returns a pointer to the first byte of the file
-		inline void* const Data() { return m_Data; }
+		//If CanWrite if false and the given pointer is written to, the results are undefined
+		virtual void* Data() = 0;
+
 		//Identical to Data()
 		inline uint8_t* const Begin() { return (uint8_t*) Data(); }
-		//Returns the first invalid byte of the file (the byte where the null terminator sits). For use in iterators
+		//Returns the first invalid byte of the file (the byte where the null terminator sits for AsString). For use in iterators
 		inline uint8_t* const End() { return Begin() + Length(); }
 
-		//Returns the first byte of this file with a null termination character at the end
-		inline char* const AsString() { return (char*) Data(); }
+		//Returns the data of this file with a null termination character at the end
+		virtual const char* AsString() = 0;
 
-		inline Path GetPath() { return m_Path; }
+		inline const Path& GetPath() { return m_Path; }
 
-		~File();
+		virtual ~File() {}
 
-	private:
-		Path m_Path;
-
+	protected:
+		const Path m_Path;
 		uint64_t m_Length;
-		//The platform dependent location of the file
-		FILE_HANDLE m_FileHandle = INVALID_FILE_HANDLE;
-		//Holds a pointer to the data
-		void* m_Data;
-		//If mapping another page to write the null termination character fails, this
-		// will be true indicating that m_Data must be freed instead of closed
-		bool m_FreeData = false, m_CompletedDeInit = false;
-		void* m_OtherPage = nullptr;
+		const bool m_Read, m_Write, m_Append;
+	};
+
+	//ArchivedFile represents a file within an archive using the location of the archive on disk as well as path specifying the file relative to the archive
+	class ArchivedFile : public File
+	{
+	public:
+		ArchivedFile(File* parent, Path& path, FileOpenOptions options, FileError* error);
+
+		virtual void Save();
+
+		virtual void Write(void* data, uint64_t bytes, uint64_t offset = 0);
+		virtual void Read(void* data, uint64_t bytes, uint64_t offset = 0);
+
+		inline virtual bool HasDirectAccess() { return true; }
+		inline virtual void* Data() { return m_Data; }
+		inline virtual const char* AsString() { return (const char*) m_Data; }
+
+		~ArchivedFile();
+	private:
+		File* m_Parent;
+		uint8_t* m_Data = nullptr;
+	};
+
+	class MemoryMappedFile : public File
+	{
+	public:
+		MemoryMappedFile(Path& path, FileOpenOptions options, FileError* error, uint8_t* data, uint64_t length);
+
+		virtual void Save();
+
+		virtual void Write(void* data, uint64_t bytes, uint64_t offset = 0);
+		virtual void Read(void* data, uint64_t bytes, uint64_t offset = 0);
+
+		inline virtual bool HasDirectAccess() { return true; }
+		inline virtual void* Data() { return m_Data; }
+		virtual const char* AsString();
+
+		~MemoryMappedFile();
+	private:
+		uint8_t* m_Data;
+		char* m_StringData = nullptr;
 	};
 }

@@ -12,13 +12,13 @@ namespace Hazel {
 		HZ_CORE_INFO("Reading texture file {}", path.ToString());
 		Timer timer;
 		FileError error = FileError::NONE;
-		File file = path.Open(true, &error);
-		if (error)
+		File* file = path.Open(FileOpenOptions::READ, error);
+		if (error != FileError::NONE)
 		{
 			HZ_CORE_ERROR("Unable open texture: {0}, Error: {1}", path.ToString(), FileErrorToString(error));
 			return nullptr;
 		}
-		timer.Stop()->Print("Reading texture took", spdlog::level::level_enum::trace);
+		timer.Stop().Print("Reading texture took", spdlog::level::level_enum::trace);
 		GraphicsAPIType api = GraphicsAPI::Get();
 		switch (api)
 		{

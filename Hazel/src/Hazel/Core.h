@@ -1,6 +1,14 @@
 #pragma once
+
 #include "Hazel/Log.h"
+#include <stdint.h>
 #include <memory>
+
+#ifdef _GCC
+	#define HZ_ALWAYS_INLINE __attribute__((always_inline))
+#else
+	#define HZ_ALWAYS_INLINE inline
+#endif
 
 #if (defined(HZ_DEBUG) || defined(HZ_RELEASE)) && (!defined(HZ_ENABLE_ASSERTS))
 	#define HZ_ENABLE_ASSERTS
@@ -32,13 +40,13 @@
 namespace Hazel {
 
 	template<typename T>
-	inline std::shared_ptr<T> sp(T* ptr)
+	HZ_ALWAYS_INLINE std::shared_ptr<T> sp(T* ptr)
 	{
 		return std::shared_ptr<T>(ptr);
 	}
 
 	template<typename T>
-	inline std::unique_ptr<T> up(T* ptr)
+	HZ_ALWAYS_INLINE std::unique_ptr<T> up(T* ptr)
 	{
 		return std::uniqie_ptr<T>(ptr);
 	}

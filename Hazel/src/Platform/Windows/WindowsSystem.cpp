@@ -11,6 +11,7 @@
 #include <pdh.h>
 
 namespace Hazel {
+
 	static SYSTEM_INFO info = {};
 	static uint64_t timerResulution = 0;
 

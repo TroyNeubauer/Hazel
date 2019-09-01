@@ -101,7 +101,7 @@ namespace Hazel {
 	class NoAPIShader : public Shader
 	{
 	public:
-		NoAPIShader(File& vertexSource, File& fragSource) : m_ID(0) {}
+		NoAPIShader(File* vertexSource, File* fragSource) : m_ID(0) {}
 
 		virtual void UploadUniformFloat(const std::string& name, const float value) {}
 		virtual void UploadUniformInt(const std::string& name, const int value) {}
@@ -123,7 +123,7 @@ namespace Hazel {
 	class NoAPITexture2D : public Texture2D
 	{
 	public:
-		NoAPITexture2D(File& file, TextureBuilder& builder = TextureBuilder::Default()) {}
+		NoAPITexture2D(File* file, TextureBuilder& builder = TextureBuilder::Default()) {}
 
 		virtual void Bind() const override {}
 		virtual void Unbind() const override {}

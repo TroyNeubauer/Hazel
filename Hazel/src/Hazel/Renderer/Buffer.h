@@ -67,12 +67,12 @@ namespace Hazel {
 		uint32_t m_Stride;
 	};
 
-	enum BufferType
+	enum class BufferType
 	{
 		VERTEX, INDEX
 	};
 
-	enum MapAccess
+	enum class MapAccess
 	{
 		READ_ONLY, WRITE_ONLY, READ_WRITE
 	};

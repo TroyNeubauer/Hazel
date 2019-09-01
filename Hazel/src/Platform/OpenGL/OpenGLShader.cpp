@@ -9,12 +9,12 @@
 #include "Hazel/Core.h"
 
 namespace Hazel {
-	OpenGLShader::OpenGLShader(File& vertexSource, File& fragSource) : m_ID(-1) {
+	OpenGLShader::OpenGLShader(File* vertexSource, File* fragSource) : m_ID(-1) {
 		Timer timer;
 		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
 		// Send the vertex shader source code to GL
-		const GLchar *const vertexArray[1] = { vertexSource.AsString() };
+		const GLchar *const vertexArray[1] = { vertexSource->AsString() };
 		GLCall(glShaderSource(vertexShader, 1, vertexArray, 0));
 
 		// Compile the vertex shader
@@ -40,7 +40,7 @@ namespace Hazel {
 
 		// Create an empty fragment shader handle
 		GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		const GLchar *const fragArray[1] = { fragSource.AsString() };
+		const GLchar *const fragArray[1] = { fragSource->AsString() };
 		GLCall(glShaderSource(fragmentShader, 1, fragArray, 0));
 
 		// Compile the fragment shader
@@ -118,7 +118,7 @@ namespace Hazel {
 #endif
 		}
 
-		timer.Stop()->Print("Compiling and linking shader took", spdlog::level::level_enum::trace);
+		timer.Stop().Print("Compiling and linking shader took", spdlog::level::level_enum::trace);
 	}
 
 	void OpenGLShader::Bind() const

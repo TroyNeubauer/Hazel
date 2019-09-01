@@ -12,8 +12,8 @@ namespace Hazel {
 
 	static GLenum GetTarget(BufferType type) {
 		switch (type) {
-		case VERTEX:	return GL_ARRAY_BUFFER;
-		case INDEX:		return GL_ELEMENT_ARRAY_BUFFER;
+		case BufferType::VERTEX:	return GL_ARRAY_BUFFER;
+		case BufferType::INDEX:		return GL_ELEMENT_ARRAY_BUFFER;
 		default:
 			HZ_CORE_ASSERT(false, "Unhandled case");
 			return 0;
@@ -41,9 +41,9 @@ namespace Hazel {
 			GLenum glAccess;
 			switch (access)
 			{
-				case READ_ONLY:	 glAccess =	GL_READ_ONLY;	break;
-				case WRITE_ONLY: glAccess =	GL_WRITE_ONLY;	break;
-				case READ_WRITE: glAccess = GL_READ_WRITE;	break;
+				case MapAccess::READ_ONLY:	glAccess = GL_READ_ONLY;	break;
+				case MapAccess::WRITE_ONLY: glAccess = GL_WRITE_ONLY;	break;
+				case MapAccess::READ_WRITE: glAccess = GL_READ_WRITE;	break;
 				default: HZ_CORE_ASSERT(false, "");
 			}
 			GLCall(uint8_t* result = (uint8_t*) glMapBuffer(GetTarget(TYPE), glAccess));

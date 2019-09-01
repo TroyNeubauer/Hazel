@@ -21,13 +21,17 @@ IncludeDir["Vulkan"] = "Hazel/vendor/Vulkan/include"
 IncludeDir["freeimage"] = "Hazel/vendor/freeimage/Source"
 IncludeDir["FastNoiseSIMD"] = "Hazel/vendor/FastNoiseSIMD/FastNoiseSIMD"
 IncludeDir["str"] = "Hazel/vendor/ocornut_str"
+IncludeDir["libarchive"] = "Hazel/vendor/libarchive/libarchive"
 
+include "Hazel/vendor/zlib"
 include "Hazel/vendor/GLFW"
 include "Hazel/vendor/Glad"
 include "Hazel/vendor/imgui"
 include "Hazel/vendor/freeimage"
 include "Hazel/vendor/FastNoiseSIMD"
 include "Hazel/vendor/ocornut_str"
+include "Hazel/vendor/libarchive"
+include "Hazel/vendor/openssl"
 
 
 project "Hazel"
@@ -67,6 +71,7 @@ project "Hazel"
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.FastNoiseSIMD}",
 		"%{IncludeDir.str}",
+		"%{IncludeDir.libarchive}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -92,6 +97,8 @@ project "Hazel"
 		"freeimage",
 		"FastNoiseSIMD",
 		"str",
+		"zlib",
+		"libarchive",
 	}
 
 	defines
@@ -103,8 +110,8 @@ project "Hazel"
 		"GLM_FORCE_INTRINSICS",
 		"HZ_GLFW_INPUT",
 		"FREEIMAGE_LIB",
+		"LIBARCHIVE_STATIC",
 	}
-
 
 	filter "system:windows"
 
@@ -192,6 +199,7 @@ project "Sandbox"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.str}",
+		"%{IncludeDir.libarchive}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -366,3 +374,126 @@ project "ImGui Test"
 		optimize "speed"
 		inlining "auto"
 		floatingpoint "Fast"
+
+
+
+project "Test"--The same as sandbox. Used for general testing purposes
+	location "Test"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+	vectorextensions "AVX"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Hazel/vendor/spdlog/include",
+		"Hazel/src",
+		"Hazel/vendor",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.freeimage}",
+		"%{IncludeDir.str}",
+		"%{IncludeDir.libarchive}",
+
+		"Hazel/vendor/freeimage/Source/",
+		"Hazel/vendor/freeimage/Source/FreeImage",
+		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
+		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
+		"Hazel/vendor/freeimage/Source/LibPNG",
+		"Hazel/vendor/freeimage/Source/Metadata",
+		"Hazel/vendor/freeimage/Source/OpenEXR",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Half",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Iex",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IexMath",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IlmImf",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IlmThread",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Imath",
+		"Hazel/vendor/freeimage/Source/ZLib",
+	}
+
+	links 
+	{
+		"Hazel",
+		"libarchive",
+	}
+
+	defines
+	{
+		"GLM_FORCE_INTRINSICS",
+		"FREEIMAGE_LIB",
+		"LIBARCHIVE_STATIC",
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+		libdirs
+		{
+			"Hazel/vendor/Vulkan/lib"
+		}
+
+		defines
+		{
+			"HZ_PLATFORM_WINDOWS",
+			"HZ_LITTLE_ENDIAN",
+		}
+
+		links
+		{
+			"kernel32.lib",
+			"Onecore.lib",
+			"opengl32.lib",
+			"vulkan.lib",
+		}
+
+	filter "system:linux"
+		systemversion "latest"
+		
+		libdirs
+		{
+			"/usr/lib/x86_64-linux-gnu/",
+		}
+
+		defines
+		{
+			"HZ_PLATFORM_UNIX"
+		}
+		
+		links
+		{
+			"libX11.a",
+		}
+
+
+	filter "configurations:Debug"
+		defines "HZ_DEBUG"
+		runtime "Debug"
+		symbols "on"
+		floatingpoint "Strict"
+
+	filter "configurations:Release"
+		defines "HZ_RELEASE"
+		runtime "Release"
+		optimize "speed"
+		inlining "auto"
+		floatingpoint "Fast"
+
+
+	filter "configurations:Dist"
+		defines "HZ_DIST"
+		runtime "Release"
+		optimize "speed"
+		inlining "auto"
+		floatingpoint "Fast"
+

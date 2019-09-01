@@ -1,3 +1,4 @@
+
 project "freeimage"
 	kind "StaticLib"
 	language "C++"
@@ -17,6 +18,7 @@ project "freeimage"
 
 	includedirs
 	{
+		"../zlib/include",
 		"Source/",
 		"Source/FreeImage",
 		"Source/FreeImageToolkit",
@@ -40,6 +42,10 @@ project "freeimage"
 		"_CRT_SECURE_NO_WARNINGS",
 		"USE_JPIP",
 		"OPJ_STATIC",
+	}
+
+	links
+	{
 	}
 	
 	filter "configurations:Debug"

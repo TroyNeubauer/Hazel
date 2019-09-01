@@ -10,7 +10,7 @@ namespace Hazel {
 	class OpenGLShader : public Shader
 	{
 	public:
-		OpenGLShader(File& vertexSource, File& fragSource);
+		OpenGLShader(File* vertexSource, File* fragSource);
 
 		virtual void UploadUniformFloat(const std::string& name, const float value);
 		virtual void UploadUniformInt(const std::string& name, const int value);

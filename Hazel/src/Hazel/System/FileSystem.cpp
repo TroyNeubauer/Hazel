@@ -1,15 +1,13 @@
-#include "FileSystem.h"
+#include "hzpch.h"
+#include "Hazel/System/Path.h"
+#include "Hazel/System/Timer.h"
+
 #include <stdint.h>
-
-bool isSlash(char c)
-{
-	return (c == '/' || c == '\\');
-}
-
 
 namespace Hazel {
 
-const uint32_t MAX_SLASHES = 32;
+	const uint32_t MAX_SLASHES = 128;
+
 	void FileSystem::NormalizePath(const char* src, char* dest, uint64_t destSize)
 	{
 		bool valid = true;
@@ -19,7 +17,7 @@ const uint32_t MAX_SLASHES = 32;
 		uint32_t slashCount = 0;
 		while (*src)
 		{
-			if (isSlash(src[0]))
+			if (IsSlash(src[0]))
 			{
 				if (src[1] == '.' && src[2] == '.')
 				{
@@ -30,7 +28,7 @@ const uint32_t MAX_SLASHES = 32;
 					}
 					else
 					{
-						dest[index++] = src[0];
+						dest[index++] = FileSystem::GetSlashCharacter();
 						valid = false;
 					}
 					src += 3;
@@ -39,7 +37,7 @@ const uint32_t MAX_SLASHES = 32;
 				{
 					if (slashCount == 0)
 					{
-						dest[index++] = src[0];
+						dest[index++] = FileSystem::GetSlashCharacter();
 						valid = false;
 					}
 					src += 2; // just skip \.
@@ -54,14 +52,28 @@ const uint32_t MAX_SLASHES = 32;
 					{
 						valid = false;
 					}
-					dest[index++] = *src++;
+					dest[index++] = FileSystem::NormalizeSlash(*src++);
 				}
 			}
 			else
 			{
-				dest[index++] = *src++;
+				dest[index++] = FileSystem::NormalizeSlash(*src++);
 			}
 		}
 		dest[index] = 0;
 	}
+
+	bool FileSystem::IsExtension(const char* fileName, const char* extension)
+	{
+		const char* lastDot = fileName;
+		while (*fileName)
+		{
+			Until(fileName, '.');
+			fileName++;
+			if (*fileName)
+				lastDot = fileName;
+		}
+		return StringUtils::Equal(lastDot, extension);
+	}
+
 }

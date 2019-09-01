@@ -4,7 +4,7 @@
 
 namespace Hazel {
 
-	OpenGLTexture2D::OpenGLTexture2D(File& file, TextureBuilder& builder)
+	OpenGLTexture2D::OpenGLTexture2D(File* file, TextureBuilder& builder)
 	{
 		m_ID = OpenGLUtils::Load2DTexture(file, builder);
 		HZ_CORE_ASSERT(m_ID, "Unable to load texture");

@@ -10,7 +10,7 @@ namespace Hazel {
 			NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 			buf, capacity, NULL);
 		if (!result) {
-			//HZ_CORE_CRITICAL("Failed to get information log from error code: {0}, the error from FormatMessageA was {1}", error, GetLastError());
+			HZ_CORE_CRITICAL("Failed to get information log from error code: {0}, the error from FormatMessageA was {1}", error, GetLastError());
 			if (capacity)
 				buf[0] = 0x00;//Make sure to terminate the string
 			else

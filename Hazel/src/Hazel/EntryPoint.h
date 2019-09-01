@@ -15,13 +15,9 @@ int main(int argc, char** argv)
 {
 	Hazel::Timer timer;
 	Hazel::Log::Init();
-	char result[128];
-	Hazel::FileSystem::NormalizePath("C:/test/../other/test/test/../Troy", result, sizeof(result));
-	
-	return 0;
 	
 	auto app = Hazel::CreateApplication(argc, argv);
-	timer.Stop()->Print("Complete initialization took");
+	timer.Stop().Print("Complete initialization took");
 
 	app->Run();
 	delete app;

@@ -10,13 +10,13 @@ namespace Hazel {
 		Start();
 	}
 
-	Timer* Timer::Start()
+	Timer& Timer::Start()
 	{
 		clock_gettime(CLOCK_REALTIME, &start);
 		return this;
 	}
 
-	Timer* Timer::Stop()
+	Timer& Timer::Stop()
 	{
 		clock_gettime(CLOCK_REALTIME, &end);
 		return this;

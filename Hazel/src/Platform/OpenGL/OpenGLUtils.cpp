@@ -48,26 +48,26 @@ namespace Hazel {
 		return 0;
 	}
 
-	unsigned int OpenGLUtils::Load2DTexture(File& file, TextureBuilder& builder)
+	unsigned int OpenGLUtils::Load2DTexture(File* file, TextureBuilder& builder)
 	{
 		Hazel::Timer timer;
 
-		if (file.Data() == nullptr)
+		if (file->Data() == nullptr)
 			return false;
 
-		FIMEMORY* memory = FreeImage_OpenMemory((BYTE*) file.Data(), file.Length());
+		FIMEMORY* memory = FreeImage_OpenMemory((BYTE*) file->Data(), file->Length());
 		if (!memory) {
-			HZ_CORE_WARN("Failed to open memory for file \"{}\"", file.GetPath().ToString());
+			HZ_CORE_WARN("Failed to open memory for file \"{}\"", file->GetPath().ToString());
 			return 0;
 		}
 		//check the file signature and deduce its format
 		FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
-		fif = FreeImage_GetFileTypeFromMemory(memory, file.Length());
+		fif = FreeImage_GetFileTypeFromMemory(memory, file->Length());
 
 		if (fif == FIF_UNKNOWN)
-			fif = FreeImage_GetFIFFromFilename(file.GetPath());
+			fif = FreeImage_GetFIFFromFilename(file->GetPath().ToString());
 		if (fif == FIF_UNKNOWN) {
-			HZ_CORE_WARN("Unknown image file \"{}\"", file.GetPath().ToString());
+			HZ_CORE_WARN("Unknown image file \"{}\"", file->GetPath().ToString());
 			return 0;
 		}
 
@@ -77,13 +77,13 @@ namespace Hazel {
 		if (FreeImage_FIFSupportsReading(fif))
 			dib = FreeImage_LoadFromMemory(fif, memory);
 		else {
-			HZ_CORE_WARN("Freeimage plugin cannot read file \"{}\"", file.GetPath().ToString());
+			HZ_CORE_WARN("Freeimage plugin cannot read file \"{}\"", file->GetPath().ToString());
 			return 0;
 		}
 
 		//if the image failed to load, return failure
 		if (!dib) {
-			HZ_CORE_WARN("Failed to decode image file \"{}\"", file.GetPath().ToString());
+			HZ_CORE_WARN("Failed to decode image file \"{}\"", file->GetPath().ToString());
 			return 0;
 		}
 
@@ -97,7 +97,7 @@ namespace Hazel {
 			case FIT_BITMAP://! standard image			: 1-, 4-, 8-, 16-, 24-, 32-bit
 			{
 				if (!redM || !greenM || !blueM) {
-					HZ_CORE_ASSERT(false, "Image \"{}\" missing one RGB component R:0x{:x}, G:0x{:x}, B:0x{:x}", file.GetPath().ToString(), redM, greenM, blueM);
+					HZ_CORE_ASSERT(false, "Image \"{}\" missing one RGB component R:0x{:x}, G:0x{:x}, B:0x{:x}", file->GetPath().ToString(), redM, greenM, blueM);
 					goto end;
 				}
 				if (bpp == 24) {
@@ -114,7 +114,7 @@ namespace Hazel {
 						imageFormat = GL_RGB;
 #endif
 					} else {
-						HZ_CORE_ASSERT(false, "Unknown image format Image \"{}\"", file.GetPath().ToString());
+						HZ_CORE_ASSERT(false, "Unknown image format Image \"{}\"", file->GetPath().ToString());
 						goto end;
 					}
 				} else if (bpp == 32) {
@@ -131,11 +131,11 @@ namespace Hazel {
 						imageFormat = GL_RGBA;
 #endif
 					} else {
-						HZ_CORE_ASSERT(false, "Unknown image format Image \"{}\"", file.GetPath().ToString());
+						HZ_CORE_ASSERT(false, "Unknown image format Image \"{}\"", file->GetPath().ToString());
 						goto end;
 					}
 				} else {
-					HZ_CORE_ASSERT(false, "Unknown bits per pixel {}, Image \"{}\"", bpp, file.GetPath().ToString());
+					HZ_CORE_ASSERT(false, "Unknown bits per pixel {}, Image \"{}\"", bpp, file->GetPath().ToString());
 					goto end;
 				}
 				break;
@@ -149,7 +149,7 @@ namespace Hazel {
 				imageFormat = GL_RGBA;
 				break;
 			default:
-				HZ_CORE_ASSERT(false, "Unknown image type! {}, Image: \"{}\", bpp {}, R:0x{:x}, G:0x{:x}, B:0x{:x}", (int) type, file.GetPath().ToString(), bpp, redM, greenM, blueM);
+				HZ_CORE_ASSERT(false, "Unknown image type! {}, Image: \"{}\", bpp {}, R:0x{:x}, G:0x{:x}, B:0x{:x}", (int) type, file->GetPath().ToString(), bpp, redM, greenM, blueM);
 				goto end;
 		}
 
@@ -196,7 +196,7 @@ namespace Hazel {
 		FreeImage_Unload(dib);
 		FreeImage_CloseMemory(memory);
 
-		timer.Stop()->Print("Reading texture took");
+		timer.Stop().Print("Reading texture took");
 		return id;
 	}
 
