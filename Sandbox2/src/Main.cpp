@@ -4,16 +4,16 @@
 #include <vector>
 #include <map>
 
-
 #include "Hazel.h"
-
 
 
 int main()
 {
 	Hazel::Log::Init();
-	const char* str = "Fast string finding is fun";
-	Hazel::StringUtils::FindBegin(str, "is");
+	const char* str = "Fast string finding is fun\r\n\nThis is the next line";
+	Hazel::StringUtils::NextLine(str);
+	HZ_CORE_INFO("Result: {}", str);
+	Hazel::StringUtils::NextLine(str);
 	HZ_CORE_INFO("Result: {}", str);
 
 	system("PAUSE");

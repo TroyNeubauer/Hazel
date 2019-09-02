@@ -12,14 +12,12 @@ namespace Hazel {
 		inline static bool Equal(const char* a, const char* b) { return strcmp(a, b) == 0; }
 		inline static bool Contains(const char* string, const char* part) { return strstr(string, part) != NULL; }
 
+		static bool StartsWith(const char* string, const char* target);
+
 		inline static size_t Length(const char* string) { return strlen(string); }
 		inline static size_t Capacity(const char* string) { return Length(string) + 1; }
 
 		inline static void Copy(char* dest, const char* source) { strcpy(dest, source); }
-
-		static void LTrim(std::string& s);// trim from start
-		static void RTrim(std::string& s);// trim from end
-		static void Trim(std::string& s);// trim from both ends
 
 		template<class none = void>
 		constexpr static bool ContainsAny(const char* string, const char* first)
@@ -70,11 +68,11 @@ namespace Hazel {
 		//string will be modified to be an empty string if the target is not found
 		//Find("Fast string finding is fun", "is") -> "is fun"
 		template<typename T>
-		static void FindBegin(T*& string, const char* target)
+		static T* FindBegin(T*& string, const char* target)
 		{
-			if (*string == 0x00 || *target == 0x00) return;
+			if (*string == 0x00 || *target == 0x00) return string;
 			const char* targetStart = target;
-			const char* start;//Guaranteed to be assigned the first time a character is matched
+			T* start;//Guaranteed to be assigned the first time a character is matched
 			while (*string)
 			{
 				if (*string == *target) {//A character matches
@@ -83,8 +81,9 @@ namespace Hazel {
 					target++;
 					if (*target == 0x00)//We matched the entire target
 					{
+						T* end = string;
 						string = start;//Reset string to point to the start of the target
-						return;
+						return end + 1;
 					}
 				}
 				else
@@ -93,6 +92,27 @@ namespace Hazel {
 				}
 				string++;
 			}
+			return string;
+		}
+		template<typename T>
+		static void NextLine(T*& string)
+		{
+			char endingChar = 0x00;
+			Until(string, [&endingChar](char current)
+			{
+				if (current == '\r' || current == '\n')
+				{
+					endingChar = current;
+					return true;
+				}
+				else
+					return false;
+			});//Continue until we find a newline
+			string++;//Skip the first endline character
+
+			//If \r\n is used we need to consume the \n
+			if (endingChar == '\r' && *string == '\n')
+				string++;
 		}
 
 	};

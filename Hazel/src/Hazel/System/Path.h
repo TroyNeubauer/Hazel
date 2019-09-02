@@ -34,7 +34,7 @@ namespace Hazel {
 	{
 	public:
 		Path(const char* path);
-		Path(std::string path);
+		Path(const std::string& path);
 		Path(Str& path);
 
 		operator const Str& ();

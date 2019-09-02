@@ -104,7 +104,7 @@ namespace Hazel {
 				ImGui::Begin("Files");
 				ImGui::Text("Open Files:");
 				for (auto& it : FileTracker::GetOpenFilePaths()) {
-					std::string path = it.second;
+					const std::string& path = it.second;
 					ImGui::Text("\t%s", path.c_str());
 				}
 				ImGui::Text("Closed Files:");

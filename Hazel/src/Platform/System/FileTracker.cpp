@@ -17,7 +17,8 @@ FILE* Log_fopen(FILE* result, const char* path, const char* mode, const char* so
 int Log_fclose(FILE* file, int result, const char* sourceFile, int line)
 {
 	auto& map = Hazel::FileTracker::GetOpenFilePaths();
-	std::string path = map[file];
+	//Make a copy so that we can add it to the list of closed files
+	const std::string path = map[file];
 	map.erase(file);
 	Hazel::FileTracker::GetClosedFilePaths().insert(path);
 	if (result != EOF && file != NULL) {
@@ -43,7 +44,7 @@ FILE* Log_fopen(FILE* result, const char* path)
 int Log_fclose(FILE* file, int result)
 {
 	auto& map = Hazel::FileTracker::GetOpenFilePaths();
-	std::string path = map[file];
+	const std::string& path = map[file];
 	map.erase(file);
 	Hazel::FileTracker::GetClosedFilePaths().insert(path);
 	if (result != EOF) {

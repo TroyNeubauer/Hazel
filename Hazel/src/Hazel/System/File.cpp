@@ -129,6 +129,11 @@ namespace Hazel {
 			uint8_t* oldData = m_Data;
 			m_Length = offset + bytes;
 			m_Data = new uint8_t[m_Length + 1];
+			if (m_MutableString)
+			{
+				delete m_MutableString;
+				m_MutableString = new char[m_Length + 1];
+			}
 			memcpy(m_Data, oldData, offset);
 			m_Data[m_Length] = 0x00;
 			delete[] oldData;
@@ -140,6 +145,17 @@ namespace Hazel {
 	{
 		HZ_CORE_ASSERT(offset + bytes <= m_Length, "Attempt to read past the end of the buffer");
 		memcpy(data, m_Data + offset, bytes);
+	}
+
+	char* ArchivedFile::AsMutableString()
+	{
+		if (m_MutableString == nullptr)
+		{
+			m_MutableString = new char[m_Length + 1];
+		}
+		memcpy(m_MutableString, m_Data, m_Length);
+		m_MutableString[m_Length] = 0x00;
+		return m_MutableString;
 	}
 
 	ArchivedFile::~ArchivedFile()
@@ -198,6 +214,17 @@ namespace Hazel {
 		{
 			return (const char*) m_Data;//We know there is a null byte at the end
 		}
+	}
+
+	char* MemoryMappedFile::AsMutableString()
+	{
+		if (m_MutableString == nullptr)
+		{
+			m_MutableString = new char[m_Length + 1];
+		}
+		memcpy(m_MutableString, m_Data, m_Length);
+		m_MutableString[m_Length] = 0x00;
+		return m_MutableString;
 	}
 
 	MemoryMappedFile::~MemoryMappedFile()

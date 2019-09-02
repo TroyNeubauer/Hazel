@@ -57,7 +57,7 @@ namespace Hazel {
 		m_VertexBuffers.push_back(vertexBuffer);
 	}
 
-	static uint64_t OffsetOf(std::string name, const BufferLayout& layout)
+	static uint64_t OffsetOf(const std::string& name, const BufferLayout& layout)
 	{
 		for (auto element : layout.GetElements())
 		{

@@ -66,6 +66,10 @@ namespace Hazel {
 		//Returns the data of this file with a null termination character at the end
 		virtual const char* AsString() = 0;
 
+		//Returns the mutable copy of this file with a null termination character at the end
+		//Calling this will destroy any modifications made to the string returned from the last call to AsMutableString()
+		virtual char* AsMutableString() = 0;
+
 		inline const Path& GetPath() { return m_Path; }
 
 		virtual ~File() {}
@@ -90,11 +94,14 @@ namespace Hazel {
 		inline virtual bool HasDirectAccess() { return true; }
 		inline virtual void* Data() { return m_Data; }
 		inline virtual const char* AsString() { return (const char*) m_Data; }
+		
+		virtual char* AsMutableString();
 
 		~ArchivedFile();
 	private:
 		File* m_Parent;
 		uint8_t* m_Data = nullptr;
+		char* m_MutableString = nullptr;
 	};
 
 	class MemoryMappedFile : public File
@@ -111,9 +118,12 @@ namespace Hazel {
 		inline virtual void* Data() { return m_Data; }
 		virtual const char* AsString();
 
+		virtual char* AsMutableString();
+
 		~MemoryMappedFile();
 	private:
 		uint8_t* m_Data;
 		char* m_StringData = nullptr;
+		char* m_MutableString = nullptr;
 	};
 }

@@ -63,7 +63,7 @@ namespace Hazel {
 	}
 
 	Path::Path(const char* path) : m_Path(path) { UpdatePath(); }
-	Path::Path(std::string path) : m_Path(path.c_str()) { UpdatePath(); }
+	Path::Path(const std::string& path) : m_Path(path.c_str()) { UpdatePath(); }
 	Path::Path(Str& path) : m_Path(path.c_str()) { UpdatePath(); }
 
 	Path::operator const Str& () { return m_Path; }

@@ -29,21 +29,12 @@ namespace Hazel {
 		virtual ~OpenGLShader();
 
 	private:
-		inline int GetUniformLocation(const char* name)
-		{
-			static std::string temp;
-			temp.reserve(1000);
-			temp = name;
-			if (m_UniformCache.find(temp) == m_UniformCache.end()) {
-				HZ_CORE_WARN("Invalid uniform {}", name);
-				return -1;
-			}
-			return m_UniformCache[name];
-		}
-		void CheckUniformType(const char* name, GLenum type);
-		std::unordered_map<GLenum, std::string> PreProcess(const std::string source);
+		int GetUniformLocation(const char* name);
 
-		void Compile(const std::unordered_map<GLenum, std::string>& shaders);
+		void CheckUniformType(const char* name, GLenum type);
+		std::unordered_map<GLenum, const char*> PreProcess(char* source);
+
+		void Compile(const std::unordered_map<GLenum, const char*>& shaders);
 
 	private:
 		unsigned int m_ID;

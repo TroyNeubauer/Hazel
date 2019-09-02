@@ -1,231 +1,33 @@
-HAZEL-10676:[09/01/19 21:45 02.963] info: Creating window "Hazel Engine" (1280, 720)
-HAZEL-10676:[09/01/19 21:45 04.302] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
-HAZEL-10676:[09/01/19 21:45 04.606] info: Reading shader file assets\shaders\test.glsl
-HAZEL-10676:[09/01/19 21:45 04.606] trace: Reading shader file took 147.60 microseconds
-HAZEL-10676:[09/01/19 21:45 04.606] critical: Preprocessing shader took: 6.90 microseconds
-HAZEL-10676:[09/01/19 21:45 04.607] critical: Preprocessing shader took: 5.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.607] critical: Preprocessing shader took: 4.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.607] critical: Preprocessing shader took: 3.60 microseconds
-HAZEL-10676:[09/01/19 21:45 04.607] critical: Preprocessing shader took: 2.90 microseconds
-HAZEL-10676:[09/01/19 21:45 04.608] critical: Preprocessing shader took: 3.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.608] critical: Preprocessing shader took: 4.10 microseconds
-HAZEL-10676:[09/01/19 21:45 04.608] critical: Preprocessing shader took: 3.30 microseconds
-HAZEL-10676:[09/01/19 21:45 04.608] critical: Preprocessing shader took: 3.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.608] critical: Preprocessing shader took: 3.60 microseconds
-HAZEL-10676:[09/01/19 21:45 04.608] critical: Preprocessing shader took: 3.70 microseconds
-HAZEL-10676:[09/01/19 21:45 04.609] critical: Preprocessing shader took: 3.60 microseconds
-HAZEL-10676:[09/01/19 21:45 04.609] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 04.609] critical: Preprocessing shader took: 3.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.609] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 04.609] critical: Preprocessing shader took: 3.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.610] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 04.610] critical: Preprocessing shader took: 3.10 microseconds
-HAZEL-10676:[09/01/19 21:45 04.610] critical: Preprocessing shader took: 3.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.610] critical: Preprocessing shader took: 3.00 microseconds
-HAZEL-10676:[09/01/19 21:45 04.611] critical: Preprocessing shader took: 4.20 microseconds
-HAZEL-10676:[09/01/19 21:45 04.611] critical: Preprocessing shader took: 3.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.611] critical: Preprocessing shader took: 3.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.611] critical: Preprocessing shader took: 3.30 microseconds
-HAZEL-10676:[09/01/19 21:45 04.611] critical: Preprocessing shader took: 3.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.612] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 04.612] critical: Preprocessing shader took: 4.10 microseconds
-HAZEL-10676:[09/01/19 21:45 04.612] critical: Preprocessing shader took: 3.30 microseconds
-HAZEL-10676:[09/01/19 21:45 04.612] critical: Preprocessing shader took: 4.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.612] critical: Preprocessing shader took: 3.00 microseconds
-HAZEL-10676:[09/01/19 21:45 04.613] critical: Preprocessing shader took: 3.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.613] critical: Preprocessing shader took: 3.30 microseconds
-HAZEL-10676:[09/01/19 21:45 04.619] critical: Preprocessing shader took: 10.10 microseconds
-HAZEL-10676:[09/01/19 21:45 04.623] critical: Preprocessing shader took: 9.60 microseconds
-HAZEL-10676:[09/01/19 21:45 04.624] critical: Preprocessing shader took: 5.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.625] critical: Preprocessing shader took: 6.10 microseconds
-HAZEL-10676:[09/01/19 21:45 04.625] critical: Preprocessing shader took: 6.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.626] critical: Preprocessing shader took: 4.30 microseconds
-HAZEL-10676:[09/01/19 21:45 04.627] critical: Preprocessing shader took: 4.70 microseconds
-HAZEL-10676:[09/01/19 21:45 04.629] critical: Preprocessing shader took: 4.90 microseconds
-HAZEL-10676:[09/01/19 21:45 04.630] critical: Preprocessing shader took: 7.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.631] critical: Preprocessing shader took: 5.70 microseconds
-HAZEL-10676:[09/01/19 21:45 04.631] critical: Preprocessing shader took: 5.10 microseconds
-HAZEL-10676:[09/01/19 21:45 04.632] critical: Preprocessing shader took: 4.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.636] critical: Preprocessing shader took: 6.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.636] critical: Preprocessing shader took: 5.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.639] critical: Preprocessing shader took: 6.30 microseconds
-HAZEL-10676:[09/01/19 21:45 04.640] critical: Preprocessing shader took: 4.90 microseconds
-HAZEL-10676:[09/01/19 21:45 04.640] critical: Preprocessing shader took: 4.70 microseconds
-HAZEL-10676:[09/01/19 21:45 04.641] critical: Preprocessing shader took: 4.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.642] critical: Preprocessing shader took: 4.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.643] critical: Preprocessing shader took: 3.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.643] critical: Preprocessing shader took: 4.70 microseconds
-HAZEL-10676:[09/01/19 21:45 04.644] critical: Preprocessing shader took: 4.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.645] critical: Preprocessing shader took: 4.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.645] critical: Preprocessing shader took: 3.60 microseconds
-HAZEL-10676:[09/01/19 21:45 04.646] critical: Preprocessing shader took: 4.70 microseconds
-HAZEL-10676:[09/01/19 21:45 04.647] critical: Preprocessing shader took: 3.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.649] critical: Preprocessing shader took: 6.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.650] critical: Preprocessing shader took: 5.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.651] critical: Preprocessing shader took: 4.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.652] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 04.653] critical: Preprocessing shader took: 6.60 microseconds
-HAZEL-10676:[09/01/19 21:45 04.656] critical: Preprocessing shader took: 8.90 microseconds
-HAZEL-10676:[09/01/19 21:45 04.656] critical: Preprocessing shader took: 4.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.657] critical: Preprocessing shader took: 4.20 microseconds
-HAZEL-10676:[09/01/19 21:45 04.659] critical: Preprocessing shader took: 6.10 microseconds
-HAZEL-10676:[09/01/19 21:45 04.661] critical: Preprocessing shader took: 7.10 microseconds
-HAZEL-10676:[09/01/19 21:45 04.661] critical: Preprocessing shader took: 7.70 microseconds
-HAZEL-10676:[09/01/19 21:45 04.662] critical: Preprocessing shader took: 3.70 microseconds
-HAZEL-10676:[09/01/19 21:45 04.663] critical: Preprocessing shader took: 4.30 microseconds
-HAZEL-10676:[09/01/19 21:45 04.663] critical: Preprocessing shader took: 3.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.664] critical: Preprocessing shader took: 4.30 microseconds
-HAZEL-10676:[09/01/19 21:45 04.664] critical: Preprocessing shader took: 4.30 microseconds
-HAZEL-10676:[09/01/19 21:45 04.665] critical: Preprocessing shader took: 4.90 microseconds
-HAZEL-10676:[09/01/19 21:45 04.666] critical: Preprocessing shader took: 3.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.666] critical: Preprocessing shader took: 4.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.669] critical: Preprocessing shader took: 5.60 microseconds
-HAZEL-10676:[09/01/19 21:45 04.671] critical: Preprocessing shader took: 5.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.671] critical: Preprocessing shader took: 4.70 microseconds
-HAZEL-10676:[09/01/19 21:45 04.672] critical: Preprocessing shader took: 5.00 microseconds
-HAZEL-10676:[09/01/19 21:45 04.673] critical: Preprocessing shader took: 4.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.673] critical: Preprocessing shader took: 5.20 microseconds
-HAZEL-10676:[09/01/19 21:45 04.674] critical: Preprocessing shader took: 5.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.675] critical: Preprocessing shader took: 5.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.676] critical: Preprocessing shader took: 4.90 microseconds
-HAZEL-10676:[09/01/19 21:45 04.676] critical: Preprocessing shader took: 5.30 microseconds
-HAZEL-10676:[09/01/19 21:45 04.677] critical: Preprocessing shader took: 5.00 microseconds
-HAZEL-10676:[09/01/19 21:45 04.679] critical: Preprocessing shader took: 5.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.681] critical: Preprocessing shader took: 5.50 microseconds
-HAZEL-10676:[09/01/19 21:45 04.681] critical: Preprocessing shader took: 4.70 microseconds
-HAZEL-10676:[09/01/19 21:45 04.682] critical: Preprocessing shader took: 4.20 microseconds
-HAZEL-10676:[09/01/19 21:45 04.683] critical: Preprocessing shader took: 6.60 microseconds
-HAZEL-10676:[09/01/19 21:45 04.684] critical: Preprocessing shader took: 6.10 microseconds
-HAZEL-10676:[09/01/19 21:45 04.685] critical: Preprocessing shader took: 5.90 microseconds
-HAZEL-10676:[09/01/19 21:45 04.686] critical: Preprocessing shader took: 5.40 microseconds
-HAZEL-10676:[09/01/19 21:45 04.686] critical: Preprocessing shader took: 5.80 microseconds
-HAZEL-10676:[09/01/19 21:45 04.690] critical: Preprocessing shader took: 9.10 microseconds
-HAZEL-10676:[09/01/19 21:45 04.692] critical: Preprocessing shader took: 6.10 microseconds
-HAZEL-10676:[09/01/19 21:45 04.692] critical: Preprocessing shader took: 5.90 microseconds
-HAZEL-10676:[09/01/19 21:45 04.698] trace: Compiling and linking shader took 4.57 milliseconds
-HAZEL-10676:[09/01/19 21:45 04.698] info: Reading texture file assets\img\red.png
-HAZEL-10676:[09/01/19 21:45 04.702] trace: Reading texture took 157.00 microseconds
-HAZEL-10676:[09/01/19 21:45 04.705] info: Reading texture took 2.00 milliseconds
-HAZEL-10676:[09/01/19 21:45 04.734] info: Dont with first
-HAZEL-10676:[09/01/19 21:45 04.770] info: Reading texture file assets\img\grass.png
-HAZEL-10676:[09/01/19 21:45 04.785] trace: Reading texture took 150.00 microseconds
-HAZEL-10676:[09/01/19 21:45 04.875] info: Reading texture took 89.24 milliseconds
-HAZEL-10676:[09/01/19 21:45 04.887] warning: Finished generating 66049 vertices, 3950628 bytes of memory
-HAZEL-10676:[09/01/19 21:45 04.889] warning: Generating terrain took 180.30 milliseconds
-HAZEL-10676:[09/01/19 21:45 04.934] info: Dont with first
-HAZEL-10676:[09/01/19 21:45 04.964] info: Reading texture file assets\img\grass.png
-HAZEL-10676:[09/01/19 21:45 04.970] trace: Reading texture took 104.40 microseconds
-HAZEL-10676:[09/01/19 21:45 05.056] info: Reading texture took 85.70 milliseconds
-HAZEL-10676:[09/01/19 21:45 05.096] warning: Finished generating 289 vertices, 16548 bytes of memory
-HAZEL-10676:[09/01/19 21:45 05.097] warning: Generating terrain took 205.03 milliseconds
-HAZEL-10676:[09/01/19 21:45 05.206] info: Reading texture file assets\img\grass.png
-HAZEL-10676:[09/01/19 21:45 05.217] trace: Reading texture took 111.80 microseconds
-HAZEL-10676:[09/01/19 21:45 05.285] info: Reading texture took 65.63 milliseconds
-HAZEL-10676:[09/01/19 21:45 05.292] info: Reading shader file assets\shaders\pbr.glsl
-HAZEL-10676:[09/01/19 21:45 05.293] trace: Reading shader file took 108.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.294] critical: Preprocessing shader took: 9.10 microseconds
-HAZEL-10676:[09/01/19 21:45 05.295] critical: Preprocessing shader took: 4.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.295] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.296] critical: Preprocessing shader took: 4.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.297] critical: Preprocessing shader took: 3.70 microseconds
-HAZEL-10676:[09/01/19 21:45 05.297] critical: Preprocessing shader took: 7.20 microseconds
-HAZEL-10676:[09/01/19 21:45 05.298] critical: Preprocessing shader took: 4.80 microseconds
-HAZEL-10676:[09/01/19 21:45 05.299] critical: Preprocessing shader took: 4.10 microseconds
-HAZEL-10676:[09/01/19 21:45 05.303] critical: Preprocessing shader took: 4.50 microseconds
-HAZEL-10676:[09/01/19 21:45 05.304] critical: Preprocessing shader took: 4.20 microseconds
-HAZEL-10676:[09/01/19 21:45 05.304] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.305] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.306] critical: Preprocessing shader took: 3.80 microseconds
-HAZEL-10676:[09/01/19 21:45 05.306] critical: Preprocessing shader took: 3.30 microseconds
-HAZEL-10676:[09/01/19 21:45 05.307] critical: Preprocessing shader took: 3.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.308] critical: Preprocessing shader took: 3.80 microseconds
-HAZEL-10676:[09/01/19 21:45 05.309] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.310] critical: Preprocessing shader took: 4.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.310] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.311] critical: Preprocessing shader took: 3.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.313] critical: Preprocessing shader took: 5.10 microseconds
-HAZEL-10676:[09/01/19 21:45 05.314] critical: Preprocessing shader took: 4.20 microseconds
-HAZEL-10676:[09/01/19 21:45 05.315] critical: Preprocessing shader took: 3.30 microseconds
-HAZEL-10676:[09/01/19 21:45 05.316] critical: Preprocessing shader took: 4.80 microseconds
-HAZEL-10676:[09/01/19 21:45 05.317] critical: Preprocessing shader took: 4.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.317] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.318] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.319] critical: Preprocessing shader took: 4.10 microseconds
-HAZEL-10676:[09/01/19 21:45 05.319] critical: Preprocessing shader took: 3.50 microseconds
-HAZEL-10676:[09/01/19 21:45 05.320] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.321] critical: Preprocessing shader took: 5.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.324] critical: Preprocessing shader took: 4.70 microseconds
-HAZEL-10676:[09/01/19 21:45 05.325] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.326] critical: Preprocessing shader took: 3.20 microseconds
-HAZEL-10676:[09/01/19 21:45 05.326] critical: Preprocessing shader took: 3.20 microseconds
-HAZEL-10676:[09/01/19 21:45 05.327] critical: Preprocessing shader took: 3.80 microseconds
-HAZEL-10676:[09/01/19 21:45 05.328] critical: Preprocessing shader took: 3.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.328] critical: Preprocessing shader took: 3.40 microseconds
-HAZEL-10676:[09/01/19 21:45 05.329] critical: Preprocessing shader took: 4.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.330] critical: Preprocessing shader took: 5.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.331] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.332] critical: Preprocessing shader took: 4.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.332] critical: Preprocessing shader took: 3.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.335] critical: Preprocessing shader took: 5.10 microseconds
-HAZEL-10676:[09/01/19 21:45 05.336] critical: Preprocessing shader took: 4.80 microseconds
-HAZEL-10676:[09/01/19 21:45 05.336] critical: Preprocessing shader took: 4.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.337] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.338] critical: Preprocessing shader took: 3.40 microseconds
-HAZEL-10676:[09/01/19 21:45 05.339] critical: Preprocessing shader took: 5.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.340] critical: Preprocessing shader took: 6.40 microseconds
-HAZEL-10676:[09/01/19 21:45 05.342] critical: Preprocessing shader took: 7.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.342] critical: Preprocessing shader took: 4.30 microseconds
-HAZEL-10676:[09/01/19 21:45 05.343] critical: Preprocessing shader took: 4.10 microseconds
-HAZEL-10676:[09/01/19 21:45 05.344] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.346] critical: Preprocessing shader took: 4.80 microseconds
-HAZEL-10676:[09/01/19 21:45 05.347] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.348] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.348] critical: Preprocessing shader took: 3.70 microseconds
-HAZEL-10676:[09/01/19 21:45 05.350] critical: Preprocessing shader took: 6.10 microseconds
-HAZEL-10676:[09/01/19 21:45 05.351] critical: Preprocessing shader took: 4.50 microseconds
-HAZEL-10676:[09/01/19 21:45 05.351] critical: Preprocessing shader took: 4.70 microseconds
-HAZEL-10676:[09/01/19 21:45 05.352] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.353] critical: Preprocessing shader took: 4.40 microseconds
-HAZEL-10676:[09/01/19 21:45 05.354] critical: Preprocessing shader took: 4.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.356] critical: Preprocessing shader took: 5.30 microseconds
-HAZEL-10676:[09/01/19 21:45 05.357] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.358] critical: Preprocessing shader took: 3.50 microseconds
-HAZEL-10676:[09/01/19 21:45 05.358] critical: Preprocessing shader took: 4.30 microseconds
-HAZEL-10676:[09/01/19 21:45 05.359] critical: Preprocessing shader took: 3.70 microseconds
-HAZEL-10676:[09/01/19 21:45 05.360] critical: Preprocessing shader took: 3.70 microseconds
-HAZEL-10676:[09/01/19 21:45 05.360] critical: Preprocessing shader took: 3.70 microseconds
-HAZEL-10676:[09/01/19 21:45 05.361] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.362] critical: Preprocessing shader took: 3.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.362] critical: Preprocessing shader took: 3.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.363] critical: Preprocessing shader took: 3.50 microseconds
-HAZEL-10676:[09/01/19 21:45 05.364] critical: Preprocessing shader took: 3.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.366] critical: Preprocessing shader took: 7.80 microseconds
-HAZEL-10676:[09/01/19 21:45 05.368] critical: Preprocessing shader took: 4.70 microseconds
-HAZEL-10676:[09/01/19 21:45 05.369] critical: Preprocessing shader took: 5.50 microseconds
-HAZEL-10676:[09/01/19 21:45 05.370] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.371] critical: Preprocessing shader took: 4.20 microseconds
-HAZEL-10676:[09/01/19 21:45 05.371] critical: Preprocessing shader took: 4.40 microseconds
-HAZEL-10676:[09/01/19 21:45 05.372] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.373] critical: Preprocessing shader took: 4.00 microseconds
-HAZEL-10676:[09/01/19 21:45 05.373] critical: Preprocessing shader took: 3.80 microseconds
-HAZEL-10676:[09/01/19 21:45 05.374] critical: Preprocessing shader took: 4.50 microseconds
-HAZEL-10676:[09/01/19 21:45 05.377] critical: Preprocessing shader took: 4.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.378] critical: Preprocessing shader took: 4.50 microseconds
-HAZEL-10676:[09/01/19 21:45 05.378] critical: Preprocessing shader took: 3.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.379] critical: Preprocessing shader took: 3.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.380] critical: Preprocessing shader took: 4.30 microseconds
-HAZEL-10676:[09/01/19 21:45 05.380] critical: Preprocessing shader took: 3.50 microseconds
-HAZEL-10676:[09/01/19 21:45 05.381] critical: Preprocessing shader took: 3.80 microseconds
-HAZEL-10676:[09/01/19 21:45 05.382] critical: Preprocessing shader took: 4.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.383] critical: Preprocessing shader took: 6.40 microseconds
-HAZEL-10676:[09/01/19 21:45 05.384] critical: Preprocessing shader took: 4.50 microseconds
-HAZEL-10676:[09/01/19 21:45 05.387] critical: Preprocessing shader took: 4.70 microseconds
-HAZEL-10676:[09/01/19 21:45 05.389] critical: Preprocessing shader took: 4.50 microseconds
-HAZEL-10676:[09/01/19 21:45 05.391] critical: Preprocessing shader took: 6.20 microseconds
-HAZEL-10676:[09/01/19 21:45 05.392] critical: Preprocessing shader took: 4.90 microseconds
-HAZEL-10676:[09/01/19 21:45 05.430] trace: Compiling and linking shader took 36.73 milliseconds
-HAZEL-10676:[09/01/19 21:45 05.431] info: Reading texture file assets\material\rusted_iron\albedo.png
-HAZEL-10676:[09/01/19 21:45 05.432] trace: Reading texture took 100.60 microseconds
-HAZEL-10676:[09/01/19 21:45 05.889] info: Reading texture took 455.66 milliseconds
-HAZEL-10676:[09/01/19 21:45 05.936] info: Complete initialization took 3.190 seconds
-HAZEL-10676:[09/01/19 21:45 46.190] info: Destroying logging
+HAZEL-7568:[09/02/19 00:01 47.720] info: Creating window "Hazel Engine" (1280, 720)
+HAZEL-7568:[09/02/19 00:01 48.390] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
+HAZEL-7568:[09/02/19 00:01 48.607] info: Reading shader file assets\shaders\test.glsl
+HAZEL-7568:[09/02/19 00:01 48.608] trace: Reading shader file took 206.50 microseconds
+HAZEL-7568:[09/02/19 00:01 48.608] critical: Preprocessing shader took: 64.60 microseconds
+HAZEL-7568:[09/02/19 00:01 48.610] trace: Compiling and linking shader took 1.15 milliseconds
+HAZEL-7568:[09/02/19 00:01 48.610] info: Reading texture file assets\img\red.png
+HAZEL-7568:[09/02/19 00:01 48.610] trace: Reading texture took 150.60 microseconds
+HAZEL-7568:[09/02/19 00:01 48.630] info: Reading texture took 19.21 milliseconds
+HAZEL-7568:[09/02/19 00:01 48.669] info: Dont with first
+HAZEL-7568:[09/02/19 00:01 48.869] info: Reading texture file assets\img\grass.png
+HAZEL-7568:[09/02/19 00:01 48.870] trace: Reading texture took 169.00 microseconds
+HAZEL-7568:[09/02/19 00:01 49.164] info: Reading texture took 293.04 milliseconds
+HAZEL-7568:[09/02/19 00:01 49.167] warning: Finished generating 66049 vertices, 3950628 bytes of memory
+HAZEL-7568:[09/02/19 00:01 49.168] warning: Generating terrain took 536.77 milliseconds
+HAZEL-7568:[09/02/19 00:01 49.170] info: Dont with first
+HAZEL-7568:[09/02/19 00:01 49.171] info: Reading texture file assets\img\grass.png
+HAZEL-7568:[09/02/19 00:01 49.172] trace: Reading texture took 117.20 microseconds
+HAZEL-7568:[09/02/19 00:01 49.466] info: Reading texture took 294.31 milliseconds
+HAZEL-7568:[09/02/19 00:01 49.474] warning: Finished generating 289 vertices, 16548 bytes of memory
+HAZEL-7568:[09/02/19 00:01 49.474] warning: Generating terrain took 305.24 milliseconds
+HAZEL-7568:[09/02/19 00:01 49.489] info: Reading texture file assets\img\grass.png
+HAZEL-7568:[09/02/19 00:01 49.489] trace: Reading texture took 119.50 microseconds
+HAZEL-7568:[09/02/19 00:01 49.707] info: Reading texture took 217.49 milliseconds
+HAZEL-7568:[09/02/19 00:01 49.709] info: Reading shader file assets\shaders\pbr.glsl
+HAZEL-7568:[09/02/19 00:01 49.710] trace: Reading shader file took 201.90 microseconds
+HAZEL-7568:[09/02/19 00:01 49.710] critical: Preprocessing shader took: 30.90 microseconds
+HAZEL-7568:[09/02/19 00:01 49.711] trace: Compiling and linking shader took 962.80 microseconds
+HAZEL-7568:[09/02/19 00:01 49.712] info: Reading texture file assets\material\rusted_iron\albedo.png
+HAZEL-7568:[09/02/19 00:01 49.712] trace: Reading texture took 152.20 microseconds
+HAZEL-7568:[09/02/19 00:01 50.878] info: Reading texture took 1.166 seconds
+HAZEL-7568:[09/02/19 00:01 50.894] info: Complete initialization took 3.359 seconds
+HAZEL-7568:[09/02/19 00:02 42.988] info: Destroying logging

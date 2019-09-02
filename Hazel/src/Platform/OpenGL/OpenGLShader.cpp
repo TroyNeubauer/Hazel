@@ -11,26 +11,25 @@
 
 namespace Hazel {
 
-	static GLenum ShaderTypeFromString(const std::string& type)
+	static GLenum ShaderTypeFromString(const char* type)
 	{
-		if (type == "vertex")
+		if (StringUtils::StartsWith(type, "vertex"))
 			return GL_VERTEX_SHADER;
-		if (type == "fragment" || type == "pixel")
+		if (StringUtils::StartsWith(type, "fragment") || StringUtils::StartsWith(type, "pixel"))
 			return GL_FRAGMENT_SHADER;
 		HZ_CORE_ASSERT(false, "Unknown shader type \"{}\"", type);
 		return 0;
 	}
 
 	OpenGLShader::OpenGLShader(File* shaderSource) : m_ID(-1) {
-		std::unordered_map<GLenum, std::string> map;
-		for (int i = 0; i < 100; i ++)
-			map = PreProcess(std::string(shaderSource->AsString(), shaderSource->Length()));
-		Compile(map);
+		std::unordered_map<GLenum, const char*> shaders;
+		shaders = PreProcess(shaderSource->AsMutableString());
+		Compile(shaders);
 	}
 
 	OpenGLShader::OpenGLShader(const char* vertex, const char* fragment)
 	{
-		std::unordered_map<GLenum, std::string> shaders;
+		std::unordered_map<GLenum, const char*> shaders;
 		shaders[GL_VERTEX_SHADER] = vertex;
 		shaders[GL_FRAGMENT_SHADER] = fragment;
 		Compile(shaders);
@@ -51,6 +50,18 @@ namespace Hazel {
 		GLCall(glDeleteProgram(m_ID));
 	}
 
+	int OpenGLShader::GetUniformLocation(const char* name)
+	{
+		static std::string temp;
+		temp.reserve(1000);
+		temp = name;
+		if (m_UniformCache.find(temp) == m_UniformCache.end()) {
+			HZ_CORE_WARN("Invalid uniform {}", name);
+			return -1;
+		}
+		return m_UniformCache[temp];
+	}
+
 	void OpenGLShader::CheckUniformType(const char* name, GLenum type)
 	{
 #ifdef HZ_DEBUG
@@ -66,49 +77,30 @@ namespace Hazel {
 #endif
 	}
 
-	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string source)
+	std::unordered_map<GLenum, const char*> OpenGLShader::PreProcess(char* source)
 	{
 		Timer timer;
-		std::unordered_map<GLenum, std::string> result;
-#if 0
-		const std::string token = "#type";
-		
-		size_t pos = source.find(token);
-		while (pos != std::string::npos)
+		std::unordered_map<GLenum, const char*> result;
+		const char* target = "#type";
+
+		StringUtils::Find(source, target);
+		while (*source != 0x00)
 		{
-			size_t eol = source.find_first_of("\r\n", pos);
-			HZ_CORE_ASSERT(eol != std::string::npos, "Failed to find newline after #type statement!");
-			size_t begin = pos + token.length();
-			std::string type = source.substr(begin, eol - begin);
-			StringUtils::Trim(type);
-			size_t nextLinePos = source.find_first_not_of("\r\n", eol);
-			pos = source.find(token, nextLinePos);
-			std::string substring = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.length() - 1 : nextLinePos));
-			result[ShaderTypeFromString(type)] = substring;
+			StringUtils::FirstNotOf(source, ' ');//Skip whitespace
+			const char* type = source;
+			StringUtils::NextLine(source);
+			const char* shaderStart = source;
+
+			char* end = StringUtils::FindBegin(source, target);
+			*source = 0x00;//Split the current and next sources into two different strings
+			source = end;
+			result[ShaderTypeFromString(type)] = shaderStart;
 		}
 
-#else
-		const std::string token = "#type";
-
-		size_t pos = source.find(token);
-		while (pos != std::string::npos)
-		{
-			size_t eol = source.find_first_of("\r\n", pos);
-			HZ_CORE_ASSERT(eol != std::string::npos, "Failed to find newline after #type statement!");
-			size_t begin = pos + token.length();
-			std::string type = source.substr(begin, eol - begin);
-			StringUtils::Trim(type);
-			size_t nextLinePos = source.find_first_not_of("\r\n", eol);
-			pos = source.find(token, nextLinePos);
-			std::string substring = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.length() - 1 : nextLinePos));
-			result[ShaderTypeFromString(type)] = substring;
-		}
-
-#endif
 		timer.Stop().Print("Preprocessing shader took:", spdlog::level::critical);
 		return result;
 	}
-	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaders)
+	void OpenGLShader::Compile(const std::unordered_map<GLenum, const char*>& shaders)
 	{
 
 		Timer timer;
@@ -116,8 +108,8 @@ namespace Hazel {
 		for (auto& kv : shaders)
 		{
 			GLenum type = kv.first;
-			const std::string& source = kv.second;
-			const GLchar* const sourceArray[1] = { source.c_str() };
+			const char* source = kv.second;
+			const GLchar* const sourceArray[1] = { source };
 			GLuint shader = glCreateShader(type);
 			GLCall(glShaderSource(shader, 1, sourceArray, 0));
 			GLCall(glCompileShader(shader));
