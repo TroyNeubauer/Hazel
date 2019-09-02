@@ -159,9 +159,9 @@ namespace Hazel {
 				WindowsUtils::GetLastErrorMessage(buf, sizeof(buf));
 				HZ_CORE_WARN("QueryPerformanceFrequency Returned 0! Error: {0}", buf);
 			}
-			return timerResulution = result.QuadPart;
-		} else
-			return timerResulution;
+			timerResulution = result.QuadPart;
+		}
+		return timerResulution;
 	}
 
 	uint32_t System::GetMinBitPosition(uint64_t value) {

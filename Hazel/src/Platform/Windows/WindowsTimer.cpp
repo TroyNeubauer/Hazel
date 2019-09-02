@@ -12,17 +12,13 @@ namespace Hazel {
 
 	Timer& Timer::Start()
 	{
-		if (QueryPerformanceCounter(&start) == 0) {
-			HZ_CORE_ASSERT(false, "QueryPerformanceCounter failed. Error code {0}", GetLastError());
-		}
+		QueryPerformanceCounter(&start);
 		return *this;
 	}
 
 	Timer& Timer::Stop()
 	{
-		if (QueryPerformanceCounter(&end) == 0) {
-			HZ_CORE_ASSERT(false, "QueryPerformanceCounter failed. Error code {0}", GetLastError());
-		}
+		QueryPerformanceCounter(&end);
 		return *this;
 	}
 

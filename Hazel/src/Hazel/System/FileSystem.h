@@ -65,8 +65,10 @@ namespace Hazel {
 		//The boolean return value in the lambda is used to determine weather to continue or not. True means break and iterate no more, false means continue
 		//This is marked always inline because onPath will almost always be a lambda, therefore inlining this function will usually
 		//lead the compiler to inline the lambda too
-		HZ_ALWAYS_INLINE static void PathNameIterator(const char* path, std::function<bool(char*, char*)> onPath);
-		HZ_ALWAYS_INLINE static void PathNameIterator(char* path, std::function<bool(char*, char*)> onPath);
+		template<typename F>
+		HZ_ALWAYS_INLINE static void PathNameIterator(const char* path, F onPath);
+		template<typename F>
+		HZ_ALWAYS_INLINE static void PathNameIterator(char* path, F onPath);
 
 		static bool PathsEqual(const char* a, const char* b);
 

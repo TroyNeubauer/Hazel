@@ -6,6 +6,7 @@
 
 #include <string>
 #include "Hazel/Util/StringUtils.h"
+#include "Hazel/System/FileSystem.h"
 
 #ifdef HZ_PLATFORM_WINDOWS
 

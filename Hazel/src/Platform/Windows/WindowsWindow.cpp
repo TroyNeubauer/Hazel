@@ -39,7 +39,7 @@ namespace Hazel {
 		if (api != GraphicsAPIType::NONE) {
 			HZ_CORE_INFO("Creating window \"{0}\" ({1}, {2})", props.Title, props.Width, props.Height);
 
-			if (api == GraphicsAPIType::VULKAN) {
+			if (api != GraphicsAPIType::OPEN_GL) {
 				glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 			}
 			m_Window = glfwCreateWindow(props.Width, props.Height, m_Data.Title, nullptr, nullptr);

@@ -5,6 +5,7 @@
 namespace Hazel {
 
 	Renderer::SceneData* Renderer::s_SceneData = new SceneData;
+
 	void Renderer::BeginScene(Camera& camera, std::vector<Light>& lights)
 	{
 		RenderCommand::Begin();

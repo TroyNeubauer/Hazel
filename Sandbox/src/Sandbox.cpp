@@ -9,68 +9,16 @@
 
 #include "ExampleLayer.h"
 
-
-bool launching;
-float launchTime;
 Sandbox* sandbox;
-int toGo = 0;
-
-std::random_device rd;
-std::mt19937 eng(rd());
-
-bool paused = false;
-
-float currentTime;
-
-
-void Sandbox::StopLaunch()
-{
-	launching = false;
-	if (m_Camera->GetStorage().GetPosition().y > 30.0f)
-	{
-		vec3 pos = m_Camera->GetStorage().GetPosition();
-		pos.y = 10.0f;
-		m_Camera->GetStorage().SetPosition(pos);
-		m_Camera->ForceUpdate();
-	}
-}
-
-void Sandbox::StartLaunch()
-{
-	launching = true;
-	launchTime = Hazel::Engine::GetTime();
-}
-
-void NextCaptureFrame()
-{
-	std::uniform_real_distribution<float> timeStep(0.1f, 1.6f);
-	currentTime += timeStep(eng);
-}
-
-float GetTime()
-{
-	return currentTime;
-}
-
-float GetHeight()
-{
-	float time = GetTime();
-	if (time < 63.481f)
-		return -4.4123f * time * (time - 70.0f);
-	else
-		return -5000.0f / 100.0f * time + 5000.0f;
-}
 
 Sandbox::Sandbox()
 {
+
 	m_Lights.push_back({ vec3(15000.0f, 100000.0f, -1000.0f), vec3(0.1f, 0.3f, 0.9f) });
 	sandbox = this;
 	PushLayer(new ExampleLayer());
 	PushOverlay(new Hazel::DebugLayer());
 	HZ_INFO("Created app");
-	//HZ_WARN("warn");
-	//HZ_ERROR("error");
-	std::filesystem::directory_iterator();
 
 	std::shared_ptr<Hazel::VertexArray> targetArray = Hazel::sp(Hazel::VertexArray::Create());
 
@@ -110,7 +58,7 @@ Sandbox::Sandbox()
 	targetArray->CalculateNormals();
 
 
-	std::shared_ptr<Hazel::Shader> shader = Hazel::sp(Hazel::Shader::Create("shaders/test.vert", "shaders/test.frag"));
+	std::shared_ptr<Hazel::Shader> shader = Hazel::sp(Hazel::Shader::Create("assets/shaders/test.glsl"));
 
 	m_Camera.reset(new Hazel::FPSCamera(50.0f));
 	m_Camera->SetPosition(vec3(0.0f, 2.0f, 10.0f));
@@ -126,48 +74,21 @@ Sandbox::Sandbox()
 		m_Meshes.push_back(Hazel::sp(new Hazel::Mesh(targetArray, shader, redTexture, positions[i])));
 	}
 
-	//Hazel::IcoashedronMesh* mesh = new Hazel::IcoashedronMesh("assets/material/rusted_iron/albedo.png", 10.0f);
-	//mesh->Subdivide(3);
-	//m_Meshes.push_back(Hazel::sp(mesh));
-	//mesh->Position = { 0.0f, 10.0f, -5.0f };
+	Hazel::IcoashedronMesh* mesh = new Hazel::IcoashedronMesh("assets/material/rusted_iron/albedo.png", 10.0f);
+	mesh->Subdivide(3);
+	m_Meshes.push_back(Hazel::sp(mesh));
+	mesh->Position = { 0.0f, 10.0f, -5.0f };
 }
 
 std::ostream& operator<<(std::ostream& os, const vec3& vec) { return os << '[' << vec.x << ", " << vec.y << ", " << vec.z << ", " << ']'; }
 
 void Sandbox::Update()
 {
-	if (toGo)
-	{
-		std::uniform_real_distribution<float> altitude(0.0f, 6000.0f);
-		float y = altitude(eng);
-		float displacement = y / 6000.0f * 200.0f;
-		std::uniform_real_distribution<float> pitch(radians(-95.0f), radians(-85.0f));
-		std::uniform_real_distribution<float> yaw(radians(0.0f), radians(360.0f));
-		std::uniform_real_distribution<float> roll(radians(0.0f), radians(0.0f));
-
-		std::uniform_real_distribution<float> xDist(0.0f, displacement);
-		std::uniform_real_distribution<float> zDist(0.0f, displacement);
-		vec3 pos(xDist(eng), y, zDist(eng));
-		vec3 rot(pitch(eng), yaw(eng), roll(eng));
-		m_Camera->SetPosition(pos);
-		m_Camera->SetEulerAngles(rot);
-		m_Camera->RecalculateViewMatrix();
-	}
-	else
-	{
-		m_Camera->Update(paused);
-	}
+	m_Camera->Update(false);
 }
 
 void Sandbox::Render()
 {
-	if (launching && !toGo) {
-		vec3 pos = m_Camera->GetStorage().GetPosition();
-		pos.y = GetHeight();
-		m_Camera->SetPosition(pos);
-		m_Camera->RecalculateViewMatrix();
-	}
-	Application::Get().GetWindow().ShowCursor(paused | toGo);
 
 	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 	Hazel::RenderCommand::Clear();
@@ -194,39 +115,6 @@ void Sandbox::Render()
 	Hazel::Renderer::EndScene();
 	//Renderer::Flush();
 
-	if (toGo)
-	{
-		int width = GetWindow().GetWidth(), height = GetWindow().GetHeight();
-		uint8_t* bytes = new uint8_t[3 * width * height];
-		glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, bytes);
-		glFinish();
-		FIBITMAP* bitmap = FreeImage_ConvertFromRawBits(bytes, width, height, 3 * width, 24, 0xff0000, 0xff00, 0xff);
-		
-		char pngName[128], altitudeName[128];
-		std::uniform_int_distribution nameDist(0, 1000000);
-		int name = nameDist(eng);
-		snprintf(pngName, sizeof(pngName), "pics/%d.png", name);
-		snprintf(altitudeName, sizeof(altitudeName), "pics/%d.txt", name);
-		if (!FreeImage_Save(FIF_PNG, bitmap, pngName))
-		{
-			HZ_WARN("Failed to save file {}", pngName);
-		}
-		else
-		{
-			FILE* file = fopen(altitudeName, "wb");
-			fprintf(file, "%.2f\n", m_Camera->GetPosition().y);
-			fclose(file);
-		}
-		glFinish();
-
-		FreeImage_Unload(bitmap);
-		delete[] bytes;
-		if (toGo != -1)
-		{
-			toGo--;
-		}
-	}
-	NextCaptureFrame();
 }
 
 Sandbox::~Sandbox()

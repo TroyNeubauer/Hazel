@@ -14,27 +14,12 @@ public:
 
 	virtual void OnUpdate() override
 	{
-		if (launching && GetTime() > 100.0f) {
-			launching = false;
-		}
+
 	}
 
 	virtual void OnImGuiRender() override
 	{
 		ImGui::Begin("Camera Info");
-		if (ImGui::Button("Generate 1000 pictures"))
-		{
-			toGo = 1000;
-		}
-		if (ImGui::Button("Generate 5000 pictures"))
-		{
-			toGo = 5000;
-		}
-		if (ImGui::Button("Zip images"))
-		{
-
-		}
-		ImGui::Text("Pictures remaining %d", toGo);
 		
 		//ImGui::DragFloat3("Light Position", &lightPosition.x, 0.5f);
 		//ImGui::DragFloat3("Light Color", &lightColor.x, 0.01f, 0.0f, 1.0f);
@@ -54,42 +39,13 @@ public:
 
 	bool KeyReleased(Hazel::KeyReleasedEvent* event)
 	{
-		if (event->GetKeyCode() == HZ_KEY_ESCAPE)
-			paused = !paused;
 		return false;
 	}
 
 	bool KeyPressed(Hazel::KeyPressedEvent* event)
 	{
 		int code = event->GetKeyCode();
-		if (code == HZ_KEY_L)//Launch
-		{
-			sandbox->StartLaunch();
-		}
-		else if (code == HZ_KEY_C)//Cancel
-		{
-			if (launching)
-			{
-				sandbox->StopLaunch();
-			}
-		}
-		else if (code == HZ_KEY_G)
-		{
-			if (toGo)
-				toGo = 0;
-			else
-				toGo = -1;
-		}
-		else if (code == HZ_KEY_J)
-		{
-			sandbox->m_Camera->GetStorage().SetPosition(vec3(0.0f, 6900.0f, 0.0f));
-			sandbox->m_Camera->ForceUpdate();
-		}
-		else if (code == HZ_KEY_R)
-		{
-			sandbox->m_Camera->GetStorage().SetEulerAngles(vec3(0.0f, 0.0f, 0.0f));
-			sandbox->m_Camera->ForceUpdate();
-		}
+
 		return false;
 	}
 

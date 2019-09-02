@@ -68,7 +68,7 @@ namespace Hazel {
 		const char* lastDot = fileName;
 		while (*fileName)
 		{
-			Until(fileName, '.');
+			StringUtils::FirstOf(fileName, '.');
 			fileName++;
 			if (*fileName)
 				lastDot = fileName;

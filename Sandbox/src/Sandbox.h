@@ -7,16 +7,6 @@
 
 #include <vector>
 
-extern bool launching;
-extern float launchTime;
-
-extern bool paused;
-extern int toGo;
-
-
-float GetTime();
-
-float GetHeight();
 
 class Sandbox : public Hazel::Application
 {
@@ -26,8 +16,6 @@ public:
 	virtual void Update() override;
 
 	virtual void Render() override;
-	void StopLaunch();
-	void StartLaunch();
 
 	~Sandbox();
 

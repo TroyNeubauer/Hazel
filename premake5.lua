@@ -111,6 +111,7 @@ project "Hazel"
 		"HZ_GLFW_INPUT",
 		"FREEIMAGE_LIB",
 		"LIBARCHIVE_STATIC",
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	filter "system:windows"
@@ -377,8 +378,8 @@ project "ImGui Test"
 
 
 
-project "Test"--The same as sandbox. Used for general testing purposes
-	location "Test"
+project "Sandbox2"--The same as sandbox. Used for general testing purposes
+	location "Sandbox2"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"

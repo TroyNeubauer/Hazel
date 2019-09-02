@@ -78,7 +78,7 @@ namespace Hazel {
 
 		Texture.reset(Hazel::Texture2D::Load("assets/img/grass.png"));
 
-		this->Shader = sp(Shader::Create("shaders/pbr.vert", "shaders/pbr.frag"));
+		this->Shader = sp(Shader::Create("assets/shaders/pbr.glsl"));
 		this->Texture = sp(Texture2D::Load(texture, TextureBuilder::Default().ClampEdges()));
 	}
 

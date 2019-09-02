@@ -5,20 +5,22 @@
 #include <glad/glad.h>
 
 #include "Hazel/Renderer/Shader.h"
+#include <string_view>
 
 namespace Hazel {
 	class OpenGLShader : public Shader
 	{
 	public:
-		OpenGLShader(File* vertexSource, File* fragSource);
+		OpenGLShader(File* shaderSource);
+		OpenGLShader(const char* vertex, const char* fragment);
 
-		virtual void UploadUniformFloat(const std::string& name, const float value);
-		virtual void UploadUniformInt(const std::string& name, const int value);
-		virtual void UploadUniformVec2(const std::string& name, const glm::vec2& vec);
-		virtual void UploadUniformVec3(const std::string& name, const glm::vec3& vec);
-		virtual void UploadUniformVec4(const std::string& name, const glm::vec4& vec);
-		virtual void UploadUniformMat3(const std::string& name, const glm::mat3& mat);
-		virtual void UploadUniformMat4(const std::string& name, const glm::mat4& mat);
+		virtual void UploadUniformFloat(const char* name, const float value);
+		virtual void UploadUniformInt  (const char* name, const int value);
+		virtual void UploadUniformVec2 (const char* name, const glm::vec2& vec);
+		virtual void UploadUniformVec3 (const char* name, const glm::vec3& vec);
+		virtual void UploadUniformVec4 (const char* name, const glm::vec4& vec);
+		virtual void UploadUniformMat3 (const char* name, const glm::mat3& mat);
+		virtual void UploadUniformMat4 (const char* name, const glm::mat4& mat);
 
 		virtual void Bind() const;
 
@@ -27,15 +29,21 @@ namespace Hazel {
 		virtual ~OpenGLShader();
 
 	private:
-		inline int GetUniformLocation(const std::string& name)
+		inline int GetUniformLocation(const char* name)
 		{
-			if (m_UniformCache.find(name) == m_UniformCache.end()) {
+			static std::string temp;
+			temp.reserve(1000);
+			temp = name;
+			if (m_UniformCache.find(temp) == m_UniformCache.end()) {
 				HZ_CORE_WARN("Invalid uniform {}", name);
 				return -1;
 			}
 			return m_UniformCache[name];
 		}
-		void CheckUniformType(const std::string&, GLenum type);
+		void CheckUniformType(const char* name, GLenum type);
+		std::unordered_map<GLenum, std::string> PreProcess(const std::string source);
+
+		void Compile(const std::unordered_map<GLenum, std::string>& shaders);
 
 	private:
 		unsigned int m_ID;
