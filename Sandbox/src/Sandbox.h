@@ -23,6 +23,7 @@ private:
 	friend class ExampleLayer;
 	Hazel::Ref<Hazel::FPSCamera> m_Camera;
 	Terrain* m_terrain;
+	Hazel::Ref<Hazel::Shader> m_PBRShader;
 
 	std::vector<Hazel::Ref<Hazel::Mesh>> m_Meshes;
 	std::vector<Hazel::Light> m_Lights;

@@ -11,7 +11,7 @@
 
 namespace Hazel {
 
-	const float ROT_AMOUNT = radians(140.0f / 60.0f), MOVE_AMOUNT = 10, PI_2 = pi<float>() / 2.0f;
+	const float ROT_AMOUNT = radians(1.0f), MOVE_AMOUNT = 10, PI_2 = pi<float>() / 2.0f;
 
 	bool AdvancedCameraController::Update(CameraStorage& camera, bool paused)
 	{

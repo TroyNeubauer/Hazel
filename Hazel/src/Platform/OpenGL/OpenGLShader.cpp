@@ -21,7 +21,9 @@ namespace Hazel {
 		return 0;
 	}
 
-	OpenGLShader::OpenGLShader(File* shaderSource) : m_ID(-1) {
+	OpenGLShader::OpenGLShader(File* shaderSource) : m_ID(-1)
+	{
+		this->m_Path = shaderSource->GetPath().ToString();
 		std::unordered_map<GLenum, const char*> shaders;
 		shaders = PreProcess(shaderSource->AsMutableString());
 		Compile(shaders);
@@ -29,6 +31,7 @@ namespace Hazel {
 
 	OpenGLShader::OpenGLShader(const char* vertex, const char* fragment)
 	{
+		m_Path = "<Hardcoded Shader>";
 		std::unordered_map<GLenum, const char*> shaders;
 		shaders[GL_VERTEX_SHADER] = vertex;
 		shaders[GL_FRAGMENT_SHADER] = fragment;
@@ -56,7 +59,7 @@ namespace Hazel {
 		temp.reserve(1000);
 		temp = name;
 		if (m_UniformCache.find(temp) == m_UniformCache.end()) {
-			HZ_CORE_WARN("Invalid uniform {}", name);
+			HZ_CORE_WARN("Invalid uniform {}, Shader: {}", name, m_Path);
 			return -1;
 		}
 		return m_UniformCache[temp];
@@ -71,7 +74,7 @@ namespace Hazel {
 		if (m_UniformTypes.find(temp) != m_UniformTypes.end()) {
 			GLenum knownType = m_UniformTypes[temp];
 			if (knownType != type) {
-				HZ_CORE_ASSERT(false, "Uniform type mismatch! Expected {} but got {}", knownType, type);
+				HZ_CORE_ASSERT(false, "Uniform type mismatch! Expected {} but got {}, Shader: {}", knownType, type, m_Path);
 			}
 		}
 #endif
@@ -181,10 +184,15 @@ namespace Hazel {
 		glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
 
 		char name[128];
+		if (count)
+		{
+			HZ_CORE_INFO("{} Uniforms in shader: {}", count, m_Path);
+		}
 		for (int i = 0; i < count; i++)
 		{
 			glGetActiveUniform(program, i, sizeof(name), &length, &size, &type, name);
 			m_UniformCache[std::string(name, length)] = glGetUniformLocation(m_ID, name);
+			HZ_CORE_INFO("Name: {}, type: {}", name, type);
 #ifdef HZ_DEBUG
 			m_UniformTypes[std::string(name, length)] = type;
 #endif

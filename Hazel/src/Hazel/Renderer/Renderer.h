@@ -23,6 +23,7 @@ namespace Hazel {
 		struct SceneData
 		{
 			mat4 ViewProjectionMatrix;
+			vec3 CameraPos;
 		};
 
 		static SceneData* s_SceneData;

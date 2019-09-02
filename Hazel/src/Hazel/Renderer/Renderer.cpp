@@ -10,6 +10,7 @@ namespace Hazel {
 	{
 		RenderCommand::Begin();
 		s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+		s_SceneData->CameraPos = camera.GetPosition();
 	}
 
 	void Renderer::EndScene()

@@ -76,8 +76,6 @@ namespace Hazel {
 
 		VertexArray->SetIndexBuffer(Hazel::IndexBuffer::Create(initalIndices, sizeof(initalIndices)));
 		VertexArray->CalculateNormals();
-
-		this->Shader = Shader::Create("assets/shaders/pbr.glsl");
 	}
 
 	using Lookup=std::map<std::pair<uint32_t, uint32_t>, uint32_t>;

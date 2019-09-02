@@ -4,6 +4,7 @@
 #include "Hazel/System/Path.h"
 #include "Hazel/Core.h"
 
+#include <string>
 #include <glm/glm.hpp>
 
 namespace Hazel {
@@ -34,5 +35,7 @@ namespace Hazel {
 		static Hazel::Ref<Shader> Create(const char* vertex, const char* fragment);
 
 		virtual ~Shader();
+	protected:
+		std::string m_Path;
 	};
 }

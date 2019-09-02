@@ -9,9 +9,9 @@ namespace Hazel {
 	struct Material
 	{
 		Material() {}
-		Material(Hazel::Ref<Texture2D>& albedo, float metalic, float roughness, float ao) : Albedo(albedo), Metalic(metalic), Roughness(roughness), AO(ao) {}
+		Material(Hazel::Ref<Texture2D>& albedo, float metallic, float roughness, float ao) : Albedo(albedo), Metallic(metallic), Roughness(roughness), AO(ao) {}
 
 		Hazel::Ref<Texture2D> Albedo;
-		float Metalic, Roughness, AO;
+		float Metallic, Roughness, AO;
 	};
 }
