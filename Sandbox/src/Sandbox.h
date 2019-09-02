@@ -21,12 +21,13 @@ public:
 
 private:
 	friend class ExampleLayer;
-	std::shared_ptr<Hazel::FPSCamera> m_Camera;
+	Hazel::Ref<Hazel::FPSCamera> m_Camera;
 	Terrain* m_terrain;
-	Terrain* m_terrain2;
 
-	std::vector<std::shared_ptr<Hazel::Mesh>> m_Meshes;
+	std::vector<Hazel::Ref<Hazel::Mesh>> m_Meshes;
 	std::vector<Hazel::Light> m_Lights;
+public:
+	bool Paused = false;
 
 };
 

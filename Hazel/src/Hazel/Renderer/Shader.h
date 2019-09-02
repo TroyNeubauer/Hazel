@@ -2,6 +2,7 @@
 
 #include "Hazel/Renderer/GraphicsAPI.h"
 #include "Hazel/System/Path.h"
+#include "Hazel/Core.h"
 
 #include <glm/glm.hpp>
 
@@ -29,8 +30,8 @@ namespace Hazel {
 
 		virtual void UnBind() const = 0;
 
-		static Shader* Create(Path shader);
-		static Shader* Create(const char* vertex, const char* fragment);
+		static Hazel::Ref<Shader> Create(Path shader);
+		static Hazel::Ref<Shader> Create(const char* vertex, const char* fragment);
 
 		virtual ~Shader();
 	};

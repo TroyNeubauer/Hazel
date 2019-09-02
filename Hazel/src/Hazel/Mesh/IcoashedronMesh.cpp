@@ -25,9 +25,10 @@ namespace Hazel {
 		}
 	}
 
-	IcoashedronMesh::IcoashedronMesh(Path texture, float radius)
+	IcoashedronMesh::IcoashedronMesh(Ref<Hazel::Material> material, float radius)
 		: m_Radius(radius)
 	{
+		this->Material = material;
 		const float X = .525731112119133606f	* radius;
 		const float Z = .850650808352039932f	* radius;
 		const float N = 0.0f					* radius;
@@ -66,20 +67,17 @@ namespace Hazel {
 			6,  1, 10,    9,  0, 11,    9, 11,  2,    9,  2,  5,    7,  2,  11,
 		};
 
-		this->VertexArray = sp(VertexArray::Create());
+		this->VertexArray = VertexArray::Create();
 		
-		std::shared_ptr<VertexBuffer> vertexBuffer = sp(VertexBuffer::Create(initalVertices.data(), sizeof(float) * initalVertices.size()));
+		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(initalVertices.data(), sizeof(float) * initalVertices.size());
 	
 		vertexBuffer->SetLayout(layout);
 		VertexArray->AddVertexBuffer(vertexBuffer);
 
-		VertexArray->SetIndexBuffer(Hazel::sp(Hazel::IndexBuffer::Create(initalIndices, sizeof(initalIndices))));
+		VertexArray->SetIndexBuffer(Hazel::IndexBuffer::Create(initalIndices, sizeof(initalIndices)));
 		VertexArray->CalculateNormals();
 
-		Texture.reset(Hazel::Texture2D::Load("assets/img/grass.png"));
-
-		this->Shader = sp(Shader::Create("assets/shaders/pbr.glsl"));
-		this->Texture = sp(Texture2D::Load(texture, TextureBuilder::Default().ClampEdges()));
+		this->Shader = Shader::Create("assets/shaders/pbr.glsl");
 	}
 
 	using Lookup=std::map<std::pair<uint32_t, uint32_t>, uint32_t>;
@@ -116,8 +114,8 @@ namespace Hazel {
 
 	void IcoashedronMesh::Subdivide(int divisions)
 	{
-		const std::shared_ptr<VertexBuffer>& vertexBuffer = VertexArray->GetVertexBuffers()[0];
-		const std::shared_ptr<IndexBuffer>& indexBuffer = VertexArray->GetIndexBuffer();
+		const Ref<VertexBuffer>& vertexBuffer = VertexArray->GetVertexBuffers()[0];
+		const Ref<IndexBuffer>& indexBuffer = VertexArray->GetIndexBuffer();
 
 		for (int count = 0; count < divisions; count++)
 		{

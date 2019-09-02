@@ -55,14 +55,14 @@ namespace Hazel {
 	}
 
 	template <>
-	VertexBuffer* Buffer<float, BufferType::VERTEX>::Create(float* data, uint64_t bytes) {
+	Ref<VertexBuffer> Buffer<float, BufferType::VERTEX>::Create(float* data, uint64_t bytes) {
 		switch (GraphicsAPI::Get())
 		{
 #ifdef HZ_ENABLE_GRAPHICS_API_NONE
-			case GraphicsAPIType::NONE:		return new NoAPIBuffer <float, BufferType::VERTEX>(data, bytes);
+			case GraphicsAPIType::NONE:		return Ref<VertexBuffer>(new NoAPIBuffer <float, BufferType::VERTEX>(data, bytes));
 #endif
 #ifdef HZ_ENABLE_OPEN_GL
-			case GraphicsAPIType::OPEN_GL:	return new OpenGLBuffer<float, BufferType::VERTEX>(data, bytes);
+			case GraphicsAPIType::OPEN_GL:	return Ref<VertexBuffer>(new OpenGLBuffer<float, BufferType::VERTEX>(data, bytes));
 #endif
 			default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
 		}
@@ -70,14 +70,14 @@ namespace Hazel {
 	}
 
 	template <>
-	IndexBuffer* Buffer<uint32_t, BufferType::INDEX>::Create(uint32_t* data, uint64_t bytes) {
+	Ref<IndexBuffer> Buffer<uint32_t, BufferType::INDEX>::Create(uint32_t* data, uint64_t bytes) {
 		switch (GraphicsAPI::Get())
 		{
 #ifdef HZ_ENABLE_GRAPHICS_API_NONE
-			case GraphicsAPIType::NONE:		return new NoAPIBuffer <uint32_t, BufferType::INDEX>(data, bytes);
+			case GraphicsAPIType::NONE:		return Ref<IndexBuffer>(new NoAPIBuffer <uint32_t, BufferType::INDEX>(data, bytes));
 #endif
 #ifdef HZ_ENABLE_OPEN_GL
-			case GraphicsAPIType::OPEN_GL:	return new OpenGLBuffer<uint32_t, BufferType::INDEX>(data, bytes);
+			case GraphicsAPIType::OPEN_GL:	return Ref<IndexBuffer>(new OpenGLBuffer<uint32_t, BufferType::INDEX>(data, bytes));
 #endif
 			default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
 		}

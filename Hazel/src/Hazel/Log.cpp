@@ -18,14 +18,11 @@ namespace Hazel {
 
 		auto coreStdOut = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 		coreStdOut->set_pattern(consolePattern);
-		coreStdOut->set_level(spdlog::level::level_enum::trace);
 		
 		auto coreFile = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/core.txt", true);
 		coreFile->set_pattern(filePattern);
-		coreFile->set_level(spdlog::level::level_enum::trace);
 
 		s_CoreLogger = new spdlog::logger("HAZEL", { coreStdOut, coreFile });
-		s_CoreLogger->set_level(spdlog::level::level_enum::trace);
 
 
 		auto clientStdOut = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
@@ -33,9 +30,37 @@ namespace Hazel {
 
 		auto clientFile = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/client.txt", true);
 		clientFile->set_pattern(filePattern);
-		//clientFile->set_level(spdlog::level::trace);
 
 		s_ClientLogger = new spdlog::logger("APP", { clientStdOut, clientFile });
+
+#if   defined(HZ_DEBUG)
+		coreStdOut->set_level(spdlog::level::level_enum::trace);
+		coreFile->set_level(spdlog::level::level_enum::trace);
+		s_CoreLogger->set_level(spdlog::level::level_enum::trace);
+		
+		clientStdOut->set_level(spdlog::level::level_enum::trace);
+		clientFile->set_level(spdlog::level::level_enum::trace);
+		s_ClientLogger->set_level(spdlog::level::level_enum::trace);
+#elif defined(HZ_RELEASE)
+		coreStdOut->set_level(spdlog::level::level_enum::warn);
+		coreFile->set_level(spdlog::level::level_enum::info);
+		s_CoreLogger->set_level(spdlog::level::level_enum::info);
+
+		clientStdOut->set_level(spdlog::level::level_enum::warn);
+		clientFile->set_level(spdlog::level::level_enum::info);
+		s_ClientLogger->set_level(spdlog::level::level_enum::info);
+#elif defined(HZ_DIST)
+		coreStdOut->set_level(spdlog::level::level_enum::off);
+		coreFile->set_level(spdlog::level::level_enum::err);
+		s_CoreLogger->set_level(spdlog::level::level_enum::err);
+
+		clientStdOut->set_level(spdlog::level::level_enum::off);
+		clientFile->set_level(spdlog::level::level_enum::err);
+		s_ClientLogger->set_level(spdlog::level::level_enum::err);
+#else
+	#error Undefined log level
+#endif
+
 		Log::s_Init = true;
 	}
 

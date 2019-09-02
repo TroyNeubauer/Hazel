@@ -1,11 +1,11 @@
 #pragma once
-#include <vector>
-
-#include <glad/glad.h>
-
-#include "GraphicsAPI.h"
 
 #include <string>
+#include <vector>
+#include <glad/glad.h>
+
+#include "Hazel/Core.h"
+#include "GraphicsAPI.h"
 
 namespace Hazel {
 
@@ -98,8 +98,8 @@ namespace Hazel {
 		virtual void SetLayout(BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
-		static Buffer<float, BufferType::VERTEX>* Create(float* data, uint64_t bytes);
-		static Buffer<uint32_t, BufferType::INDEX>* Create(uint32_t* data, uint64_t bytes);
+		static Ref<Buffer<float, BufferType::VERTEX>> Create(float* data, uint64_t bytes);
+		static Ref<Buffer<uint32_t, BufferType::INDEX>> Create(uint32_t* data, uint64_t bytes);
 
 		virtual ~Buffer() {}
 	};

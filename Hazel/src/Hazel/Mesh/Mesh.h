@@ -5,20 +5,22 @@
 #include "Hazel/Renderer/VertexArray.h"
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/Renderer/Texture.h"
+#include "Hazel/Enviorment/Material.h"
 #include "Hazel/glm.h"
 
 namespace Hazel {
 
 	struct Mesh
 	{
+	public:
 		Mesh() : Position(0.0f) {}
 
-		Mesh(std::shared_ptr<VertexArray> vertexArray, std::shared_ptr<Shader> shader, std::shared_ptr<Texture2D> texture, vec3 position)
-			: VertexArray(vertexArray), Shader(shader), Texture(texture), Position(position) {}
+		Mesh(Ref<Material> material, Ref<VertexArray> vertexArray, Ref<Shader> shader, vec3& position)
+			: Material(material), VertexArray(vertexArray), Shader(shader), Position(position) {}
 
-		std::shared_ptr<VertexArray> VertexArray;
-		std::shared_ptr<Shader> Shader;
-		std::shared_ptr<Texture2D> Texture;
+		Ref<VertexArray> VertexArray;
+		Ref<Shader> Shader;
+		Ref<Material> Material;
 		vec3 Position;
 	};
 

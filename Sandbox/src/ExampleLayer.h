@@ -2,6 +2,7 @@
 
 #include <Hazel.h>
 #include "Sandbox.h"
+#include "Hazel/KeyCodes.h"
 
 class ExampleLayer : public Hazel::Layer
 {
@@ -45,7 +46,8 @@ public:
 	bool KeyPressed(Hazel::KeyPressedEvent* event)
 	{
 		int code = event->GetKeyCode();
-
+		if (code == HZ_KEY_ESCAPE)
+			sandbox->Paused = !sandbox->Paused;
 		return false;
 	}
 

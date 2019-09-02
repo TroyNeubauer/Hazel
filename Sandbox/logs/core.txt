@@ -1,33 +1,13 @@
-HAZEL-7568:[09/02/19 00:01 47.720] info: Creating window "Hazel Engine" (1280, 720)
-HAZEL-7568:[09/02/19 00:01 48.390] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
-HAZEL-7568:[09/02/19 00:01 48.607] info: Reading shader file assets\shaders\test.glsl
-HAZEL-7568:[09/02/19 00:01 48.608] trace: Reading shader file took 206.50 microseconds
-HAZEL-7568:[09/02/19 00:01 48.608] critical: Preprocessing shader took: 64.60 microseconds
-HAZEL-7568:[09/02/19 00:01 48.610] trace: Compiling and linking shader took 1.15 milliseconds
-HAZEL-7568:[09/02/19 00:01 48.610] info: Reading texture file assets\img\red.png
-HAZEL-7568:[09/02/19 00:01 48.610] trace: Reading texture took 150.60 microseconds
-HAZEL-7568:[09/02/19 00:01 48.630] info: Reading texture took 19.21 milliseconds
-HAZEL-7568:[09/02/19 00:01 48.669] info: Dont with first
-HAZEL-7568:[09/02/19 00:01 48.869] info: Reading texture file assets\img\grass.png
-HAZEL-7568:[09/02/19 00:01 48.870] trace: Reading texture took 169.00 microseconds
-HAZEL-7568:[09/02/19 00:01 49.164] info: Reading texture took 293.04 milliseconds
-HAZEL-7568:[09/02/19 00:01 49.167] warning: Finished generating 66049 vertices, 3950628 bytes of memory
-HAZEL-7568:[09/02/19 00:01 49.168] warning: Generating terrain took 536.77 milliseconds
-HAZEL-7568:[09/02/19 00:01 49.170] info: Dont with first
-HAZEL-7568:[09/02/19 00:01 49.171] info: Reading texture file assets\img\grass.png
-HAZEL-7568:[09/02/19 00:01 49.172] trace: Reading texture took 117.20 microseconds
-HAZEL-7568:[09/02/19 00:01 49.466] info: Reading texture took 294.31 milliseconds
-HAZEL-7568:[09/02/19 00:01 49.474] warning: Finished generating 289 vertices, 16548 bytes of memory
-HAZEL-7568:[09/02/19 00:01 49.474] warning: Generating terrain took 305.24 milliseconds
-HAZEL-7568:[09/02/19 00:01 49.489] info: Reading texture file assets\img\grass.png
-HAZEL-7568:[09/02/19 00:01 49.489] trace: Reading texture took 119.50 microseconds
-HAZEL-7568:[09/02/19 00:01 49.707] info: Reading texture took 217.49 milliseconds
-HAZEL-7568:[09/02/19 00:01 49.709] info: Reading shader file assets\shaders\pbr.glsl
-HAZEL-7568:[09/02/19 00:01 49.710] trace: Reading shader file took 201.90 microseconds
-HAZEL-7568:[09/02/19 00:01 49.710] critical: Preprocessing shader took: 30.90 microseconds
-HAZEL-7568:[09/02/19 00:01 49.711] trace: Compiling and linking shader took 962.80 microseconds
-HAZEL-7568:[09/02/19 00:01 49.712] info: Reading texture file assets\material\rusted_iron\albedo.png
-HAZEL-7568:[09/02/19 00:01 49.712] trace: Reading texture took 152.20 microseconds
-HAZEL-7568:[09/02/19 00:01 50.878] info: Reading texture took 1.166 seconds
-HAZEL-7568:[09/02/19 00:01 50.894] info: Complete initialization took 3.359 seconds
-HAZEL-7568:[09/02/19 00:02 42.988] info: Destroying logging
+HAZEL-20240:[09/02/19 14:38 44.350] info: Creating window "Hazel Engine" (1280, 720)
+HAZEL-20240:[09/02/19 14:38 45.726] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 419.35
+HAZEL-20240:[09/02/19 14:38 46.107] info: Reading shader file assets\shaders\test.glsl
+HAZEL-20240:[09/02/19 14:38 46.156] info: Dont with first
+HAZEL-20240:[09/02/19 14:38 46.226] info: Reading texture file assets\img\grass.png
+HAZEL-20240:[09/02/19 14:38 46.340] info: Reading texture took 114.27 milliseconds
+HAZEL-20240:[09/02/19 14:38 46.340] warning: Finished generating 66049 vertices, 3950628 bytes of memory
+HAZEL-20240:[09/02/19 14:38 46.341] warning: Generating terrain took 197.83 milliseconds
+HAZEL-20240:[09/02/19 14:38 46.342] info: Reading texture file assets\material\rusted_iron\albedo.png
+HAZEL-20240:[09/02/19 14:38 46.981] info: Reading texture took 638.11 milliseconds
+HAZEL-20240:[09/02/19 14:38 47.083] info: Reading shader file assets\shaders\pbr.glsl
+HAZEL-20240:[09/02/19 14:38 47.084] info: Complete initialization took 3.572 seconds
+HAZEL-20240:[09/02/19 14:39 00.897] info: Destroying logging

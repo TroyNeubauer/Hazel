@@ -40,17 +40,15 @@
 namespace Hazel {
 
 	template<typename T>
-	HZ_ALWAYS_INLINE std::shared_ptr<T> sp(T* ptr)
-	{
-		return std::shared_ptr<T>(ptr);
-	}
+	using Scope = std::unique_ptr<T>;
 
 	template<typename T>
-	HZ_ALWAYS_INLINE std::unique_ptr<T> up(T* ptr)
-	{
-		return std::uniqie_ptr<T>(ptr);
-	}
+	using Ref = std::shared_ptr<T>;
 
+	template<typename T>
+	inline Ref<T> R(T* t) { return Ref<T>(t); }
 
+	template<typename T>
+	inline Scope<T> S(T* t) { return Scope<T>(t); }
 }
 

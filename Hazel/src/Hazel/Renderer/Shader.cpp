@@ -10,7 +10,7 @@
 namespace Hazel {
 	Shader::~Shader() {}
 
-	Shader* Shader::Create(Path shader)
+	Ref<Shader> Shader::Create(Path shader)
 	{
 		HZ_CORE_INFO("Reading shader file {}", shader.ToString());
 		Timer timer;
@@ -35,9 +35,12 @@ namespace Hazel {
 			default:
 				HZ_CORE_ASSERT(false, "Unsupported graphics API for creating a shader: {0}", GraphicsAPI::ToString(api));
 		}
-		return result;
+		return Ref<Shader>(result);
 	}
-	Shader* Shader::Create(const char* vertex, const char* fragment)
+
+
+
+	Ref<Shader> Shader::Create(const char* vertex, const char* fragment)
 	{
 		GraphicsAPIType api = GraphicsAPI::Get();
 		Shader* result = nullptr;
@@ -52,7 +55,7 @@ namespace Hazel {
 		default:
 			HZ_CORE_ASSERT(false, "Unsupported graphics API for creating a shader: {0}", GraphicsAPI::ToString(api));
 		}
-		return result;
+		return Ref<Shader>(result);
 	}
 }
 

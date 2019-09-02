@@ -11,11 +11,12 @@ static float Lerp(float min, float max, float f)
 
 FastNoiseSIMD* noise = nullptr;
 
-Terrain::Terrain(std::shared_ptr<Hazel::Shader> shader, float minX, float maxX, float minZ, float maxZ, float baseY, unsigned int detail, float unitsPerTexture)
+Terrain::Terrain(Hazel::Ref<Hazel::Shader> shader, float minX, float maxX, float minZ, float maxZ, float baseY, unsigned int detail, float unitsPerTexture)
 {
 	this->Shader = shader;
+	this->Material = Hazel::Ref<Hazel::Material>(new Hazel::Material());
 	Hazel::Timer timer;
-	VertexArray.reset(Hazel::VertexArray::Create());
+	this->VertexArray = Hazel::VertexArray::Create();
 	if (!noise)
 		noise = FastNoiseSIMD::NewFastNoiseSIMD();
 
@@ -90,15 +91,14 @@ Terrain::Terrain(std::shared_ptr<Hazel::Shader> shader, float minX, float maxX, 
 		}
 	}
 
-	
-	auto vertexBuffer = Hazel::sp(Hazel::VertexBuffer::Create(initalVertices, vertexCount * layout.GetStride()));
+	auto vertexBuffer = Hazel::VertexBuffer::Create(initalVertices, vertexCount * layout.GetStride());
 	vertexBuffer->SetLayout(layout);
 	VertexArray->AddVertexBuffer(vertexBuffer);
 
-	VertexArray->SetIndexBuffer(Hazel::sp(Hazel::IndexBuffer::Create(initalIndices, indexCount * sizeof(uint32_t))));
+	VertexArray->SetIndexBuffer(Hazel::IndexBuffer::Create(initalIndices, indexCount * sizeof(uint32_t)));
 	VertexArray->CalculateNormals();
 
-	Texture.reset(Hazel::Texture2D::Load("assets/img/grass.png"));
+	Material->Albedo = Hazel::Texture2D::Load("assets/img/grass.png");
 	HZ_CORE_WARN("Finished generating {} vertices, {} bytes of memory", vertexCount, indexCount * sizeof(uint32_t) + vertexCount * layout.GetStride());
 	timer.Stop().Print("Generating terrain took", spdlog::level::warn);
 

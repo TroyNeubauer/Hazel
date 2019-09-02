@@ -79,7 +79,6 @@ namespace Hazel {
 
 	std::unordered_map<GLenum, const char*> OpenGLShader::PreProcess(char* source)
 	{
-		Timer timer;
 		std::unordered_map<GLenum, const char*> result;
 		const char* target = "#type";
 
@@ -97,9 +96,9 @@ namespace Hazel {
 			result[ShaderTypeFromString(type)] = shaderStart;
 		}
 
-		timer.Stop().Print("Preprocessing shader took:", spdlog::level::critical);
 		return result;
 	}
+
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, const char*>& shaders)
 	{
 
