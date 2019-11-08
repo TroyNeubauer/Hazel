@@ -13,13 +13,13 @@ namespace Hazel {
 	Timer& Timer::Start()
 	{
 		clock_gettime(CLOCK_REALTIME, &start);
-		return this;
+		return *this;
 	}
 
 	Timer& Timer::Stop()
 	{
 		clock_gettime(CLOCK_REALTIME, &end);
-		return this;
+		return *this;
 	}
 
 	uint64_t Timer::Nanos()

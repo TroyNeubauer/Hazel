@@ -12,7 +12,21 @@ namespace Hazel {
 		inline static bool Equal(const char* a, const char* b) { return strcmp(a, b) == 0; }
 		inline static bool Contains(const char* string, const char* part) { return strstr(string, part) != NULL; }
 
-		static bool StartsWith(const char* string, const char* target);
+		inline static bool StartsWith(const char* string, const char* target)
+		{
+			if (*target == 0x00) return false;
+			while (*string != 0x00)
+			{
+				if (*string == *target)
+				{
+					string++;
+					target++;
+					if (*target == 0x00) return true;//We have hit the end of target with all the characters matching!
+				}
+				else
+					return false;
+			}
+		}
 
 		inline static size_t Length(const char* string) { return strlen(string); }
 		inline static size_t Capacity(const char* string) { return Length(string) + 1; }
