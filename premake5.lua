@@ -1,6 +1,6 @@
 workspace "Hazel"
 	architecture "x64"
-	startproject "Sandbox"
+	startproject "Game Design"
 
 	configurations
 	{
@@ -31,7 +31,7 @@ include "Hazel/vendor/freeimage"
 include "Hazel/vendor/FastNoiseSIMD"
 include "Hazel/vendor/ocornut_str"
 include "Hazel/vendor/libarchive"
-include "Hazel/vendor/openssl"
+--include "Hazel/vendor/openssl"
 
 
 project "Hazel"
@@ -105,13 +105,13 @@ project "Hazel"
 	{
 		"HZ_ENABLE_GRAPHICS_API_NONE",
 		"HZ_ENABLE_OPEN_GL",
-		"HZ_ENABLE_VULKAN",
+		--"HZ_ENABLE_VULKAN",
 		"GLFW_INCLUDE_NONE",
 		"GLM_FORCE_INTRINSICS",
 		"HZ_GLFW_INPUT",
 		"FREEIMAGE_LIB",
 		"LIBARCHIVE_STATIC",
-		"_CRT_SECURE_NO_WARNINGS"
+		"_CRT_SECURE_NO_WARNINGS",
 	}
 
 	filter "system:windows"
@@ -352,6 +352,7 @@ project "ImGui Test"
 
 		defines
 		{
+			"_CRT_SECURE_NO_WARNINGS",
 		}
 
 	filter "configurations:Debug"
@@ -448,6 +449,7 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 		{
 			"HZ_PLATFORM_WINDOWS",
 			"HZ_LITTLE_ENDIAN",
+			"_CRT_SECURE_NO_WARNINGS",
 		}
 
 		links
@@ -468,7 +470,130 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 
 		defines
 		{
-			"HZ_PLATFORM_UNIX"
+			"HZ_PLATFORM_LINIX",
+			"HZ_PLATFORM_UNIX",
+		}
+		
+		links
+		{
+			"libX11.a",
+		}
+
+
+	filter "configurations:Debug"
+		defines "HZ_DEBUG"
+		runtime "Debug"
+		symbols "on"
+		floatingpoint "Strict"
+
+	filter "configurations:Release"
+		defines "HZ_RELEASE"
+		runtime "Release"
+		optimize "speed"
+		inlining "auto"
+		floatingpoint "Fast"
+
+
+	filter "configurations:Dist"
+		defines "HZ_DIST"
+		runtime "Release"
+		optimize "speed"
+		inlining "auto"
+		floatingpoint "Fast"
+
+
+
+project "Game Design"
+	location "Game Design"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+	vectorextensions "AVX"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Hazel/vendor/spdlog/include",
+		"Hazel/src",
+		"Hazel/vendor",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.freeimage}",
+		"%{IncludeDir.str}",
+		"%{IncludeDir.libarchive}",
+
+		"Hazel/vendor/freeimage/Source/",
+		"Hazel/vendor/freeimage/Source/FreeImage",
+		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
+		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
+		"Hazel/vendor/freeimage/Source/LibPNG",
+		"Hazel/vendor/freeimage/Source/Metadata",
+		"Hazel/vendor/freeimage/Source/OpenEXR",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Half",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Iex",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IexMath",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IlmImf",
+		"Hazel/vendor/freeimage/Source/OpenEXR/IlmThread",
+		"Hazel/vendor/freeimage/Source/OpenEXR/Imath",
+		"Hazel/vendor/freeimage/Source/ZLib",
+	}
+
+	links
+	{
+		"Hazel",
+	}
+
+	defines
+	{
+		"GLM_FORCE_INTRINSICS",
+		"FREEIMAGE_LIB"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+		libdirs
+		{
+			"Hazel/vendor/Vulkan/lib"
+		}
+
+		defines
+		{
+			"HZ_PLATFORM_WINDOWS",
+			"HZ_LITTLE_ENDIAN",
+			"_CRT_SECURE_NO_WARNINGS",
+		}
+
+		links
+		{
+			"kernel32.lib",
+			"Onecore.lib",
+			"opengl32.lib",
+			"vulkan.lib",
+		}
+
+	filter "system:linux"
+		systemversion "latest"
+		
+		libdirs
+		{
+			"/usr/lib/x86_64-linux-gnu/",
+		}
+
+		defines
+		{
+			"HZ_PLATFORM_LINIX",
+			"HZ_PLATFORM_UNIX",
 		}
 		
 		links

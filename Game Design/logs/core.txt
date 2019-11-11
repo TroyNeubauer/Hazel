@@ -1,0 +1,4 @@
+HAZEL-3192:[11/10/19 20:06 10.503] info: Creating window "Hazel Engine" (1280, 720)
+HAZEL-3192:[11/10/19 20:06 11.270] info: Created OpenGL Context, Version: 4.6.0 NVIDIA 426.00
+HAZEL-3192:[11/10/19 20:06 11.598] info: Complete initialization took 1.338 seconds
+HAZEL-3192:[11/10/19 20:07 33.127] info: Destroying logging
