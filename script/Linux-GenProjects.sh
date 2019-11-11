@@ -1,3 +1,2 @@
 #!/bin/sh
-
-./vendor/bin/premake/premake5 --os=linux codelite
+premake5 --os=linux gmake2
