@@ -28,7 +28,7 @@ namespace Hazel {
 	IcoashedronMesh::IcoashedronMesh(Ref<Hazel::Material> material, float radius)
 		: m_Radius(radius)
 	{
-		this->Material = material;
+		this->MeshMaterial = material;
 		const float X = .525731112119133606f	* radius;
 		const float Z = .850650808352039932f	* radius;
 		const float N = 0.0f					* radius;
@@ -67,15 +67,15 @@ namespace Hazel {
 			6,  1, 10,    9,  0, 11,    9, 11,  2,    9,  2,  5,    7,  2,  11,
 		};
 
-		this->VertexArray = VertexArray::Create();
+		this->MeshVertexArray = VertexArray::Create();
 		
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(initalVertices.data(), sizeof(float) * initalVertices.size());
 	
 		vertexBuffer->SetLayout(layout);
-		VertexArray->AddVertexBuffer(vertexBuffer);
+		MeshVertexArray->AddVertexBuffer(vertexBuffer);
 
-		VertexArray->SetIndexBuffer(Hazel::IndexBuffer::Create(initalIndices, sizeof(initalIndices)));
-		VertexArray->CalculateNormals();
+		MeshVertexArray->SetIndexBuffer(Hazel::IndexBuffer::Create(initalIndices, sizeof(initalIndices)));
+		MeshVertexArray->CalculateNormals();
 	}
 
 	using Lookup=std::map<std::pair<uint32_t, uint32_t>, uint32_t>;
@@ -112,8 +112,8 @@ namespace Hazel {
 
 	void IcoashedronMesh::Subdivide(int divisions)
 	{
-		const Ref<VertexBuffer>& vertexBuffer = VertexArray->GetVertexBuffers()[0];
-		const Ref<IndexBuffer>& indexBuffer = VertexArray->GetIndexBuffer();
+		const Ref<VertexBuffer>& vertexBuffer = MeshVertexArray->GetVertexBuffers()[0];
+		const Ref<IndexBuffer>& indexBuffer = MeshVertexArray->GetIndexBuffer();
 
 		for (int count = 0; count < divisions; count++)
 		{
@@ -148,7 +148,7 @@ namespace Hazel {
 
 		}
 
-		VertexArray->CalculateNormals();
+		MeshVertexArray->CalculateNormals();
 	}
 }
 

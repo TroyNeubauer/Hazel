@@ -59,7 +59,7 @@ namespace Hazel {
 
 	//Definitions to template functions
 	template<typename T>
-	HZ_ALWAYS_INLINE static T* System::FastNew(size_t elements)
+	HZ_ALWAYS_INLINE T* System::FastNew(size_t elements)
 	{
 		const size_t bytes = sizeof(T) * elements;
 #ifdef HZ_PLATFORM_WINDOWS

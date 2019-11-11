@@ -26,13 +26,13 @@ namespace Hazel {
 	void Renderer::Submit(const Mesh& mesh)
 	{
 		
-		mesh.Shader->Bind();
-		mesh.Shader->UploadUniformMat4("u_ViewProjectionMatrix", s_SceneData->ViewProjectionMatrix);
-		mesh.Shader->UploadUniformMat4("u_Model", translate(mesh.Position));
+		mesh.MeshShader->Bind();
+		mesh.MeshShader->UploadUniformMat4("u_ViewProjectionMatrix", s_SceneData->ViewProjectionMatrix);
+		mesh.MeshShader->UploadUniformMat4("u_Model", translate(mesh.Position));
 
-		mesh.Material->Albedo->Bind();
-		mesh.VertexArray->Bind();
-		RenderCommand::DrawIndexed(mesh.VertexArray);
+		mesh.MeshMaterial->Albedo->Bind();
+		mesh.MeshVertexArray->Bind();
+		RenderCommand::DrawIndexed(mesh.MeshVertexArray);
 	}
 
 }

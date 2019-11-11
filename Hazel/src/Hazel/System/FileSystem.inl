@@ -16,14 +16,6 @@ namespace Hazel {
 		System::FastDelete(mutablePath);
 	}
 
-	inline bool FileSystem::PathsEqual(const char* a, const char* b)
-	{
-		char fullA[512], fullB[512];
-		GetFullPathNameA(a, sizeof(fullA), fullA, nullptr);
-		GetFullPathNameA(b, sizeof(fullB), fullB, nullptr);
-		return StringUtils::Equal(fullA, fullB);
-	}
-
 	template<typename F>
 	void FileSystem::PathNameIterator(char* path, F onPath)
 	{

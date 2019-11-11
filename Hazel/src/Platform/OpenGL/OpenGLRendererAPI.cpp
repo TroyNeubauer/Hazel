@@ -15,17 +15,17 @@ namespace Hazel {
 
 	void OpenGLRendererAPI::Clear()
 	{
-		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4 & color)
 	{
-		GLCall(glClearColor(color.r, color.g, color.b, color.a));
+		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
 	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 	{
-		GLCall(glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->Count(), GL_UNSIGNED_INT, nullptr));
+		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->Count(), GL_UNSIGNED_INT, nullptr);
 	}
 
 	void OpenGLRendererAPI::Begin()

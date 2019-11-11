@@ -20,7 +20,7 @@ namespace Hazel {
 		uint64_t length;
 		if (p_Path.m_InArchive)
 		{
-			char* end = "";
+			char* end = nullptr;
 			FileSystem::PathNameIterator(p_Path, [&end](char* fileName, char* rest) -> bool {
 				
 				if (FileSystem::HasArchiveExtension(fileName))
@@ -38,7 +38,7 @@ namespace Hazel {
 				delete parent;
 				return nullptr;
 			}
-			while (*end)
+			while (end && *end)
 			{
 				char* start = end;
 				FileSystem::PathNameIterator(end, [&end](char* fileName, char* rest) -> bool {
@@ -52,22 +52,16 @@ namespace Hazel {
 				});
 				if (start == end)
 				{
-					end = "";//There are no more recursive archives so make this be the last iteration
+					end = nullptr;//There are no more recursive archives so make this be the last iteration
 				}
 				else
 				{
 					end[-1] = 0x00;
 				}
-				result = new ArchivedFile(parent, Path(start), p_Options, p_Error);
-				if (*p_Error != FileError::NONE)
-				{
-					delete result;
-					return nullptr;
-				}
-				parent = result;
+				result = new ArchivedFile(parent, p_Path, p_Options, p_Error);
 			}
-			return result;
 			HZ_CORE_ASSERT(false, "Unable to find seperation between archive file and internal file!");
+			return result;
 		}
 		else
 		{
@@ -76,7 +70,7 @@ namespace Hazel {
 	}
 	
 
-	ArchivedFile::ArchivedFile(File* parent, Path& path, FileOpenOptions options, FileError* error) 
+	ArchivedFile::ArchivedFile(File* parent, const Path& path, FileOpenOptions options, FileError* error)
 		: File(path, options), m_Parent(parent)
 	{
 		archive_entry* entry;
@@ -165,7 +159,7 @@ namespace Hazel {
 	}
 
 
-	MemoryMappedFile::MemoryMappedFile(Path& path, FileOpenOptions options, FileError* error, uint8_t* data, uint64_t length)
+	MemoryMappedFile::MemoryMappedFile(const Path& path, FileOpenOptions options, FileError* error, uint8_t* data, uint64_t length)
 		: File(path, options)
 	{
 		this->m_Length = length;

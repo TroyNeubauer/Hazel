@@ -14,18 +14,18 @@ namespace Hazel {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
-		GLCall(glGenVertexArrays(1, &m_ID));
-		GLCall(glBindVertexArray(m_ID));
+		glGenVertexArrays(1, &m_ID);
+		glBindVertexArray(m_ID);
 	}
 
 	void OpenGLVertexArray::Bind() const
 	{
-		GLCall(glBindVertexArray(m_ID));
+		glBindVertexArray(m_ID);
 	}
 
 	void OpenGLVertexArray::Unbind() const
 	{
-		GLCall(glBindVertexArray(0));
+		glBindVertexArray(0);
 	}
 
 	size_t OpenGLVertexArray::Bytes() const
@@ -45,13 +45,13 @@ namespace Hazel {
 		uint32_t index = 0;
 		const auto& layout = vertexBuffer->GetLayout();
 		for (const auto& element : layout) {
-			GLCall(glEnableVertexAttribArray(index));
-			GLCall(glVertexAttribPointer(index,
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index,
 				element.GetElementCount(),
 				OpenGLUtils::ShaderDataTypeToGLType(element.Type),
 				element.Normalized,
 				layout.GetStride(),
-				(const void*) element.Offset));
+				reinterpret_cast<const void*>(element.Offset));
 			index++;
 		}
 		m_VertexBuffers.push_back(vertexBuffer);
@@ -151,7 +151,7 @@ namespace Hazel {
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
-		GLCall(glDeleteVertexArrays(1, &m_ID));
+		glDeleteVertexArrays(1, &m_ID);
 	}
 
 	void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer)

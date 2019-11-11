@@ -7,7 +7,7 @@
 #include "Platform/NoAPI/NoAPI.h"
 
 namespace Hazel {
-	Hazel::Ref<Texture2D> Texture2D::Load(Path path, TextureBuilder& builder)
+	Hazel::Ref<Texture2D> Texture2D::Load(Path path, TextureBuilder builder)
 	{
 		HZ_CORE_INFO("Reading texture file {}", path.ToString());
 		Timer timer;

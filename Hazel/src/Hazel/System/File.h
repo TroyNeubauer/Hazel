@@ -26,7 +26,7 @@ namespace Hazel {
 	public:
 		static File* Open(Path& path, FileOpenOptions options = DEFAULT_OPTIONS, FileError* error = nullptr);
 
-		File(Path& path, FileOpenOptions options) : m_Path(path), m_Length((uint64_t) -1),
+		File(const Path& path, FileOpenOptions options) : m_Path(path), m_Length((uint64_t) -1),
 			m_Read(options & FileOpenOptions::READ), m_Write(options& FileOpenOptions::WRITE), m_Append(options & FileOpenOptions::APPEND) {}
 
 		//No copying
@@ -84,7 +84,7 @@ namespace Hazel {
 	class ArchivedFile : public File
 	{
 	public:
-		ArchivedFile(File* parent, Path& path, FileOpenOptions options, FileError* error);
+		ArchivedFile(File* parent, const Path& path, FileOpenOptions options, FileError* error);
 
 		virtual void Save();
 
@@ -107,7 +107,7 @@ namespace Hazel {
 	class MemoryMappedFile : public File
 	{
 	public:
-		MemoryMappedFile(Path& path, FileOpenOptions options, FileError* error, uint8_t* data, uint64_t length);
+		MemoryMappedFile(const Path& path, FileOpenOptions options, FileError* error, uint8_t* data, uint64_t length);
 
 		virtual void Save();
 

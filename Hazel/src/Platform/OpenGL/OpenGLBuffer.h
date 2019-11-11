@@ -25,14 +25,14 @@ namespace Hazel {
 	public:
 		OpenGLBuffer(T* data, uint64_t bytes)
 		{
-			GLCall(glCreateBuffers(1, &m_BufferID));
-			GLCall(glBindBuffer(GetTarget(TYPE), m_BufferID));
+			glCreateBuffers(1, &m_BufferID);
+			glBindBuffer(GetTarget(TYPE), m_BufferID);
 			SetData(data, bytes);
 		}
 
 		virtual void SetData(T* data, uint64_t bytes) override
 		{
-			GLCall(glBufferData(GetTarget(TYPE), bytes, data, GL_STATIC_DRAW));
+			glBufferData(GetTarget(TYPE), bytes, data, GL_STATIC_DRAW);
 			m_Bytes = bytes;
 		}
 
@@ -46,7 +46,7 @@ namespace Hazel {
 				case MapAccess::READ_WRITE: glAccess = GL_READ_WRITE;	break;
 				default: HZ_CORE_ASSERT(false, "");
 			}
-			GLCall(uint8_t* result = (uint8_t*) glMapBuffer(GetTarget(TYPE), glAccess));
+			uint8_t* result = (uint8_t*) glMapBuffer(GetTarget(TYPE), glAccess);
 			if (result == nullptr)
 				HZ_CORE_WARN("Unable to map buffer!");
 			return result;
@@ -54,12 +54,12 @@ namespace Hazel {
 
 		virtual void Unmap(void* buffer) override
 		{
-			GLCall(glUnmapBuffer(GetTarget(TYPE)));
+			glUnmapBuffer(GetTarget(TYPE));
 		}
 
-		virtual void Bind() const override { GLCall(glBindBuffer(GetTarget(TYPE), m_BufferID)); }
+		virtual void Bind() const override { glBindBuffer(GetTarget(TYPE), m_BufferID); }
 
-		virtual void Unbind() const override { GLCall(glBindBuffer(GetTarget(TYPE), 0)); }
+		virtual void Unbind() const override { glBindBuffer(GetTarget(TYPE), 0); }
 
 		virtual uint64_t Bytes() const override { return m_Bytes; }
 
@@ -76,7 +76,7 @@ namespace Hazel {
 
 		virtual ~OpenGLBuffer()
 		{
-			GLCall(glDeleteBuffers(1, &m_BufferID));
+			glDeleteBuffers(1, &m_BufferID);
 		}
 
 

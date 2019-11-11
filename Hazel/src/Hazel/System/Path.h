@@ -2,31 +2,12 @@
 
 #include <string>
 #include <Str.h>
+#include "FileEnums.h"
 #include "Hazel/System/FileSystem.h"
 
 namespace Hazel {
 
 	class File;
-
-	enum FileOpenOptions
-	{
-		READ = BIT(0),
-		WRITE = BIT(1),
-		APPEND = BIT(2),
-		RANDOM_ACCESS = BIT(3),
-		READ_WRITE = READ | WRITE,
-		TRUNCATE = 0,	//Bit second bit is off
-		SCAN = 0,		// the third bit is off
-	};
-
-	static const uint32_t APPEND_MASK = (uint32_t) FileOpenOptions::APPEND, MODE_MASK = (uint32_t) FileOpenOptions::READ_WRITE;
-	static const FileOpenOptions DEFAULT_OPTIONS = (FileOpenOptions) (FileOpenOptions::READ_WRITE | FileOpenOptions::APPEND);
-
-	enum class FileError
-	{
-		NONE = 0, FILE_NOT_FOUND, ACCESS_DENIED, TOO_MANY_FILES, NOT_ENOUGH_MEMORY, IS_DIRECTORY, IS_FILE, INVALID_PARAMETER, UNKNOWN
-	};
-	const char* FileErrorToString(FileError error);
 	
 	//A class that represents a path to a file or directory on disk
 	//Evuantaly it will be able to read from archives
@@ -39,7 +20,7 @@ namespace Hazel {
 
 		operator const Str& ();
 		operator char* ();
-		explicit operator const char* () const;
+		operator const char* () const;
 		const char* ToString() const;
 		bool operator==(const Path& other) const;
 

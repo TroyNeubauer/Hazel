@@ -51,16 +51,6 @@ namespace Hazel {
 		FileSystem::NormalizePath(m_Path, normalized, m_Path.capacity());
 		StringUtils::Copy(m_Path, normalized);
 	}
-	static const char* fileErrorNames[] = { "No Error", "File Not Found", "Access Denied", "Too Many Files Open", "Not Enough Memory", "Is Directory", "Invalid Parameter", "Unknown Error" };
-	static const int s_ErrorNamesLength = sizeof(fileErrorNames) / sizeof(const char*);
-
-	const char* FileErrorToString(FileError error)
-	{
-		if ((uint64_t) error >= s_ErrorNamesLength)
-			return "Invalid Error! Out of bounds";
-		else
-			return fileErrorNames[(uint64_t) error];
-	}
 
 	Path::Path(const char* path) : m_Path(path) { UpdatePath(); }
 	Path::Path(const std::string& path) : m_Path(path.c_str()) { UpdatePath(); }

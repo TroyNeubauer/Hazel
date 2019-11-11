@@ -125,7 +125,7 @@ namespace Hazel {
 	class NoAPITexture2D : public Texture2D
 	{
 	public:
-		NoAPITexture2D(File* file, TextureBuilder& builder = TextureBuilder::Default()) {}
+		NoAPITexture2D(File* file, const TextureBuilder& builder = TextureBuilder::Default()) {}
 
 		virtual void Bind() const override {}
 		virtual void Unbind() const override {}

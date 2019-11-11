@@ -14,9 +14,9 @@ FastNoiseSIMD* noise = nullptr;
 Terrain::Terrain(Hazel::Ref<Hazel::Shader> shader, float minX, float maxX, float minZ, float maxZ, float baseY, unsigned int detail, float unitsPerTexture)
 {
 	this->Shader = shader;
-	this->Material = Hazel::Ref<Hazel::Material>(new Hazel::Material());
+	this->MeshMaterial = Hazel::Ref<Hazel::Material>(new Hazel::Material());
 	Hazel::Timer timer;
-	this->VertexArray = Hazel::VertexArray::Create();
+	this->MeshVertexArray = Hazel::VertexArray::Create();
 	if (!noise)
 		noise = FastNoiseSIMD::NewFastNoiseSIMD();
 
@@ -93,12 +93,12 @@ Terrain::Terrain(Hazel::Ref<Hazel::Shader> shader, float minX, float maxX, float
 
 	auto vertexBuffer = Hazel::VertexBuffer::Create(initalVertices, vertexCount * layout.GetStride());
 	vertexBuffer->SetLayout(layout);
-	VertexArray->AddVertexBuffer(vertexBuffer);
+	MeshVertexArray->AddVertexBuffer(vertexBuffer);
 
-	VertexArray->SetIndexBuffer(Hazel::IndexBuffer::Create(initalIndices, indexCount * sizeof(uint32_t)));
-	VertexArray->CalculateNormals();
+	MeshVertexArray->SetIndexBuffer(Hazel::IndexBuffer::Create(initalIndices, indexCount * sizeof(uint32_t)));
+	MeshVertexArray->CalculateNormals();
 
-	Material->Albedo = Hazel::Texture2D::Load("assets/img/grass.png");
+	MeshMaterial->Albedo = Hazel::Texture2D::Load("assets/img/grass.png");
 	HZ_CORE_WARN("Finished generating {} vertices, {} bytes of memory", vertexCount, indexCount * sizeof(uint32_t) + vertexCount * layout.GetStride());
 	timer.Stop().Print("Generating terrain took", spdlog::level::warn);
 

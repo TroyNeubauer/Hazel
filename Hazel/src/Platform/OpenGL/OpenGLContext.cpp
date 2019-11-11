@@ -46,7 +46,7 @@ namespace Hazel {
 	}
 	void OpenGLContext::OnWindowResize(Window* window, int width, int height)
 	{
-		GLCall(glViewport(0, 0, width, height));
+		glViewport(0, 0, width, height);
 	}
 
 	void OpenGLContext::Destroy()

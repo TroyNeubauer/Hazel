@@ -86,10 +86,10 @@ void Sandbox::Render()
 	m_PBRShader->UploadUniformVec3("u_LightColor", m_Lights[0].color);
 	for (auto& mesh : m_Meshes) {
 		mesh->Shader->UploadUniformVec3("u_CamPos", m_Camera->GetPosition());
-		mesh->Shader->UploadUniformFloat("u_Metallic", mesh->Material->Metallic);
-		mesh->Shader->UploadUniformFloat("u_Roughness", mesh->Material->Roughness);
-		mesh->Shader->UploadUniformFloat("u_AO", mesh->Material->AO);
-		HZ_CORE_WARN("Rough {}", mesh->Material->Roughness);
+		mesh->Shader->UploadUniformFloat("u_Metallic", mesh->MeshMaterial->Metallic);
+		mesh->Shader->UploadUniformFloat("u_Roughness", mesh->MeshMaterial->Roughness);
+		mesh->Shader->UploadUniformFloat("u_AO", mesh->MeshMaterial->AO);
+		HZ_CORE_WARN("Rough {}", mesh->MeshMaterial->Roughness);
 
 		Hazel::Renderer::Submit(*mesh);
 	}

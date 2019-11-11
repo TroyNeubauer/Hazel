@@ -6,6 +6,11 @@
 #include <functional>
 #include <utility>
 
+#include <stdint.h>
+
+#include "FileEnums.h"
+
+
 #ifdef HZ_PLATFORM_WINDOWS//The Win32 API is truly evil
 	#undef CreateFile
 	#undef CreateDirectory
@@ -16,7 +21,6 @@
 namespace Hazel {
 
 	enum class FileError;
-	enum FileOpenOptions;
 
 	class FileSystem
 	{

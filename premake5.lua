@@ -79,13 +79,6 @@ project "Hazel"
 		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
 		"Hazel/vendor/freeimage/Source/LibPNG",
 		"Hazel/vendor/freeimage/Source/Metadata",
-		"Hazel/vendor/freeimage/Source/OpenEXR",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Half",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Iex",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IexMath",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IlmImf",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IlmThread",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Imath",
 		"Hazel/vendor/freeimage/Source/ZLib",
 	}
 
@@ -208,13 +201,6 @@ project "Sandbox"
 		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
 		"Hazel/vendor/freeimage/Source/LibPNG",
 		"Hazel/vendor/freeimage/Source/Metadata",
-		"Hazel/vendor/freeimage/Source/OpenEXR",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Half",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Iex",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IexMath",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IlmImf",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IlmThread",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Imath",
 		"Hazel/vendor/freeimage/Source/ZLib",
 	}
 
@@ -414,13 +400,6 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
 		"Hazel/vendor/freeimage/Source/LibPNG",
 		"Hazel/vendor/freeimage/Source/Metadata",
-		"Hazel/vendor/freeimage/Source/OpenEXR",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Half",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Iex",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IexMath",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IlmImf",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IlmThread",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Imath",
 		"Hazel/vendor/freeimage/Source/ZLib",
 	}
 
@@ -538,13 +517,6 @@ project "Game Design"
 		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
 		"Hazel/vendor/freeimage/Source/LibPNG",
 		"Hazel/vendor/freeimage/Source/Metadata",
-		"Hazel/vendor/freeimage/Source/OpenEXR",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Half",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Iex",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IexMath",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IlmImf",
-		"Hazel/vendor/freeimage/Source/OpenEXR/IlmThread",
-		"Hazel/vendor/freeimage/Source/OpenEXR/Imath",
 		"Hazel/vendor/freeimage/Source/ZLib",
 	}
 

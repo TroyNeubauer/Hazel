@@ -40,17 +40,17 @@ namespace Hazel {
 
 	void OpenGLShader::Bind() const
 	{
-		GLCall(glUseProgram(m_ID));
+		glUseProgram(m_ID);
 	}
 
 	void OpenGLShader::UnBind() const
 	{
-		GLCall(glUseProgram(0));
+		glUseProgram(0);
 	}
 
 	OpenGLShader::~OpenGLShader()
 	{
-		GLCall(glDeleteProgram(m_ID));
+		glDeleteProgram(m_ID);
 	}
 
 	int OpenGLShader::GetUniformLocation(const char* name)
@@ -113,8 +113,8 @@ namespace Hazel {
 			const char* source = kv.second;
 			const GLchar* const sourceArray[1] = { source };
 			GLuint shader = glCreateShader(type);
-			GLCall(glShaderSource(shader, 1, sourceArray, 0));
-			GLCall(glCompileShader(shader));
+			glShaderSource(shader, 1, sourceArray, 0);
+			glCompileShader(shader);
 
 			GLint isCompiled = 0;
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
@@ -139,10 +139,10 @@ namespace Hazel {
 			shaderIDs.push_back(shader);
 
 		}
-		GLCall(GLuint program = glCreateProgram());
+		GLuint program = glCreateProgram();
 		for (auto shaderID : shaderIDs)
 			glAttachShader(program, shaderID);
-		GLCall(glLinkProgram(program));
+		glLinkProgram(program);
 
 		// Note the different functions here: glGetProgram* instead of glGetShader*.
 		GLint isLinked = 0;
@@ -206,7 +206,7 @@ namespace Hazel {
 		CheckUniformType(name, GL_FLOAT);
 		int location = GetUniformLocation(name);
 		if (location != -1)
-			GLCall(glUniform1f(location, f));
+			glUniform1f(location, f);
 	}
 
 	void OpenGLShader::UploadUniformInt(const char* name, const int value)
@@ -214,7 +214,7 @@ namespace Hazel {
 		CheckUniformType(name, GL_SAMPLER_2D);
 		int location = GetUniformLocation(name);
 		if (location != -1)
-			GLCall(glUniform1i(location, value));
+			glUniform1i(location, value);
 	}
 	
 	void OpenGLShader::UploadUniformVec2(const char* name, const glm::vec2& vec)
@@ -222,7 +222,7 @@ namespace Hazel {
 		CheckUniformType(name, GL_FLOAT_VEC2);
 		int location = GetUniformLocation(name);
 		if (location != -1)
-			GLCall(glUniform2f(location, vec.x, vec.y));
+			glUniform2f(location, vec.x, vec.y);
 	}
 	
 	void OpenGLShader::UploadUniformVec3(const char* name, const glm::vec3& vec)
@@ -230,7 +230,7 @@ namespace Hazel {
 		CheckUniformType(name, GL_FLOAT_VEC3);
 		int location = GetUniformLocation(name);
 		if (location != -1)
-			GLCall(glUniform3f(location, vec.x, vec.y, vec.z));
+			glUniform3f(location, vec.x, vec.y, vec.z);
 	}
 	
 	void OpenGLShader::UploadUniformVec4(const char* name, const glm::vec4& vec)
@@ -238,7 +238,7 @@ namespace Hazel {
 		CheckUniformType(name, GL_FLOAT_VEC4);
 		int location = GetUniformLocation(name);
 		if (location != -1)
-			GLCall(glUniform4f(location, vec.x, vec.y, vec.z, vec.w));
+			glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
 	}
 	
 	void OpenGLShader::UploadUniformMat3(const char* name, const glm::mat3& mat)
@@ -246,7 +246,7 @@ namespace Hazel {
 		CheckUniformType(name, GL_FLOAT_MAT3);
 		int location = GetUniformLocation(name);
 		if (location != -1)
-			GLCall(glUniformMatrix3fv(location, 1, false, value_ptr(mat)));
+			glUniformMatrix3fv(location, 1, false, value_ptr(mat));
 	}
 	
 	void OpenGLShader::UploadUniformMat4(const char* name, const glm::mat4& mat)
@@ -254,7 +254,7 @@ namespace Hazel {
 		CheckUniformType(name, GL_FLOAT_MAT4);
 		int location = GetUniformLocation(name);
 		if(location != -1)
-			GLCall(glUniformMatrix4fv(location, 1, false, value_ptr(mat)));
+			glUniformMatrix4fv(location, 1, false, value_ptr(mat));
 	}
 
 

@@ -14,6 +14,14 @@ namespace Hazel {
 		return atts != INVALID_FILE_ATTRIBUTES;
 	}
 
+	bool FileSystem::PathsEqual(const char* a, const char* b)
+	{
+		char fullA[512], fullB[512];
+		GetFullPathNameA(a, sizeof(fullA), fullA, nullptr);
+		GetFullPathNameA(b, sizeof(fullB), fullB, nullptr);
+		return StringUtils::Equal(fullA, fullB);
+	}
+
 	bool FileSystem::IsDirectory(const char* path)
 	{
 		DWORD atts = GetFileAttributesA(path);

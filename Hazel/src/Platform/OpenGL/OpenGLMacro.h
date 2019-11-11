@@ -33,10 +33,3 @@ static bool GLLogCall(const char* function, const char* file, const int line)
 	return true;
 }
 
-#if defined HZ_DEBUG
-#define GLCall(x) GLClearError();\
-                      x;\
-                      HZ_CORE_ASSERT(GLLogCall(#x, __FILE__, __LINE__), "OpenGL Error!")
-#else
-#define GLCall(x) x
-#endif
