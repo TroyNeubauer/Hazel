@@ -5,7 +5,7 @@
 #include "Platform/NoAPI/NoAPI.h"
 
 namespace Hazel {
-	size_t SizeOfShaderDataType(ShaderDataType type)
+	uint32_t SizeOfShaderDataType(ShaderDataType type)
 	{
 		switch (type)
 		{

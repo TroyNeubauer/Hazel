@@ -83,7 +83,7 @@ namespace Hazel {
 		archive* a = archive_read_new();
 		archive_read_support_filter_all(a);
 		archive_read_support_format_all(a);
-		int r = archive_read_open_memory(a, parent->Data(), parent->Length());
+		uint64_t r = archive_read_open_memory(a, parent->Data(), parent->Length());
 		if (r != ARCHIVE_OK)
 			printf("Invalid file %s\n", path.ToString());
 		printf("archive %s contains: \n", path.ToString());

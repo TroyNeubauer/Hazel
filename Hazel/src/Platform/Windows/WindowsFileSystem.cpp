@@ -10,21 +10,18 @@ namespace Hazel {
 
 	bool FileSystem::Exists(const char* path)
 	{
-		ScopedTimer("Exists took: ");
 		DWORD atts = GetFileAttributesA(path);
 		return atts != INVALID_FILE_ATTRIBUTES;
 	}
 
 	bool FileSystem::IsDirectory(const char* path)
 	{
-		ScopedTimer("IsDirectory took: ");
 		DWORD atts = GetFileAttributesA(path);
 		return atts & FILE_ATTRIBUTE_DIRECTORY;
 	}
 
 	bool FileSystem::CreateFile(const char* path)
 	{
-		ScopedTimer("CreateFile took: ");
 		HANDLE handle = CreateFileA(path, GENERIC_READ, 0, nullptr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if (handle == INVALID_HANDLE_VALUE)
 		{
@@ -36,7 +33,6 @@ namespace Hazel {
 
 	bool FileSystem::CreateFileWithParents(const char* path)
 	{
-		ScopedTimer("CreateFileWithParents took: ");
 		HANDLE handle = CreateFileA(path, GENERIC_READ, 0, nullptr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if (handle == INVALID_HANDLE_VALUE)
 		{
@@ -48,19 +44,15 @@ namespace Hazel {
 
 	bool FileSystem::CreateDirectory(const char* path)
 	{
-		ScopedTimer("CreateDirectory took: ");
-		HANDLE handle = CreateFileA(path, GENERIC_READ, 0, nullptr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, nullptr);
-		if (handle == INVALID_HANDLE_VALUE)
+		if (CreateDirectoryA(path, nullptr))
 		{
-			return false;
+			return true;
 		}
-		CloseHandle(handle);//A bit wasteful. Looking into assigning the handle to a path might be more efficent since Paths are usually opened anyway
-		return true;
+		return Exists(path);
 	}
 
 	bool FileSystem::CreateDirectories(const char* path)
 	{
-		ScopedTimer("CreateDirectories took: ");
 		HANDLE handle = CreateFileA(path, GENERIC_READ, 0, nullptr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if (handle == INVALID_HANDLE_VALUE)
 		{
@@ -72,7 +64,6 @@ namespace Hazel {
 
 	bool FileSystem::TruncateFile(const char* path)
 	{
-		ScopedTimer("TruncateFile took: ");
 		HANDLE handle = CreateFileA(path, GENERIC_WRITE, 0, nullptr, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if (handle == INVALID_HANDLE_VALUE)
 		{
@@ -85,14 +76,14 @@ namespace Hazel {
 		return true;
 	}
 
-	void FileSystem::AbsloutePath(const char* file, char* buf, size_t bufLength)
+	void FileSystem::AbsloutePath(const char* file, char* buf, uint32_t bufLength)
 	{
 		GetFullPathNameA(file, bufLength, buf, nullptr);
 	}
 
 	bool FileSystem::Delete(const char* path)
 	{
-		return false;
+		return DeleteFileA(path);
 	}
 
 

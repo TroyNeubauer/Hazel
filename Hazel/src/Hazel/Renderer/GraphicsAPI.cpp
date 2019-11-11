@@ -3,7 +3,11 @@
 #include "GraphicsAPI.h"
 
 #include <GLFW/glfw3.h>
+
+#ifdef HZ_ENABLE_VULKAN
 #include <vulkan/vulkan.h>
+#endif
+
 #include "Hazel/Context/ContextManager.h"
 #include "RenderCommand.h"
 
@@ -96,6 +100,7 @@ namespace Hazel {
 		return "Unknown";
 	}
 
+#ifdef HZ_ENABLE_VULKAN
 	static bool isVuklanSupportedKnown = false, isVulkanSupported = false;
 
 	static bool IsVulkanSupported() {
@@ -117,6 +122,7 @@ namespace Hazel {
 		}
 		return isVulkanSupported;
 	}
+#endif
 
 	bool GraphicsAPI::IsAvilable(GraphicsAPIType type) {
 		switch (type)

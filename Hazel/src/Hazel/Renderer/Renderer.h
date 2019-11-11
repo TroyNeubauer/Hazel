@@ -13,6 +13,7 @@ namespace Hazel {
 	class Renderer
 	{
 	public:
+		static void Init();
 		static void BeginScene(Camera& camera, std::vector<Light>& lights);
 		static void EndScene();
 

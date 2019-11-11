@@ -14,7 +14,6 @@ public:
 	Sandbox();
 
 	virtual void Update() override;
-
 	virtual void Render() override;
 
 	~Sandbox();

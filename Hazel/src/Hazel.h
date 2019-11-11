@@ -44,8 +44,6 @@
 #include "Hazel/Mesh/IcoashedronMesh.h"
 
 
-//glm
-#define GLM_FORCE_INTRINSICS
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>

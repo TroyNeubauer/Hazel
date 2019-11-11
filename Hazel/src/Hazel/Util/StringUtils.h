@@ -26,6 +26,7 @@ namespace Hazel {
 				else
 					return false;
 			}
+			return false;
 		}
 
 		inline static size_t Length(const char* string) { return strlen(string); }

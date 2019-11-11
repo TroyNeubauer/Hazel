@@ -26,7 +26,7 @@ namespace Hazel {
 		Float = Float32, Float2 = Float32_2, Float3 = Float32_3, Float4 = Float32_4,
 	};
 
-	size_t SizeOfShaderDataType(ShaderDataType type);
+	uint32_t SizeOfShaderDataType(ShaderDataType type);
 
 	struct BufferElement {
 		std::string Name;

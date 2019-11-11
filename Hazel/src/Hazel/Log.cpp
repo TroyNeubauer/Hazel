@@ -5,6 +5,8 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
 
+#include "System/FileSystem.h"
+
 namespace Hazel {
 
 	volatile bool Log::s_Init = false;
@@ -14,6 +16,10 @@ namespace Hazel {
 
 	void Log::Init()
 	{
+		if (!FileSystem::CreateDirectory("./logs"))
+		{
+			std::cerr << "Unable to create logs directory for logging. Issues may arise" << std::endl;
+		}
 		std::string consolePattern = "%^[%T] %n: %$%v", filePattern = "%n-%t:[%D %H:%M %S.%e] %l: %v";
 
 		auto coreStdOut = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();

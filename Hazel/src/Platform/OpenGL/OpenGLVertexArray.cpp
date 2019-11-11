@@ -124,7 +124,7 @@ namespace Hazel {
 			vec3& vertexNormal = GetVec3(normals, stride, i);
 			vertexNormal.x = vertexNormal.y = vertexNormal.z = 0.0f;
 		}
-		for (int i = 0; i < m_IndexBuffer->Count(); i++) {
+		for (uint32_t i = 0; i < m_IndexBuffer->Count(); i++) {
 			int index = indices[i];
 			vec3& vertexNormal = GetVec3(normals, stride, index);
 			vertexNormal += faceNormals[i / 3];

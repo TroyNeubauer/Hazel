@@ -8,7 +8,7 @@ namespace Hazel {
 
 	const uint32_t MAX_SLASHES = 128;
 
-	void FileSystem::NormalizePath(const char* src, char* dest, uint64_t destSize)
+	void FileSystem::NormalizePath(const char* src, char* dest, uint32_t destSize)
 	{
 		bool valid = true;
 		uint32_t index = 0;

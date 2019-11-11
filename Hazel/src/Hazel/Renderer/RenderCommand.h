@@ -8,6 +8,11 @@ namespace Hazel {
 	class RenderCommand
 	{
 	public:
+		static inline void Init()
+		{
+			s_RendererAPI->Init();
+		}
+
 		static inline void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);

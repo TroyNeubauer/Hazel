@@ -125,7 +125,7 @@ namespace Hazel {
 
 			Lookup lookup;
 
-			for (int i = 0; i < indexBuffer->Count(); )
+			for (uint32_t i = 0; i < indexBuffer->Count(); )
 			{
 				std::array<uint32_t, 3> mid;
 				uint32_t a = oldIndices[i++], b = oldIndices[i++], c = oldIndices[i++];

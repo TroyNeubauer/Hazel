@@ -52,14 +52,14 @@ namespace Hazel {
 		static bool TruncateFile(const char* path);
 
 		//Copies the absloute path of file into buf
-		static void AbsloutePath(const char* file, char* buf, size_t bufLength);
+		static void AbsloutePath(const char* file, char* buf, uint32_t bufLength);
 
 		//Deletes a file or directory
 		//If path points to a directory that contains files, each file will be removed before the directory is deleted
 		//If Delete returns false (indicating that the operation failed), some child files may have been removed even if removing their parent directory failed
 		static bool Delete(const char* path);
 
-		static void NormalizePath(const char* src, char* dest, uint64_t destSize);
+		static void NormalizePath(const char* src, char* dest, uint32_t destSize);
 
 		//Calls onPath() for each component in path with the name of the file or directory. This path must be normalized. ../ results in undefined behavior
 		//The boolean return value in the lambda is used to determine weather to continue or not. True means break and iterate no more, false means continue
@@ -88,7 +88,7 @@ namespace Hazel {
 #endif
 		}
 
-		static inline bool HasArchiveExtension(const char* fileName) { return StringUtils::ContainsAny(fileName, ".zip", ".pax", ".cpio", ".tar", "mtree", "ar"); }
+		static inline bool HasArchiveExtension(const char* fileName) { return StringUtils::ContainsAny(fileName, ".zip", ".pax", ".cpio", ".tar", ".mtree", ".ar"); }
 	};
 
 }
