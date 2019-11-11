@@ -62,7 +62,7 @@ namespace Hazel {
 		for (auto event = m_EventQueue.end(); event != m_EventQueue.begin(); event) {
 			Event* e = *(--event);
 			EventDispatcher dispatcher(e);
-			dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+			dispatcher.DispatchInstance<WindowCloseEvent>(&Application::OnWindowClose, this);
 
 			for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); it)
 			{

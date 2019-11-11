@@ -14,6 +14,7 @@
 namespace Hazel {
 	class NoAPIRendererAPI : public RendererAPI
 	{
+		virtual void Init() {}
 		virtual void Clear() override {}
 		virtual void SetClearColor(const glm::vec4& color) override {}
 
