@@ -128,7 +128,6 @@ void DLL_CALLCONV InitDDS(Plugin *plugin, int format_id);
 void DLL_CALLCONV InitGIF(Plugin *plugin, int format_id);
 void DLL_CALLCONV InitHDR(Plugin *plugin, int format_id);
 void DLL_CALLCONV InitSGI(Plugin *plugin, int format_id);
-void DLL_CALLCONV InitEXR(Plugin *plugin, int format_id);
 void DLL_CALLCONV InitJ2K(Plugin *plugin, int format_id);
 void DLL_CALLCONV InitJP2(Plugin *plugin, int format_id);
 void DLL_CALLCONV InitPFM(Plugin *plugin, int format_id);

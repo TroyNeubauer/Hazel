@@ -1,6 +1,7 @@
 # Directories
 **/.vs/
 **/bin/
+!vendor/bin/
 **/bin-int/
 
 # Files
@@ -32,3 +33,5 @@ ImGui Test/imgui.ini
 **/*.vcxproj
 **/*.vcxproj.user
 **/*.vcxproj.filters
+
+**/logs/

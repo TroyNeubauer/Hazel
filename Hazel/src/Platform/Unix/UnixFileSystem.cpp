@@ -1,19 +1,9 @@
 #include "hzpch.h"
 #ifdef HZ_PLATFORM_UNIX
-#include "FileSystem.h"
-
-namespace Hazel {
-
-
-}
-#endif
-
-
 
 #include "Hazel/System/FileSystem.h"
 #include "Hazel/System/Path.h"
 #include "Hazel/System/Timer.h"
-#include "WindowsUtils.h"
 
 namespace Hazel {
 
@@ -118,3 +108,4 @@ namespace Hazel {
 	}*/
 
 }
+#endif

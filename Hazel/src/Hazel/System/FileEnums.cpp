@@ -1,7 +1,6 @@
+#include "hzpch.h"
 
 #include "FileEnums.h"
-
-
 
 namespace Hazel {
 
