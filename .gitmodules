@@ -16,6 +16,4 @@
 [submodule "Hazel/vendor/FastNoiseSIMD"]
 	path = Hazel/vendor/FastNoiseSIMD
 	url = https://github.com/TroyNeubauer/FastNoiseSIMD.git
-[submodule "Hazel/vendor/libarchive"]
-	path = Hazel/vendor/libarchive
-	url = https://github.com/TroyNeubauer/libarchive.git
+
