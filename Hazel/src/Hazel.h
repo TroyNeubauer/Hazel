@@ -20,14 +20,9 @@
 #include "Hazel/ImGui/ImGuiLayer.h"
 #include "Hazel/Layer/DebugLayer.h"
 
-#include "Hazel/System/Path.h"
-#include "Hazel/System/File.h"
-#include "Hazel/System/FileSystem.h"
-#include "Hazel/System/System.h"
-#include "Hazel/System/Timer.h"
+#include "Hazel/TUtil.h"
 
 #include "Hazel/Util/Utils.h"
-#include "Hazel/Util/NumberUtils.h"
 
 #include "Hazel/Renderer/Buffer.h"
 #include "Hazel/Renderer/GraphicsAPI.h"

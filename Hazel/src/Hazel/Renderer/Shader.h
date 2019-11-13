@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Hazel/Renderer/GraphicsAPI.h"
-#include "Hazel/System/Path.h"
-#include "Hazel/Core.h"
+#include <TUtil/TUtil.h>
 
+#include "Hazel/Renderer/GraphicsAPI.h"
+#include "Hazel/Core.h"
 #include <string>
 #include <glm/glm.hpp>
 

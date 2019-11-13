@@ -1,19 +1,18 @@
 #pragma once
 
 #include <stdio.h>
-#include "Hazel/Context/ContextManager.h"
-#include "Hazel/System/Timer.h"
-
 #include <string>
-#include "Hazel/Util/StringUtils.h"
-#include "Hazel/System/FileSystem.h"
+
+#include "Hazel/Context/ContextManager.h"
+#include "Hazel/TUtil.h"
 
 extern Hazel::Application* Hazel::CreateApplication(int argc, char** argv);
 
 int main(int argc, char** argv)
 {
-	Hazel::Timer timer;
+	TUtil::Timer timer;
 	Hazel::Log::Init();
+	System::Init();
 	
 	auto app = Hazel::CreateApplication(argc, argv);
 	timer.Stop().Print("Complete initialization took");

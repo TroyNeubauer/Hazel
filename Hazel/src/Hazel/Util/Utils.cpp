@@ -3,8 +3,8 @@
 
 #include <GLFW/glfw3.h>
 
-namespace Hazel {
-	float Utils::GetTime()
+namespace TUtil {
+	float GetTime()
 	{
 		return (float) glfwGetTime();
 	}

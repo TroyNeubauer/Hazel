@@ -2,6 +2,9 @@
 #include "Application.h"
 #include "Input.h"
 
+#include <TUtil/FileSystem.h>
+#include <TUtil/System.h>
+
 #include "Hazel/Engine.h"
 #include "Hazel/Log.h"
 #include "Hazel/Events/EventPool.h"
@@ -9,8 +12,7 @@
 #include "Hazel/Events/MouseEvent.h"
 #include "Hazel/Context/GraphicsContext.h"
 #include "Hazel/Context/ContextManager.h"
-#include "Hazel/System/File.h"
-#include "Hazel/System/System.h"
+
 #include "Hazel/Renderer/RenderCommand.h"
 #include "Hazel/Renderer/Renderer.h"
 #include "Platform/System/AllocTracker.h"

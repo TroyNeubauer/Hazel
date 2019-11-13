@@ -2,7 +2,7 @@
 #include "DebugLayer.h"
 #include "Hazel/Engine.h"
 
-#include "Hazel/System/System.h"
+#include "Hazel/TUtil.h"
 #include "Platform/System/FileTracker.h"
 #include "Platform/System/AllocTracker.h"
 
@@ -129,7 +129,6 @@ namespace Hazel {
 	void DebugLayer::OnAttach()
 	{
 #ifndef HZ_DIST
-		Hazel::System::Init();
 		m_FrameTime = new Graph("Frame Time", []() { return Engine::GetDeltaTime(); }, 5, 60);
 		m_FrameTime->SetDataMode(GraphDataMode::CurrentValue);
 		m_FrameTime->SetDisplayMode(GraphDisplayMode::Linear);

@@ -18,7 +18,7 @@ namespace Hazel {
 			HZ_CORE_ERROR("Unable open texture: {0}, Error: {1}", path.ToString(), FileErrorToString(error));
 			return nullptr;
 		}
-		timer.Stop().Print("Reading texture took", spdlog::level::level_enum::trace);
+		timer.Stop().Print("Reading texture took"/*, spdlog::level::level_enum::trace*/);
 		GraphicsAPIType api = GraphicsAPI::Get();
 		switch (api)
 		{

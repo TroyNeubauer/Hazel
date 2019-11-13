@@ -1,12 +1,9 @@
 #pragma once
 
 #include "Hazel/Core.h"
+namespace TUtil {
+	
+	float GetTime();
 
-namespace Hazel {
-
-	class Utils
-	{
-	public:
-		static float GetTime();
-	};
 }
+

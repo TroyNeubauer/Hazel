@@ -4,10 +4,7 @@
 #include "OpenGLShader.h"
 #include "OpenGLMacro.h"
 
-#include "Hazel/System/File.h"
-#include "Hazel/System/Timer.h"
 #include "Hazel/Core.h"
-#include "Hazel/Util/StringUtils.h"
 
 namespace Hazel {
 
@@ -197,7 +194,7 @@ namespace Hazel {
 			m_UniformTypes[std::string(name, length)] = type;
 #endif
 		}
-		timer.Stop().Print("Compiling and linking shader took", spdlog::level::level_enum::trace);
+		timer.Stop().Print("Compiling and linking shader took"/*, spdlog::level::level_enum::trace*/);
 	}
 
 

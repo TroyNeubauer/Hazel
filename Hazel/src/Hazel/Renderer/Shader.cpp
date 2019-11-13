@@ -4,9 +4,6 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "Platform/NoAPI/NoAPI.h"
 
-#include "Hazel/System/File.h"
-#include "Hazel/System/Timer.h"
-
 namespace Hazel {
 	Shader::~Shader() {}
 
@@ -21,7 +18,7 @@ namespace Hazel {
 			HZ_CORE_ERROR("Unable to find shader file {0}, Error: {1}", shader.ToString(), FileErrorToString(error));
 			return nullptr;
 		}
-		timer.Stop().Print("Reading shader file took", spdlog::level::level_enum::trace);
+		timer.Stop().Print("Reading shader file took"/*, spdlog::level::level_enum::trace*/);
 		GraphicsAPIType api = GraphicsAPI::Get();
 		Shader* result = nullptr;
 		switch (api)

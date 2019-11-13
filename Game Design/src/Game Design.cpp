@@ -1,5 +1,7 @@
 #include "Game Design.h"
 
+#include "Hazel/glm.h"
+
 GameDesign::GameDesign()
 {
 	PushOverlay(new Hazel::DebugLayer());

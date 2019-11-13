@@ -20,7 +20,6 @@ IncludeDir["glm"] = "Hazel/vendor/glm"
 IncludeDir["Vulkan"] = "Hazel/vendor/Vulkan/include"
 IncludeDir["freeimage"] = "Hazel/vendor/freeimage/Source"
 IncludeDir["FastNoiseSIMD"] = "Hazel/vendor/FastNoiseSIMD/FastNoiseSIMD"
-IncludeDir["str"] = "Hazel/vendor/ocornut_str"
 IncludeDir["TUtil"] = "Hazel/vendor/TUtil/TUtil/include"
 
 include "Hazel/vendor/zlib"
@@ -29,7 +28,6 @@ include "Hazel/vendor/Glad"
 include "Hazel/vendor/imgui"
 include "Hazel/vendor/freeimage"
 include "Hazel/vendor/FastNoiseSIMD"
-include "Hazel/vendor/ocornut_str"
 include "Hazel/vendor/TUtil/TUtil_project.lua"
 --include "Hazel/vendor/openssl"
 
@@ -70,7 +68,6 @@ project "Hazel"
 		"%{IncludeDir.Vulkan}",
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.FastNoiseSIMD}",
-		"%{IncludeDir.str}",
 		"%{IncludeDir.TUtil}",
 
 		"Hazel/vendor/freeimage/Source/",
@@ -82,6 +79,7 @@ project "Hazel"
 		"Hazel/vendor/freeimage/Source/ZLib",
 	}
 
+
 	links 
 	{ 
 		"GLFW",
@@ -89,7 +87,6 @@ project "Hazel"
 		"ImGui",
 		"freeimage",
 		"FastNoiseSIMD",
-		"str",
 		"zlib",
 		"TUtil",
 	}
@@ -503,7 +500,7 @@ project "Game Design"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
-		"%{IncludeDir.str}",
+		"%{IncludeDir.TUtil}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",

@@ -3,6 +3,7 @@
 #include "Platform/System/AllocTracker.h"
 
 #include "Hazel/glm.h"
+#include "Hazel/TUtil.h"
 
 #include <iostream>
 #include <memory>

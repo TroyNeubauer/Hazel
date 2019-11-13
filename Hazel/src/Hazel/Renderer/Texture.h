@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Hazel/System/Path.h"
-#include "Hazel/System/File.h"
-#include "Hazel/System/Timer.h"
+#include "Hazel/TUtil.h"
 
 namespace Hazel {
 

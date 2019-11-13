@@ -1,8 +1,6 @@
 #include "hzpch.h"
 #include "OpenGLUtils.h"
 
-#include "Hazel/System/Timer.h"
-
 #include "FreeImage.h"
 #include "OpenGLMacro.h"
 
@@ -50,7 +48,7 @@ namespace Hazel {
 
 	unsigned int OpenGLUtils::Load2DTexture(File* file, TextureBuilder builder)
 	{
-		Hazel::Timer timer;
+		TUtil::Timer timer;
 
 		if (file->Data() == nullptr)
 			return false;
