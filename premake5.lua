@@ -21,7 +21,6 @@ IncludeDir["Vulkan"] = "Hazel/vendor/Vulkan/include"
 IncludeDir["freeimage"] = "Hazel/vendor/freeimage/Source"
 IncludeDir["FastNoiseSIMD"] = "Hazel/vendor/FastNoiseSIMD/FastNoiseSIMD"
 IncludeDir["str"] = "Hazel/vendor/ocornut_str"
-IncludeDir["libarchive"] = "Hazel/vendor/libarchive/libarchive"
 
 include "Hazel/vendor/zlib"
 include "Hazel/vendor/GLFW"
@@ -30,7 +29,7 @@ include "Hazel/vendor/imgui"
 include "Hazel/vendor/freeimage"
 include "Hazel/vendor/FastNoiseSIMD"
 include "Hazel/vendor/ocornut_str"
-include "Hazel/vendor/libarchive"
+include "Hazel/vendor/TUtil"
 --include "Hazel/vendor/openssl"
 
 
@@ -71,7 +70,6 @@ project "Hazel"
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.FastNoiseSIMD}",
 		"%{IncludeDir.str}",
-		"%{IncludeDir.libarchive}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -91,7 +89,7 @@ project "Hazel"
 		"FastNoiseSIMD",
 		"str",
 		"zlib",
-		"libarchive",
+		"TUtil",
 	}
 
 	defines
@@ -103,7 +101,6 @@ project "Hazel"
 		"GLM_FORCE_INTRINSICS",
 		"HZ_GLFW_INPUT",
 		"FREEIMAGE_LIB",
-		"LIBARCHIVE_STATIC",
 		"_CRT_SECURE_NO_WARNINGS",
 	}
 
@@ -193,7 +190,6 @@ project "Sandbox"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.str}",
-		"%{IncludeDir.libarchive}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -392,7 +388,6 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.str}",
-		"%{IncludeDir.libarchive}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -406,14 +401,12 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 	links 
 	{
 		"Hazel",
-		"libarchive",
 	}
 
 	defines
 	{
 		"GLM_FORCE_INTRINSICS",
 		"FREEIMAGE_LIB",
-		"LIBARCHIVE_STATIC",
 	}
 
 	filter "system:windows"
@@ -509,7 +502,6 @@ project "Game Design"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.str}",
-		"%{IncludeDir.libarchive}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
