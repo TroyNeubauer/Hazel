@@ -2,7 +2,7 @@
 #ifdef HZ_ENABLE_GRAPHICS_API_NONE
 
 #include "NoAPI.h"
-#include "Hazel/Window.h"
+#include "Hazel/Core.h"
 
 struct GLFWwindow;
 

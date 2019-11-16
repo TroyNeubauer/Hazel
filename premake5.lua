@@ -9,6 +9,35 @@ workspace "Hazel"
 		"Dist"
 	}
 
+	filter "system:windows"
+		defines 
+		{
+			"_CRT_SECURE_NO_WARNINGS",
+		}
+
+
+	filter "configurations:Debug"
+		defines "HZ_DEBUG"
+		runtime "Debug"
+		symbols "on"
+		floatingpoint "Strict"
+
+
+	filter "configurations:Release"
+		defines "HZ_RELEASE"
+		runtime "Release"
+		optimize "speed"
+		inlining "auto"
+		floatingpoint "Fast"
+
+
+	filter "configurations:Dist"
+		defines "HZ_DIST"
+		runtime "Release"
+		optimize "speed"
+		inlining "auto"
+		floatingpoint "Fast"
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
@@ -101,7 +130,6 @@ project "Hazel"
 		"HZ_GLFW_INPUT",
 		"HZ_GLFW_WINDOW",
 		"FREEIMAGE_LIB",
-		"_CRT_SECURE_NO_WARNINGS",
 	}
 
 	filter "system:windows"
@@ -130,28 +158,6 @@ project "Hazel"
 		{
 
 		}
-
-	filter "configurations:Debug"
-		defines "HZ_DEBUG"
-		runtime "Debug"
-		symbols "on"
-		floatingpoint "Strict"
-
-
-	filter "configurations:Release"
-		defines "HZ_RELEASE"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"
-		floatingpoint "Fast"
-
-
-	filter "configurations:Dist"
-		defines "HZ_DIST"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"
-		floatingpoint "Fast"
 
 
 project "Sandbox"
@@ -254,31 +260,97 @@ project "Sandbox"
 		}
 
 
-	filter "configurations:Debug"
-		defines "HZ_DEBUG"
-		runtime "Debug"
-		symbols "on"
-		floatingpoint "Strict"
 
-	filter "configurations:Release"
-		defines "HZ_RELEASE"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"
-		floatingpoint "Fast"
+project "Game Design"
+	location "Game Design"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+	vectorextensions "AVX"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Hazel/vendor/spdlog/include",
+		"Hazel/src",
+		"Hazel/vendor",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.freeimage}",
+		"%{IncludeDir.TUtil}",
+
+--[[		"Hazel/vendor/freeimage/Source/",
+		"Hazel/vendor/freeimage/Source/FreeImage",
+		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
+		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
+		"Hazel/vendor/freeimage/Source/LibPNG",
+		"Hazel/vendor/freeimage/Source/Metadata",
+		"Hazel/vendor/freeimage/Source/ZLib",]]
+	}
+
+	links
+	{
+		"Hazel",
+	}
+
+	defines
+	{
+		"GLM_FORCE_INTRINSICS",
+		"FREEIMAGE_LIB"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+		libdirs
+		{
+			"Hazel/vendor/Vulkan/lib"
+		}
+
+		defines
+		{
+			"_CRT_SECURE_NO_WARNINGS",
+		}
+
+		links
+		{
+			"kernel32.lib",
+			"Onecore.lib",
+			"opengl32.lib",
+			"vulkan.lib",
+		}
+
+	filter "system:linux"
+		systemversion "latest"
+		
+		libdirs
+		{
+
+		}
+
+		defines
+		{
+
+		}
+		
+		links
+		{
+
+		}
 
 
-	filter "configurations:Dist"
-		defines "HZ_DIST"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"
-		floatingpoint "Fast"
-
-
-
-project "ImGuiTest"
-	location "ImGuiTest"
+project "ImGui Test"
+	location "ImGui Test"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
@@ -338,31 +410,8 @@ project "ImGuiTest"
 		{
 			"_CRT_SECURE_NO_WARNINGS",
 		}
-
-	filter "configurations:Debug"
-		defines "HZ_DEBUG"
-		runtime "Debug"
-		symbols "on"
-		floatingpoint "Strict"
-
-
-	filter "configurations:Release"
-		defines "HZ_RELEASE"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"
-		floatingpoint "Fast"
-
-
-	filter "configurations:Dist"
-		defines "HZ_DIST"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"
-		floatingpoint "Fast"
-
-
-
+		
+--[[
 project "Sandbox2"--The same as sandbox. Used for general testing purposes
 	location "Sandbox2"
 	kind "ConsoleApp"
@@ -389,7 +438,7 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
-		"%{IncludeDir.TUtil}",
+		"%{IncludeDir.str}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -442,143 +491,10 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 
 		defines
 		{
-
 		}
 		
 		links
 		{
 
 		}
-
-
-	filter "configurations:Debug"
-		defines "HZ_DEBUG"
-		runtime "Debug"
-		symbols "on"
-		floatingpoint "Strict"
-
-	filter "configurations:Release"
-		defines "HZ_RELEASE"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"
-		floatingpoint "Fast"
-
-
-	filter "configurations:Dist"
-		defines "HZ_DIST"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"
-		floatingpoint "Fast"
-
-
-
-project "GameDesign"
-	location "GameDesign"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "on"
-	vectorextensions "AVX"
-
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
-
-	includedirs
-	{
-		"Hazel/vendor/spdlog/include",
-		"Hazel/src",
-		"Hazel/vendor",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.freeimage}",
-		"%{IncludeDir.TUtil}",
-
-		"Hazel/vendor/freeimage/Source/",
-		"Hazel/vendor/freeimage/Source/FreeImage",
-		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
-		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
-		"Hazel/vendor/freeimage/Source/LibPNG",
-		"Hazel/vendor/freeimage/Source/Metadata",
-		"Hazel/vendor/freeimage/Source/ZLib",
-	}
-
-	links
-	{
-		"Hazel",
-	}
-
-	defines
-	{
-		"GLM_FORCE_INTRINSICS",
-		"FREEIMAGE_LIB"
-	}
-
-	filter "system:windows"
-		systemversion "latest"
-
-		libdirs
-		{
-			"Hazel/vendor/Vulkan/lib"
-		}
-
-		defines
-		{
-			"_CRT_SECURE_NO_WARNINGS",
-		}
-
-		links
-		{
-			"kernel32.lib",
-			"Onecore.lib",
-			"opengl32.lib",
-			"vulkan.lib",
-		}
-
-	filter "system:linux"
-		systemversion "latest"
-		
-		libdirs
-		{
-
-		}
-
-		defines
-		{
-		}
-		
-		links
-		{
-
-		}
-
-
-	filter "configurations:Debug"
-		defines "HZ_DEBUG"
-		runtime "Debug"
-		symbols "on"
-		floatingpoint "Strict"
-
-	filter "configurations:Release"
-		defines "HZ_RELEASE"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"
-		floatingpoint "Fast"
-
-
-	filter "configurations:Dist"
-		defines "HZ_DIST"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"
-		floatingpoint "Fast"
-
+]]--
