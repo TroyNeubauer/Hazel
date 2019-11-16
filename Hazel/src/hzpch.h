@@ -1,4 +1,4 @@
-#pragma once
+
 #include "Platform/System/FileTrackerOverride.h"
 #include "Platform/System/AllocTracker.h"
 

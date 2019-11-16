@@ -11,6 +11,8 @@ namespace Hazel {
 	{
 	public:
 		virtual bool Update(CameraStorage& camera, bool paused) = 0;
+
+		virtual ~CameraController();
 	};
 
 	class AdvancedCameraController : public CameraController

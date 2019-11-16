@@ -99,6 +99,7 @@ project "Hazel"
 		"GLFW_INCLUDE_NONE",
 		"GLM_FORCE_INTRINSICS",
 		"HZ_GLFW_INPUT",
+		"HZ_GLFW_WINDOW",
 		"FREEIMAGE_LIB",
 		"_CRT_SECURE_NO_WARNINGS",
 	}
@@ -109,35 +110,18 @@ project "Hazel"
 
 		defines
 		{
-			"HZ_PLATFORM_WINDOWS",
 			"VK_USE_PLATFORM_WIN32_KHR",
 			"HZ_ENABLE_DIRECTX_12",
-			"HZ_LITTLE_ENDIAN",
 		}
 
 
 	filter "system:linux"
-	
-		libdirs
-		{
-			"/usr/lib/x86_64-linux-gnu/",
-		}
-	
-		links "libX11.a"
+		
+		links "X11"
 
-		defines
-		{
-			"HZ_PLATFORM_UNIX",
-			"HZ_PLATFORM_LINUX",
-		}
 
 	filter "system:macosx"
 
-		defines
-		{
-			"HZ_PLATFORM_UNIX",
-			"HZ_PLATFORM_OSX",
-		}
 
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
@@ -188,7 +172,7 @@ project "Sandbox"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
-		"%{IncludeDir.str}",
+		"%{IncludeDir.TUtil}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -202,6 +186,13 @@ project "Sandbox"
 	links 
 	{
 		"Hazel",
+		"Glad",
+		"ImGui",
+		"GLFW",
+		"FastNoiseSIMD",
+		"TUtil",
+		"freeimage",
+		"zlib",
 	}
 
 	defines
@@ -220,8 +211,7 @@ project "Sandbox"
 
 		defines
 		{
-			"HZ_PLATFORM_WINDOWS",
-			"HZ_LITTLE_ENDIAN",
+		
 		}
 
 		links
@@ -237,7 +227,6 @@ project "Sandbox"
 		
 		libdirs
 		{
-			"/usr/lib/x86_64-linux-gnu/",
 		}
 
 		defines
@@ -247,7 +236,8 @@ project "Sandbox"
 		
 		links
 		{
-			"libX11.a",
+			"X11",
+			"dl",
 		}
 
 
@@ -274,8 +264,8 @@ project "Sandbox"
 
 
 
-project "ImGui Test"
-	location "ImGui Test"
+project "ImGuiTest"
+	location "ImGuiTest"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
@@ -386,7 +376,7 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
-		"%{IncludeDir.str}",
+		"%{IncludeDir.TUtil}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -418,8 +408,6 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 
 		defines
 		{
-			"HZ_PLATFORM_WINDOWS",
-			"HZ_LITTLE_ENDIAN",
 			"_CRT_SECURE_NO_WARNINGS",
 		}
 
@@ -474,8 +462,8 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 
 
 
-project "Game Design"
-	location "Game Design"
+project "GameDesign"
+	location "GameDesign"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
@@ -532,8 +520,6 @@ project "Game Design"
 
 		defines
 		{
-			"HZ_PLATFORM_WINDOWS",
-			"HZ_LITTLE_ENDIAN",
 			"_CRT_SECURE_NO_WARNINGS",
 		}
 
@@ -550,18 +536,16 @@ project "Game Design"
 		
 		libdirs
 		{
-			"/usr/lib/x86_64-linux-gnu/",
+
 		}
 
 		defines
 		{
-			"HZ_PLATFORM_LINIX",
-			"HZ_PLATFORM_UNIX",
 		}
 		
 		links
 		{
-			"libX11.a",
+
 		}
 
 

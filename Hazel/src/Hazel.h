@@ -38,12 +38,9 @@
 #include "Hazel/Mesh/Mesh.h"
 #include "Hazel/Mesh/IcoashedronMesh.h"
 
+#include "Hazel/glm.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
+#include "Hazel/TUtil.h"
 
 //freeimage
 #include <FreeImage.h>

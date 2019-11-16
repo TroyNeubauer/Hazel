@@ -13,9 +13,9 @@ FastNoiseSIMD* noise = nullptr;
 
 Terrain::Terrain(Hazel::Ref<Hazel::Shader> shader, float minX, float maxX, float minZ, float maxZ, float baseY, unsigned int detail, float unitsPerTexture)
 {
-	this->Shader = shader;
+	this->MeshShader = shader;
 	this->MeshMaterial = Hazel::Ref<Hazel::Material>(new Hazel::Material());
-	Hazel::Timer timer;
+	TUtil::Timer timer;
 	this->MeshVertexArray = Hazel::VertexArray::Create();
 	if (!noise)
 		noise = FastNoiseSIMD::NewFastNoiseSIMD();
@@ -35,8 +35,7 @@ Terrain::Terrain(Hazel::Ref<Hazel::Shader> shader, float minX, float maxX, float
 	uint32_t vertexCount = verticesPerSide * verticesPerSide;
 	uint32_t indexCount = 6 * rowsPerSide * rowsPerSide;//6 vertices per square
 	uint32_t floatsPerVertex = layout.GetStride() / sizeof(float);
-	
-	float* heights = new float[Hazel::NumberUtils::RoundUp(vertexCount, 512 / (sizeof(float) * CHAR_BIT))];// FillNoiseSet works in mutiples of 512 bits so we need to make sure we have enough space!
+	float* heights = new float[Integer::RoundUp(vertexCount, 512 / (sizeof(float) * CHAR_BIT))];// FillNoiseSet works in mutiples of 512 bits so we need to make sure we have enough space!
 	noise->SetNoiseType(FastNoiseSIMD::NoiseType::SimplexFractal);
 	noise->FillNoiseSet(heights, 0, 0, 0, verticesPerSide, 1, verticesPerSide);
 
@@ -100,7 +99,7 @@ Terrain::Terrain(Hazel::Ref<Hazel::Shader> shader, float minX, float maxX, float
 
 	MeshMaterial->Albedo = Hazel::Texture2D::Load("assets/img/grass.png");
 	HZ_CORE_WARN("Finished generating {} vertices, {} bytes of memory", vertexCount, indexCount * sizeof(uint32_t) + vertexCount * layout.GetStride());
-	timer.Stop().Print("Generating terrain took", spdlog::level::warn);
+	timer.Stop().Print("Generating terrain took");
 
 	delete[] heights;
 	delete[] initalVertices;

@@ -2,34 +2,7 @@
 #ifdef HZ_ENABLE_GRAPHICS_API_NONE
 
 #include "NoAPI.h"
-
-#ifdef HZ_PLATFORM_WINDOWS
-	#include "Platform/Windows/WindowsWindow.h"
-	#include <conio.h>
-#elif defined(HZ_PLATFORM_UNIX)
-	#include "Platform/Unix/UnixWindow.h"
-	#include <sys/ioctl.h>
-	#include <termios.h>
-
-	static bool _kbhit()
-	{
-		termios term;
-		tcgetattr(0, &term);
-
-		termios term2 = term;
-		term2.c_lflag &= ~ICANON;
-		tcsetattr(0, TCSANOW, &term2);
-
-		int byteswaiting;
-		ioctl(0, FIONREAD, &byteswaiting);
-
-		tcsetattr(0, TCSANOW, &term);
-
-		return byteswaiting > 0;
-	}
-#else
-	#error
-#endif
+#include "Hazel/Window.h"
 
 struct GLFWwindow;
 
@@ -69,17 +42,13 @@ namespace Hazel {
 	}
 
 	void NoAPIContext::SwapBuffers() {
-		if (_kbhit()) {
+		if (System::KBHit()) {
 			if(m_Windows.size())
 				HZ_CORE_INFO("Keypress detected. Closing windows");
 			for (Window* window : m_Windows) {
-#ifdef HZ_PLATFORM_WINDOWS
-				WindowsWindow* myWindow = (WindowsWindow*) window;
-#elif defined(HZ_PLATFORM_UNIX)
-				UnixWindow* myWindow = (UnixWindow*) window;
-#endif
+
 				WindowCloseEvent* event = new WindowCloseEvent();
-				(myWindow->GetEventCallback())(event);
+				(window->GetEventCallback())(event);
 			}
 			m_Windows.clear();
 		}

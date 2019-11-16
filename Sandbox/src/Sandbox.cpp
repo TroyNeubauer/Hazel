@@ -48,7 +48,7 @@ Sandbox::Sandbox()
 			material->Metallic = x / 5.0f;
 			material->Roughness = y / 5.0f;
 			Hazel::Ref<Hazel::IcoashedronMesh> mesh = Hazel::R(new Hazel::IcoashedronMesh(material, 1.0f));
-			mesh->Shader = m_PBRShader;
+			mesh->MeshShader = m_PBRShader;
 			mesh->Subdivide(2);
 			m_Meshes.push_back(mesh);
 			mesh->Position = { 2.5f * x, 2.5f * y, 0.0f };
@@ -85,10 +85,10 @@ void Sandbox::Render()
 	m_PBRShader->UploadUniformVec3("u_LightPosition", m_Lights[0].position);
 	m_PBRShader->UploadUniformVec3("u_LightColor", m_Lights[0].color);
 	for (auto& mesh : m_Meshes) {
-		mesh->Shader->UploadUniformVec3("u_CamPos", m_Camera->GetPosition());
-		mesh->Shader->UploadUniformFloat("u_Metallic", mesh->MeshMaterial->Metallic);
-		mesh->Shader->UploadUniformFloat("u_Roughness", mesh->MeshMaterial->Roughness);
-		mesh->Shader->UploadUniformFloat("u_AO", mesh->MeshMaterial->AO);
+		mesh->MeshShader->UploadUniformVec3("u_CamPos", m_Camera->GetPosition());
+		mesh->MeshShader->UploadUniformFloat("u_Metallic", mesh->MeshMaterial->Metallic);
+		mesh->MeshShader->UploadUniformFloat("u_Roughness", mesh->MeshMaterial->Roughness);
+		mesh->MeshShader->UploadUniformFloat("u_AO", mesh->MeshMaterial->AO);
 		HZ_CORE_WARN("Rough {}", mesh->MeshMaterial->Roughness);
 
 		Hazel::Renderer::Submit(*mesh);

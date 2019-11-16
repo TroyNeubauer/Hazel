@@ -22,6 +22,7 @@ namespace Hazel {
 
 		inline void SetNearPlane(float nearPlane) { m_NearPlane = nearPlane; }
 		inline void SetFarPlane(float farPlane) { m_FarPlane = farPlane; }
+		virtual ~CameraProjection();
 
 	protected:
 		float m_NearPlane, m_FarPlane;

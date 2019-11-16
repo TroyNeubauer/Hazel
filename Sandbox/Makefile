@@ -19,7 +19,7 @@ endif
 # #############################################
 
 RESCOMP = windres
-INCLUDES += -I../Hazel/vendor/spdlog/include -I../Hazel/src -I../Hazel/vendor -I../Hazel/vendor/glm -I../Hazel/vendor/GLFW/include -I../Hazel/vendor/Glad/include -I../Hazel/vendor/ocornut_str -I../Hazel/vendor/libarchive/libarchive -I../Hazel/vendor/freeimage/Source -I../Hazel/vendor/freeimage/Source/FreeImage -I../Hazel/vendor/freeimage/Source/FreeImageToolkit -I../Hazel/vendor/freeimage/Source/LibOpenJPEG -I../Hazel/vendor/freeimage/Source/LibPNG -I../Hazel/vendor/freeimage/Source/Metadata -I../Hazel/vendor/freeimage/Source/ZLib
+INCLUDES += -I../Hazel/vendor/spdlog/include -I../Hazel/src -I../Hazel/vendor -I../Hazel/vendor/glm -I../Hazel/vendor/GLFW/include -I../Hazel/vendor/Glad/include -I../Hazel/vendor/TUtil/TUtil/include -I../Hazel/vendor/freeimage/Source -I../Hazel/vendor/freeimage/Source/FreeImage -I../Hazel/vendor/freeimage/Source/FreeImageToolkit -I../Hazel/vendor/freeimage/Source/LibOpenJPEG -I../Hazel/vendor/freeimage/Source/LibPNG -I../Hazel/vendor/freeimage/Source/Metadata -I../Hazel/vendor/freeimage/Source/ZLib
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -38,9 +38,9 @@ OBJDIR = ../bin-int/Debug-linux-x86_64/Sandbox
 DEFINES += -DGLM_FORCE_INTRINSICS -DFREEIMAGE_LIB -DHZ_PLATFORM_UNIX -DHZ_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -ffloat-store -g -mavx
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -ffloat-store -g -mavx -std=c++17
-LIBS += ../bin/Debug-linux-x86_64/Hazel/libHazel.a -llibX11.a
-LDDEPS += ../bin/Debug-linux-x86_64/Hazel/libHazel.a
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -m64
+LIBS += ../bin/Debug-linux-x86_64/Hazel/libHazel.a ../bin/Debug-linux-x86_64/Glad/libGlad.a ../bin/Debug-linux-x86_64/ImGui/libImGui.a ../Hazel/vendor/GLFW/bin/Debug-linux-x86_64/GLFW/libGLFW.a ../bin/Debug-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../Hazel/vendor/TUtil/bin/Debug-linux-x86_64/TUtil/libTUtil.a ../bin/Debug-linux-x86_64/freeimage/libfreeimage.a ../bin/Debug-linux-x86_64/zlib/libzlib.a -lX11 -ldl
+LDDEPS += ../bin/Debug-linux-x86_64/Hazel/libHazel.a ../bin/Debug-linux-x86_64/Glad/libGlad.a ../bin/Debug-linux-x86_64/ImGui/libImGui.a ../Hazel/vendor/GLFW/bin/Debug-linux-x86_64/GLFW/libGLFW.a ../bin/Debug-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../Hazel/vendor/TUtil/bin/Debug-linux-x86_64/TUtil/libTUtil.a ../bin/Debug-linux-x86_64/freeimage/libfreeimage.a ../bin/Debug-linux-x86_64/zlib/libzlib.a
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
 TARGETDIR = ../bin/Release-linux-x86_64/Sandbox
@@ -49,9 +49,9 @@ OBJDIR = ../bin-int/Release-linux-x86_64/Sandbox
 DEFINES += -DGLM_FORCE_INTRINSICS -DFREEIMAGE_LIB -DHZ_PLATFORM_UNIX -DHZ_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx -std=c++17
-LIBS += ../bin/Release-linux-x86_64/Hazel/libHazel.a -llibX11.a
-LDDEPS += ../bin/Release-linux-x86_64/Hazel/libHazel.a
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -m64 -s
+LIBS += ../bin/Release-linux-x86_64/Hazel/libHazel.a ../bin/Release-linux-x86_64/Glad/libGlad.a ../bin/Release-linux-x86_64/ImGui/libImGui.a ../Hazel/vendor/GLFW/bin/Release-linux-x86_64/GLFW/libGLFW.a ../bin/Release-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../Hazel/vendor/TUtil/bin/Release-linux-x86_64/TUtil/libTUtil.a ../bin/Release-linux-x86_64/freeimage/libfreeimage.a ../bin/Release-linux-x86_64/zlib/libzlib.a -lX11 -ldl
+LDDEPS += ../bin/Release-linux-x86_64/Hazel/libHazel.a ../bin/Release-linux-x86_64/Glad/libGlad.a ../bin/Release-linux-x86_64/ImGui/libImGui.a ../Hazel/vendor/GLFW/bin/Release-linux-x86_64/GLFW/libGLFW.a ../bin/Release-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../Hazel/vendor/TUtil/bin/Release-linux-x86_64/TUtil/libTUtil.a ../bin/Release-linux-x86_64/freeimage/libfreeimage.a ../bin/Release-linux-x86_64/zlib/libzlib.a
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
 TARGETDIR = ../bin/Dist-linux-x86_64/Sandbox
@@ -60,9 +60,9 @@ OBJDIR = ../bin-int/Dist-linux-x86_64/Sandbox
 DEFINES += -DGLM_FORCE_INTRINSICS -DFREEIMAGE_LIB -DHZ_PLATFORM_UNIX -DHZ_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx -std=c++17
-LIBS += ../bin/Dist-linux-x86_64/Hazel/libHazel.a -llibX11.a
-LDDEPS += ../bin/Dist-linux-x86_64/Hazel/libHazel.a
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -m64 -s
+LIBS += ../bin/Dist-linux-x86_64/Hazel/libHazel.a ../bin/Dist-linux-x86_64/Glad/libGlad.a ../bin/Dist-linux-x86_64/ImGui/libImGui.a ../Hazel/vendor/GLFW/bin/Dist-linux-x86_64/GLFW/libGLFW.a ../bin/Dist-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../Hazel/vendor/TUtil/bin/Dist-linux-x86_64/TUtil/libTUtil.a ../bin/Dist-linux-x86_64/freeimage/libfreeimage.a ../bin/Dist-linux-x86_64/zlib/libzlib.a -lX11 -ldl
+LDDEPS += ../bin/Dist-linux-x86_64/Hazel/libHazel.a ../bin/Dist-linux-x86_64/Glad/libGlad.a ../bin/Dist-linux-x86_64/ImGui/libImGui.a ../Hazel/vendor/GLFW/bin/Dist-linux-x86_64/GLFW/libGLFW.a ../bin/Dist-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../Hazel/vendor/TUtil/bin/Dist-linux-x86_64/TUtil/libTUtil.a ../bin/Dist-linux-x86_64/freeimage/libfreeimage.a ../bin/Dist-linux-x86_64/zlib/libzlib.a
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else
   $(error "invalid configuration $(config)")

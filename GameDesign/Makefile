@@ -32,37 +32,37 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = ../bin/Debug-linux-x86_64/Sandbox2
-TARGET = $(TARGETDIR)/Sandbox2
-OBJDIR = ../bin-int/Debug-linux-x86_64/Sandbox2
-DEFINES += -DGLM_FORCE_INTRINSICS -DFREEIMAGE_LIB -DHZ_PLATFORM_LINIX -DHZ_PLATFORM_UNIX -DHZ_DEBUG
+TARGETDIR = ../bin/Debug-linux-x86_64/GameDesign
+TARGET = $(TARGETDIR)/GameDesign
+OBJDIR = ../bin-int/Debug-linux-x86_64/GameDesign
+DEFINES += -DGLM_FORCE_INTRINSICS -DFREEIMAGE_LIB -DHZ_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -ffloat-store -g -mavx
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -ffloat-store -g -mavx -std=c++17
-LIBS += ../bin/Debug-linux-x86_64/Hazel/libHazel.a -llibX11.a
+LIBS += ../bin/Debug-linux-x86_64/Hazel/libHazel.a
 LDDEPS += ../bin/Debug-linux-x86_64/Hazel/libHazel.a
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -m64
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
-TARGETDIR = ../bin/Release-linux-x86_64/Sandbox2
-TARGET = $(TARGETDIR)/Sandbox2
-OBJDIR = ../bin-int/Release-linux-x86_64/Sandbox2
-DEFINES += -DGLM_FORCE_INTRINSICS -DFREEIMAGE_LIB -DHZ_PLATFORM_LINIX -DHZ_PLATFORM_UNIX -DHZ_RELEASE
+TARGETDIR = ../bin/Release-linux-x86_64/GameDesign
+TARGET = $(TARGETDIR)/GameDesign
+OBJDIR = ../bin-int/Release-linux-x86_64/GameDesign
+DEFINES += -DGLM_FORCE_INTRINSICS -DFREEIMAGE_LIB -DHZ_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx -std=c++17
-LIBS += ../bin/Release-linux-x86_64/Hazel/libHazel.a -llibX11.a
+LIBS += ../bin/Release-linux-x86_64/Hazel/libHazel.a
 LDDEPS += ../bin/Release-linux-x86_64/Hazel/libHazel.a
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -m64 -s
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
-TARGETDIR = ../bin/Dist-linux-x86_64/Sandbox2
-TARGET = $(TARGETDIR)/Sandbox2
-OBJDIR = ../bin-int/Dist-linux-x86_64/Sandbox2
-DEFINES += -DGLM_FORCE_INTRINSICS -DFREEIMAGE_LIB -DHZ_PLATFORM_LINIX -DHZ_PLATFORM_UNIX -DHZ_DIST
+TARGETDIR = ../bin/Dist-linux-x86_64/GameDesign
+TARGET = $(TARGETDIR)/GameDesign
+OBJDIR = ../bin-int/Dist-linux-x86_64/GameDesign
+DEFINES += -DGLM_FORCE_INTRINSICS -DFREEIMAGE_LIB -DHZ_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx -std=c++17
-LIBS += ../bin/Dist-linux-x86_64/Hazel/libHazel.a -llibX11.a
+LIBS += ../bin/Dist-linux-x86_64/Hazel/libHazel.a
 LDDEPS += ../bin/Dist-linux-x86_64/Hazel/libHazel.a
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -m64 -s
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else
   $(error "invalid configuration $(config)")
@@ -77,6 +77,8 @@ endif
 
 OBJECTS :=
 
+OBJECTS += $(OBJDIR)/Game\ Design.o
+OBJECTS += $(OBJDIR)/LaunchLayer.o
 OBJECTS += $(OBJDIR)/Main.o
 
 # Rules
@@ -87,7 +89,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
 	$(PRELINKCMDS)
-	@echo Linking Sandbox2
+	@echo Linking GameDesign
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -108,7 +110,7 @@ else
 endif
 
 clean:
-	@echo Cleaning Sandbox2
+	@echo Cleaning GameDesign
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(OBJDIR)
@@ -139,7 +141,13 @@ endif
 # File Rules
 # #############################################
 
+$(OBJDIR)/Game Design.o: src/Game\ Design.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Main.o: src/Main.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/LaunchLayer.o: src/layers/LaunchLayer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

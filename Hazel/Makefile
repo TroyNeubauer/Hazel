@@ -22,7 +22,7 @@ RESCOMP = windres
 PCH = src/hzpch.h
 PCH_PLACEHOLDER = $(OBJDIR)/$(notdir $(PCH))
 GCH = $(PCH_PLACEHOLDER).gch
-INCLUDES += -Isrc -Ivendor/spdlog/include -Ivendor/GLFW/include -Ivendor/Glad/include -Ivendor/imgui -Ivendor/glm -Ivendor/Vulkan/include -Ivendor/FastNoiseSIMD/FastNoiseSIMD -Ivendor/ocornut_str -Ivendor/libarchive/libarchive -Ivendor/freeimage/Source -Ivendor/freeimage/Source/FreeImage -Ivendor/freeimage/Source/FreeImageToolkit -Ivendor/freeimage/Source/LibOpenJPEG -Ivendor/freeimage/Source/LibPNG -Ivendor/freeimage/Source/Metadata -Ivendor/freeimage/Source/ZLib
+INCLUDES += -Isrc -Ivendor/spdlog/include -Ivendor/GLFW/include -Ivendor/Glad/include -Ivendor/imgui -Ivendor/glm -Ivendor/Vulkan/include -Ivendor/FastNoiseSIMD/FastNoiseSIMD -Ivendor/TUtil/TUtil/include -Ivendor/freeimage/Source -Ivendor/freeimage/Source/FreeImage -Ivendor/freeimage/Source/FreeImageToolkit -Ivendor/freeimage/Source/LibOpenJPEG -Ivendor/freeimage/Source/LibPNG -Ivendor/freeimage/Source/Metadata -Ivendor/freeimage/Source/ZLib
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -38,34 +38,34 @@ ifeq ($(config),debug)
 TARGETDIR = ../bin/Debug-linux-x86_64/Hazel
 TARGET = $(TARGETDIR)/libHazel.a
 OBJDIR = ../bin-int/Debug-linux-x86_64/Hazel
-DEFINES += -DHZ_ENABLE_GRAPHICS_API_NONE -DHZ_ENABLE_OPEN_GL -DGLFW_INCLUDE_NONE -DGLM_FORCE_INTRINSICS -DHZ_GLFW_INPUT -DFREEIMAGE_LIB -DLIBARCHIVE_STATIC -D_CRT_SECURE_NO_WARNINGS -DHZ_PLATFORM_UNIX -DHZ_PLATFORM_LINUX -DHZ_DEBUG
+DEFINES += -DHZ_ENABLE_GRAPHICS_API_NONE -DHZ_ENABLE_OPEN_GL -DGLFW_INCLUDE_NONE -DGLM_FORCE_INTRINSICS -DHZ_GLFW_INPUT -DHZ_GLFW_WINDOW -DFREEIMAGE_LIB -D_CRT_SECURE_NO_WARNINGS -DHZ_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -ffloat-store -g -mavx
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -ffloat-store -g -mavx -std=c++17
-LIBS += vendor/GLFW/bin/Debug-linux-x86_64/GLFW/libGLFW.a ../bin/Debug-linux-x86_64/Glad/libGlad.a ../bin/Debug-linux-x86_64/ImGui/libImGui.a ../bin/Debug-linux-x86_64/freeimage/libfreeimage.a ../bin/Debug-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Debug-linux-x86_64/str/libstr.a ../bin/Debug-linux-x86_64/zlib/libzlib.a ../bin/Debug-linux-x86_64/libarchive/liblibarchive.a -llibX11.a
-LDDEPS += vendor/GLFW/bin/Debug-linux-x86_64/GLFW/libGLFW.a ../bin/Debug-linux-x86_64/Glad/libGlad.a ../bin/Debug-linux-x86_64/ImGui/libImGui.a ../bin/Debug-linux-x86_64/freeimage/libfreeimage.a ../bin/Debug-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Debug-linux-x86_64/str/libstr.a ../bin/Debug-linux-x86_64/zlib/libzlib.a ../bin/Debug-linux-x86_64/libarchive/liblibarchive.a
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -m64
+LIBS += vendor/GLFW/bin/Debug-linux-x86_64/GLFW/libGLFW.a ../bin/Debug-linux-x86_64/Glad/libGlad.a ../bin/Debug-linux-x86_64/ImGui/libImGui.a ../bin/Debug-linux-x86_64/freeimage/libfreeimage.a ../bin/Debug-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Debug-linux-x86_64/zlib/libzlib.a vendor/TUtil/bin/Debug-linux-x86_64/TUtil/libTUtil.a -lX11
+LDDEPS += vendor/GLFW/bin/Debug-linux-x86_64/GLFW/libGLFW.a ../bin/Debug-linux-x86_64/Glad/libGlad.a ../bin/Debug-linux-x86_64/ImGui/libImGui.a ../bin/Debug-linux-x86_64/freeimage/libfreeimage.a ../bin/Debug-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Debug-linux-x86_64/zlib/libzlib.a vendor/TUtil/bin/Debug-linux-x86_64/TUtil/libTUtil.a
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
 TARGETDIR = ../bin/Release-linux-x86_64/Hazel
 TARGET = $(TARGETDIR)/libHazel.a
 OBJDIR = ../bin-int/Release-linux-x86_64/Hazel
-DEFINES += -DHZ_ENABLE_GRAPHICS_API_NONE -DHZ_ENABLE_OPEN_GL -DGLFW_INCLUDE_NONE -DGLM_FORCE_INTRINSICS -DHZ_GLFW_INPUT -DFREEIMAGE_LIB -DLIBARCHIVE_STATIC -D_CRT_SECURE_NO_WARNINGS -DHZ_PLATFORM_UNIX -DHZ_PLATFORM_LINUX -DHZ_RELEASE
+DEFINES += -DHZ_ENABLE_GRAPHICS_API_NONE -DHZ_ENABLE_OPEN_GL -DGLFW_INCLUDE_NONE -DGLM_FORCE_INTRINSICS -DHZ_GLFW_INPUT -DHZ_GLFW_WINDOW -DFREEIMAGE_LIB -D_CRT_SECURE_NO_WARNINGS -DHZ_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx -std=c++17
-LIBS += vendor/GLFW/bin/Release-linux-x86_64/GLFW/libGLFW.a ../bin/Release-linux-x86_64/Glad/libGlad.a ../bin/Release-linux-x86_64/ImGui/libImGui.a ../bin/Release-linux-x86_64/freeimage/libfreeimage.a ../bin/Release-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Release-linux-x86_64/str/libstr.a ../bin/Release-linux-x86_64/zlib/libzlib.a ../bin/Release-linux-x86_64/libarchive/liblibarchive.a -llibX11.a
-LDDEPS += vendor/GLFW/bin/Release-linux-x86_64/GLFW/libGLFW.a ../bin/Release-linux-x86_64/Glad/libGlad.a ../bin/Release-linux-x86_64/ImGui/libImGui.a ../bin/Release-linux-x86_64/freeimage/libfreeimage.a ../bin/Release-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Release-linux-x86_64/str/libstr.a ../bin/Release-linux-x86_64/zlib/libzlib.a ../bin/Release-linux-x86_64/libarchive/liblibarchive.a
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -m64 -s
+LIBS += vendor/GLFW/bin/Release-linux-x86_64/GLFW/libGLFW.a ../bin/Release-linux-x86_64/Glad/libGlad.a ../bin/Release-linux-x86_64/ImGui/libImGui.a ../bin/Release-linux-x86_64/freeimage/libfreeimage.a ../bin/Release-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Release-linux-x86_64/zlib/libzlib.a vendor/TUtil/bin/Release-linux-x86_64/TUtil/libTUtil.a -lX11
+LDDEPS += vendor/GLFW/bin/Release-linux-x86_64/GLFW/libGLFW.a ../bin/Release-linux-x86_64/Glad/libGlad.a ../bin/Release-linux-x86_64/ImGui/libImGui.a ../bin/Release-linux-x86_64/freeimage/libfreeimage.a ../bin/Release-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Release-linux-x86_64/zlib/libzlib.a vendor/TUtil/bin/Release-linux-x86_64/TUtil/libTUtil.a
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
 TARGETDIR = ../bin/Dist-linux-x86_64/Hazel
 TARGET = $(TARGETDIR)/libHazel.a
 OBJDIR = ../bin-int/Dist-linux-x86_64/Hazel
-DEFINES += -DHZ_ENABLE_GRAPHICS_API_NONE -DHZ_ENABLE_OPEN_GL -DGLFW_INCLUDE_NONE -DGLM_FORCE_INTRINSICS -DHZ_GLFW_INPUT -DFREEIMAGE_LIB -DLIBARCHIVE_STATIC -D_CRT_SECURE_NO_WARNINGS -DHZ_PLATFORM_UNIX -DHZ_PLATFORM_LINUX -DHZ_DIST
+DEFINES += -DHZ_ENABLE_GRAPHICS_API_NONE -DHZ_ENABLE_OPEN_GL -DGLFW_INCLUDE_NONE -DGLM_FORCE_INTRINSICS -DHZ_GLFW_INPUT -DHZ_GLFW_WINDOW -DFREEIMAGE_LIB -D_CRT_SECURE_NO_WARNINGS -DHZ_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -ffast-math -O3 -mavx -std=c++17
-LIBS += vendor/GLFW/bin/Dist-linux-x86_64/GLFW/libGLFW.a ../bin/Dist-linux-x86_64/Glad/libGlad.a ../bin/Dist-linux-x86_64/ImGui/libImGui.a ../bin/Dist-linux-x86_64/freeimage/libfreeimage.a ../bin/Dist-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Dist-linux-x86_64/str/libstr.a ../bin/Dist-linux-x86_64/zlib/libzlib.a ../bin/Dist-linux-x86_64/libarchive/liblibarchive.a -llibX11.a
-LDDEPS += vendor/GLFW/bin/Dist-linux-x86_64/GLFW/libGLFW.a ../bin/Dist-linux-x86_64/Glad/libGlad.a ../bin/Dist-linux-x86_64/ImGui/libImGui.a ../bin/Dist-linux-x86_64/freeimage/libfreeimage.a ../bin/Dist-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Dist-linux-x86_64/str/libstr.a ../bin/Dist-linux-x86_64/zlib/libzlib.a ../bin/Dist-linux-x86_64/libarchive/liblibarchive.a
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -m64 -s
+LIBS += vendor/GLFW/bin/Dist-linux-x86_64/GLFW/libGLFW.a ../bin/Dist-linux-x86_64/Glad/libGlad.a ../bin/Dist-linux-x86_64/ImGui/libImGui.a ../bin/Dist-linux-x86_64/freeimage/libfreeimage.a ../bin/Dist-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Dist-linux-x86_64/zlib/libzlib.a vendor/TUtil/bin/Dist-linux-x86_64/TUtil/libTUtil.a -lX11
+LDDEPS += vendor/GLFW/bin/Dist-linux-x86_64/GLFW/libGLFW.a ../bin/Dist-linux-x86_64/Glad/libGlad.a ../bin/Dist-linux-x86_64/ImGui/libImGui.a ../bin/Dist-linux-x86_64/freeimage/libfreeimage.a ../bin/Dist-linux-x86_64/FastNoiseSIMD/libFastNoiseSIMD.a ../bin/Dist-linux-x86_64/zlib/libzlib.a vendor/TUtil/bin/Dist-linux-x86_64/TUtil/libTUtil.a
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else
   $(error "invalid configuration $(config)")
@@ -89,10 +89,9 @@ OBJECTS += $(OBJDIR)/CountTracker.o
 OBJECTS += $(OBJDIR)/DebugLayer.o
 OBJECTS += $(OBJDIR)/Engine.o
 OBJECTS += $(OBJDIR)/Event.o
-OBJECTS += $(OBJDIR)/File.o
-OBJECTS += $(OBJDIR)/FileSystem.o
 OBJECTS += $(OBJDIR)/FileTracker.o
 OBJECTS += $(OBJDIR)/GLFWInput.o
+OBJECTS += $(OBJDIR)/GLFWWindow.o
 OBJECTS += $(OBJDIR)/Graph.o
 OBJECTS += $(OBJDIR)/GraphicsAPI.o
 OBJECTS += $(OBJDIR)/IcoashedronMesh.o
@@ -100,7 +99,6 @@ OBJECTS += $(OBJDIR)/ImGuiBuild.o
 OBJECTS += $(OBJDIR)/LayerStack.o
 OBJECTS += $(OBJDIR)/Log.o
 OBJECTS += $(OBJDIR)/NoAPI.o
-OBJECTS += $(OBJDIR)/NumberUtils.o
 OBJECTS += $(OBJDIR)/OpenGLContext.o
 OBJECTS += $(OBJDIR)/OpenGLImGuiLayer.o
 OBJECTS += $(OBJDIR)/OpenGLRendererAPI.o
@@ -108,30 +106,17 @@ OBJECTS += $(OBJDIR)/OpenGLShader.o
 OBJECTS += $(OBJDIR)/OpenGLTexture.o
 OBJECTS += $(OBJDIR)/OpenGLUtils.o
 OBJECTS += $(OBJDIR)/OpenGLVertexArray.o
-OBJECTS += $(OBJDIR)/Path.o
 OBJECTS += $(OBJDIR)/RenderCommand.o
 OBJECTS += $(OBJDIR)/Renderer.o
 OBJECTS += $(OBJDIR)/Shader.o
 OBJECTS += $(OBJDIR)/Texture.o
 OBJECTS += $(OBJDIR)/UnixContextManager.o
-OBJECTS += $(OBJDIR)/UnixFile.o
-OBJECTS += $(OBJDIR)/UnixFileSystem.o
-OBJECTS += $(OBJDIR)/UnixInput.o
-OBJECTS += $(OBJDIR)/UnixSystem.o
-OBJECTS += $(OBJDIR)/UnixTimer.o
-OBJECTS += $(OBJDIR)/UnixWindow.o
 OBJECTS += $(OBJDIR)/Utils.o
 OBJECTS += $(OBJDIR)/VertexArray.o
 OBJECTS += $(OBJDIR)/VulkanContext.o
 OBJECTS += $(OBJDIR)/VulkanHelper.o
 OBJECTS += $(OBJDIR)/VulkanImGuiLayer.o
 OBJECTS += $(OBJDIR)/WindowsContextManager.o
-OBJECTS += $(OBJDIR)/WindowsFile.o
-OBJECTS += $(OBJDIR)/WindowsFileSystem.o
-OBJECTS += $(OBJDIR)/WindowsSystem.o
-OBJECTS += $(OBJDIR)/WindowsTimer.o
-OBJECTS += $(OBJDIR)/WindowsUtils.o
-OBJECTS += $(OBJDIR)/WindowsWindow.o
 OBJECTS += $(OBJDIR)/hzpch.o
 
 # Rules
@@ -245,28 +230,19 @@ $(OBJDIR)/Texture.o: src/Hazel/Renderer/Texture.cpp
 $(OBJDIR)/VertexArray.o: src/Hazel/Renderer/VertexArray.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/File.o: src/Hazel/System/File.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/FileSystem.o: src/Hazel/System/FileSystem.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Path.o: src/Hazel/System/Path.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/CountTracker.o: src/Hazel/Util/CountTracker.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Graph.o: src/Hazel/Util/Graph.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/NumberUtils.o: src/Hazel/Util/NumberUtils.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Utils.o: src/Hazel/Util/Utils.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/GLFWInput.o: src/Platform/GLFW/GLFWInput.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/GLFWWindow.o: src/Platform/GLFW/GLFWWindow.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/NoAPI.o: src/Platform/NoAPI/NoAPI.cpp
@@ -302,24 +278,6 @@ $(OBJDIR)/FileTracker.o: src/Platform/System/FileTracker.cpp
 $(OBJDIR)/UnixContextManager.o: src/Platform/Unix/UnixContextManager.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/UnixFile.o: src/Platform/Unix/UnixFile.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/UnixFileSystem.o: src/Platform/Unix/UnixFileSystem.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/UnixInput.o: src/Platform/Unix/UnixInput.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/UnixSystem.o: src/Platform/Unix/UnixSystem.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/UnixTimer.o: src/Platform/Unix/UnixTimer.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/UnixWindow.o: src/Platform/Unix/UnixWindow.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/VulkanContext.o: src/Platform/Vulkan/VulkanContext.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -330,24 +288,6 @@ $(OBJDIR)/VulkanImGuiLayer.o: src/Platform/Vulkan/VulkanImGuiLayer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/WindowsContextManager.o: src/Platform/Windows/WindowsContextManager.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/WindowsFile.o: src/Platform/Windows/WindowsFile.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/WindowsFileSystem.o: src/Platform/Windows/WindowsFileSystem.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/WindowsSystem.o: src/Platform/Windows/WindowsSystem.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/WindowsTimer.o: src/Platform/Windows/WindowsTimer.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/WindowsUtils.o: src/Platform/Windows/WindowsUtils.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/WindowsWindow.o: src/Platform/Windows/WindowsWindow.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/hzpch.o: src/hzpch.cpp

@@ -19,6 +19,8 @@ namespace Hazel {
 
 		virtual const mat4& GetViewMatrix() const = 0;
 
+		virtual ~CameraStorage();
+
 	};
 
 	class DefaultCameraStorage : public CameraStorage
@@ -36,6 +38,8 @@ namespace Hazel {
 		inline virtual void SetEulerAngles(const vec3& rotation) override { m_Rotation = quat(rotation); }
 
 		inline virtual const mat4& GetViewMatrix() const override { return m_ViewMatrix; }
+
+		virtual ~DefaultCameraStorage() override {}
 	private:
 		vec3 m_Posirion;
 		quat m_Rotation;
@@ -65,6 +69,8 @@ namespace Hazel {
 		inline virtual void SetEulerAngles(const vec3& rotation) override { m_Pitch = rotation.x; m_Yaw = rotation.y; m_Roll = rotation.z; }
 
 		inline virtual const mat4& GetViewMatrix() const override { return m_ViewMatrix; }
+
+		virtual ~EulerCameraStorage() override{}
 	private:
 		vec3 m_Posirion;
 		float m_Pitch, m_Yaw, m_Roll;
