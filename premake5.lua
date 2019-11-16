@@ -119,9 +119,17 @@ project "Hazel"
 		
 		links "X11"
 
+		defines
+		{
+
+		}
 
 	filter "system:macosx"
 
+		defines
+		{
+
+		}
 
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
@@ -231,12 +239,17 @@ project "Sandbox"
 
 		defines
 		{
-			"HZ_PLATFORM_UNIX"
+
 		}
 		
 		links
 		{
+			"GL",
 			"X11",
+			"Xrandr",
+			"Xinerama",
+			"Xcursor",
+			"pthread",
 			"dl",
 		}
 
@@ -429,13 +442,12 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 
 		defines
 		{
-			"HZ_PLATFORM_LINIX",
-			"HZ_PLATFORM_UNIX",
+
 		}
 		
 		links
 		{
-			"libX11.a",
+
 		}
 
 
