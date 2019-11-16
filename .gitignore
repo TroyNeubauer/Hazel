@@ -26,6 +26,7 @@ ImGui Test/imgui.ini
 **/*.vcxproj.filters
 
 #make
+**/Makefile
 **/.project
 **/.workspace
 **/Makefile

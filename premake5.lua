@@ -241,6 +241,7 @@ project "Sandbox"
 		
 		libdirs
 		{
+			"Hazel/vendor/Vulkan/lib"
 		}
 
 		defines
@@ -257,6 +258,7 @@ project "Sandbox"
 			"Xcursor",
 			"pthread",
 			"dl",
+			"vulkan",
 		}
 
 
