@@ -3,9 +3,9 @@
 #include <Hazel.h>
 
 
-class LaunchLayer : public Hazel::Layer
+class WorldLayer : public Hazel::Layer
 {
-	inline LaunchLayer() : Hazel::Layer("Launch Layer") {}
+	inline WorldLayer() : Hazel::Layer("World Layer") {}
 
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
@@ -14,7 +14,7 @@ class LaunchLayer : public Hazel::Layer
 	virtual void OnEvent(Hazel::Event* event) override;
 	virtual void OnImGuiRender() override;
 
-	virtual ~LaunchLayer() override;
+	virtual ~WorldLayer() override;
 
 
 };

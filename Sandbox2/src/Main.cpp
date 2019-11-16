@@ -1,5 +1,3 @@
-#include <archive.h>
-#include <archive_entry.h>
 
 #include <vector>
 #include <map>
@@ -11,9 +9,9 @@ int main()
 {
 	Hazel::Log::Init();
 	const char* str = "Fast string finding is fun\r\n\nThis is the next line";
-	Hazel::StringUtils::NextLine(str);
+	StringUtils::NextLine(str);
 	HZ_CORE_INFO("Result: {}", str);
-	Hazel::StringUtils::NextLine(str);
+	StringUtils::NextLine(str);
 	HZ_CORE_INFO("Result: {}", str);
 
 	system("PAUSE");

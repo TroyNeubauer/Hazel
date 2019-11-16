@@ -109,7 +109,6 @@ project "Hazel"
 
 		defines
 		{
-			"HZ_PLATFORM_WINDOWS",
 			"VK_USE_PLATFORM_WIN32_KHR",
 			"HZ_ENABLE_DIRECTX_12",
 			"HZ_LITTLE_ENDIAN",
@@ -127,16 +126,14 @@ project "Hazel"
 
 		defines
 		{
-			"HZ_PLATFORM_UNIX",
-			"HZ_PLATFORM_LINUX",
+
 		}
 
 	filter "system:macosx"
 
 		defines
 		{
-			"HZ_PLATFORM_UNIX",
-			"HZ_PLATFORM_OSX",
+
 		}
 
 	filter "configurations:Debug"
@@ -220,7 +217,6 @@ project "Sandbox"
 
 		defines
 		{
-			"HZ_PLATFORM_WINDOWS",
 			"HZ_LITTLE_ENDIAN",
 		}
 
@@ -242,12 +238,18 @@ project "Sandbox"
 
 		defines
 		{
-			"HZ_PLATFORM_UNIX"
+
 		}
 		
 		links
 		{
-			"libX11.a",
+			"GL",
+			"X11",
+			"Xrandr",
+			"Xinerama",
+			"Xcursor",
+			"pthread",
+			"dl",
 		}
 
 
@@ -418,7 +420,6 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 
 		defines
 		{
-			"HZ_PLATFORM_WINDOWS",
 			"HZ_LITTLE_ENDIAN",
 			"_CRT_SECURE_NO_WARNINGS",
 		}
@@ -441,13 +442,12 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 
 		defines
 		{
-			"HZ_PLATFORM_LINIX",
-			"HZ_PLATFORM_UNIX",
+
 		}
 		
 		links
 		{
-			"libX11.a",
+
 		}
 
 
@@ -532,7 +532,6 @@ project "Game Design"
 
 		defines
 		{
-			"HZ_PLATFORM_WINDOWS",
 			"HZ_LITTLE_ENDIAN",
 			"_CRT_SECURE_NO_WARNINGS",
 		}
@@ -550,18 +549,17 @@ project "Game Design"
 		
 		libdirs
 		{
-			"/usr/lib/x86_64-linux-gnu/",
+
 		}
 
 		defines
 		{
-			"HZ_PLATFORM_LINIX",
-			"HZ_PLATFORM_UNIX",
+
 		}
 		
 		links
 		{
-			"libX11.a",
+
 		}
 
 
