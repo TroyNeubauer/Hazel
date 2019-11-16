@@ -28,6 +28,7 @@ ImGui Test/imgui.ini
 #make
 **/.project
 **/.workspace
+**/Makefile
 
 **/*.sln
 **/*.vcxproj

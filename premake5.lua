@@ -1,6 +1,6 @@
 workspace "Hazel"
 	architecture "x64"
-	startproject "Game Design"
+	startproject "GameDesign"
 
 	configurations
 	{
@@ -261,8 +261,8 @@ project "Sandbox"
 
 
 
-project "Game Design"
-	location "Game Design"
+project "GameDesign"
+	location "GameDesign"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
@@ -317,11 +317,6 @@ project "Game Design"
 			"Hazel/vendor/Vulkan/lib"
 		}
 
-		defines
-		{
-			"_CRT_SECURE_NO_WARNINGS",
-		}
-
 		links
 		{
 			"kernel32.lib",
@@ -330,27 +325,9 @@ project "Game Design"
 			"vulkan.lib",
 		}
 
-	filter "system:linux"
-		systemversion "latest"
-		
-		libdirs
-		{
 
-		}
-
-		defines
-		{
-
-		}
-		
-		links
-		{
-
-		}
-
-
-project "ImGui Test"
-	location "ImGui Test"
+project "ImGuiTest"
+	location "ImGuiTest"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
@@ -406,10 +383,6 @@ project "ImGui Test"
 			"Pdh.lib",
 		}
 
-		defines
-		{
-			"_CRT_SECURE_NO_WARNINGS",
-		}
 		
 --[[
 project "Sandbox2"--The same as sandbox. Used for general testing purposes
@@ -466,11 +439,6 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 		libdirs
 		{
 			"Hazel/vendor/Vulkan/lib"
-		}
-
-		defines
-		{
-			"_CRT_SECURE_NO_WARNINGS",
 		}
 
 		links

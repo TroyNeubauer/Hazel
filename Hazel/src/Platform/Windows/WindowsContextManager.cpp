@@ -8,7 +8,6 @@
 #include "Platform/NoAPI/NoAPI.h"
 
 #include <GLFW/glfw3.h>
-#include <FreeImage.h>
 
 namespace Hazel {
 
@@ -23,7 +22,6 @@ namespace Hazel {
 			int success = glfwInit();
 			HZ_CORE_ASSERT(success, "Could not intialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
-			FreeImage_Initialise();
 		}
 	}
 
@@ -54,7 +52,6 @@ namespace Hazel {
 			if (GraphicsAPI::Get() != GraphicsAPIType::NONE)
 			{
 				glfwTerminate();
-				FreeImage_DeInitialise();
 			}
 		}
 	}

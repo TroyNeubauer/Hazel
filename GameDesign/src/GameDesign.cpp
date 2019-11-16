@@ -1,4 +1,5 @@
-#include "Game Design.h"
+
+#include "GameDesign.h"
 
 #include "Hazel/glm.h"
 
@@ -14,7 +15,7 @@ void GameDesign::Update()
 
 void GameDesign::Render()
 {
-	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 0.5f, 1.0f));
 	Hazel::RenderCommand::Clear();
 }
 

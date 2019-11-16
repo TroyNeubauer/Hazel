@@ -17,4 +17,7 @@ namespace Hazel {
 		static float m_DeltaTime;
 		static float m_LastTime;
 	};
+
+	void Init();
+	void Shutdown();
 }

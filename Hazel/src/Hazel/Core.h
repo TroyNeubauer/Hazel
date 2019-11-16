@@ -4,34 +4,89 @@
 #include <stdint.h>
 #include <memory>
 
+//Common includes
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+
+//========== COMPILER detect ==========
+#if defined(_MSC_VER)
+	#define HZ_COMPILER_MSVC
+#elif defined(__GNUC__)
+	#define HZ_COMPILER_GCC
+#elif defined(__clang__)
+	#define HZ_COMPILER_CLANG
+#elif defined(__EMSCRIPTEN__ )
+	#define HZ_COMPILER_EMSCRIPTEN
+#else
+	#error Unsupported compiler
+#endif
+
+
+//========== PLATFORM detect ==========
+#if defined(__ANDROID__)
+	#define HZ_PLATFORM_ANDROID
+	#define HZ_PLATFORM_UNIX
+	#define HZ_PLATFORM_LINUX
+
+#elif defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__BORLANDC__)
+	#define HZ_PLATFORM_WINDOWS
+
+#elif defined(__APPLE__) || defined(__MACH__)
+	#include <TargetConditionals.h>
+	/* TARGET_OS_MAC exists on all the platforms
+	 * so we must check all of them (in this order)
+	 * to ensure that we're running on MAC
+	 * and not some other Apple platform */
+	#define HZ_PLATFORM_APPLE
+	#define HZ_PLATFORM_UNIX
+	#if TARGET_IPHONE_SIMULATOR == 1
+		#error "IOS simulator is not supported!"
+	#elif TARGET_OS_IPHONE == 1
+		#define HZ_PLATFORM_IOS
+		#error "IOS is not supported!"
+	#elif TARGET_OS_MAC == 1
+		#define HZ_PLATFORM_MACOS
+		#error "MacOS is not supported!"
+	#else
+		#error "Unknown Apple platform!"
+	#endif
+
+
+#elif defined(__linux__)//Defined after android to target desktop linux
+	#define HZ_PLATFORM_UNIX
+	#define HZ_PLATFORM_LINUX
+#else
+	#error Unknown platform
+#endif
+
+
+#ifdef HZ_DEBUG
+		// debug break
+	#if defined(HZ_PLATFORM_WINDOWS)
+		#define HZ_DEBUGBREAK() __debugbreak()
+	#elif defined(HZ_PLATFORM_UNIX)
+		#include <signal.h>
+		#define HZ_DEBUGBREAK() raise(SIGTRAP)
+
+	#else
+		#error No debug break!
+	#endif
+
+	#define HZ_ASSERT(x, ...) { if(!(x)) { HZ_ERROR("Assertion Failed: {0}", __VA_ARGS__); HZ_DEBUGBREAK(); } }
+	#define HZ_CORE_ASSERT(x, ...) { if(!(x)) { HZ_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); HZ_DEBUGBREAK(); } }
+
+#else
+	#define HZ_ASSERT(x, ...)
+	#define HZ_CORE_ASSERT(x, ...)
+#endif
+
 #ifdef _GCC
 	#define HZ_ALWAYS_INLINE __attribute__((always_inline))
 #else
 	#define HZ_ALWAYS_INLINE inline
 #endif
 
-#if (defined(HZ_DEBUG) || defined(HZ_RELEASE)) && (!defined(HZ_ENABLE_ASSERTS))
-	#define HZ_ENABLE_ASSERTS
-#endif
-
-
-#ifdef HZ_PLATFORM_WINDOWS
-	#ifdef HZ_ENABLE_ASSERTS
-		#define HZ_ASSERT(x, ...) { if(!(x)) { HZ_ERROR("Assertion Failed:"); HZ_ERROR(__VA_ARGS__);__debugbreak(); } }
-		#define HZ_CORE_ASSERT(x, ...) { if(!(x)) { HZ_CORE_ERROR("Assertion Failed:"); HZ_CORE_ERROR(__VA_ARGS__);__debugbreak(); } }
-	#else
-		#define HZ_ASSERT(x, ...)
-		#define HZ_CORE_ASSERT(x, ...)
-	#endif
-#else
-	#ifdef HZ_ENABLE_ASSERTS
-		#define HZ_ASSERT(x, ...) { if(!(x)) { HZ_ERROR("Assertion Failed:"); HZ_ERROR(__VA_ARGS__); asm("int $3"); } }
-		#define HZ_CORE_ASSERT(x, ...) { if(!(x)) { HZ_CORE_ERROR("Assertion Failed:"); HZ_CORE_ERROR(__VA_ARGS__); asm("int $3"); } }
-	#else
-		#define HZ_ASSERT(x, ...)
-		#define HZ_CORE_ASSERT(x, ...)
-	#endif
-#endif
 
 #define BIT(x) (1 << x)
 

@@ -3,8 +3,24 @@
 #include "Log.h"
 
 #include <GLFW/glfw3.h>
+#include <FreeImage.h>
+#include "Hazel/Context/ContextManager.h"
 
 namespace Hazel {
+
+	void Init()
+	{
+		FreeImage_Initialise();
+		Hazel::Log::Init();
+		System::Init();
+	}
+
+	void Shutdown()
+	{
+		FreeImage_DeInitialise();
+		Hazel::Log::DisableLogging();
+		Hazel::ContextManager::Destroy();
+	}
 
 	float Engine::m_DeltaTime = 1.0f / 60.0f;
 	float Engine::m_LastTime = -1.0f;

@@ -5,14 +5,14 @@
 
 #include "Hazel/Context/ContextManager.h"
 #include "Hazel/TUtil.h"
+#include "Hazel/Engine.h"
 
 extern Hazel::Application* Hazel::CreateApplication(int argc, char** argv);
 
 int main(int argc, char** argv)
 {
 	TUtil::Timer timer;
-	Hazel::Log::Init();
-	System::Init();
+	Hazel::Init();
 	
 	auto app = Hazel::CreateApplication(argc, argv);
 	timer.Stop().Print("Complete initialization took");
@@ -20,6 +20,5 @@ int main(int argc, char** argv)
 	app->Run();
 	delete app;
 
-	Hazel::Log::DisableLogging();
-	Hazel::ContextManager::Destroy();
+	Hazel::Shutdown();
 }
