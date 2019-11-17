@@ -312,7 +312,6 @@ project "GameDesign"
 		"TUtil",
 		"ImGui",
 		"FastNoiseSIMD",
-		"libarchive",
 		"Box2D",
 	}
 
