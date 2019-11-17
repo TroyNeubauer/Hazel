@@ -94,15 +94,15 @@ namespace Hazel {
 	}
 
 	void Application::DoRenderPass() {
-		if (GraphicsAPI::Get() != GraphicsAPIType::NONE)
-		{
-			Render();
+		for (Layer* layer : m_LayerStack)
+			layer->Render();
+		Render();
 
-			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack)
-				layer->OnImGuiRender();
-			m_ImGuiLayer->End();
-		}
+		m_ImGuiLayer->Begin();
+		for (Layer* layer : m_LayerStack)
+			layer->OnImGuiRender();
+		m_ImGuiLayer->End();
+		
 		m_Window->OnRender();
 	}
 

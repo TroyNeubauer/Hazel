@@ -11,6 +11,9 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 
+
 	~GameDesign();
+private:
+
 
 };

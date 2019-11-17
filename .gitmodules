@@ -19,3 +19,6 @@
 [submodule "Hazel/vendor/TUtil"]
 	path = Hazel/vendor/TUtil
 	url = https://github.com/TroyNeubauer/TUtil.git
+[submodule "Hazel/vendor/Box2D"]
+	path = Hazel/vendor/Box2D
+	url = https://github.com/TroyNeubauer/Box2D.git

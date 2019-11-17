@@ -50,6 +50,7 @@ IncludeDir["Vulkan"] = "Hazel/vendor/Vulkan/include"
 IncludeDir["freeimage"] = "Hazel/vendor/freeimage/Source"
 IncludeDir["FastNoiseSIMD"] = "Hazel/vendor/FastNoiseSIMD/FastNoiseSIMD"
 IncludeDir["TUtil"] = "Hazel/vendor/TUtil/TUtil/include"
+IncludeDir["Box2D"] = "Hazel/vendor/Box2D"
 
 include "Hazel/vendor/zlib"
 include "Hazel/vendor/GLFW"
@@ -58,6 +59,7 @@ include "Hazel/vendor/imgui"
 include "Hazel/vendor/freeimage"
 include "Hazel/vendor/FastNoiseSIMD"
 include "Hazel/vendor/TUtil/TUtil_project.lua"
+include "Hazel/vendor/Box2D/Box2D_project.lua"
 --include "Hazel/vendor/openssl"
 
 
@@ -98,6 +100,7 @@ project "Hazel"
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.FastNoiseSIMD}",
 		"%{IncludeDir.TUtil}",
+		"%{IncludeDir.Box2D}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -207,6 +210,7 @@ project "Sandbox"
 		"TUtil",
 		"freeimage",
 		"zlib",
+		"Box2D",
 	}
 
 	defines
@@ -288,6 +292,7 @@ project "GameDesign"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.TUtil}",
+		"%{IncludeDir.Box2D}",
 
 --[[		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
