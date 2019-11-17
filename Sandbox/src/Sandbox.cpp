@@ -61,7 +61,7 @@ std::ostream& operator<<(std::ostream& os, const vec3& vec) { return os << '[' <
 
 void Sandbox::Update()
 {
-	m_Camera->Update(Paused);
+	if(!Paused) m_Camera->Update();
 	GetWindow().ShowCursor(Paused);
 }
 

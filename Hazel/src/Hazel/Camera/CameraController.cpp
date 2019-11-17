@@ -13,7 +13,7 @@ namespace Hazel {
 
 	const float ROT_AMOUNT = radians(1.0f), MOVE_AMOUNT = 10, PI_2 = pi<float>() / 2.0f;
 
-	bool AdvancedCameraController::Update(CameraStorage& camera, bool paused)
+	bool AdvancedCameraController::Update(CameraStorage3D& camera)
 	{
 		bool update = false;
 		vec3 pos = camera.GetPosition();
@@ -66,7 +66,7 @@ namespace Hazel {
 		return update;
 	}
 
-	bool FPSCameraController::Update(CameraStorage& camera, bool paused)
+	bool FPSCameraController::Update(CameraStorage3D& camera)
 	{
 		bool update = false;
 		vec3 pos = camera.GetPosition();
@@ -81,16 +81,13 @@ namespace Hazel {
 		if (mouseMove.x || mouseMove.y)
 			update = true;
 
-		if (!paused)
-		{
-			pitch -= mouseMove.y * ROT_AMOUNT / 10.0f;
-			yaw += mouseMove.x * ROT_AMOUNT / 10.0f;
+		pitch -= mouseMove.y * ROT_AMOUNT / 10.0f;
+		yaw += mouseMove.x * ROT_AMOUNT / 10.0f;
 
-			pitch = clamp(pitch, radians<float>(-110.0f), radians<float>(90.0f));
-			yaw = mod(yaw, radians<float>(360));
+		pitch = clamp(pitch, radians<float>(-110.0f), radians<float>(90.0f));
+		yaw = mod(yaw, radians<float>(360));
 
-			camera.SetEulerAngles(vec3(pitch, yaw, rot.z));
-		}
+		camera.SetEulerAngles(vec3(pitch, yaw, rot.z));
 
 
 		if (Hazel::Input::IsKeyPressed(HZ_KEY_W)) {

@@ -15,6 +15,13 @@ namespace Hazel {
 
 	class Camera
 	{
+		virtual const mat4& GetViewMatrix() const = 0;
+		virtual const mat4& GetProjectionMatrix() const = 0;
+		virtual const mat4& GetViewProjectionMatrix() const = 0;
+	};
+
+	class Camera3D : public Camera
+	{
 	public:
 
 		virtual const mat4& GetViewMatrix() const = 0;
@@ -22,7 +29,7 @@ namespace Hazel {
 		virtual const mat4& GetViewProjectionMatrix() const = 0;
 
 		virtual void ForceUpdate() = 0;
-		virtual void Update(bool paused) = 0;
+		virtual void Update() = 0;
 
 		virtual const vec3 GetPosition() = 0;
 		virtual const quat GetRotation() = 0;
@@ -36,12 +43,30 @@ namespace Hazel {
 		virtual void RecalculateViewMatrix() = 0;
 	};
 
-	class DefaultCamera : public Camera
+	class Camera2D : public Camera
+	{
+		virtual const mat4& GetViewMatrix() const = 0;
+		virtual const mat4& GetProjectionMatrix() const = 0;
+		virtual const mat4& GetViewProjectionMatrix() const = 0;
+
+		virtual void ForceUpdate() = 0;
+
+		virtual const vec2 GetPosition() = 0;
+		virtual const float GetRotation() = 0;
+
+		virtual void SetRotation(float rotation) = 0;
+		virtual void SetPosition(const vec2& position) = 0;
+
+		virtual void RecalculateProjectionMatrix() = 0;
+		virtual void RecalculateViewMatrix() = 0;
+	};
+
+	class DefaultCamera : public Camera3D
 	{
 	public:
 
-		DefaultCamera(CameraController* controller, CameraStorage* storage, CameraProjection* projection)
-			: m_Controller(controller), m_Storage(storage), m_Projection(projection), m_ViewProjectionMatrix() { Update(false); }
+		DefaultCamera(CameraController3D* controller, CameraStorage3D* storage, CameraProjection3D* projection)
+			: m_Controller(controller), m_Storage(storage), m_Projection(projection), m_ViewProjectionMatrix() { Update(); }
 		
 		inline virtual void ForceUpdate() override
 		{
@@ -50,9 +75,9 @@ namespace Hazel {
 			UpdateViewProjectionMatrix();
 		}
 
-		inline virtual void Update(bool paused) override
+		inline virtual void Update() override
 		{
-			if (m_Controller->Update(*m_Storage.get(), paused)) {
+			if (m_Controller->Update(*m_Storage.get())) {
 				m_Storage->RecalculateViewMatrix();
 			}
 			UpdateViewProjectionMatrix();
@@ -69,9 +94,9 @@ namespace Hazel {
 		virtual void SetPosition(const vec3& position) { m_Storage->SetPosition(position); }
 		virtual void SetEulerAngles(const vec3& rotation) { m_Storage->SetEulerAngles(rotation); }
 
-		inline CameraController& GetController() const { return *m_Controller.get(); }
-		inline CameraStorage& GetStorage() const { return *m_Storage.get(); }
-		inline CameraProjection& GetProjection() const { return *m_Projection.get(); }
+		inline CameraController3D& GetController() const { return *m_Controller.get(); }
+		inline CameraStorage3D& GetStorage() const { return *m_Storage.get(); }
+		inline CameraProjection3D& GetProjection() const { return *m_Projection.get(); }
 
 		inline virtual const mat4& GetViewMatrix() const override { return m_Storage->GetViewMatrix(); }
 		inline virtual const mat4& GetProjectionMatrix() const override { return m_Projection->GetProjectionMatrix(); }
@@ -85,9 +110,9 @@ namespace Hazel {
 
 	protected:
 		mat4 m_ViewProjectionMatrix;
-		std::unique_ptr<CameraController> m_Controller;
-		std::unique_ptr<CameraStorage> m_Storage;
-		std::unique_ptr<CameraProjection> m_Projection;
+		std::unique_ptr<CameraController3D> m_Controller;
+		std::unique_ptr<CameraStorage3D> m_Storage;
+		std::unique_ptr<CameraProjection3D> m_Projection;
 	};
 
 	class FPSCamera : public DefaultCamera

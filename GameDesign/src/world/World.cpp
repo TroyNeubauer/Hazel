@@ -8,7 +8,7 @@ World::World()
 {
 	m_World.reset(new b2World( {0.0f, 0.0f} ));//No gravity since we handle it ourselves
 	Ship* ship = new Ship(*this,  0.0, 0.0, 5.0f, 10000.0f);
-	Ship* ship = new Ship(*this, 10.0, 4.0, 3.0f, 10000.0f);
+	Ship* ship2 = new Ship(*this, 10.0, 4.0, 3.0f, 10000.0f);
 }
 
 void World::Update()

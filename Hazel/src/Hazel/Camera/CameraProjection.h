@@ -7,11 +7,11 @@
 
 namespace Hazel {
 
-	class CameraProjection
+	class CameraProjection3D
 	{
 	public:
 		//Leave initalization of m_ProjectionMatrix to subclasses
-		CameraProjection(float nearPlane, float farPlane) : m_NearPlane(nearPlane), m_FarPlane(farPlane), m_ProjectionMatrix() {}
+		CameraProjection3D(float nearPlane, float farPlane) : m_NearPlane(nearPlane), m_FarPlane(farPlane), m_ProjectionMatrix() {}
 
 		//Re-creates the projection matrix based on the new parameters
 		virtual void RecalculateProjectionMatrix() = 0;
@@ -22,18 +22,18 @@ namespace Hazel {
 
 		inline void SetNearPlane(float nearPlane) { m_NearPlane = nearPlane; }
 		inline void SetFarPlane(float farPlane) { m_FarPlane = farPlane; }
-		virtual ~CameraProjection();
+		virtual ~CameraProjection3D() {}
 
 	protected:
 		float m_NearPlane, m_FarPlane;
 		mat4 m_ProjectionMatrix;
 	};
 
-	class PerspectiveCameraProjection : public CameraProjection
+	class PerspectiveCameraProjection : public CameraProjection3D
 	{
 	public:
 		PerspectiveCameraProjection(float nearPlane, float farPlane, float fov) 
-			: CameraProjection(nearPlane, farPlane), m_FOV(fov) { RecalculateProjectionMatrix(); }
+			: CameraProjection3D(nearPlane, farPlane), m_FOV(fov) { RecalculateProjectionMatrix(); }
 
 		inline virtual void RecalculateProjectionMatrix()
 		{
@@ -49,11 +49,11 @@ namespace Hazel {
 	};
 
 
-	class OrthographicCameraProjection : public CameraProjection
+	class OrthographicCameraProjection : public CameraProjection3D
 	{
 	public:
 		OrthographicCameraProjection(float left, float right, float top, float bottom, float nearPlane = -1.0f, float farPlane = 1.0f) 
-			: CameraProjection(nearPlane, farPlane) { RecalculateProjectionMatrix(); }
+			: CameraProjection3D(nearPlane, farPlane) { RecalculateProjectionMatrix(); }
 
 		inline virtual void RecalculateProjectionMatrix()
 		{

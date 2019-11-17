@@ -3,7 +3,7 @@
 #include "Hazel/glm.h"
 
 namespace Hazel {
-	class CameraStorage
+	class CameraStorage3D
 	{
 	public:
 		//Updates the view matrix
@@ -19,11 +19,11 @@ namespace Hazel {
 
 		virtual const mat4& GetViewMatrix() const = 0;
 
-		virtual ~CameraStorage();
+		virtual ~CameraStorage3D() {}
 
 	};
 
-	class DefaultCameraStorage : public CameraStorage
+	class DefaultCameraStorage : public CameraStorage3D
 	{
 	public:
 		DefaultCameraStorage() { RecalculateViewMatrix(); }
@@ -46,7 +46,7 @@ namespace Hazel {
 		mat4 m_ViewMatrix;
 	};
 
-	class EulerCameraStorage : public CameraStorage
+	class EulerCameraStorage : public CameraStorage3D
 	{
 	public:
 		EulerCameraStorage() 

@@ -4,27 +4,27 @@
 
 namespace Hazel {
 	
-	class CameraStorage;
+	class CameraStorage3D;
 	
 
-	class CameraController
+	class CameraController3D
 	{
 	public:
-		virtual bool Update(CameraStorage& camera, bool paused) = 0;
+		virtual bool Update(CameraStorage3D& camera) = 0;
 
-		virtual ~CameraController();
+		virtual ~CameraController3D() {}
 	};
 
-	class AdvancedCameraController : public CameraController
+	class AdvancedCameraController : public CameraController3D
 	{
 	public:
-		virtual bool Update(CameraStorage& camera, bool paused);
+		virtual bool Update(CameraStorage3D& camera);
 	};
 
-	class FPSCameraController : public CameraController
+	class FPSCameraController : public CameraController3D
 	{
 	public:
-		virtual bool Update(CameraStorage& camera, bool paused);
+		virtual bool Update(CameraStorage3D& camera);
 	};
 
 }

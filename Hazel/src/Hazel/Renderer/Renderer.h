@@ -14,7 +14,7 @@ namespace Hazel {
 	{
 	public:
 		static void Init();
-		static void BeginScene(Camera& camera, std::vector<Light>& lights);
+		static void BeginScene(Camera3D& camera, std::vector<Light>& lights);
 		static void EndScene();
 
 		static void Submit(const Mesh& mesh);

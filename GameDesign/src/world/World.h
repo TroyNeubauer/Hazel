@@ -6,6 +6,29 @@
 
 #include "Body.h"
 
+
+struct LinkedListIterator
+{
+public:
+	LinkedListIterator(b2Body* first) : m_Current(first) {}
+
+	b2Body* operator* () { return m_Current; }
+	// pointer operator& () { return &**this ; }
+	b2Body* operator-> () { return m_Current; } // *** EDIT
+
+	LinkedListIterator& operator++ () { m_Current = m_Current->GetNext(); return *this; }
+	LinkedListIterator operator++ (int) { const auto temp(*this); ++*this; return temp; }
+
+	bool operator== (const LinkedListIterator& that) const { return m_Current == that.m_Current; }
+	bool operator!= (const LinkedListIterator& that) const { return !(*this == that); }
+
+	~LinkedListIterator() {}
+private:
+	b2Body* m_Current;
+
+};
+
+
 class World
 {
 public:
@@ -28,28 +51,5 @@ private:
 	Hazel::Scope<b2World> m_World;
 
 };
-
-
-	struct LinkedListIterator
-	{
-	public:
-		LinkedListIterator(b2Body* first) : m_Current(first) {}
-
-		b2Body* operator* () { return m_Current; }
-		// pointer operator& () { return &**this ; }
-		b2Body* operator-> () { return m_Current; } // *** EDIT
-
-		LinkedListIterator& operator++ () { m_Current = m_Current->GetNext(); return *this; }
-		LinkedListIterator operator++ (int) { const auto temp(*this); ++*this; return temp; }
-
-		bool operator== (const LinkedListIterator& that) const { return m_Current == that.m_Current; }
-		bool operator!= (const LinkedListIterator& that) const { return !(*this == that); }
-
-		~LinkedListIterator() {}
-	private:
-		b2Body* m_Current;
-
-	};
-
 
 

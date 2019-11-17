@@ -121,6 +121,7 @@ project "Hazel"
 		"FastNoiseSIMD",
 		"zlib",
 		"TUtil",
+		"Box2D",
 	}
 
 	defines
@@ -308,6 +309,11 @@ project "GameDesign"
 	links
 	{
 		"Hazel",
+		"TUtil",
+		"ImGui",
+		"FastNoiseSIMD",
+		"libarchive",
+		"Box2D",
 	}
 
 	defines

@@ -11,7 +11,7 @@ namespace Hazel {
 		RenderCommand::Init();
 	}
 
-	void Renderer::BeginScene(Camera& camera, std::vector<Light>& lights)
+	void Renderer::BeginScene(Camera3D& camera, std::vector<Light>& lights)
 	{
 		RenderCommand::Begin();
 		s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
