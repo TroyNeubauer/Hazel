@@ -9,6 +9,8 @@ namespace Hazel {
 	{
 	public:
 		OpenGLTexture2D(File* file, TextureBuilder builder = TextureBuilder::Default());
+		OpenGLTexture2D(int width, int height, TextureBuilder builder = TextureBuilder::Default());
+
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 		

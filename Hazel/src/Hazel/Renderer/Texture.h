@@ -51,7 +51,7 @@ namespace Hazel {
 	{
 	public:
 		static Hazel::Ref<Texture2D> Load(Path path, TextureBuilder builder = TextureBuilder::Default());
-
+		static Hazel::Ref<Texture2D> Create(int width, int height, TextureBuilder builder = TextureBuilder::Default());
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;

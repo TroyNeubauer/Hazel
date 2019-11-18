@@ -20,12 +20,12 @@ Ship::Ship(World& world, float x, float y, float size, float density)
 	
 }
 
-void Ship::Render(const World & world)
+void Ship::Render(const World& world)
 {
 	
 }
 
-void Ship::Update(const World & world)
+void Ship::Update(const World& world)
 {
 
 }

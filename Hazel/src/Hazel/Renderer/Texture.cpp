@@ -26,7 +26,24 @@ namespace Hazel {
 		case Hazel::GraphicsAPIType::NONE:		return Hazel::Ref<Texture2D>(new NoAPITexture2D(file, builder));
 #endif
 #ifdef HZ_ENABLE_OPEN_GL
-		case Hazel::GraphicsAPIType::OPEN_GL:	return Hazel::Ref<Texture2D>(new OpenGLTexture2D(file, builder));  break;
+		case Hazel::GraphicsAPIType::OPEN_GL:	return Hazel::Ref<Texture2D>(new OpenGLTexture2D(file, builder));
+#endif
+		default:
+			HZ_CORE_ASSERT(false, "Unsupported graphics API for creating a texture: {0}", GraphicsAPI::ToString(api));
+		}
+		return nullptr;
+	}
+
+	Hazel::Ref<Texture2D> Texture2D::Create(int width, int height, TextureBuilder builder)
+	{
+		GraphicsAPIType api = GraphicsAPI::Get();
+		switch (api)
+		{
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
+		case Hazel::GraphicsAPIType::NONE:		return Hazel::Ref<Texture2D>(new NoAPITexture2D(width, height, builder));
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+		case Hazel::GraphicsAPIType::OPEN_GL:	return Hazel::Ref<Texture2D>(new OpenGLTexture2D(width, height, builder));
 #endif
 		default:
 			HZ_CORE_ASSERT(false, "Unsupported graphics API for creating a texture: {0}", GraphicsAPI::ToString(api));

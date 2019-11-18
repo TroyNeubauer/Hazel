@@ -72,7 +72,7 @@ namespace Hazel {
 
 		//check that the plugin has reading capabilities and load the file
 		FIBITMAP* dib = nullptr;
-		GLuint id;
+		GLuint id = 0;
 
 		{
 			if (FreeImage_FIFSupportsReading(fif))
@@ -157,39 +157,11 @@ namespace Hazel {
 			BYTE* bits = FreeImage_GetBits(dib);
 			unsigned int width = FreeImage_GetWidth(dib), height = FreeImage_GetHeight(dib);
 
-			if ((bits == 0) || (width == 0) || (height == 0))
+			if ((bits == nullptr) || (width == 0) || (height == 0))
 				return false;
 
 			//generate an OpenGL texture ID for this texture
-			glEnable(GL_TEXTURE_2D);
-			glGenTextures(1, &id);
-			glBindTexture(GL_TEXTURE_2D, id);
-
-			//store the texture data for OpenGL use
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, imageFormat, imageType, bits);
-			if (builder.IsMipmap()) {
-				glGenerateMipmap(GL_TEXTURE_2D);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				if (builder.IsAnisotropic()) {
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, 4.0f);
-				}
-			} else if (builder.IsNearest()) {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			} else {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			}
-
-			if (builder.IsClampEdges()) {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			} else {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			}
+			id = Load2DTexture(width, height, bits, imageFormat, imageType, builder);
 		}
 	end:
 		//Free FreeImage's copy of the data
@@ -197,6 +169,48 @@ namespace Hazel {
 		FreeImage_CloseMemory(memory);
 
 		timer.Stop().Print("Reading texture took");
+		return id;
+	}
+
+	unsigned int OpenGLUtils::Load2DTexture(int width, int height, void* data, int imageFormat, int imageType, TextureBuilder builder)
+	{
+		GLuint id;
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &id);
+		glBindTexture(GL_TEXTURE_2D, id);
+
+		//store the texture data for OpenGL use
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, imageFormat, imageType, data);
+		if (builder.IsMipmap()) {
+			glGenerateMipmap(GL_TEXTURE_2D);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			if (builder.IsAnisotropic()) {
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, 4.0f);
+			}
+		}
+		else if (builder.IsNearest())
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		}
+
+		if (builder.IsClampEdges())
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
 		return id;
 	}
 

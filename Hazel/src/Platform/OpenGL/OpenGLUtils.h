@@ -14,6 +14,7 @@ namespace Hazel {
 		static GLenum ShaderDataTypeToGLType(ShaderDataType type);
 
 		static unsigned int Load2DTexture(File* file, TextureBuilder builder = TextureBuilder::Default());
+		static unsigned int Load2DTexture(int width, int height, void* data, int imageFormat, int imageType, TextureBuilder builder = TextureBuilder::Default());
 
 	};
 

@@ -12,7 +12,7 @@ namespace Hazel {
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const Camera2D& camera);
 		static void EndScene();
 
 		// Primitives

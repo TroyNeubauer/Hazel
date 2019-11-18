@@ -204,13 +204,9 @@ project "Sandbox"
 	links 
 	{
 		"Hazel",
-		"Glad",
-		"ImGui",
-		"GLFW",
-		"FastNoiseSIMD",
 		"TUtil",
-		"freeimage",
-		"zlib",
+		"ImGui",
+		"FastNoiseSIMD",
 		"Box2D",
 	}
 
