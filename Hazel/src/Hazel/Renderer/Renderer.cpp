@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "Renderer.h"
 #include "RenderCommand.h"
+#include "Renderer2D.h"
 
 namespace Hazel {
 

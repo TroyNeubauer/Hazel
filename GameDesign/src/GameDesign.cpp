@@ -2,13 +2,13 @@
 #include "GameDesign.h"
 #include "layers/WorldLayer.h"
 
-#include "Hazel/glm.h"
+#include "Hazel.h"
 
 GameDesign::GameDesign()
 {
 	PushOverlay(new Hazel::DebugLayer());
 	PushLayer(new WorldLayer(new World()));
-	
+	Hazel::Renderer2D::Init();
 }
 
 void GameDesign::Update()
@@ -34,5 +34,5 @@ void GameDesign::Render()
 
 GameDesign::~GameDesign()
 {
-
+	Hazel::Renderer2D::Shutdown();
 }

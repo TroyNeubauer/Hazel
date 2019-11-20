@@ -201,6 +201,8 @@ project "Sandbox"
 		"Box2D",
 		"freeimage",
 		"glad",
+		"glfw",
+		"zlib",
 	}
 
 	defines
@@ -242,8 +244,6 @@ project "Sandbox"
 			"pthread",
 			"dl",
 			"vulkan",
-			"zlib",
-			"glfw",
 		}
 
 
@@ -291,6 +291,8 @@ project "GameDesign"
 		"Box2D",
 		"freeimage",
 		"glad",
+		"glfw",
+		"zlib",
 	}
 
 	defines
@@ -331,9 +333,6 @@ project "GameDesign"
 			"pthread",
 			"dl",
 			"vulkan",
-			"zlib",
-			"glfw",
-		
 		}		
 
 --[[

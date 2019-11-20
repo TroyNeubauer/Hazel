@@ -62,11 +62,11 @@ namespace Hazel {
 		virtual void RecalculateViewMatrix() = 0;
 	};
 
-	class DefaultCamera : public Camera3D
+	class DefaultCamera3D : public Camera3D
 	{
 	public:
 
-		DefaultCamera(CameraController3D* controller, CameraStorage3D* storage, CameraProjection3D* projection)
+		DefaultCamera3D(CameraController3D* controller, CameraStorage3D* storage, CameraProjection3D* projection)
 			: m_Controller(controller), m_Storage(storage), m_Projection(projection), m_ViewProjectionMatrix() { Update(); }
 		
 		inline virtual void ForceUpdate() override
@@ -116,12 +116,40 @@ namespace Hazel {
 		std::unique_ptr<CameraProjection3D> m_Projection;
 	};
 
-	class FPSCamera : public DefaultCamera
+	class FPSCamera : public DefaultCamera3D
 	{
 	public:
-		FPSCamera(float fov) : DefaultCamera(new FPSCameraController(), new EulerCameraStorage(), new PerspectiveCameraProjection(0.5f, 7500.0f, fov)) {}
+		FPSCamera(float fov) : DefaultCamera3D(new FPSCameraController(), new EulerCameraStorage(), new PerspectiveCameraProjection(0.5f, 7500.0f, fov)) {}
 
 		virtual ~FPSCamera() {}
+	};
+
+	class DefaultCamera2D : public Camera2D
+	{
+	public:
+		virtual inline const mat4& GetViewMatrix() const { return m_ViewMatrix; }
+		virtual inline const mat4& GetProjectionMatrix() const override { return m_ProjectionMatrix; }
+		virtual inline const mat4& GetViewProjectionMatrix() const override { return m_ProjectionMatrix * m_ViewMatrix; }
+
+		virtual inline void ForceUpdate() override { RecalculateProjectionMatrix(); RecalculateViewMatrix(); }
+
+		virtual inline const vec2 GetPosition() override { return m_Pos; }
+		virtual inline const float GetRotation() override { return m_Rot; }
+
+		virtual inline void SetRotation(float rotation) override { m_Rot = rotation; }
+		virtual inline void SetPosition(const vec2& position) override { m_Pos = position; }
+
+		virtual inline void RecalculateProjectionMatrix() override { m_ProjectionMatrix = ortho(m_Left, m_Right, m_Bottom, m_Top, -1.0f, 1.0f); }
+		virtual inline void RecalculateViewMatrix() override;
+
+		
+
+	private:
+		mat4 m_ProjectionMatrix;
+		mat4 m_ViewMatrix;
+		float m_Rot;
+		vec2 m_Pos;
+		float m_Left, m_Right, m_Bottom, m_Top;
 	};
 
 }

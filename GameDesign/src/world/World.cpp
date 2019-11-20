@@ -30,10 +30,14 @@ void World::Update()
 			}
 		}
 	}
+	HZ_INFO("Delta time: {} ", Hazel::Engine::GetDeltaTime());
+	m_World->Step(Hazel::Engine::GetDeltaTime(), 10, 10);
+	m_World->ClearForces();
 }
 
 void World::Render()
 {
+	Hazel::Renderer2D::BeginScene();
 	for (auto it = BodiesBegin(); it != BodiesEnd(); it++)
 	{
 		Body* body = ToBody(*it);

@@ -15,6 +15,12 @@ namespace Hazel {
 		virtual ~CameraController3D() {}
 	};
 
+	class CameraController2D
+	{
+	public:
+		virtual bool Update(Camera2D& camera) = 0;
+	};
+
 	class AdvancedCameraController : public CameraController3D
 	{
 	public:

@@ -1,6 +1,7 @@
 #include "Ship.h"
 #include "World.h"
 
+
 Ship::Ship(World& world, float x, float y, float size, float density)
 {
 	b2BodyDef def;
@@ -17,12 +18,16 @@ Ship::Ship(World& world, float x, float y, float size, float density)
 	fixtureDef.shape = &shape;
 	fixtureDef.density = density;
 	b2Fixture* myFixture = m_Body->CreateFixture(&fixtureDef);
+
+	m_Texture = Hazel::Texture2D::Load("assets/textures/RocketComponents.png");
 	
 }
 
 void Ship::Render(const World& world)
 {
-	
+	float x = m_Body->GetPosition().x, y = m_Body->GetPosition().y;
+	Hazel::Renderer2D::DrawQuad( { x, y, 0.0f }, { 1.0f, 1.0f }, m_Texture);
+	HZ_INFO("Ship at {}, {}", x, y);
 }
 
 void Ship::Update(const World& world)

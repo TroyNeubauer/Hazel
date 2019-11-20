@@ -15,7 +15,7 @@ namespace Hazel {
 		File* shaderFile = shader.Open(FileOpenOptions::READ, error);
 		if (error != FileError::NONE)
 		{
-			HZ_CORE_ERROR("Unable to find shader file {0}, Error: {1}", shader.ToString(), FileErrorToString(error));
+			HZ_CORE_ASSERT(false, "Unable to find shader file {}, Error: {}", shader.ToString(), FileErrorToString(error));
 			return nullptr;
 		}
 		timer.Stop().Print("Reading shader file took"/*, spdlog::level::level_enum::trace*/);
