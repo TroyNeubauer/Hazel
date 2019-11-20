@@ -81,7 +81,7 @@
 	#define HZ_CORE_ASSERT(x, ...)
 #endif
 
-#ifdef _GCC
+#ifdef HZ_COMPILER_GCC
 	#define HZ_ALWAYS_INLINE __attribute__((always_inline))
 #else
 	#define HZ_ALWAYS_INLINE inline

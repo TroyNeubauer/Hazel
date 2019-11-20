@@ -31,9 +31,14 @@ ImGui Test/imgui.ini
 **/.workspace
 **/Makefile
 
+
 **/*.sln
 **/*.vcxproj
 **/*.vcxproj.user
 **/*.vcxproj.filters
 
 **/logs/
+
+#Eclipse
+**/.cproject
+.settings/

@@ -15,6 +15,7 @@ namespace Hazel {
 
 	class Camera
 	{
+	public:
 		virtual const mat4& GetViewMatrix() const = 0;
 		virtual const mat4& GetProjectionMatrix() const = 0;
 		virtual const mat4& GetViewProjectionMatrix() const = 0;
@@ -23,7 +24,6 @@ namespace Hazel {
 	class Camera3D : public Camera
 	{
 	public:
-
 		virtual const mat4& GetViewMatrix() const = 0;
 		virtual const mat4& GetProjectionMatrix() const = 0;
 		virtual const mat4& GetViewProjectionMatrix() const = 0;
@@ -45,6 +45,7 @@ namespace Hazel {
 
 	class Camera2D : public Camera
 	{
+	public:
 		virtual const mat4& GetViewMatrix() const = 0;
 		virtual const mat4& GetProjectionMatrix() const = 0;
 		virtual const mat4& GetViewProjectionMatrix() const = 0;
@@ -119,6 +120,8 @@ namespace Hazel {
 	{
 	public:
 		FPSCamera(float fov) : DefaultCamera(new FPSCameraController(), new EulerCameraStorage(), new PerspectiveCameraProjection(0.5f, 7500.0f, fov)) {}
+
+		virtual ~FPSCamera() {}
 	};
 
 }

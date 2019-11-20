@@ -46,7 +46,7 @@ namespace Hazel {
 		return 0;
 	}
 
-	unsigned int OpenGLUtils::Load2DTexture(File* file, TextureBuilder builder)
+	GLuint OpenGLUtils::Load2DTexture(File* file, uint32_t& width, uint32_t& height, TextureBuilder builder)
 	{
 		TUtil::Timer timer;
 
@@ -155,7 +155,7 @@ namespace Hazel {
 			}
 
 			BYTE* bits = FreeImage_GetBits(dib);
-			unsigned int width = FreeImage_GetWidth(dib), height = FreeImage_GetHeight(dib);
+			width = FreeImage_GetWidth(dib), height = FreeImage_GetHeight(dib);
 
 			if ((bits == nullptr) || (width == 0) || (height == 0))
 				return false;
@@ -172,7 +172,7 @@ namespace Hazel {
 		return id;
 	}
 
-	unsigned int OpenGLUtils::Load2DTexture(int width, int height, void* data, int imageFormat, int imageType, TextureBuilder builder)
+	GLuint OpenGLUtils::Load2DTexture(uint32_t width, uint32_t height, void* data, int imageFormat, int imageType, TextureBuilder builder)
 	{
 		GLuint id;
 		glEnable(GL_TEXTURE_2D);

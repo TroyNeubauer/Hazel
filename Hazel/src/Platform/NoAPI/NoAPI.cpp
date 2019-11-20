@@ -8,7 +8,6 @@ struct GLFWwindow;
 
 namespace Hazel {
 
-
 	size_t NoAPIVertexArray::Bytes() const
 	{
 		return 0;

@@ -50,7 +50,7 @@ namespace Hazel {
 		virtual void Bind() const override {}
 		virtual void Unbind() const override {}
 		virtual uint64_t Bytes() const override { return 0; }
-		virtual void SetLayout(BufferLayout& layout) override {}
+		virtual void SetLayout(const BufferLayout& layout) override {}
 		virtual const BufferLayout& GetLayout() const override { return layout; }
 
 		virtual ~NoAPIBuffer() {}
@@ -105,13 +105,13 @@ namespace Hazel {
 		NoAPIShader(File* shaderSource) : m_ID(0) {}
 		NoAPIShader(const char* vertex, const char* fragment) : m_ID(0) {}
 
-		virtual void UploadUniformFloat(const char* name, const float value) {}
-		virtual void UploadUniformInt(const char* name, const int value) {}
-		virtual void UploadUniformVec2(const char* name, const glm::vec2& vec) {}
-		virtual void UploadUniformVec3(const char* name, const glm::vec3& vec) {}
-		virtual void UploadUniformVec4(const char* name, const glm::vec4& vec) {}
-		virtual void UploadUniformMat3(const char* name, const glm::mat3& mat) {}
-		virtual void UploadUniformMat4(const char* name, const glm::mat4& mat) {}
+		virtual void SetFloat(const char* name, const float value) {}
+		virtual void SetInt(const char* name, const int value) {}
+		virtual void SetFloat2(const char* name, const glm::vec2& vec) {}
+		virtual void SetFloat3(const char* name, const glm::vec3& vec) {}
+		virtual void SetFloat4(const char* name, const glm::vec4& vec) {}
+		virtual void SetMat3(const char* name, const glm::mat3& mat) {}
+		virtual void SetMat4(const char* name, const glm::mat4& mat) {}
 
 		virtual void Bind() const override {}
 
@@ -127,6 +127,8 @@ namespace Hazel {
 	public:
 		NoAPITexture2D(File* file, const TextureBuilder& builder = TextureBuilder::Default()) {}
 		NoAPITexture2D(int width, int height, const TextureBuilder& builder = TextureBuilder::Default()) {}
+
+		virtual void SetPixels(void* pixels, int bytes) {}
 
 		virtual void Bind() const override {}
 		virtual void Unbind() const override {}

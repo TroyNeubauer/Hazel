@@ -18,7 +18,7 @@ namespace Hazel {
 	{
 		if (!FileSystem::CreateDirectory("./logs"))
 		{
-			std::cerr << "Unable to create logs directory for logging. Issues may arise" << std::endl;
+			std::cerr << "[Hazel] Unable to create logs directory for logging. Issues may arise" << std::endl;
 		}
 		std::string consolePattern = "%^[%T] %n: %$%v", filePattern = "%n-%t:[%D %H:%M %S.%e] %l: %v";
 

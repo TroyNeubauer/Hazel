@@ -14,13 +14,21 @@ namespace Hazel {
 		OpenGLShader(File* shaderSource);
 		OpenGLShader(const char* vertex, const char* fragment);
 
-		virtual void UploadUniformFloat(const char* name, const float value);
-		virtual void UploadUniformInt  (const char* name, const int value);
-		virtual void UploadUniformVec2 (const char* name, const glm::vec2& vec);
-		virtual void UploadUniformVec3 (const char* name, const glm::vec3& vec);
-		virtual void UploadUniformVec4 (const char* name, const glm::vec4& vec);
-		virtual void UploadUniformMat3 (const char* name, const glm::mat3& mat);
-		virtual void UploadUniformMat4 (const char* name, const glm::mat4& mat);
+		virtual void SetFloat(const char* name, const float value);
+		virtual void SetInt  (const char* name, const int value);
+		virtual void SetFloat2(const char* name, const glm::vec2& vec);
+		virtual void SetFloat3(const char* name, const glm::vec3& vec);
+		virtual void SetFloat4(const char* name, const glm::vec4& vec);
+		virtual void SetMat3 (const char* name, const glm::mat3& mat);
+		virtual void SetMat4 (const char* name, const glm::mat4& mat);
+
+		void UploadUniformFloat(const char* name, const float value);
+		void UploadUniformInt  (const char* name, const int value);
+		void UploadUniformVec2 (const char* name, const glm::vec2& vec);
+		void UploadUniformVec3 (const char* name, const glm::vec3& vec);
+		void UploadUniformVec4 (const char* name, const glm::vec4& vec);
+		void UploadUniformMat3 (const char* name, const glm::mat3& mat);
+		void UploadUniformMat4 (const char* name, const glm::mat4& mat);
 
 		virtual void Bind() const;
 

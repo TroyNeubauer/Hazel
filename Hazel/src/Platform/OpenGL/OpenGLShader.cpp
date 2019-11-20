@@ -198,6 +198,35 @@ namespace Hazel {
 	}
 
 
+	void OpenGLShader::SetFloat(const char* name, const float value)
+	{
+		UploadUniformFloat(name, value);
+	}
+	void OpenGLShader::SetInt  (const char* name, const int value)
+	{
+		UploadUniformInt(name, value);
+	}
+	void OpenGLShader::SetFloat2(const char* name, const glm::vec2& vec)
+	{
+		UploadUniformVec2(name, vec);
+	}
+	void OpenGLShader::SetFloat3(const char* name, const glm::vec3& vec)
+	{
+		UploadUniformVec3(name, vec);
+	}
+	void OpenGLShader::SetFloat4(const char* name, const glm::vec4& vec)
+	{
+		UploadUniformVec4(name, vec);
+	}
+	void OpenGLShader::SetMat3 (const char* name, const glm::mat3& mat)
+	{
+		UploadUniformMat3(name, mat);
+	}
+	void OpenGLShader::SetMat4 (const char* name, const glm::mat4& mat)
+	{
+		UploadUniformMat4(name, mat);
+	}
+
 	void OpenGLShader::UploadUniformFloat(const char* name, const float f)
 	{
 		CheckUniformType(name, GL_FLOAT);

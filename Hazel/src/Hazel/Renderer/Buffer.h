@@ -95,7 +95,7 @@ namespace Hazel {
 		inline uint64_t ElementSize() const { return sizeof(T); }
 		virtual uint64_t Bytes() const = 0;
 
-		virtual void SetLayout(BufferLayout& layout) = 0;
+		virtual void SetLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
 		static Ref<Buffer<float, BufferType::VERTEX>> Create(float* data, uint64_t bytes);

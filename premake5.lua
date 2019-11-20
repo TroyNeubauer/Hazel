@@ -1,6 +1,12 @@
 workspace "Hazel"
 	architecture "x64"
 	startproject "GameDesign"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on" 
+	intrinsics "on"
+	systemversion "latest"
+	
 
 	configurations
 	{
@@ -13,6 +19,12 @@ workspace "Hazel"
 		defines 
 		{
 			"_CRT_SECURE_NO_WARNINGS",
+			"_GLFW_WIN32",
+		}
+	filter "system:linux"
+		defines
+		{
+			"_GLFW_X11",
 		}
 
 
@@ -66,11 +78,6 @@ include "Hazel/vendor/Box2D/Box2D_project.lua"
 project "Hazel"
 	location "Hazel"
 	kind "StaticLib"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "on" 
-	intrinsics "on"
-	systemversion "latest"
 
 	vectorextensions "AVX"
 
@@ -112,17 +119,7 @@ project "Hazel"
 	}
 
 
-	links 
-	{ 
-		"GLFW",
-		"Glad",
-		"ImGui",
-		"freeimage",
-		"FastNoiseSIMD",
-		"zlib",
-		"TUtil",
-		"Box2D",
-	}
+
 
 	defines
 	{
@@ -149,8 +146,6 @@ project "Hazel"
 
 	filter "system:linux"
 		
-		links "X11"
-
 		defines
 		{
 
@@ -167,10 +162,6 @@ project "Hazel"
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "on"
-	vectorextensions "AVX"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -208,6 +199,8 @@ project "Sandbox"
 		"ImGui",
 		"FastNoiseSIMD",
 		"Box2D",
+		"freeimage",
+		"glad",
 	}
 
 	defines
@@ -224,11 +217,6 @@ project "Sandbox"
 			"Hazel/vendor/Vulkan/lib"
 		}
 
-		defines
-		{
-		
-		}
-
 		links
 		{
 			"kernel32.lib",
@@ -238,18 +226,12 @@ project "Sandbox"
 		}
 
 	filter "system:linux"
-		systemversion "latest"
 		
 		libdirs
 		{
 			"Hazel/vendor/Vulkan/lib"
 		}
 
-		defines
-		{
-
-		}
-		
 		links
 		{
 			"GL",
@@ -260,6 +242,8 @@ project "Sandbox"
 			"pthread",
 			"dl",
 			"vulkan",
+			"zlib",
+			"glfw",
 		}
 
 
@@ -267,10 +251,6 @@ project "Sandbox"
 project "GameDesign"
 	location "GameDesign"
 	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "on"
-	vectorextensions "AVX"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -309,6 +289,8 @@ project "GameDesign"
 		"ImGui",
 		"FastNoiseSIMD",
 		"Box2D",
+		"freeimage",
+		"glad",
 	}
 
 	defines
@@ -318,7 +300,6 @@ project "GameDesign"
 	}
 
 	filter "system:windows"
-		systemversion "latest"
 
 		libdirs
 		{
@@ -332,16 +313,33 @@ project "GameDesign"
 			"opengl32.lib",
 			"vulkan.lib",
 		}
+	filter "system:linux"
+	
+		libdirs
+		{
+			"Hazel/vendor/Vulkan/lib"
+		}
+	
+	
+		links
+		{
+			"GL",
+			"X11",
+			"Xrandr",
+			"Xinerama",
+			"Xcursor",
+			"pthread",
+			"dl",
+			"vulkan",
+			"zlib",
+			"glfw",
+		
+		}		
 
-
+--[[
 project "ImGuiTest"
 	location "ImGuiTest"
 	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "on" 
-	intrinsics "on"
-	systemversion "latest"
 
 	vectorextensions "AVX"
 
@@ -378,11 +376,6 @@ project "ImGuiTest"
 		"Hazel/vendor/spdlog/include",
 	}
 
-	defines
-	{
-		"_GLFW_WIN32",
-	}
-
 
 	filter "system:windows"
 
@@ -392,14 +385,10 @@ project "ImGuiTest"
 		}
 
 		
---[[
+
 project "Sandbox2"--The same as sandbox. Used for general testing purposes
 	location "Sandbox2"
 	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "on"
-	vectorextensions "AVX"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -442,7 +431,6 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 	}
 
 	filter "system:windows"
-		systemversion "latest"
 
 		libdirs
 		{
@@ -458,7 +446,6 @@ project "Sandbox2"--The same as sandbox. Used for general testing purposes
 		}
 
 	filter "system:linux"
-		systemversion "latest"
 		
 		libdirs
 		{

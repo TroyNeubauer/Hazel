@@ -27,8 +27,8 @@ namespace Hazel {
 	{
 		
 		mesh.MeshShader->Bind();
-		mesh.MeshShader->UploadUniformMat4("u_ViewProjectionMatrix", s_SceneData->ViewProjectionMatrix);
-		mesh.MeshShader->UploadUniformMat4("u_Model", translate(mesh.Position));
+		mesh.MeshShader->SetMat4("u_ViewProjectionMatrix", s_SceneData->ViewProjectionMatrix);
+		mesh.MeshShader->SetMat4("u_Model", translate(mesh.Position));
 
 		mesh.MeshMaterial->Albedo->Bind();
 		mesh.MeshVertexArray->Bind();
