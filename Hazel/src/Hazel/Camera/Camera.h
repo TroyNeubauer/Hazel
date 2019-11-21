@@ -19,6 +19,8 @@ namespace Hazel {
 		virtual const mat4& GetViewMatrix() const = 0;
 		virtual const mat4& GetProjectionMatrix() const = 0;
 		virtual const mat4& GetViewProjectionMatrix() const = 0;
+
+		virtual ~Camera() {}
 	};
 
 	class Camera3D : public Camera
@@ -41,6 +43,8 @@ namespace Hazel {
 
 		virtual void RecalculateProjectionMatrix() = 0;
 		virtual void RecalculateViewMatrix() = 0;
+
+		virtual ~Camera3D() {}
 	};
 
 	class Camera2D : public Camera
@@ -60,6 +64,8 @@ namespace Hazel {
 
 		virtual void RecalculateProjectionMatrix() = 0;
 		virtual void RecalculateViewMatrix() = 0;
+
+		virtual ~Camera2D() {}
 	};
 
 	class DefaultCamera3D : public Camera3D
@@ -103,6 +109,8 @@ namespace Hazel {
 		inline virtual const mat4& GetProjectionMatrix() const override { return m_Projection->GetProjectionMatrix(); }
 		inline virtual const mat4& GetViewProjectionMatrix() const override { return m_ViewProjectionMatrix; }
 
+		virtual ~DefaultCamera3D() {}
+
 	private:
 		void UpdateViewProjectionMatrix() {
 			m_ViewProjectionMatrix = GetProjectionMatrix() * GetViewMatrix();
@@ -129,9 +137,14 @@ namespace Hazel {
 	public:
 		virtual inline const mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		virtual inline const mat4& GetProjectionMatrix() const override { return m_ProjectionMatrix; }
-		virtual inline const mat4& GetViewProjectionMatrix() const override { return m_ProjectionMatrix * m_ViewMatrix; }
+		virtual inline const mat4& GetViewProjectionMatrix() const override { return m_VPMatrix; }
 
-		virtual inline void ForceUpdate() override { RecalculateProjectionMatrix(); RecalculateViewMatrix(); }
+		virtual inline void ForceUpdate() override
+		{
+			RecalculateProjectionMatrix();
+			RecalculateViewMatrix();
+			m_VPMatrix = m_ProjectionMatrix * m_ViewMatrix;
+		}
 
 		virtual inline const vec2 GetPosition() override { return m_Pos; }
 		virtual inline const float GetRotation() override { return m_Rot; }
@@ -139,17 +152,25 @@ namespace Hazel {
 		virtual inline void SetRotation(float rotation) override { m_Rot = rotation; }
 		virtual inline void SetPosition(const vec2& position) override { m_Pos = position; }
 
-		virtual inline void RecalculateProjectionMatrix() override { m_ProjectionMatrix = ortho(m_Left, m_Right, m_Bottom, m_Top, -1.0f, 1.0f); }
-		virtual inline void RecalculateViewMatrix() override;
+		virtual inline void RecalculateProjectionMatrix() override
+		{
+			m_ProjectionMatrix = ortho(
+					(float) -Application::Get().GetWindow().GetWidth(),
+					(float)  Application::Get().GetWindow().GetWidth(),
+					(float) -Application::Get().GetWindow().GetHeight(),
+					(float)  Application::Get().GetWindow().GetHeight(),
+					-1.0f, 1.0f);
+		}
+		virtual inline void RecalculateViewMatrix() override { }
 
-		
+		virtual ~DefaultCamera2D() {}
 
 	private:
 		mat4 m_ProjectionMatrix;
 		mat4 m_ViewMatrix;
+		mat4 m_VPMatrix;
 		float m_Rot;
 		vec2 m_Pos;
-		float m_Left, m_Right, m_Bottom, m_Top;
 	};
 
 }

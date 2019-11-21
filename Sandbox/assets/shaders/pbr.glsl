@@ -126,5 +126,5 @@ void main()
 	color = pow(color, vec3(1.0/2.2));
 	
 	FragColor = vec4(color, 1.0);*/
-	FragColor = vec4(v_Normal, 1.0f);
+	FragColor = vec4(0.2f, a_TextCoords.x, a_TextCoords.y, 1.0f);
 }

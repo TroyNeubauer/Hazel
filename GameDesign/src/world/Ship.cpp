@@ -7,6 +7,8 @@ Ship::Ship(World& world, float x, float y, float size, float density)
 	b2BodyDef def;
 	def.position.Set(x, y);
 	def.userData = this;
+	def.type = b2_dynamicBody;
+	def.active = true;
 	m_Body = world.GetWorld()->CreateBody(&def);
 
 

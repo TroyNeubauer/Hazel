@@ -1,4 +1,5 @@
 #pragma once
+#include "Hazel/Core.h"
 #ifdef HZ_PLATFORM_UNIX
 
 #include "Hazel/Context/ContextManager.h"

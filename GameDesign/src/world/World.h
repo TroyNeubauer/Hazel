@@ -49,7 +49,7 @@ public:
 	static inline Body* ToBody(b2Body* body) { return reinterpret_cast<Body*>(body->GetUserData()); }
 private:
 	Hazel::Scope<b2World> m_World;
-	Hazel::Camera2D m_Camera;
+	Hazel::DefaultCamera2D m_Camera;
 };
 
 

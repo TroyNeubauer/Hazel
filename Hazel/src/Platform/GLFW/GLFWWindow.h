@@ -13,11 +13,11 @@ namespace Hazel {
 		bool VSync;
 	};
 
-	class WindowsWindow : public Window
+	class GLFWWindow : public Window
 	{
 	public:
-		WindowsWindow(const WindowProps& props);
-		virtual ~WindowsWindow();
+		GLFWWindow(const WindowProps& props);
+		virtual ~GLFWWindow();
 
 		virtual void OnUpdate() override;
 		virtual void OnRender() override;

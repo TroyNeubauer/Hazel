@@ -5,7 +5,7 @@
 namespace Hazel {
 	
 	class CameraStorage3D;
-	
+	class Camera2D;
 
 	class CameraController3D
 	{
