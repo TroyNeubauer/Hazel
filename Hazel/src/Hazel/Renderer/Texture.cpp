@@ -7,7 +7,7 @@
 #include "Platform/NoAPI/NoAPI.h"
 
 namespace Hazel {
-	Hazel::Ref<Texture2D> Texture2D::Load(Path path, TextureBuilder builder)
+	Ref<Texture2D> Texture2D::Load(Path path, TextureBuilder builder)
 	{
 		HZ_CORE_INFO("Reading texture file {}", path.ToString());
 		Timer timer;
@@ -34,7 +34,7 @@ namespace Hazel {
 		return nullptr;
 	}
 
-	Hazel::Ref<Texture2D> Texture2D::Create(int width, int height, TextureBuilder builder)
+	Ref<Texture2D> Texture2D::Create(int width, int height, TextureBuilder builder)
 	{
 		GraphicsAPIType api = GraphicsAPI::Get();
 		switch (api)
@@ -44,6 +44,23 @@ namespace Hazel {
 #endif
 #ifdef HZ_ENABLE_OPEN_GL
 		case Hazel::GraphicsAPIType::OPEN_GL:	return Hazel::Ref<Texture2D>(new OpenGLTexture2D(width, height, builder));
+#endif
+		default:
+			HZ_CORE_ASSERT(false, "Unsupported graphics API for creating a texture: {0}", GraphicsAPI::ToString(api));
+		}
+		return nullptr;
+	}
+
+	Ref<Texture2D> Texture2D::Create(int width, int height, void* data, TextureFormat format, TextureBuilder builder)
+	{
+		GraphicsAPIType api = GraphicsAPI::Get();
+		switch (api)
+		{
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
+		case Hazel::GraphicsAPIType::NONE:		return Hazel::Ref<Texture2D>(new NoAPITexture2D(width, height, data, format, builder));
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+		case Hazel::GraphicsAPIType::OPEN_GL:	return Hazel::Ref<Texture2D>(new OpenGLTexture2D(width, height, data, format, builder));
 #endif
 		default:
 			HZ_CORE_ASSERT(false, "Unsupported graphics API for creating a texture: {0}", GraphicsAPI::ToString(api));

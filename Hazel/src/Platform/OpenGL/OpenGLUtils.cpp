@@ -1,5 +1,6 @@
 #include "hzpch.h"
 #include "OpenGLUtils.h"
+#include "Hazel/TUtil.h"
 
 #include "FreeImage.h"
 #include "OpenGLMacro.h"
@@ -198,8 +199,13 @@ namespace Hazel {
 		FreeImage_Unload(dib);
 		FreeImage_CloseMemory(memory);
 
-		timer.Stop().Print("Reading texture took");
+		timer.Stop().Print("Decoding texture took");
 		return id;
+	}
+
+	GLuint OpenGLUtils::Load2DTexture(uint32_t width, uint32_t height, void* data, TextureFormat format, TextureBuilder builder)
+	{
+		return Load2DTexture(width, height, data, TextureFormatTGLType(format), GL_UNSIGNED_BYTE, builder);
 	}
 
 	GLuint OpenGLUtils::Load2DTexture(uint32_t width, uint32_t height, void* data, int imageFormat, int imageType, TextureBuilder builder)

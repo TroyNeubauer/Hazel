@@ -37,7 +37,7 @@ Sandbox::Sandbox()
 	//m_terrain = new Terrain(shader, -3000.0f, 3000.0f, -3000.0f, 3000.0f, -2.0f, 8, 100.0f);
 
 
-	std::vector<const char*> pbrAssets = { "assets/material/aluminum", "assets/material/planet", "assets/material/rock_streaks", "assets/material/rusted_iron" };
+	std::vector<const char*> pbrAssets = { "./assets/material/aluminum", "./assets/material/planet", "./assets/material/rock_streaks", "./assets/material/rusted_iron" };
 	m_PBRShader = Hazel::Shader::Create("assets/shaders/pbr.glsl");
 	for (int x = 0; x < pbrAssets.size(); x++)
 	{

@@ -10,8 +10,9 @@ namespace Hazel {
 	class OpenGLTexture2D : public Texture2D
 	{
 	public:
-		OpenGLTexture2D(File* file, TextureBuilder builder = TextureBuilder::Default());
-		OpenGLTexture2D(int width, int height, TextureBuilder builder = TextureBuilder::Default());
+		OpenGLTexture2D(File* file, TextureBuilder builder);
+		OpenGLTexture2D(int width, int height, TextureBuilder builder);
+		OpenGLTexture2D(int width, int height, void* data, TextureFormat format, TextureBuilder builder);
 
 		virtual void SetPixels(void* pixels, TextureFormat format) override;
 

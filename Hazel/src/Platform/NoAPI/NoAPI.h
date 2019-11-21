@@ -126,8 +126,9 @@ namespace Hazel {
 	class NoAPITexture2D : public Texture2D
 	{
 	public:
-		NoAPITexture2D(File* file, const TextureBuilder& builder = TextureBuilder::Default()) {}
-		NoAPITexture2D(int width, int height, const TextureBuilder& builder = TextureBuilder::Default()) {}
+		NoAPITexture2D(File* file, const TextureBuilder& builder) {}
+		NoAPITexture2D(int width, int height, const TextureBuilder& builder) {}
+		NoAPITexture2D(int width, int height, void* data, TextureFormat format, TextureBuilder builder) {}
 
 		virtual void SetPixels(void* pixels, TextureFormat format) {}
 

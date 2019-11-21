@@ -16,6 +16,13 @@ namespace Hazel {
 		HZ_CORE_ASSERT(m_ID, "Unable to create texture");
 	}
 
+	OpenGLTexture2D::OpenGLTexture2D(int width, int height, void* data, TextureFormat format, TextureBuilder builder) : Texture2D(width, height), m_Builder(builder)
+	{
+		m_ID = OpenGLUtils::Load2DTexture(width, height, data, format, builder);
+		HZ_CORE_ASSERT(m_ID, "Unable to create texture");
+	}
+
+
 	void OpenGLTexture2D::SetPixels(void* pixels, TextureFormat format)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, OpenGLUtils::TextureFormatTGLType(m_Builder.GetFormat()), 

@@ -77,8 +77,9 @@ namespace Hazel {
 		inline Texture2D() : Texture2D(INVALID_LENGTH, INVALID_LENGTH) {}
 		inline Texture2D(uint32_t width, uint32_t height) : m_Width(width), m_Height(height) {}
 
-		static Hazel::Ref<Texture2D> Load(Path path, TextureBuilder builder = TextureBuilder::Default());
-		static Hazel::Ref<Texture2D> Create(int width, int height, TextureBuilder builder = TextureBuilder::Default());
+		static Ref<Texture2D> Load(Path path, TextureBuilder builder = TextureBuilder::Default());
+		static Ref<Texture2D> Create(int width, int height, TextureBuilder builder = TextureBuilder::Default());
+		static Ref<Texture2D> Create(int width, int height, void* data, TextureFormat format, TextureBuilder builder = TextureBuilder::Default());
 
 		virtual void SetPixels(void* pixels, TextureFormat format = TextureFormat::RGBA) = 0;
 		virtual void Bind() const = 0;

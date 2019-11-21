@@ -15,8 +15,9 @@ namespace Hazel {
 		static GLenum TextureFormatTGLType(TextureFormat format);
 
 		static GLuint Load2DTexture(File* file, uint32_t& width, uint32_t& height, TextureBuilder builder = TextureBuilder::Default());
+
+		//Create empty image from data in memory
 		static GLuint Load2DTexture(uint32_t width, uint32_t height, void* data, int imageFormat, int imageType, TextureBuilder builder = TextureBuilder::Default());
-
+		static GLuint Load2DTexture(uint32_t width, uint32_t height, void* data, TextureFormat format, TextureBuilder builder);
 	};
-
 }
