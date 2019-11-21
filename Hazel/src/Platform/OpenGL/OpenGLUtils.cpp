@@ -46,6 +46,17 @@ namespace Hazel {
 		return 0;
 	}
 
+	GLenum OpenGLUtils::TextureFormatTGLType(TextureFormat format)
+	{
+		switch (format)
+		{
+			case TextureFormat::RED: return GL_RED;
+			case TextureFormat::RGB: return GL_RGB;
+			case TextureFormat::RGBA: return GL_RGBA;
+			default: HZ_CORE_ASSERT(false, "Invalid GPUTextureFormat"); return 0;
+		}
+	}
+
 	GLuint OpenGLUtils::Load2DTexture(File* file, uint32_t& width, uint32_t& height, TextureBuilder builder)
 	{
 		TUtil::Timer timer;
@@ -90,57 +101,80 @@ namespace Hazel {
 
 			//Determine the Open GL image type
 			FREE_IMAGE_TYPE type = FreeImage_GetImageType(dib);
-			GLenum imageFormat = 0, imageType = GL_UNSIGNED_BYTE;
+			GLenum imageFormat = -1, imageType = GL_UNSIGNED_BYTE;
+			GLenum gpuFormat = -1;
 			unsigned int bpp = FreeImage_GetBPP(dib);
 			unsigned int redM = FreeImage_GetRedMask(dib), greenM = FreeImage_GetGreenMask(dib), blueM = FreeImage_GetBlueMask(dib);
+
+			BYTE* bits = FreeImage_GetBits(dib);
+			width = FreeImage_GetWidth(dib), height = FreeImage_GetHeight(dib);
+			if ((bits == nullptr) || (width == 0) || (height == 0))
+				return false;
+
 			switch (type)
 			{
-				case FIT_BITMAP://! standard image			: 1-, 4-, 8-, 16-, 24-, 32-bit
+			case FIT_BITMAP://! standard image			: 1-, 4-, 8-, 16-, 24-, 32-bit
+			{
+				if (bpp == 8)
+				{
+					imageFormat = GL_RED;
+				}
+				else
 				{
 					if (!redM || !greenM || !blueM) {
 						HZ_CORE_ASSERT(false, "Image \"{}\" missing one RGB component R:0x{:x}, G:0x{:x}, B:0x{:x}", file->GetPath().ToString(), redM, greenM, blueM);
 						goto end;
 					}
-					if (bpp == 24) {
-						if (blueM == 0xFF0000 && greenM == 0xFF00 && redM == 0xFF) {
-	#ifdef HZ_LITTLE_ENDIAN
-							imageFormat = GL_RGB;
-	#else
-							imageFormat = GL_BGR;
-	#endif
-						} else if (redM == 0xFF0000 && greenM == 0xFF00 && blueM == 0xFF) {
-	#ifdef HZ_LITTLE_ENDIAN
-							imageFormat = GL_BGR;
-	#else
-							imageFormat = GL_RGB;
-	#endif
-						} else {
-							HZ_CORE_ASSERT(false, "Unknown image format Image \"{}\"", file->GetPath().ToString());
+						if (bpp == 24) {
+							if (blueM == 0xFF0000 && greenM == 0xFF00 && redM == 0xFF) {
+#ifdef HZ_LITTLE_ENDIAN
+								imageFormat = GL_RGB;
+#else
+								imageFormat = GL_BGR;
+#endif
+							}
+							else if (redM == 0xFF0000 && greenM == 0xFF00 && blueM == 0xFF) {
+#ifdef HZ_LITTLE_ENDIAN
+								imageFormat = GL_BGR;
+#else
+								imageFormat = GL_RGB;
+#endif
+							}
+							else {
+								HZ_CORE_ASSERT(false, "Unknown image format Image \"{}\"", file->GetPath().ToString());
+								goto end;
+							}
+						}
+						else if (bpp == 32) {
+							if (blueM == 0xFF0000 && greenM == 0xFF00 && redM == 0xFF) {
+#ifdef HZ_LITTLE_ENDIAN
+								imageFormat = GL_RGBA;
+#else
+								imageFormat = GL_BGRA;
+#endif
+							}
+							else if (redM == 0xFF0000 && greenM == 0xFF00 && blueM == 0xFF) {
+#ifdef HZ_LITTLE_ENDIAN
+								imageFormat = GL_BGRA;
+#else
+								imageFormat = GL_RGBA;
+#endif
+							}
+							else {
+								HZ_CORE_ASSERT(false, "Unknown image format Image \"{}\"", file->GetPath().ToString());
+								goto end;
+							}
+						}
+						else {
+							HZ_CORE_ASSERT(false, "Unknown bits per pixel {}, Image \"{}\"", bpp, file->GetPath().ToString());
 							goto end;
 						}
-					} else if (bpp == 32) {
-						if (blueM == 0xFF0000 && greenM == 0xFF00 && redM == 0xFF) {
-	#ifdef HZ_LITTLE_ENDIAN
-							imageFormat = GL_RGBA;
-	#else
-							imageFormat = GL_BGRA;
-	#endif
-						} else if (redM == 0xFF0000 && greenM == 0xFF00 && blueM == 0xFF) {
-	#ifdef HZ_LITTLE_ENDIAN
-							imageFormat = GL_BGRA;
-	#else
-							imageFormat = GL_RGBA;
-	#endif
-						} else {
-							HZ_CORE_ASSERT(false, "Unknown image format Image \"{}\"", file->GetPath().ToString());
-							goto end;
-						}
-					} else {
-						HZ_CORE_ASSERT(false, "Unknown bits per pixel {}, Image \"{}\"", bpp, file->GetPath().ToString());
-						goto end;
 					}
 					break;
-				}
+				case FIT_UINT16:
+					imageType = GL_UNSIGNED_SHORT;
+					imageFormat = GL_RED;
+					break;
 				case FIT_RGB16:	//! 48-bit RGB image	: 3 x 16-bit
 					imageType = GL_UNSIGNED_SHORT;
 					imageFormat = GL_RGB;
@@ -150,15 +184,11 @@ namespace Hazel {
 					imageFormat = GL_RGBA;
 					break;
 				default:
-					HZ_CORE_ASSERT(false, "Unknown image type! {}, Image: \"{}\", bpp {}, R:0x{:x}, G:0x{:x}, B:0x{:x}", (int) type, file->GetPath().ToString(), bpp, redM, greenM, blueM);
+					HZ_CORE_ASSERT(false, "Unknown image type! {}, Image: \"{}\", bpp {}, R:0x{:x}, G:0x{:x}, B:0x{:x}", (int)type, file->GetPath().ToString(), bpp, redM, greenM, blueM);
 					goto end;
+				}
 			}
 
-			BYTE* bits = FreeImage_GetBits(dib);
-			width = FreeImage_GetWidth(dib), height = FreeImage_GetHeight(dib);
-
-			if ((bits == nullptr) || (width == 0) || (height == 0))
-				return false;
 
 			//generate an OpenGL texture ID for this texture
 			id = Load2DTexture(width, height, bits, imageFormat, imageType, builder);
@@ -180,7 +210,8 @@ namespace Hazel {
 		glBindTexture(GL_TEXTURE_2D, id);
 
 		//store the texture data for OpenGL use
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, imageFormat, imageType, data);
+		GLenum gpuFormat = TextureFormatTGLType(builder.GetFormat());
+		glTexImage2D(GL_TEXTURE_2D, 0, gpuFormat, width, height, 0, imageFormat, imageType, data);
 		if (builder.IsMipmap()) {
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

@@ -94,9 +94,9 @@ namespace Hazel {
 	}
 
 	void Application::DoRenderPass() {
+		Render();
 		for (Layer* layer : m_LayerStack)
 			layer->Render();
-		Render();
 
 		m_ImGuiLayer->Begin();
 		for (Layer* layer : m_LayerStack)

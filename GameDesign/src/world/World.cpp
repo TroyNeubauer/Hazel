@@ -2,17 +2,20 @@
 #include "Ship.h"
 #include "Planet.h"
 
-float World::Constants::G = 6.67430E-11;
+float World::Constants::G = 6.67430E-11 * 2000;
 
 World::World()
 {
 	m_World.reset(new b2World( {0.0f, 0.0f} ));//No gravity since we handle it ourselves
-	Ship* ship = new Ship(*this,  0.0, 0.0, 5.0f, 100000000.0f);
-	Ship* ship2 = new Ship(*this, 10.0, 4.0, 3.0f, 100000000.0f);
+	Ship* ship = new Ship(*this,  0.0, 0.0, 5.0f, 1000000.0f);
+	Ship* ship2 = new Ship(*this, 10.0, 4.0, 3.0f, 1000000.0f);
+	m_Camera.SetPosition(vec2(0.0, 0.0));
+	m_Camera.SetRotation(0.0f);
 }
 
 void World::Update()
 {
+	m_Camera.ForceUpdate();
 	b2Body* body = m_World->GetBodyList();
 	for (int i = 0; i < m_World->GetBodyCount(); i++, body = body->GetNext())
 	{
@@ -44,4 +47,5 @@ void World::Render()
 		body->Render(*this);
 
 	}
+	Hazel::Renderer2D::EndScene();
 }

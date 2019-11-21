@@ -14,7 +14,7 @@ Sandbox* sandbox;
 Sandbox::Sandbox()
 {
 
-	m_Lights.push_back({ vec3(15000.0f, 100000.0f, -1000.0f), vec3(0.1f, 0.3f, 0.9f) });
+	m_Lights.push_back({ vec3(1.0f, 20.0f, -5.0f), vec3(23.47f, 21.31f, 20.79f) });
 	sandbox = this;
 	PushLayer(new ExampleLayer());
 	PushOverlay(new Hazel::DebugLayer());
@@ -35,24 +35,23 @@ Sandbox::Sandbox()
 	m_Camera->RecalculateViewMatrix();
 
 	//m_terrain = new Terrain(shader, -3000.0f, 3000.0f, -3000.0f, 3000.0f, -2.0f, 8, 100.0f);
-	
-	Hazel::Ref<Hazel::Texture2D> albedo = Hazel::Texture2D::Load("assets/material/rusted_iron/albedo.png");
 
-	
+
+	std::vector<const char*> pbrAssets = { "assets/material/aluminum", "assets/material/planet", "assets/material/rock_streaks", "assets/material/rusted_iron" };
 	m_PBRShader = Hazel::Shader::Create("assets/shaders/pbr.glsl");
-	for (int x = 0; x <= 5; x++)
+	for (int x = 0; x < pbrAssets.size(); x++)
 	{
+		Hazel::Ref<Hazel::Material> baseMaterial = Hazel::Material::CreatePBRMaterial(Path(pbrAssets[x]));
 		for (int y = 0; y < 5; y++)
 		{
-			Hazel::Ref<Hazel::Material> material = Hazel::R(new Hazel::Material(albedo, 0.0f, 0.0f, 0.0f));
-			material->Metallic = x / 5.0f;
-			material->Roughness = y / 5.0f;
+			Hazel::Ref<Hazel::Material> material = Hazel::Ref<Hazel::Material>(new Hazel::Material(*baseMaterial.get()));
+			material->ScaleAO(y / 5.0f);
 			Hazel::Ref<Hazel::IcoashedronMesh> mesh = Hazel::R(new Hazel::IcoashedronMesh(material, 1.0f));
 			mesh->MeshShader = m_PBRShader;
-			mesh->Subdivide(2);
-			m_Meshes.push_back(mesh);
+			mesh->Subdivide(3);
 			mesh->Position = { 2.5f * x, 2.5f * y, 0.0f };
 
+			m_Meshes.push_back(mesh);
 		}
 	}
 }
@@ -85,11 +84,14 @@ void Sandbox::Render()
 	m_PBRShader->SetFloat3("u_LightPosition", m_Lights[0].position);
 	m_PBRShader->SetFloat3("u_LightColor", m_Lights[0].color);
 	for (auto& mesh : m_Meshes) {
+		mesh->MeshShader->SetTexture("u_Albedo", mesh->MeshMaterial->Albedo);
+		mesh->MeshShader->SetTexture("u_Metallic", mesh->MeshMaterial->Metallic);
+		mesh->MeshShader->SetTexture("u_Roughness", mesh->MeshMaterial->Roughness);
+		mesh->MeshShader->SetTexture("u_NormalMap", mesh->MeshMaterial->Normal);
+		mesh->MeshShader->SetTexture("u_AOMap", mesh->MeshMaterial->AO);
+		mesh->MeshShader->SetTexture("u_HeightMap", mesh->MeshMaterial->Height);
+
 		mesh->MeshShader->SetFloat3("u_CamPos", m_Camera->GetPosition());
-		mesh->MeshShader->SetFloat("u_Metallic", mesh->MeshMaterial->Metallic);
-		mesh->MeshShader->SetFloat("u_Roughness", mesh->MeshMaterial->Roughness);
-		mesh->MeshShader->SetFloat("u_AO", mesh->MeshMaterial->AO);
-		HZ_CORE_WARN("Rough {}", mesh->MeshMaterial->Roughness);
 
 		Hazel::Renderer::Submit(*mesh);
 	}

@@ -21,6 +21,7 @@ namespace Hazel {
 		virtual void SetFloat4(const char* name, const glm::vec4& vec);
 		virtual void SetMat3 (const char* name, const glm::mat3& mat);
 		virtual void SetMat4 (const char* name, const glm::mat4& mat);
+		virtual void SetTexture(const char* name, const Ref<Texture2D>& texture);
 
 		void UploadUniformFloat(const char* name, const float value);
 		void UploadUniformInt  (const char* name, const int value);
@@ -29,10 +30,11 @@ namespace Hazel {
 		void UploadUniformVec4 (const char* name, const glm::vec4& vec);
 		void UploadUniformMat3 (const char* name, const glm::mat3& mat);
 		void UploadUniformMat4 (const char* name, const glm::mat4& mat);
+		void BindTexture2D(const char* name, const Ref<Texture2D>& texture);
 
-		virtual void Bind() const;
+		virtual void Bind();
 
-		virtual void UnBind() const;
+		virtual void UnBind();
 
 		virtual ~OpenGLShader();
 
@@ -45,7 +47,7 @@ namespace Hazel {
 		void Compile(const std::unordered_map<GLenum, const char*>& shaders);
 
 	private:
-		unsigned int m_ID;
+		unsigned int m_ID, m_TextureUnit;
 		std::map<std::string, int> m_UniformCache;
 #ifdef HZ_DEBUG
 		std::map<std::string, GLenum> m_UniformTypes;

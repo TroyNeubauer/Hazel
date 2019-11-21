@@ -33,14 +33,17 @@ in vec3 v_Normal;
 in vec3 v_WorldPos;
 
 uniform sampler2D u_Albedo;
+uniform sampler2D u_Metallic;
+uniform sampler2D u_Roughness;
+uniform sampler2D u_NormalMap;
+uniform sampler2D u_AOMap;
+uniform sampler2D u_HeightMap;
 
 uniform vec3 u_CamPos;
 
 uniform vec3 u_LightPosition;
 uniform vec3 u_LightColor;
 
-uniform float u_Metallic;
-uniform float u_Roughness;
 uniform float u_AO;
 
 const float PI = 3.14159265359;
@@ -83,17 +86,23 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 vec3 fresnelSchlick(float cosTheta, vec3 F0)
 {
 	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
-}  
-
+}
 
 void main()
 {
-	/*vec3 V = normalize(u_CamPos - v_WorldPos);
+	vec3 V = normalize(u_CamPos - v_WorldPos);
 	vec3 N = v_Normal;
+
 	vec3 albedo = texture(u_Albedo, v_TextCoords).rgb;
-	vec3 F0 = albedo;
+	float roughness = texture(u_Roughness, v_TextCoords).r;
+	float metallic = texture(u_Metallic, v_TextCoords).r;
+
+	vec3 mappedNormal = texture(u_NormalMap, v_TextCoords).rgb;
+	float ao = texture(u_AOMap, v_TextCoords).r;
+	float mappedHeight = texture(u_HeightMap, v_TextCoords).r;
 
 	// reflectance equation
+	vec3 F0 = albedo;
 	vec3 Lo = vec3(0.0f);
 	
 	vec3 L = normalize(u_LightPosition - v_WorldPos);
@@ -103,13 +112,13 @@ void main()
 	vec3 radiance = u_LightColor * attenuation;
 
 	// cook-torrance brdf
-	float NDF = DistributionGGX(N, H, u_Roughness);        
-	float G = GeometrySmith(N, V, L, u_Roughness);      
+	float NDF = DistributionGGX(N, H, roughness);
+	float G = GeometrySmith(N, V, L, roughness);
 	vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
 
 	vec3 kS = F;
 	vec3 kD = vec3(1.0) - kS;
-	kD *= 1.0 - u_Metallic;
+	kD *= 1.0 - metallic;
 
 	vec3 numerator = NDF * G * F;
 	float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
@@ -119,12 +128,13 @@ void main()
 	float NdotL = max(dot(N, L), 0.0);
 	Lo += (kD * albedo / PI + specular) * radiance * NdotL;
 	
-	vec3 ambient = vec3(0.03) * albedo * u_AO;
+	vec3 ambient = vec3(0.03) * albedo * ao;
 	vec3 color = ambient + Lo;
 	
+	//Gamma correction
 	color = color / (color + vec3(1.0));
 	color = pow(color, vec3(1.0/2.2));
 	
-	FragColor = vec4(color, 1.0);*/
-	FragColor = vec4(0.2f, a_TextCoords.x, a_TextCoords.y, 1.0f);
+	//FragColor = vec4(color, 1.0);
+	FragColor = vec4(color, 1.0) * 0.001 + vec4(mappedNormal, 1.0f);
 }

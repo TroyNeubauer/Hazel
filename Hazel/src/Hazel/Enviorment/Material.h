@@ -8,11 +8,10 @@ namespace Hazel {
 
 	struct Material
 	{
-		Material(): Metallic(0.0f), Roughness(0.0f), AO(0.0f) {}
+		static Ref<Material> CreatePBRMaterial(Path path);
 
-		Material(Hazel::Ref<Texture2D>& albedo, float metallic, float roughness, float ao) : Albedo(albedo), Metallic(metallic), Roughness(roughness), AO(ao) {}
+		void ScaleAO(float scale);
 
-		Hazel::Ref<Texture2D> Albedo;
-		float Metallic, Roughness, AO;
+		Hazel::Ref<Texture2D> Albedo, Metallic, Roughness, Normal, AO, Height;
 	};
 }

@@ -112,10 +112,11 @@ namespace Hazel {
 		virtual void SetFloat4(const char* name, const glm::vec4& vec) {}
 		virtual void SetMat3(const char* name, const glm::mat3& mat) {}
 		virtual void SetMat4(const char* name, const glm::mat4& mat) {}
+		virtual void SetTexture(const char* name, const Ref<Texture2D>& texture) {}
 
-		virtual void Bind() const override {}
+		virtual void Bind() override {}
 
-		virtual void UnBind() const override {}
+		virtual void UnBind() override {}
 
 		virtual ~NoAPIShader() {}
 	private:
@@ -128,7 +129,7 @@ namespace Hazel {
 		NoAPITexture2D(File* file, const TextureBuilder& builder = TextureBuilder::Default()) {}
 		NoAPITexture2D(int width, int height, const TextureBuilder& builder = TextureBuilder::Default()) {}
 
-		virtual void SetPixels(void* pixels, int bytes) {}
+		virtual void SetPixels(void* pixels, TextureFormat format) {}
 
 		virtual void Bind() const override {}
 		virtual void Unbind() const override {}

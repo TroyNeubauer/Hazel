@@ -24,10 +24,11 @@ private:
 	Terrain* m_terrain;
 	Hazel::Ref<Hazel::Shader> m_PBRShader;
 
-	std::vector<Hazel::Ref<Hazel::Mesh>> m_Meshes;
-	std::vector<Hazel::Light> m_Lights;
+	
 public:
+	std::vector<Hazel::Ref<Hazel::Mesh>> m_Meshes;
 	bool Paused = false;
+	std::vector<Hazel::Light> m_Lights;
 
 };
 

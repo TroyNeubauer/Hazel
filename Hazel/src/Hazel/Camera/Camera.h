@@ -154,14 +154,17 @@ namespace Hazel {
 
 		virtual inline void RecalculateProjectionMatrix() override
 		{
-			m_ProjectionMatrix = ortho(
-					(float) -Application::Get().GetWindow().GetWidth(),
-					(float)  Application::Get().GetWindow().GetWidth(),
-					(float) -Application::Get().GetWindow().GetHeight(),
-					(float)  Application::Get().GetWindow().GetHeight(),
-					-1.0f, 1.0f);
+			float aspect = static_cast<float>(Application::Get().GetWindow().GetWidth()) / static_cast<float>(Application::Get().GetWindow().GetHeight());
+			m_ProjectionMatrix = ortho(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
 		}
-		virtual inline void RecalculateViewMatrix() override { }
+		virtual inline void RecalculateViewMatrix() override
+		{
+			mat4 transform = 
+				translate(mat4(1.0f), vec3(m_Pos, 0.0f)) * 
+				rotate(mat4(1.0f), radians(m_Rot), vec3(0, 0, 1));
+
+			m_ViewMatrix = inverse(transform);
+		}
 
 		virtual ~DefaultCamera2D() {}
 

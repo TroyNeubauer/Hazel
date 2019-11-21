@@ -5,11 +5,16 @@
 
 namespace Hazel {
 
+	enum class TextureFormat
+	{
+		RED, RGB, RGBA
+	};
+
 	class TextureBuilder
 	{
 	public:
 		TextureBuilder() 
-			: m_ClampEdges(false), m_Mipmap(true), m_Anisotropic(true), m_Nearest(false) {}
+			: m_ClampEdges(false), m_Mipmap(true), m_Anisotropic(true), m_Nearest(false), m_GPUFormat(TextureFormat::RGBA) {}
 
 		inline TextureBuilder& ClampEdges() { m_ClampEdges = true; return *this; }
 
@@ -35,17 +40,35 @@ namespace Hazel {
 			return *this;
 		}
 
+		inline TextureBuilder& FormatRed()
+		{
+			m_GPUFormat = TextureFormat::RED;
+			return *this;
+		}
+
+		inline TextureBuilder& FormatRGB()
+		{
+			m_GPUFormat = TextureFormat::RGB;
+			return *this;
+		}
+
+		inline TextureBuilder& FormatRGBA()
+		{
+			m_GPUFormat = TextureFormat::RGBA;
+			return *this;
+		}
+
 		inline bool IsClampEdges() { return m_ClampEdges; }
-
 		inline bool IsMipmap() { return m_Mipmap; }
-
 		inline bool IsAnisotropic() { return m_Anisotropic; }
-
 		inline bool IsNearest() { return m_Nearest; }
+
+		inline TextureFormat GetFormat() { return m_GPUFormat; }
 
 		static inline TextureBuilder Default() { return TextureBuilder(); }
 	private:
 		bool m_ClampEdges, m_Mipmap, m_Anisotropic, m_Nearest;
+		TextureFormat m_GPUFormat;
 	};
 
 	class Texture2D
@@ -57,7 +80,7 @@ namespace Hazel {
 		static Hazel::Ref<Texture2D> Load(Path path, TextureBuilder builder = TextureBuilder::Default());
 		static Hazel::Ref<Texture2D> Create(int width, int height, TextureBuilder builder = TextureBuilder::Default());
 
-		virtual void SetPixels(void* pixels, int bytes) = 0;
+		virtual void SetPixels(void* pixels, TextureFormat format = TextureFormat::RGBA) = 0;
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 

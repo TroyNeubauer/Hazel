@@ -35,12 +35,14 @@ namespace Hazel {
 		Compile(shaders);
 	}
 
-	void OpenGLShader::Bind() const
+	void OpenGLShader::Bind()
 	{
+		//Make sure we begin from texture unit 0 every time
+		m_TextureUnit = 0;
 		glUseProgram(m_ID);
 	}
 
-	void OpenGLShader::UnBind() const
+	void OpenGLShader::UnBind()
 	{
 		glUseProgram(0);
 	}
@@ -226,6 +228,10 @@ namespace Hazel {
 	{
 		UploadUniformMat4(name, mat);
 	}
+	void OpenGLShader::SetTexture(const char* name, const Ref<Texture2D>& texture)
+	{
+		BindTexture2D(name, texture);
+	}
 
 	void OpenGLShader::UploadUniformFloat(const char* name, const float f)
 	{
@@ -281,6 +287,19 @@ namespace Hazel {
 		int location = GetUniformLocation(name);
 		if(location != -1)
 			glUniformMatrix4fv(location, 1, false, value_ptr(mat));
+	}
+
+	void OpenGLShader::BindTexture2D(const char* name, const Ref<Texture2D>& texture)
+	{
+		CheckUniformType(name, GL_SAMPLER_2D);
+		int location = GetUniformLocation(name);
+		int unit = m_TextureUnit++;
+		if (location != -1)
+		{
+			glUniform1i(location, unit);
+			glActiveTexture(GL_TEXTURE0 + unit);
+			texture->Bind();
+		}
 	}
 
 

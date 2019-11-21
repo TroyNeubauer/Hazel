@@ -44,7 +44,7 @@ namespace Hazel {
 
 		s_Data->WhiteTexture = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
-		s_Data->WhiteTexture->SetPixels(&whiteTextureData, sizeof(uint32_t));
+		s_Data->WhiteTexture->SetPixels(&whiteTextureData, TextureFormat::RGBA);
 
 		s_Data->TextureShader = Shader::Create("assets/shaders/Texture.glsl");
 		s_Data->TextureShader->Bind();
