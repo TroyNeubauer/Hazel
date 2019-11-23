@@ -3,18 +3,29 @@
 
 #include "Hazel/Input.h"
 #include "Hazel/Application.h"
+#include "Hazel/KeyCodes.h"
 
 #include <GLFW/glfw3.h>
+#include <bitset>
 
 namespace Hazel {
 
 	glm::vec2 Input::s_MousePos(-1.0f, -1.0f), Input::s_LastMousePos(-1.0f, -1.0f), Input::s_MouseDelta(0.0f, 0.0f);
+
+	static std::bitset<HZ_MAX_KEY_VALUE> s_LastKeys, s_CurrentKeys;
 
 	bool Input::IsKeyPressed(int keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
+	}
+
+	bool Input::IsKeyFired(int keycode)
+	{
+		if (keycode < HZ_MIN_KEY_VALUE || keycode >= HZ_MAX_KEY_VALUE)
+			return false;
+		return s_CurrentKeys[keycode] && !s_LastKeys[keycode];
 	}
 
 	bool Input::IsMouseButtonPressed(int button)
@@ -37,6 +48,15 @@ namespace Hazel {
 	{
 		s_LastMousePos = s_MousePos;
 		glm::vec2 newMousePos = GetMousePositionImpl();
+		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
+		for (int i = HZ_MIN_KEY_VALUE; i < HZ_MAX_KEY_VALUE; i++)
+		{
+			s_LastKeys[i] = s_CurrentKeys[i];
+
+			bool presed = glfwGetKey(window, i) == GLFW_PRESS;
+			s_CurrentKeys[i] = presed;
+			
+		}
 
 		if(s_MousePos != glm::vec2(-1.0f, -1.0f))
 			s_MouseDelta = newMousePos - s_LastMousePos;

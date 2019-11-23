@@ -123,3 +123,8 @@
 #define HZ_KEY_RIGHT_ALT          346
 #define HZ_KEY_RIGHT_SUPER        347
 #define HZ_KEY_MENU               348
+
+
+#define HZ_MIN_KEY_VALUE 32// Inclusive
+#define HZ_MAX_KEY_VALUE 349// Exclusive
+

@@ -79,6 +79,11 @@ void Sandbox::Render()
 		glPolygonMode(GL_FRONT, GL_LINE);
 		glPolygonMode(GL_BACK, GL_LINE);
 	}
+	if (Hazel::Input::IsKeyFired(HZ_KEY_R))
+	{
+		HZ_TRACE("Reloading shader...");
+		m_PBRShader = Hazel::Shader::Create("assets/shaders/pbr.glsl");
+	}
 
 	m_PBRShader->Bind();
 	m_PBRShader->SetFloat3("u_LightPosition", m_Lights[0].position);
@@ -89,7 +94,7 @@ void Sandbox::Render()
 		mesh->MeshShader->SetTexture("u_Roughness", mesh->MeshMaterial->Roughness);
 		mesh->MeshShader->SetTexture("u_NormalMap", mesh->MeshMaterial->Normal);
 		mesh->MeshShader->SetTexture("u_AOMap", mesh->MeshMaterial->AO);
-		mesh->MeshShader->SetTexture("u_HeightMap", mesh->MeshMaterial->Height);
+		//mesh->MeshShader->SetTexture("u_HeightMap", mesh->MeshMaterial->Height);
 
 		mesh->MeshShader->SetFloat3("u_CamPos", m_Camera->GetPosition());
 

@@ -6,6 +6,7 @@
 
 # Files
 *.user
+**/*.TMP
 
 Sandbox/imgui.ini
 Sandbox/imgui_log.txt
