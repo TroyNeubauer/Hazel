@@ -39,25 +39,6 @@ namespace Hazel {
 	
 	}
 
-	Application::~Application()
-	{
-	}
-
-	void Application::PushLayer(Layer* layer)
-	{
-		m_LayerStack.PushLayer(layer);
-	}
-
-	void Application::PushOverlay(Layer* layer)
-	{
-		m_LayerStack.PushOverlay(layer);
-	}
-
-	void Application::OnEvent(Event* e)
-	{
-		m_EventQueue.push_back(e);
-	}
-
 	void Application::DispatchEvents()
 	{
 		m_Window->OnUpdate();//Poll for new events
@@ -110,6 +91,26 @@ namespace Hazel {
 	{
 		m_Running = false;
 		return true;
+	}
+
+	Application::~Application()
+	{
+		Renderer::Shutdown();
+	}
+
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+	}
+
+	void Application::PushOverlay(Layer* layer)
+	{
+		m_LayerStack.PushOverlay(layer);
+	}
+
+	void Application::OnEvent(Event* e)
+	{
+		m_EventQueue.push_back(e);
 	}
 
 }

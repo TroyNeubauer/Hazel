@@ -33,6 +33,11 @@ namespace Hazel {
 			s_RendererAPI->Begin();
 		}
 
+		static inline void Shutdown()
+		{
+			s_RendererAPI->Shutdown();
+		}
+
 
 		static void OnAPIChange(GraphicsAPIType origionalAPI, GraphicsAPIType newAPI);
 

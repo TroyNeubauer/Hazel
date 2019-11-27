@@ -42,7 +42,7 @@ Sandbox::Sandbox()
 	for (int x = 0; x < pbrAssets.size(); x++)
 	{
 		Hazel::Ref<Hazel::Material> baseMaterial = Hazel::Material::CreatePBRMaterial(Path(pbrAssets[x]));
-		for (int y = 0; y < 5; y++)
+		for (int y = 0; y < 4; y++)
 		{
 			Hazel::Ref<Hazel::Material> material = Hazel::Ref<Hazel::Material>(new Hazel::Material(*baseMaterial.get()));
 			material->ScaleAO(y / 5.0f);
@@ -70,7 +70,6 @@ void Sandbox::Render()
 	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 	Hazel::RenderCommand::Clear();
 
-	Hazel::Renderer::BeginScene(*m_Camera, m_Lights);
 
 	//Hazel::Renderer::Submit(*m_terrain);
 
@@ -80,6 +79,7 @@ void Sandbox::Render()
 		glPolygonMode(GL_BACK, GL_LINE);
 	}
 
+	Hazel::Renderer::BeginScene(*m_Camera, m_Lights);
 	m_PBRShader->Bind();
 	m_PBRShader->SetFloat3("u_LightPosition", m_Lights[0].position);
 	m_PBRShader->SetFloat3("u_LightColor", m_Lights[0].color);

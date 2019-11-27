@@ -1,5 +1,7 @@
 #include "WorldLayer.h"
 
+#include <imgui.h>
+
 void WorldLayer::OnAttach()
 {
 
@@ -22,7 +24,7 @@ void WorldLayer::OnEvent(Hazel::Event* event)
 
 void WorldLayer::OnImGuiRender()
 {
-
+	ImGui::SliderFloat("G", &World::Constants::G, -0.01f, 100.0f);
 }
 
 void WorldLayer::Render()

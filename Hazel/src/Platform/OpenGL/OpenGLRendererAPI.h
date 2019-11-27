@@ -12,6 +12,8 @@ namespace Hazel {
 
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) override;
 		virtual void Begin() override;
+
+		virtual void Shutdown() override;
 	};
 }
 

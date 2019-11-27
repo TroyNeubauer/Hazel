@@ -57,10 +57,12 @@ namespace Hazel {
 		virtual void ForceUpdate() = 0;
 
 		virtual const vec2 GetPosition() = 0;
-		virtual const float GetRotation() = 0;
+		virtual float GetRotation() = 0;
+		virtual float GetZoom() = 0;
 
-		virtual void SetRotation(float rotation) = 0;
 		virtual void SetPosition(const vec2& position) = 0;
+		virtual void SetRotation(float rotation) = 0;
+		virtual void SetZoom(float zoom) = 0;
 
 		virtual void RecalculateProjectionMatrix() = 0;
 		virtual void RecalculateViewMatrix() = 0;
@@ -147,15 +149,17 @@ namespace Hazel {
 		}
 
 		virtual inline const vec2 GetPosition() override { return m_Pos; }
-		virtual inline const float GetRotation() override { return m_Rot; }
+		virtual inline float GetRotation() override { return m_Rot; }
+		virtual inline float GetZoom() {return m_Zoom; }
 
 		virtual inline void SetRotation(float rotation) override { m_Rot = rotation; }
 		virtual inline void SetPosition(const vec2& position) override { m_Pos = position; }
+		virtual inline void SetZoom(float zoom) { m_Zoom = zoom; }
 
 		virtual inline void RecalculateProjectionMatrix() override
 		{
 			float aspect = static_cast<float>(Application::Get().GetWindow().GetWidth()) / static_cast<float>(Application::Get().GetWindow().GetHeight());
-			m_ProjectionMatrix = ortho(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
+			m_ProjectionMatrix = ortho(m_Zoom * -aspect, m_Zoom * aspect, -m_Zoom, m_Zoom, -1.0f, 1.0f);
 		}
 		virtual inline void RecalculateViewMatrix() override
 		{
@@ -172,7 +176,7 @@ namespace Hazel {
 		mat4 m_ProjectionMatrix;
 		mat4 m_ViewMatrix;
 		mat4 m_VPMatrix;
-		float m_Rot;
+		float m_Rot, m_Zoom = 1.0f;
 		vec2 m_Pos;
 	};
 

@@ -182,6 +182,7 @@ project "Sandbox"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.TUtil}",
+		"%{IncludeDir.ImGui}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -272,6 +273,7 @@ project "GameDesign"
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.TUtil}",
 		"%{IncludeDir.Box2D}",
+		"%{IncludeDir.ImGui}",
 
 --[[		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",

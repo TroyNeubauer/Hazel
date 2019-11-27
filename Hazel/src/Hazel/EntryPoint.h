@@ -18,7 +18,9 @@ int main(int argc, char** argv)
 	timer.Stop().Print("Complete initialization took");
 
 	app->Run();
-	delete app;
 
+	timer.Start();
+	delete app;
 	Hazel::Shutdown();
+	timer.Stop().Print("Shutdown took");
 }

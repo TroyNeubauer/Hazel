@@ -17,6 +17,9 @@ namespace Hazel {
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) = 0;
 		virtual void Begin() = 0;
 
+		virtual void Shutdown() = 0;
+
+		virtual ~RendererAPI() {}
 	};
 
 }

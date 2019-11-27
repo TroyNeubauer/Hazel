@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Body.h"
+#include "Ship.h"
 
 
 struct LinkedListIterator
@@ -50,6 +51,7 @@ public:
 private:
 	Hazel::Scope<b2World> m_World;
 	Hazel::DefaultCamera2D m_Camera;
+	Ship* m_Center;
 };
 
 

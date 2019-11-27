@@ -1,20 +1,31 @@
 #include "World.h"
 #include "Ship.h"
 #include "Planet.h"
+#include <random>
 
-float World::Constants::G = 6.67430E-11 * 2000;
+float World::Constants::G = 6.67430E-11 * 500000000000.0f;
 
 World::World()
 {
 	m_World.reset(new b2World( {0.0f, 0.0f} ));//No gravity since we handle it ourselves
-	Ship* ship = new Ship(*this,  0.0, 0.0, 5.0f, 1000000.0f);
-	Ship* ship2 = new Ship(*this, 10.0, 4.0, 3.0f, 1000000.0f);
+	std::default_random_engine gen;
+	std::uniform_real_distribution<float> pos(-6.0f, 6.0f);
+	std::uniform_real_distribution<float> size(0.2f, 2.0f);
+	for (int i = 0; i < 50; i++)
+	{
+		float s = size(gen);
+		Ship* ship = new Ship(*this,  { pos(gen), pos(gen) }, { s, s }, 1.0f);
+		if (i == 0)
+			m_Center = ship;
+	}
 	m_Camera.SetPosition(vec2(0.0, 0.0));
 	m_Camera.SetRotation(0.0f);
+	m_Camera.SetZoom(10.0f);
 }
 
 void World::Update()
 {
+	m_Camera.SetPosition( {m_Center->GetPosition().x, m_Center->GetPosition().y} );
 	m_Camera.ForceUpdate();
 	b2Body* body = m_World->GetBodyList();
 	for (int i = 0; i < m_World->GetBodyCount(); i++, body = body->GetNext())

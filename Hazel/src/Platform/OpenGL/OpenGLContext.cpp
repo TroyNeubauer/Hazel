@@ -59,7 +59,7 @@ namespace Hazel {
 		glfwMakeContextCurrent((GLFWwindow*) window->GetNativeWindow());
 	}
 
-	void OpenGLContext::RemoveWindow(Window * window)
+	void OpenGLContext::RemoveWindow(Window* window)
 	{
 		auto it = std::find(m_Handles.begin(), m_Handles.end(), window);
 		if (it != m_Handles.end())

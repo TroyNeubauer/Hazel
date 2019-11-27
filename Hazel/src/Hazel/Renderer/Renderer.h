@@ -19,6 +19,8 @@ namespace Hazel {
 
 		static void Submit(const Mesh& mesh);
 
+		static void Shutdown();
+
 
 	private:
 		struct SceneData
