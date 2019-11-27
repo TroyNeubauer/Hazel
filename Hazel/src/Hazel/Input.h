@@ -9,6 +9,7 @@ namespace Hazel {
 	{
 	public:
 		static bool IsKeyPressed(int keycode);
+		static bool IsKeyFired(int keycode);
 		static bool IsMouseButtonPressed(int button);
 
 		static inline glm::vec2 GetMousePosition() { return s_MousePos; }

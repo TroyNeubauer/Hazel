@@ -49,6 +49,7 @@ namespace Hazel {
 
 	OpenGLShader::~OpenGLShader()
 	{
+		glUseProgram(0);
 		glDeleteProgram(m_ID);
 	}
 
