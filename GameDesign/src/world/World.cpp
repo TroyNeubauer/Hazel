@@ -38,7 +38,6 @@ void World::Update()
 				b2Vec2 force = other->GetPosition() - body->GetPosition();
 				double distance = force.Normalize();// Determine the amount of force to give
 				force *= (World::Constants::G * body->GetMass() * other->GetMass()) / (distance * distance);
-				HZ_INFO("m1 {}, m2 {}, force {}", body->GetMass(), other->GetMass(), force.Length());
 
 				body->ApplyForceToCenter(force, true);
 				other->ApplyForceToCenter(-force, true);

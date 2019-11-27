@@ -29,7 +29,6 @@ void Ship::Render(const World& world)
 {
 	float x = m_Body->GetPosition().x, y = m_Body->GetPosition().y;
 	Hazel::Renderer2D::DrawQuad( { x, y, 0.0f }, { m_Size.x, m_Size.y }, m_Texture, m_Body->GetAngle());
-	HZ_INFO("Ship at {}, {}", x, y);
 }
 
 void Ship::Update(const World& world)
