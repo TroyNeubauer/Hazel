@@ -1,12 +1,12 @@
-#include "hzpch.h"
-#include "Hazel/Renderer/Renderer2D.h"
-#include "Hazel/Core.h"
+#include "../Renderer2D/Renderer2D.h"
 
+#include "hzpch.h"
 #include "Hazel/Renderer/VertexArray.h"
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/Renderer/RenderCommand.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include "../Core/Core.h"
 
 namespace Hazel {
 

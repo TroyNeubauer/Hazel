@@ -3,7 +3,7 @@
 #include <TUtil/TUtil.h>
 
 #include "Hazel/Renderer/GraphicsAPI.h"
-#include "Hazel/Core.h"
+#include "Hazel/Core/Core.h"
 #include <string>
 #include <glm/glm.hpp>
 #include "Texture.h"

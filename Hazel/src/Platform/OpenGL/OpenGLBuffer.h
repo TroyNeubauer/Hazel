@@ -2,8 +2,8 @@
 #ifdef HZ_ENABLE_OPEN_GL
 
 #include "Hazel/Renderer/Buffer.h"
-#include "Hazel/Core.h"
-#include "Hazel/Log.h"
+#include "Hazel/Core/Core.h"
+#include "Hazel/Core/Log.h"
 #include "OpenGLMacro.h"
 
 #include <stdlib.h>

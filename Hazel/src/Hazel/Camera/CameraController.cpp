@@ -1,13 +1,12 @@
 #include "hzpch.h"
 #include "CameraController.h"
 
-#include "Hazel/Engine.h"
 #include "Camera.h"
-#include "Hazel/Input.h"
-#include "Hazel/KeyCodes.h"
-
 #include <glm/gtx/norm.hpp>
 #include <math.h>
+#include "../Core/Engine.h"
+#include "../Core/Input.h"
+#include "../Core/KeyCodes.h"
 
 namespace Hazel {
 

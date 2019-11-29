@@ -1,13 +1,13 @@
 #include "hzpch.h"
 #include "DebugLayer.h"
-#include "Hazel/Engine.h"
-
-#include "Hazel/TUtil.h"
+#include "Hazel/Core/TUtil.h"
 #include "Platform/System/FileTracker.h"
 #include "Platform/System/AllocTracker.h"
 
 #include <imgui.h>
 #include <GLFW/glfw3.h>
+#include "../Core/Engine.h"
+#include "../Core/TUtil.h"
 
 namespace Hazel {
 	DebugLayer::DebugLayer()

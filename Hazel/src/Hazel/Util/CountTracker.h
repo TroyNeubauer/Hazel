@@ -1,7 +1,6 @@
 #pragma once
-#include "Hazel/Core.h"
-
 #include <stdint.h>
+#include "../Core/Core.h"
 
 namespace Hazel {
 

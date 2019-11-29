@@ -1,14 +1,14 @@
 #pragma once
 
 #include <memory>
-#include "Hazel/glm.h"
 
+#include "../Core/Application.h"
+#include "../Core/glm.h"
+#include "../Core/Window.h"
 #include "CameraStorage.h"
 #include "CameraController.h"
 #include "CameraProjection.h"
 
-#include "Hazel/Application.h"
-#include "Hazel/Window.h"
 
 using namespace glm;
 namespace Hazel {
@@ -50,24 +50,54 @@ namespace Hazel {
 	class Camera2D : public Camera
 	{
 	public:
-		virtual const mat4& GetViewMatrix() const = 0;
-		virtual const mat4& GetProjectionMatrix() const = 0;
-		virtual const mat4& GetViewProjectionMatrix() const = 0;
+		Camera2D(CameraController2D* controller) : m_Controller(controller) {}
 
-		virtual void ForceUpdate() = 0;
+		inline void Update () { if (m_Controller) { m_Controller->Update(*this); ForceUpdate(); } }
 
-		virtual const vec2 GetPosition() = 0;
-		virtual float GetRotation() = 0;
-		virtual float GetZoom() = 0;
+		inline const mat4& GetViewMatrix() const { return m_ViewMatrix; }
+		inline const mat4& GetProjectionMatrix() const override { return m_ProjectionMatrix; }
+		inline const mat4& GetViewProjectionMatrix() const override { return m_VPMatrix; }
 
-		virtual void SetPosition(const vec2& position) = 0;
-		virtual void SetRotation(float rotation) = 0;
-		virtual void SetZoom(float zoom) = 0;
+		inline void ForceUpdate()
+		{
+			RecalculateProjectionMatrix();
+			RecalculateViewMatrix();
+			m_VPMatrix = m_ProjectionMatrix * m_ViewMatrix;
+		}
 
-		virtual void RecalculateProjectionMatrix() = 0;
-		virtual void RecalculateViewMatrix() = 0;
+		inline const vec2 GetPosition() { return m_Pos; }
+		inline float GetRotation() { return m_Rot; }
+		inline float GetZoom() {return m_Zoom; }
 
-		virtual ~Camera2D() {}
+		inline void SetRotation(float rotation) { m_Rot = rotation; }
+		inline void SetPosition(const vec2& position) { m_Pos = position; }
+		inline void SetZoom(float zoom) { m_Zoom = zoom; }
+		inline CameraController2D& GetController() { return *m_Controller; }
+
+		inline void RecalculateProjectionMatrix()
+		{
+			float aspect = static_cast<float>(Application::Get().GetWindow().GetWidth()) / static_cast<float>(Application::Get().GetWindow().GetHeight());
+			m_ProjectionMatrix = ortho(m_Zoom * -aspect, m_Zoom * aspect, -m_Zoom, m_Zoom, -1.0f, 1.0f);
+		}
+		inline void RecalculateViewMatrix()
+		{
+			mat4 transform =
+				translate(mat4(1.0f), vec3(m_Pos, 0.0f)) *
+				rotate(mat4(1.0f), radians(m_Rot), vec3(0, 0, 1));
+
+			m_ViewMatrix = inverse(transform);
+		}
+
+	public:
+		mat4 m_ProjectionMatrix;
+		mat4 m_ViewMatrix;
+		mat4 m_VPMatrix;
+		float m_Rot = 0.0f, m_Zoom = 1.0f, m_ZoomVel = 0.0f;
+		vec2 m_Pos = {0, 0}, m_Vel = {0, 0};
+
+		std::unique_ptr<CameraController2D> m_Controller;
+
+		friend class CameraController2D;
 	};
 
 	class DefaultCamera3D : public Camera3D
@@ -132,52 +162,6 @@ namespace Hazel {
 		FPSCamera(float fov) : DefaultCamera3D(new FPSCameraController(), new EulerCameraStorage(), new PerspectiveCameraProjection(0.5f, 7500.0f, fov)) {}
 
 		virtual ~FPSCamera() {}
-	};
-
-	class DefaultCamera2D : public Camera2D
-	{
-	public:
-		virtual inline const mat4& GetViewMatrix() const { return m_ViewMatrix; }
-		virtual inline const mat4& GetProjectionMatrix() const override { return m_ProjectionMatrix; }
-		virtual inline const mat4& GetViewProjectionMatrix() const override { return m_VPMatrix; }
-
-		virtual inline void ForceUpdate() override
-		{
-			RecalculateProjectionMatrix();
-			RecalculateViewMatrix();
-			m_VPMatrix = m_ProjectionMatrix * m_ViewMatrix;
-		}
-
-		virtual inline const vec2 GetPosition() override { return m_Pos; }
-		virtual inline float GetRotation() override { return m_Rot; }
-		virtual inline float GetZoom() {return m_Zoom; }
-
-		virtual inline void SetRotation(float rotation) override { m_Rot = rotation; }
-		virtual inline void SetPosition(const vec2& position) override { m_Pos = position; }
-		virtual inline void SetZoom(float zoom) { m_Zoom = zoom; }
-
-		virtual inline void RecalculateProjectionMatrix() override
-		{
-			float aspect = static_cast<float>(Application::Get().GetWindow().GetWidth()) / static_cast<float>(Application::Get().GetWindow().GetHeight());
-			m_ProjectionMatrix = ortho(m_Zoom * -aspect, m_Zoom * aspect, -m_Zoom, m_Zoom, -1.0f, 1.0f);
-		}
-		virtual inline void RecalculateViewMatrix() override
-		{
-			mat4 transform = 
-				translate(mat4(1.0f), vec3(m_Pos, 0.0f)) * 
-				rotate(mat4(1.0f), radians(m_Rot), vec3(0, 0, 1));
-
-			m_ViewMatrix = inverse(transform);
-		}
-
-		virtual ~DefaultCamera2D() {}
-
-	private:
-		mat4 m_ProjectionMatrix;
-		mat4 m_ViewMatrix;
-		mat4 m_VPMatrix;
-		float m_Rot, m_Zoom = 1.0f;
-		vec2 m_Pos;
 	};
 
 }

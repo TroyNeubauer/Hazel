@@ -2,7 +2,7 @@
 
 #include "Hazel/ImGui/ImGuiLayer.h"
 #include "Hazel/Renderer/GraphicsAPI.h"
-#include "Hazel/Window.h"
+#include "Hazel/Core/Window.h"
 
 namespace Hazel {
 

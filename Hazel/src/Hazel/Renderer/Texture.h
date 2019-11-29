@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Hazel/TUtil.h"
 #include <limits>
+#include "../Core/TUtil.h"
 
 namespace Hazel {
 

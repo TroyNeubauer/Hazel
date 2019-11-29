@@ -1,6 +1,6 @@
 #include "hzpch.h"
 #include "OpenGLUtils.h"
-#include "Hazel/TUtil.h"
+#include "Hazel/Core/TUtil.h"
 
 #include "FreeImage.h"
 #include "OpenGLMacro.h"

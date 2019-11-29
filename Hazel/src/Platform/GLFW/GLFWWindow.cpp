@@ -3,12 +3,12 @@
 
 #include "GLFWWindow.h"
 
-#include "Hazel/Application.h"
+#include "Hazel/Core/Application.h"
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/Events/MouseEvent.h"
 #include "Hazel/Events/KeyEvent.h"
 #include "Hazel/Context/ContextManager.h"
-#include "Hazel/Input.h"
+#include "Hazel/Core/Input.h"
 
 
 namespace Hazel {
@@ -137,6 +137,7 @@ namespace Hazel {
 			GLFWWindow* myWindow = (GLFWWindow*)glfwGetWindowUserPointer(window);
 			MouseScrolledEvent* event = new MouseScrolledEvent((float)xOffset, (float)yOffset);
 			myWindow->m_EventCallback(event);
+			Input::s_ScrollDelta += glm::vec2(xOffset, yOffset);
 		});
 
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
@@ -187,7 +188,6 @@ namespace Hazel {
 	void GLFWWindow::OnUpdate()
 	{
 		glfwPollEvents();
-		Input::NextFrame();
 	}
 
 }

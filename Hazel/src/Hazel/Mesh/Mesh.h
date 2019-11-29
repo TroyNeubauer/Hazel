@@ -6,7 +6,7 @@
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Enviorment/Material.h"
-#include "Hazel/glm.h"
+#include "Hazel/Core/glm.h"
 
 namespace Hazel {
 

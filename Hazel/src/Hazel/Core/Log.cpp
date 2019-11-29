@@ -1,11 +1,11 @@
-#include "hzpch.h"
 #include "Log.h"
-#include "Core.h"
 
+#include "Core.h"
+#include "Hazel/Core/TUtil.h"
+#include "hzpch.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
 
-#include "Hazel/TUtil.h"
 
 namespace Hazel {
 

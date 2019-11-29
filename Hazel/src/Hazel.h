@@ -8,19 +8,9 @@
 #include "Hazel/Camera/CameraController.h"
 #include "Platform/System/AllocTracker.h"
 
-#include "Hazel/Core.h"
-#include "Hazel/Application.h"
 #include "Hazel/Layer/Layer.h"
-#include "Hazel/Log.h"
-#include "Hazel/Engine.h"
-#include "Hazel/Input.h"
-#include "Hazel/KeyCodes.h"
-#include "Hazel/MouseButtonCodes.h"
-
 #include "Hazel/ImGui/ImGuiLayer.h"
 #include "Hazel/Layer/DebugLayer.h"
-
-#include "Hazel/TUtil.h"
 
 #include "Hazel/Util/Utils.h"
 
@@ -28,7 +18,6 @@
 #include "Hazel/Renderer/GraphicsAPI.h"
 #include "Hazel/Renderer/RenderCommand.h"
 #include "Hazel/Renderer/Renderer.h"
-#include "Hazel/Renderer/Renderer2D.h"
 #include "Hazel/Renderer/RendererAPI.h"
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/Renderer/Texture.h"
@@ -39,13 +28,20 @@
 #include "Hazel/Mesh/Mesh.h"
 #include "Hazel/Mesh/IcoashedronMesh.h"
 
-#include "Hazel/glm.h"
-
-#include "Hazel/TUtil.h"
-
-//freeimage
 #include <FreeImage.h>
 
 //std
 #include <memory>
+
+#include "Hazel/Core/Application.h"
+#include "Hazel/Core/Core.h"
+#include "Hazel/Core/Engine.h"
+#include "Hazel/Core/glm.h"
+#include "Hazel/Core/Input.h"
+#include "Hazel/Core/KeyCodes.h"
+#include "Hazel/Core/Log.h"
+#include "Hazel/Core/MouseButtonCodes.h"
+#include "Hazel/Core/TUtil.h"
+#include "Hazel/Core/TUtil.h"
+#include "Hazel/Renderer2D/Renderer2D.h"
 

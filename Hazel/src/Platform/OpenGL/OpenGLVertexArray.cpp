@@ -4,7 +4,7 @@
 #include "OpenGLVertexArray.h"
 #include "OpenGLUtils.h"
 
-#include "Hazel/Core.h"
+#include "Hazel/Core/Core.h"
 #include "OpenGLMacro.h"
 
 #include <glad/glad.h>

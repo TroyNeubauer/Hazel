@@ -1,6 +1,6 @@
 #pragma once
 #include "hzpch.h"
-#include "Hazel/Log.h"
+#include "Hazel/Core/Log.h"
 #include <stdint.h>
 
 #define DEFAULT_POOL_ELEMENT_SIZE 128

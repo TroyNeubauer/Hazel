@@ -3,7 +3,7 @@
 #include "FileTrackerFunctions.h"
 
 #include "Hazel/Util/CountTracker.h"
-#include "Hazel/Core.h"
+#include "Hazel/Core/Core.h"
 
 #include <map>
 #include <set>

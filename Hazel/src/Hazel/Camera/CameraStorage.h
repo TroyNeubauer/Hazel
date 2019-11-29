@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazel/glm.h"
+#include "Hazel/Core/glm.h"
 
 namespace Hazel {
 	class CameraStorage3D

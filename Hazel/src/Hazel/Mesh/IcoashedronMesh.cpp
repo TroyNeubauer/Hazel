@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "IcoashedronMesh.h"
-#include "Hazel/glm.h"
+
+#include "../Core/glm.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>

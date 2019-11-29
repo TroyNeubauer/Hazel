@@ -1,10 +1,10 @@
 #pragma once
 
 #include "hzpch.h"
-#include "Hazel/Core.h"
 #include "Hazel/Events/EventPool.h"
 #include <stdint.h>
 #include <sstream>
+#include "../Core/Core.h"
 
 namespace Hazel {
 

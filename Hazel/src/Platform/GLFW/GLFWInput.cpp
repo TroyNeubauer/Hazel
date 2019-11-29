@@ -1,16 +1,17 @@
 #include "hzpch.h"
 #ifdef HZ_GLFW_INPUT
 
-#include "Hazel/Input.h"
-#include "Hazel/Application.h"
-#include "Hazel/KeyCodes.h"
+#include "Hazel/Core/Input.h"
+#include "Hazel/Core/Application.h"
+#include "Hazel/Core/KeyCodes.h"
 
 #include <GLFW/glfw3.h>
 #include <bitset>
 
 namespace Hazel {
 
-	glm::vec2 Input::s_MousePos(-1.0f, -1.0f), Input::s_LastMousePos(-1.0f, -1.0f), Input::s_MouseDelta(0.0f, 0.0f);
+	glm::vec2 Input::s_MousePos(-1.0f, -1.0f), Input::s_LastMousePos(-1.0f, -1.0f),
+			Input::s_MouseDelta(0.0f, 0.0f), Input::s_ScrollDelta(0.0f, 0.0f);
 
 	static std::bitset<HZ_MAX_KEY_VALUE> s_LastKeys, s_CurrentKeys;
 
@@ -46,6 +47,7 @@ namespace Hazel {
 
 	void Input::NextFrame()
 	{
+		s_ScrollDelta = { 0.0f, 0.0f };
 		s_LastMousePos = s_MousePos;
 		glm::vec2 newMousePos = GetMousePositionImpl();
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
@@ -61,8 +63,8 @@ namespace Hazel {
 		if(s_MousePos != glm::vec2(-1.0f, -1.0f))
 			s_MouseDelta = newMousePos - s_LastMousePos;
 		s_MousePos = newMousePos;
-	}
 
+	}
 
 }
 

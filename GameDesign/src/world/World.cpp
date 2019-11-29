@@ -3,21 +3,13 @@
 #include "Planet.h"
 #include <random>
 
-float World::Constants::G = 6.67430E-11 * 500000000000.0f;
+float World::Constants::G = 6.67430E-11 * 10000000000.0f;
 
-World::World()
+World::World() : m_Camera(new WorldCameraController())
 {
 	m_World.reset(new b2World( {0.0f, 0.0f} ));//No gravity since we handle it ourselves
-	std::default_random_engine gen;
-	std::uniform_real_distribution<float> pos(-6.0f, 6.0f);
-	std::uniform_real_distribution<float> size(0.2f, 2.0f);
-	for (int i = 0; i < 50; i++)
-	{
-		float s = size(gen);
-		Ship* ship = new Ship(*this,  { pos(gen), pos(gen) }, { s, s }, 1.0f);
-		if (i == 0)
-			m_Center = ship;
-	}
+
+	Ship* ship = new Ship(*this,  { 0.0f, 0.0f }, { 1.0f, 1.0f }, 10.0f);
 	m_Camera.SetPosition(vec2(0.0, 0.0));
 	m_Camera.SetRotation(0.0f);
 	m_Camera.SetZoom(10.0f);
@@ -25,8 +17,7 @@ World::World()
 
 void World::Update()
 {
-	m_Camera.SetPosition( {m_Center->GetPosition().x, m_Center->GetPosition().y} );
-	m_Camera.ForceUpdate();
+	m_Camera.Update();
 	b2Body* body = m_World->GetBodyList();
 	for (int i = 0; i < m_World->GetBodyCount(); i++, body = body->GetNext())
 	{
@@ -58,4 +49,42 @@ void World::Render()
 
 	}
 	Hazel::Renderer2D::EndScene();
+}
+
+const float ACCEL_SPEED = 25.0f;
+
+void WorldCameraController::Update(Hazel::Camera2D& camera)
+{
+	glm::vec2 move = {0, 0};
+	glm::vec2 right = glm::rotate(glm::vec2(1.0f, 0.0f), glm::radians(camera.m_Rot));
+	glm::vec2 up = glm::rotate(glm::vec2(0.0f, 1.0f), glm::radians(camera.m_Rot));
+
+	if (Hazel::Input::IsKeyPressed(HZ_KEY_W)) {
+		move += up;
+	} if (Hazel::Input::IsKeyPressed(HZ_KEY_S)) {
+		move -= up;
+	} if (Hazel::Input::IsKeyPressed(HZ_KEY_D)) {
+		move += right;
+	} if (Hazel::Input::IsKeyPressed(HZ_KEY_A)) {
+		move -= right;
+	}
+	float length = move.length();
+	if (length > 0.0f)
+	{
+		move /= length;
+		move *= ACCEL_SPEED;
+	}
+
+	camera.m_ZoomVel -= Hazel::Input::GetScrollDelta() / 1.0f;
+
+	camera.m_Vel += move * Hazel::Engine::GetDeltaTime();
+	camera.m_Pos += camera.m_Vel * Hazel::Engine::GetDeltaTime();
+	camera.m_Vel *= (1.0f - Hazel::Engine::GetDeltaTime() / 2.0f);
+
+	camera.m_Zoom += camera.m_ZoomVel * Hazel::Engine::GetDeltaTime();
+	camera.m_ZoomVel *= (1.0f - Hazel::Engine::GetDeltaTime() * 5.0f);
+
+	if (camera.m_Zoom <= 0.00001f)
+		camera.m_Zoom = 0.00001f;
+
 }

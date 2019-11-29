@@ -18,7 +18,9 @@ namespace Hazel {
 	class CameraController2D
 	{
 	public:
-		virtual bool Update(Camera2D& camera) = 0;
+		virtual void Update(Camera2D& camera) = 0;
+
+		virtual ~CameraController2D() {}
 	};
 
 	class AdvancedCameraController : public CameraController3D

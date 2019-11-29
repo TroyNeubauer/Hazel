@@ -1,12 +1,13 @@
-#include "hzpch.h"
 #include "Application.h"
-#include "Input.h"
 
+#include "hzpch.h"
 #include <TUtil/FileSystem.h>
 #include <TUtil/System.h>
 
-#include "Hazel/Engine.h"
-#include "Hazel/Log.h"
+#include "Hazel/Core/Engine.h"
+#include "Hazel/Core/Input.h"
+#include "Hazel/Core/Log.h"
+
 #include "Hazel/Events/EventPool.h"
 #include "Hazel/Events/KeyEvent.h"
 #include "Hazel/Events/MouseEvent.h"
@@ -62,15 +63,16 @@ namespace Hazel {
 	{
 		while (m_Running)
 		{	
+			Engine::Update();
 #ifndef HZ_DIST
 			AllocTracker::BeginFrame();//Begin tracking for the next frame
 #endif
 			DispatchEvents();
 			Update();
-			Engine::Update();
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 			DoRenderPass();
+			Input::NextFrame();
 		}
 	}
 

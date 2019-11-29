@@ -1,12 +1,12 @@
 #include "Sandbox.h"
 
-#include "Hazel/EntryPoint.h"
 #include "Hazel/Enviorment/Material.h"
 
 #include <iostream>
 #include <random>
 #include <filesystem>
 
+#include "../../Hazel/src/Hazel/Core/EntryPoint.h"
 #include "ExampleLayer.h"
 
 Sandbox* sandbox;

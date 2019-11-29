@@ -6,6 +6,7 @@
 
 #include "Body.h"
 #include "Ship.h"
+#include "Hazel/Camera/Camera.h"
 
 
 struct LinkedListIterator
@@ -14,8 +15,7 @@ public:
 	LinkedListIterator(b2Body* first) : m_Current(first) {}
 
 	b2Body* operator* () { return m_Current; }
-	// pointer operator& () { return &**this ; }
-	b2Body* operator-> () { return m_Current; } // *** EDIT
+	b2Body* operator-> () { return m_Current; }
 
 	LinkedListIterator& operator++ () { m_Current = m_Current->GetNext(); return *this; }
 	LinkedListIterator operator++ (int) { const auto temp(*this); ++*this; return temp; }
@@ -48,10 +48,16 @@ public:
 	inline b2World* GetWorld() { return m_World.get(); }
 
 	static inline Body* ToBody(b2Body* body) { return reinterpret_cast<Body*>(body->GetUserData()); }
+
 private:
 	Hazel::Scope<b2World> m_World;
-	Hazel::DefaultCamera2D m_Camera;
-	Ship* m_Center;
+	Hazel::Camera2D m_Camera;
+};
+
+class WorldCameraController : public Hazel::CameraController2D
+{
+	friend class Camera2D;
+	virtual void Update(Hazel::Camera2D& camera);
 };
 
 

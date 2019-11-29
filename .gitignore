@@ -8,7 +8,9 @@
 *.user
 **/*.TMP
 
-Sandbox/imgui.ini
+#Hazel Files
+
+**/imgui.ini
 Sandbox/imgui_log.txt
 Sandbox/test.dat
 Sandbox/1page.dat
@@ -20,7 +22,12 @@ Sandbox/pics.zip
 Test/
 
 ImGui Test/imgui.ini
+**/logs/
 
+**/*.hzp.json
+
+
+#MSVC
 **/*.sln
 **/*.vcxproj
 **/*.vcxproj.user
@@ -33,13 +40,6 @@ ImGui Test/imgui.ini
 **/Makefile
 
 **/.gdb_history
-
-**/*.sln
-**/*.vcxproj
-**/*.vcxproj.user
-**/*.vcxproj.filters
-
-**/logs/
 
 #Eclipse
 **/.cproject

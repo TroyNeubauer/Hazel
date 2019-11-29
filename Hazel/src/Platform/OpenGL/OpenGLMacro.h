@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Hazel/Log.h"
 #include <glad/glad.h>
 #include <string>
+#include "Hazel/Core/Log.h"
 
 inline static void GLClearError() { while (glGetError() != GL_NO_ERROR); }
 

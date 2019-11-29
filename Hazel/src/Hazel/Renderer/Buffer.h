@@ -4,7 +4,7 @@
 #include <vector>
 #include <glad/glad.h>
 
-#include "Hazel/Core.h"
+#include "Hazel/Core/Core.h"
 #include "GraphicsAPI.h"
 
 namespace Hazel {

@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Hazel/glm.h"
-
-#include "Hazel/Window.h"
-#include "Hazel/Application.h"
+#include "../Core/Application.h"
+#include "../Core/glm.h"
+#include "../Core/Window.h"
 
 namespace Hazel {
 

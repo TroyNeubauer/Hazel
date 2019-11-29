@@ -1,10 +1,10 @@
 #pragma once
 
+#include "../Core/TUtil.h"
 #include "Hazel/Layer/Layer.h"
 #include "Hazel/Util/Graph.h"
 
 
-#include "Hazel/TUtil.h"
 
 #define GRAPHS_WIDTH 400
 #define GRAPHS_HEIGHT 30

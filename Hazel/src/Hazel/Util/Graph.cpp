@@ -1,8 +1,7 @@
 #include "hzpch.h"
 #include "Graph.h"
 
-#include "Hazel/Engine.h"
-
+#include "../Core/Engine.h"
 #include "imgui.h"
 
 namespace Hazel {

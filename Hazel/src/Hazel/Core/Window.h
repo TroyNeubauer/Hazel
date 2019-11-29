@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Hazel/Core/Core.h"
 #include "hzpch.h"
 
-#include "Hazel/Core.h"
 #include "Hazel/Events/Event.h"
 #include "Hazel/Renderer/GraphicsAPI.h"
 

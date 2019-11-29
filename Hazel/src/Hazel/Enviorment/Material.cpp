@@ -1,8 +1,9 @@
 #include "hzpch.h"
 
 #include "Material.h"
-#include "Hazel/Core.h"
-#include "Hazel/TUtil.h"
+
+#include "../Core/Core.h"
+#include "../Core/TUtil.h"
 #include "Hazel/Renderer/Texture.h"
 
 namespace Hazel {

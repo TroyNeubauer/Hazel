@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Hazel.h>
+#include "../../Hazel/src/Hazel/Core/KeyCodes.h"
 #include "Sandbox.h"
-#include "Hazel/KeyCodes.h"
 
 class ExampleLayer : public Hazel::Layer
 {

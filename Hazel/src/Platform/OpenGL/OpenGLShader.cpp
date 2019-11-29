@@ -4,7 +4,7 @@
 #include "OpenGLShader.h"
 #include "OpenGLMacro.h"
 
-#include "Hazel/Core.h"
+#include "Hazel/Core/Core.h"
 
 namespace Hazel {
 

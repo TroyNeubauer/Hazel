@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Hazel/Log.h"
 #include <stdint.h>
 #include <memory>
 
@@ -8,6 +7,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "Log.h"
 
 //========== COMPILER detect ==========
 #if defined(_MSC_VER)

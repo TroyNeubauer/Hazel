@@ -24,7 +24,7 @@ void WorldLayer::OnEvent(Hazel::Event* event)
 
 void WorldLayer::OnImGuiRender()
 {
-	ImGui::SliderFloat("G", &World::Constants::G, -0.01f, 100.0f);
+	ImGui::SliderFloat("G", &World::Constants::G, -0.01f, 10.0f);
 }
 
 void WorldLayer::Render()

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazel/Renderer/Texture.h"
-#include "Hazel/TUtil.h"
+#include "Hazel/Core/TUtil.h"
 #include "OpenGLMacro.h"
 
 

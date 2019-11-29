@@ -1,9 +1,9 @@
-#include "hzpch.h"
 #include "Engine.h"
-#include "Log.h"
 
+#include "hzpch.h"
 #include <GLFW/glfw3.h>
 #include <FreeImage.h>
+#include "Hazel/Core/Log.h"
 #include "Hazel/Context/ContextManager.h"
 
 namespace Hazel {
