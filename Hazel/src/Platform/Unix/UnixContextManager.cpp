@@ -18,6 +18,7 @@ namespace Hazel {
 	UnixContextManager::UnixContextManager()
 	{
 		if (GraphicsAPI::Get() != GraphicsAPIType::NONE) {
+			HZ_PROFILE_SCOPE("glfwInit()");
 			int success = glfwInit();
 			HZ_CORE_ASSERT(success, "Could not intialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
@@ -50,7 +51,7 @@ namespace Hazel {
 			delete m_Context;
 			if (GraphicsAPI::Get() != GraphicsAPIType::NONE)
 			{
-				glfwTerminate();
+				HZ_PROFILE_CALL(glfwTerminate());
 			}
 		}
 	}

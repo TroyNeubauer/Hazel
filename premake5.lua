@@ -1,4 +1,22 @@
+newoption {
+	trigger     = "compiler",
+	value       = "compiler",
+	description = "Choose a compiler",
+	default     = "",
+	allowed =
+	{
+		{ "clang",    "Clang LLVM Compiler" },
+		{ "gcc",  "GNU Compiler" },
+		{ "msc",  "MSVC (Windows only)" }
+	}
+}
+
 workspace "Hazel"
+	if _OPTIONS["compiler"] ~= "" then
+		print("Using compiler ".._OPTIONS["compiler"])
+		toolset(_OPTIONS["compiler"])
+	end
+
 	architecture "x64"
 	startproject "GameDesign"
 	language "C++"

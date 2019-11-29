@@ -25,22 +25,30 @@ namespace Hazel {
 
 	void OpenGLTexture2D::SetPixels(void* pixels, TextureFormat format)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glTexImage2D(GL_TEXTURE_2D, 0, OpenGLUtils::TextureFormatTGLType(m_Builder.GetFormat()), 
 			m_Width, m_Height, 0, OpenGLUtils::TextureFormatTGLType(format), GL_UNSIGNED_BYTE, pixels);
 	}
 
 	void OpenGLTexture2D::Bind() const
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glBindTexture(GL_TEXTURE_2D, m_ID);
 	}
 
 	void OpenGLTexture2D::Unbind() const
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glDeleteTextures(1, &m_ID);
 	}
 

@@ -47,6 +47,8 @@ namespace Hazel {
 
 	void Input::NextFrame()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		s_ScrollDelta = { 0.0f, 0.0f };
 		s_LastMousePos = s_MousePos;
 		glm::vec2 newMousePos = GetMousePositionImpl();

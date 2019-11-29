@@ -10,16 +10,31 @@ namespace Hazel {
 
 	void Init()
 	{
-		FreeImage_Initialise();
+		HZ_PROFILE_FUNCTION();
+
 		Hazel::Log::Init();
-		System::Init();
+		{
+			HZ_PROFILE_SCOPE("FreeImage_Initialise()");
+			FreeImage_Initialise();
+		}
+		{
+			HZ_PROFILE_SCOPE("System::Init()");
+			System::Init();
+		}
 	}
 
 	void Shutdown()
 	{
-		FreeImage_DeInitialise();
-		Hazel::Log::DisableLogging();
+		HZ_PROFILE_FUNCTION();
+
+		{
+			HZ_PROFILE_SCOPE("FreeImage_DeInitialise()");
+			FreeImage_DeInitialise();
+		}
+
 		Hazel::ContextManager::Destroy();
+
+		Hazel::Log::DisableLogging();
 	}
 
 	float Engine::m_DeltaTime = 1.0f / 60.0f;
@@ -43,6 +58,8 @@ namespace Hazel {
 
 	void Engine::Update()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		float now = GetTime();
 		if (m_LastTime != -1.0f) {
 			Engine::SetDeltaTime(now - m_LastTime);

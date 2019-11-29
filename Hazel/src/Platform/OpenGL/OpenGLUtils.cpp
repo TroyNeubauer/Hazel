@@ -60,19 +60,26 @@ namespace Hazel {
 
 	GLuint OpenGLUtils::Load2DTexture(File* file, uint32_t& width, uint32_t& height, TextureBuilder builder)
 	{
-		TUtil::Timer timer;
+		HZ_PROFILE_FUNCTION();
 
 		if (file->Data() == nullptr)
 			return false;
 
-		FIMEMORY* memory = FreeImage_OpenMemory((BYTE*) file->Data(), file->Length());
+		FIMEMORY* memory;
+		{
+			HZ_PROFILE_SCOPE("FreeImage_OpenMemory");
+			memory = FreeImage_OpenMemory((BYTE*) file->Data(), file->Length());
+		}
 		if (!memory) {
 			HZ_CORE_WARN("Failed to open memory for file \"{}\"", file->GetPath().ToString());
 			return 0;
 		}
 		//check the file signature and deduce its format
 		FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
-		fif = FreeImage_GetFileTypeFromMemory(memory, file->Length());
+		{
+			HZ_PROFILE_SCOPE("FreeImage_GetFileTypeFromMemory");
+			fif = FreeImage_GetFileTypeFromMemory(memory, file->Length());
+		}
 
 		if (fif == FIF_UNKNOWN)
 			fif = FreeImage_GetFIFFromFilename(file->GetPath().ToString());
@@ -88,7 +95,10 @@ namespace Hazel {
 
 		{
 			if (FreeImage_FIFSupportsReading(fif))
+			{
+				HZ_PROFILE_SCOPE("FreeImage_LoadFromMemory");
 				dib = FreeImage_LoadFromMemory(fif, memory);
+			}
 			else {
 				HZ_CORE_WARN("Freeimage plugin cannot read file \"{}\"", file->GetPath().ToString());
 				return 0;
@@ -199,7 +209,6 @@ namespace Hazel {
 		FreeImage_Unload(dib);
 		FreeImage_CloseMemory(memory);
 
-		timer.Stop().Print("Decoding texture took");
 		return id;
 	}
 
@@ -210,41 +219,60 @@ namespace Hazel {
 
 	GLuint OpenGLUtils::Load2DTexture(uint32_t width, uint32_t height, void* data, int imageFormat, int imageType, TextureBuilder builder)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		GLuint id;
 		glEnable(GL_TEXTURE_2D);
-		glGenTextures(1, &id);
-		glBindTexture(GL_TEXTURE_2D, id);
+		{
+			HZ_PROFILE_SCOPE("glGenTextures");
+			glGenTextures(1, &id);
+		}
+		{
+			HZ_PROFILE_SCOPE("glBindTexture");
+			glBindTexture(GL_TEXTURE_2D, id);
+		}
 
 		//store the texture data for OpenGL use
 		GLenum gpuFormat = TextureFormatTGLType(builder.GetFormat());
-		glTexImage2D(GL_TEXTURE_2D, 0, gpuFormat, width, height, 0, imageFormat, imageType, data);
+		{
+			HZ_PROFILE_SCOPE("glTexImage2D");
+			glTexImage2D(GL_TEXTURE_2D, 0, gpuFormat, width, height, 0, imageFormat, imageType, data);
+		}
 		if (builder.IsMipmap()) {
-			glGenerateMipmap(GL_TEXTURE_2D);
+			{
+				HZ_PROFILE_SCOPE("glGenerateMipmap");
+				glGenerateMipmap(GL_TEXTURE_2D);
+			}
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			if (builder.IsAnisotropic()) {
+				HZ_PROFILE_SCOPE("glTexParameterf Anisotropic Parameters");
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, 4.0f);
 			}
 		}
 		else if (builder.IsNearest())
 		{
+			HZ_PROFILE_SCOPE("glTexParameteri GL_NEAREST");
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		}
 		else
 		{
+			HZ_PROFILE_SCOPE("glTexParameteri GL_LINEAR");
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		}
 
 		if (builder.IsClampEdges())
 		{
+			HZ_PROFILE_SCOPE("glTexParameteri GL_CLAMP_TO_EDGE");
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		}
 		else
 		{
+			HZ_PROFILE_SCOPE("glTexParameteri (REPEAT)");
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		}

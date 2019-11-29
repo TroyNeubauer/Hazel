@@ -72,6 +72,8 @@ namespace Hazel {
 
 	void Log::DisableLogging()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		s_Init = false;
 		HZ_CORE_INFO("Destroying logging");
 		delete s_ClientLogger;

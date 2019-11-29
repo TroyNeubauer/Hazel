@@ -42,6 +42,7 @@ namespace Hazel {
 
 	void Application::DispatchEvents()
 	{
+		HZ_PROFILE_FUNCTION();
 		m_Window->OnUpdate();//Poll for new events
 		for (auto event = m_EventQueue.end(); event != m_EventQueue.begin(); event) {
 			Event* e = *(--event);
@@ -61,29 +62,43 @@ namespace Hazel {
 
 	void Application::Run()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		while (m_Running)
 		{	
+			HZ_PROFILE_SCOPE("Application::Run()");
 			Engine::Update();
 #ifndef HZ_DIST
 			AllocTracker::BeginFrame();//Begin tracking for the next frame
 #endif
 			DispatchEvents();
 			Update();
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate();
+			{
+				HZ_PROFILE_SCOPE("Update Layerstacks");
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate();
+			}
 			DoRenderPass();
 			Input::NextFrame();
 		}
 	}
 
 	void Application::DoRenderPass() {
+		HZ_PROFILE_FUNCTION();
+
 		Render();
-		for (Layer* layer : m_LayerStack)
-			layer->Render();
+		{
+			HZ_PROFILE_SCOPE("Render (Layerstacks)");
+			for (Layer* layer : m_LayerStack)
+				layer->Render();
+		}
 
 		m_ImGuiLayer->Begin();
-		for (Layer* layer : m_LayerStack)
-			layer->OnImGuiRender();
+		{
+			HZ_PROFILE_SCOPE("ImGui Render (Layerstacks)");
+			for (Layer* layer : m_LayerStack)
+				layer->OnImGuiRender();
+		}
 		m_ImGuiLayer->End();
 		
 		m_Window->OnRender();

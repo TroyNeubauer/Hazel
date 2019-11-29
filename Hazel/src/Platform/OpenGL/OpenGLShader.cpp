@@ -20,6 +20,8 @@ namespace Hazel {
 
 	OpenGLShader::OpenGLShader(File* shaderSource) : m_ID(-1)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		this->m_Path = shaderSource->GetPath().ToString();
 		std::unordered_map<GLenum, const char*> shaders;
 		shaders = PreProcess(shaderSource->AsMutableString());
@@ -28,6 +30,8 @@ namespace Hazel {
 
 	OpenGLShader::OpenGLShader(const char* vertex, const char* fragment)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		m_Path = "<Hardcoded Shader>";
 		std::unordered_map<GLenum, const char*> shaders;
 		shaders[GL_VERTEX_SHADER] = vertex;
@@ -37,6 +41,8 @@ namespace Hazel {
 
 	void OpenGLShader::Bind()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		//Make sure we begin from texture unit 0 every time
 		m_TextureUnit = 0;
 		glUseProgram(m_ID);
@@ -44,11 +50,15 @@ namespace Hazel {
 
 	void OpenGLShader::UnBind()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
 
 	OpenGLShader::~OpenGLShader()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 		glDeleteProgram(m_ID);
 	}
@@ -82,6 +92,8 @@ namespace Hazel {
 
 	std::unordered_map<GLenum, const char*> OpenGLShader::PreProcess(char* source)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, const char*> result;
 		const char* target = "#type";
 
@@ -104,6 +116,8 @@ namespace Hazel {
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, const char*>& shaders)
 	{
+		HZ_PROFILE_FUNCTION();
+
 
 		Timer timer;
 		std::vector<GLuint> shaderIDs;
@@ -236,6 +250,8 @@ namespace Hazel {
 
 	void OpenGLShader::UploadUniformFloat(const char* name, const float f)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		CheckUniformType(name, GL_FLOAT);
 		int location = GetUniformLocation(name);
 		if (location != -1)
@@ -244,6 +260,8 @@ namespace Hazel {
 
 	void OpenGLShader::UploadUniformInt(const char* name, const int value)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		CheckUniformType(name, GL_SAMPLER_2D);
 		int location = GetUniformLocation(name);
 		if (location != -1)
@@ -252,6 +270,8 @@ namespace Hazel {
 	
 	void OpenGLShader::UploadUniformVec2(const char* name, const glm::vec2& vec)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		CheckUniformType(name, GL_FLOAT_VEC2);
 		int location = GetUniformLocation(name);
 		if (location != -1)
@@ -260,6 +280,8 @@ namespace Hazel {
 	
 	void OpenGLShader::UploadUniformVec3(const char* name, const glm::vec3& vec)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		CheckUniformType(name, GL_FLOAT_VEC3);
 		int location = GetUniformLocation(name);
 		if (location != -1)
@@ -268,6 +290,8 @@ namespace Hazel {
 	
 	void OpenGLShader::UploadUniformVec4(const char* name, const glm::vec4& vec)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		CheckUniformType(name, GL_FLOAT_VEC4);
 		int location = GetUniformLocation(name);
 		if (location != -1)
@@ -276,6 +300,8 @@ namespace Hazel {
 	
 	void OpenGLShader::UploadUniformMat3(const char* name, const glm::mat3& mat)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		CheckUniformType(name, GL_FLOAT_MAT3);
 		int location = GetUniformLocation(name);
 		if (location != -1)
@@ -284,6 +310,8 @@ namespace Hazel {
 	
 	void OpenGLShader::UploadUniformMat4(const char* name, const glm::mat4& mat)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		CheckUniformType(name, GL_FLOAT_MAT4);
 		int location = GetUniformLocation(name);
 		if(location != -1)
@@ -292,6 +320,8 @@ namespace Hazel {
 
 	void OpenGLShader::BindTexture2D(const char* name, const Ref<Texture2D>& texture)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		CheckUniformType(name, GL_SAMPLER_2D);
 		int location = GetUniformLocation(name);
 		int unit = m_TextureUnit++;

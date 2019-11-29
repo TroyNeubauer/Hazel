@@ -17,14 +17,21 @@ namespace Hazel {
 
 	void OpenGLImGuiLayer::OnAttach()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
+		{
+			HZ_PROFILE_SCOPE("ImGui::CreateContext()");
+			ImGui::CreateContext();
+		}
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-
-		ImGui::StyleColorsDark();
+		{
+			HZ_PROFILE_SCOPE("ImGui::StyleColorsDark()");
+			ImGui::StyleColorsDark();
+		}
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
@@ -32,13 +39,20 @@ namespace Hazel {
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-
-		ImGui_ImplGlfw_InitForOpenGL(window, true);
-		ImGui_ImplOpenGL3_Init("#version 410");
+		{
+			HZ_PROFILE_SCOPE("ImGui_ImplGlfw_InitForOpenGL()");
+			ImGui_ImplGlfw_InitForOpenGL(window, true);
+		}
+		{
+			HZ_PROFILE_SCOPE("ImGui_ImplOpenGL3_Init(\"#version 410\")");
+			ImGui_ImplOpenGL3_Init("#version 410");
+		}
 	}
 
 	void OpenGLImGuiLayer::OnDetach()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -50,25 +64,52 @@ namespace Hazel {
 
 	void OpenGLImGuiLayer::Begin()
 	{
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
+		HZ_PROFILE_FUNCTION();
+		{
+			HZ_PROFILE_SCOPE("ImGui_ImplOpenGL3_NewFrame");
+			ImGui_ImplOpenGL3_NewFrame();
+		}
+		{
+			HZ_PROFILE_SCOPE("ImGui_ImplGlfw_NewFrame");
+			ImGui_ImplGlfw_NewFrame();
+		}
+		{
+			HZ_PROFILE_SCOPE("ImGui::NewFrame");
+			ImGui::NewFrame();
+		}
 	}
 
 	void OpenGLImGuiLayer::End()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
 		io.DisplaySize = ImVec2((float) app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
-
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		{
+			HZ_PROFILE_SCOPE("");
+			ImGui::Render();
+		}
+		{
+			HZ_PROFILE_SCOPE("");
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		}
 
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			HZ_PROFILE_SCOPE("Viewports Update");
 			GLFWwindow* backupContext = glfwGetCurrentContext();
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(backupContext);
+			{
+				HZ_PROFILE_SCOPE("ImGui::UpdatePlatformWindows");
+				ImGui::UpdatePlatformWindows();
+			}
+			{
+				HZ_PROFILE_SCOPE("ImGui::RenderPlatformWindowsDefault()");
+				ImGui::RenderPlatformWindowsDefault();
+			}
+			{
+				HZ_PROFILE_SCOPE("glfwMakeContextCurrent");
+				glfwMakeContextCurrent(backupContext);
+			}
 		}
 	}
 
