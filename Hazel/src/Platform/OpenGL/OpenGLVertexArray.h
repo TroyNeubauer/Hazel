@@ -20,8 +20,8 @@ namespace Hazel {
 
 		virtual void CalculateNormals() override;
 
-		virtual const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const;
-		virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const;
+		virtual const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const override;
+		virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const override;
 
 		virtual ~OpenGLVertexArray() override;
 

@@ -87,6 +87,12 @@ namespace Hazel {
 	{
 		return new OpenGLImGuiLayer();
 	}
+
+	OpenGLContext::~OpenGLContext()
+	{
+
+	}
+
 }
 
 #endif

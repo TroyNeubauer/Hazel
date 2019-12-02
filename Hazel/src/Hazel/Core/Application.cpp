@@ -44,12 +44,12 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 		m_Window->OnUpdate();//Poll for new events
-		for (auto event = m_EventQueue.end(); event != m_EventQueue.begin(); event) {
+		for (auto event = m_EventQueue.end(); event != m_EventQueue.begin(); ) {
 			Event* e = *(--event);
 			EventDispatcher dispatcher(e);
 			dispatcher.DispatchInstance<WindowCloseEvent>(&Application::OnWindowClose, this);
 
-			for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); it)
+			for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
 			{
 				(*--it)->OnEvent(e);
 				if (e->Handled)

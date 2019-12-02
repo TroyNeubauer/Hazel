@@ -1,7 +1,9 @@
 #include "hzpch.h"
 #include "IcoashedronMesh.h"
+#include "Mesh.h"
 
-#include "../Core/glm.h"
+#include "Hazel/Core/Core.h"
+#include "Hazel/Core/glm.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -14,7 +16,10 @@ namespace Hazel {
 	{
 		for (int i = 0; i < vertices.size(); )
 		{
-			vec3 pos(vertices[i++], vertices[i++], vertices[i++]);
+			float x = vertices[i++];
+			float y = vertices[i++];
+			float z = vertices[i++];
+			vec3 pos(x, y, z);
 			pos = normalize(pos);
 			i += 3;//Skip normal			
 

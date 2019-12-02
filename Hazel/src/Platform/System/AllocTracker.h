@@ -32,19 +32,10 @@ namespace Hazel {
 	};
 }
 
-void* operator new  (std::size_t count);
-void* operator new[](std::size_t count);
-void* operator new  (std::size_t count, std::align_val_t al);
-void* operator new[](std::size_t count, std::align_val_t al);
+void* operator new  (std::size_t bytes) noexcept(false);
+void* operator new[](std::size_t bytes) noexcept(false);
 
-
-void operator delete  (void* ptr);
-void operator delete[](void* ptr);
-void operator delete  (void* ptr, std::align_val_t al);
-void operator delete[](void* ptr, std::align_val_t al);
-void operator delete  (void* ptr, std::size_t sz);
-void operator delete[](void* ptr, std::size_t sz);
-void operator delete  (void* ptr, std::size_t sz, std::align_val_t al);
-void operator delete[](void* ptr, std::size_t sz, std::align_val_t al);
+void operator delete  (void* ptr) noexcept;
+void operator delete[](void* ptr) noexcept;
 
 #endif

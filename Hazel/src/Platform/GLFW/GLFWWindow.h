@@ -31,7 +31,7 @@ namespace Hazel {
 		virtual void ShowCursor(bool shown) override;
 
 
-		inline virtual void* GetNativeWindow() const { return m_Window; }
+		inline virtual void* GetNativeWindow() const override { return m_Window; }
 		virtual void SetContextData(void* data) override;
 		virtual void* GetContextData() const override;
 

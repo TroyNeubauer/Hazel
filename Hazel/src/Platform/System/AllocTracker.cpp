@@ -12,6 +12,8 @@ namespace Hazel {
 
 	void* AllocTracker::Alloc(size_t bytes)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		void* result = malloc(bytes);
 		if (result)
 			m_Tracker.IncrementStarted();
@@ -22,6 +24,8 @@ namespace Hazel {
 
 	void AllocTracker::Delete(void* pointer)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		if (pointer) {
 			free(pointer);
 			m_Tracker.IncrementFinished();
@@ -42,62 +46,26 @@ void AllocTracker_Free(void* ptr)
 
 #ifdef HZ_TRACK_ALLOCS
 
-void* operator new(size_t bytes)
+void* operator new(size_t bytes) noexcept(false)
 {
 	return Hazel::AllocTracker::Alloc(bytes);
 }
 
-void operator delete(void* pointer)
-{
-	Hazel::AllocTracker::Delete(pointer);
-}
-
-void* operator new[](size_t bytes)
+void* operator new[](size_t bytes) noexcept(false)
 {
 	return Hazel::AllocTracker::Alloc(bytes);
 }
 
-void operator delete[](void *pointer)
+void operator delete(void* ptr) noexcept
 {
-	Hazel::AllocTracker::Delete(pointer);
+	Hazel::AllocTracker::Delete(ptr);
 }
 
-void* operator new (std::size_t bytes, std::align_val_t al)
+void operator delete[](void *ptr) noexcept
 {
-	return Hazel::AllocTracker::Alloc(bytes);
-}
-void* operator new[](std::size_t bytes, std::align_val_t al)
-{
-	return Hazel::AllocTracker::Alloc(bytes);
+	Hazel::AllocTracker::Delete(ptr);
 }
 
-
-void operator delete  (void* pointer, std::align_val_t al)
-{
-	Hazel::AllocTracker::Delete(pointer);
-}
-void operator delete[](void* pointer, std::align_val_t al)
-{
-	Hazel::AllocTracker::Delete(pointer);
-}
-
-void operator delete  (void* pointer, std::size_t sz)
-{
-	Hazel::AllocTracker::Delete(pointer);
-}
-void operator delete[](void* pointer, std::size_t sz)
-{
-	Hazel::AllocTracker::Delete(pointer);
-}
-
-void operator delete  (void* pointer, std::size_t sz, std::align_val_t al)
-{
-	Hazel::AllocTracker::Delete(pointer);
-}
-void operator delete[](void* pointer, std::size_t sz, std::align_val_t al)
-{
-	Hazel::AllocTracker::Delete(pointer);
-}
 #endif
 
 

@@ -58,7 +58,7 @@ namespace Hazel {
 		}
 	}
 
-	GLuint OpenGLUtils::Load2DTexture(File* file, uint32_t& width, uint32_t& height, TextureBuilder builder)
+	GLuint OpenGLUtils::Upload2DTexture(File* file, uint32_t& width, uint32_t& height, TextureBuilder builder)
 	{
 		HZ_PROFILE_FUNCTION();
 
@@ -202,7 +202,7 @@ namespace Hazel {
 
 
 			//generate an OpenGL texture ID for this texture
-			id = Load2DTexture(width, height, bits, imageFormat, imageType, builder);
+			id = Upload2DTexture(width, height, bits, imageFormat, imageType, builder);
 		}
 	end:
 		//Free FreeImage's copy of the data
@@ -212,12 +212,12 @@ namespace Hazel {
 		return id;
 	}
 
-	GLuint OpenGLUtils::Load2DTexture(uint32_t width, uint32_t height, void* data, TextureFormat format, TextureBuilder builder)
+	GLuint OpenGLUtils::Upload2DTexture(uint32_t width, uint32_t height, void* data, TextureFormat format, TextureBuilder builder)
 	{
-		return Load2DTexture(width, height, data, TextureFormatTGLType(format), GL_UNSIGNED_BYTE, builder);
+		return Upload2DTexture(width, height, data, TextureFormatTGLType(format), GL_UNSIGNED_BYTE, builder);
 	}
 
-	GLuint OpenGLUtils::Load2DTexture(uint32_t width, uint32_t height, void* data, int imageFormat, int imageType, TextureBuilder builder)
+	GLuint OpenGLUtils::Upload2DTexture(uint32_t width, uint32_t height, void* data, int imageFormat, int imageType, TextureBuilder builder)
 	{
 		HZ_PROFILE_FUNCTION();
 

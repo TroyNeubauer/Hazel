@@ -140,12 +140,13 @@ namespace Hazel {
 			case Hazel::GraphicsAPIType::DIRECTX_12:	return true;
 #endif
 #ifdef HZ_ENABLE_METAL
-			case Hazel::GraphicsAPIType::METAL:			return false;
+			case Hazel::GraphicsAPIType::METAL:			return true;
 #endif
 #ifdef HZ_ENABLE_SOFTWARE_RENDERER
-			case Hazel::GraphicsAPIType::SOFTWARE:		return false;
+			case Hazel::GraphicsAPIType::SOFTWARE:		return true;
 #endif
+			default:
+				return false;
 		}
-			return false;
 	}
 }

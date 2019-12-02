@@ -14,7 +14,7 @@
 namespace Hazel {
 	class NoAPIRendererAPI : public RendererAPI
 	{
-		virtual void Init() {}
+		virtual void Init() override {}
 		virtual void Clear() override {}
 		virtual void SetClearColor(const glm::vec4& color) override {}
 
@@ -72,8 +72,8 @@ namespace Hazel {
 		virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer) override;
 		virtual void AddVertexBuffer(const std::shared_ptr<VertexBuffer> vertexBuffer) override;
 	
-		virtual const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const;
-		virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const;
+		virtual const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const override;
+		virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const override;
 	
 	private:
 		std::vector<std::shared_ptr<VertexBuffer>> m_VertexBuffers;
@@ -107,14 +107,14 @@ namespace Hazel {
 		NoAPIShader(File* shaderSource) : m_ID(0) {}
 		NoAPIShader(const char* vertex, const char* fragment) : m_ID(0) {}
 
-		virtual void SetFloat(const char* name, const float value) {}
-		virtual void SetInt(const char* name, const int value) {}
-		virtual void SetFloat2(const char* name, const glm::vec2& vec) {}
-		virtual void SetFloat3(const char* name, const glm::vec3& vec) {}
-		virtual void SetFloat4(const char* name, const glm::vec4& vec) {}
-		virtual void SetMat3(const char* name, const glm::mat3& mat) {}
-		virtual void SetMat4(const char* name, const glm::mat4& mat) {}
-		virtual void SetTexture(const char* name, const Ref<Texture2D>& texture) {}
+		virtual void SetFloat(const char* name, const float value) override {}
+		virtual void SetInt(const char* name, const int value) override {}
+		virtual void SetFloat2(const char* name, const glm::vec2& vec) override {}
+		virtual void SetFloat3(const char* name, const glm::vec3& vec) override {}
+		virtual void SetFloat4(const char* name, const glm::vec4& vec) override {}
+		virtual void SetMat3(const char* name, const glm::mat3& mat) override {}
+		virtual void SetMat4(const char* name, const glm::mat4& mat) override {}
+		virtual void SetTexture(const char* name, const Ref<Texture2D>& texture) override {}
 
 		virtual void Bind() override {}
 
@@ -132,7 +132,7 @@ namespace Hazel {
 		NoAPITexture2D(int width, int height, const TextureBuilder& builder) {}
 		NoAPITexture2D(int width, int height, void* data, TextureFormat format, TextureBuilder builder) {}
 
-		virtual void SetPixels(void* pixels, TextureFormat format) {}
+		virtual void SetPixels(void* pixels, TextureFormat format) override {}
 
 		virtual void Bind() const override {}
 		virtual void Unbind() const override {}

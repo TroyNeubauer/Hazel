@@ -10,6 +10,7 @@ namespace Hazel {
 	public:
 		UnixContextManager();
 		virtual GraphicsContext* GetContext() override;
+
 		virtual ~UnixContextManager();
 
 	private:

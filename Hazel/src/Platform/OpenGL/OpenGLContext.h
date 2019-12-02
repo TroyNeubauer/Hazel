@@ -19,6 +19,8 @@ namespace Hazel {
 
 		virtual GraphicsAPIType GetAPIType() override;
 		virtual ImGuiLayer* CreateImGuiLayer() override;
+
+		virtual ~OpenGLContext();
 	protected:
 		virtual void Init() override;
 		virtual void PreInit() override;

@@ -26,9 +26,9 @@ namespace Hazel {
 	class Camera3D : public Camera
 	{
 	public:
-		virtual const mat4& GetViewMatrix() const = 0;
-		virtual const mat4& GetProjectionMatrix() const = 0;
-		virtual const mat4& GetViewProjectionMatrix() const = 0;
+		virtual const mat4& GetViewMatrix() const override = 0;
+		virtual const mat4& GetProjectionMatrix() const override = 0;
+		virtual const mat4& GetViewProjectionMatrix() const override = 0;
 
 		virtual void ForceUpdate() = 0;
 		virtual void Update() = 0;
@@ -54,7 +54,7 @@ namespace Hazel {
 
 		inline void Update () { if (m_Controller) { m_Controller->Update(*this); ForceUpdate(); } }
 
-		inline const mat4& GetViewMatrix() const { return m_ViewMatrix; }
+		inline const mat4& GetViewMatrix() const override { return m_ViewMatrix; }
 		inline const mat4& GetProjectionMatrix() const override { return m_ProjectionMatrix; }
 		inline const mat4& GetViewProjectionMatrix() const override { return m_VPMatrix; }
 
@@ -122,16 +122,16 @@ namespace Hazel {
 			UpdateViewProjectionMatrix();
 		}
 
-		virtual void RecalculateProjectionMatrix() { m_Projection->RecalculateProjectionMatrix(); UpdateViewProjectionMatrix(); }
-		virtual void RecalculateViewMatrix() { m_Storage->RecalculateViewMatrix(); UpdateViewProjectionMatrix(); }
+		virtual void RecalculateProjectionMatrix() override { m_Projection->RecalculateProjectionMatrix(); UpdateViewProjectionMatrix(); }
+		virtual void RecalculateViewMatrix() override { m_Storage->RecalculateViewMatrix(); UpdateViewProjectionMatrix(); }
 
-		virtual const vec3 GetPosition() { return m_Storage->GetPosition(); }
-		virtual const quat GetRotation() { return m_Storage->GetRotation(); }
-		virtual const vec3 GetEulerAngles() { return m_Storage->GetEulerAngles(); }
+		virtual const vec3 GetPosition() override { return m_Storage->GetPosition(); }
+		virtual const quat GetRotation() override { return m_Storage->GetRotation(); }
+		virtual const vec3 GetEulerAngles() override { return m_Storage->GetEulerAngles(); }
 
-		virtual void SetRotation(const quat& rotation) { m_Storage->SetRotation(rotation); }
-		virtual void SetPosition(const vec3& position) { m_Storage->SetPosition(position); }
-		virtual void SetEulerAngles(const vec3& rotation) { m_Storage->SetEulerAngles(rotation); }
+		virtual void SetRotation(const quat& rotation) override { m_Storage->SetRotation(rotation); }
+		virtual void SetPosition(const vec3& position) override { m_Storage->SetPosition(position); }
+		virtual void SetEulerAngles(const vec3& rotation) override { m_Storage->SetEulerAngles(rotation); }
 
 		inline CameraController3D& GetController() const { return *m_Controller.get(); }
 		inline CameraStorage3D& GetStorage() const { return *m_Storage.get(); }

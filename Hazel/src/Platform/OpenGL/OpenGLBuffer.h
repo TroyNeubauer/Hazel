@@ -63,13 +63,13 @@ namespace Hazel {
 
 		virtual uint64_t Bytes() const override { return m_Bytes; }
 
-		virtual void SetLayout(const BufferLayout& layout)
+		virtual void SetLayout(const BufferLayout& layout) override
 		{
 			m_Layout = layout;
 		}
 
 
-		virtual const BufferLayout& GetLayout() const
+		virtual const BufferLayout& GetLayout() const override
 		{
 			return m_Layout;
 		}

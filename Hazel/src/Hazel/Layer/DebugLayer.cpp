@@ -3,11 +3,13 @@
 #include "Hazel/Core/TUtil.h"
 #include "Platform/System/FileTracker.h"
 #include "Platform/System/AllocTracker.h"
+#include "Hazel/Core/Engine.h"
+#include "Hazel/Core/TUtil.h"
 
 #include <imgui.h>
 #include <GLFW/glfw3.h>
-#include "../Core/Engine.h"
-#include "../Core/TUtil.h"
+#include <inttypes.h>
+
 
 namespace Hazel {
 	DebugLayer::DebugLayer()
@@ -19,7 +21,8 @@ namespace Hazel {
 		systemMem(System::GetSystemPhysicalMemoryUsage, 0.5f),
 		totalMem(System::GetTotalMachinePhysicalMemory, 0.5f),
 		processCPU(System::GetProcessCPUUsagePercent, 0.5f),
-		systemCPU(System::GetSystemCPUUsagePercent, 0.5f)
+		systemCPU(System::GetSystemCPUUsagePercent, 0.5f),
+		m_FrameTime(nullptr)
 #endif
 	{}
 
@@ -95,7 +98,7 @@ namespace Hazel {
 
 			ImGui::Text("CPU Usage %.1f / %.1f (System)", processCPU.Get(), systemCPU.Get());
 			
-			snprintf(buffer, sizeof(buffer), "Files Open %llu, Total Opened %llu, Total Closed %llu", FileTracker::GetCurrentlyOpenFilesCount(), FileTracker::GetOpenedFilesCount(), FileTracker::GetClosedFilesCount());
+			snprintf(buffer, sizeof(buffer), "Files Open %" PRIu64 ", Total Opened %" PRIu64 ", Total Closed %" PRIu64, FileTracker::GetCurrentlyOpenFilesCount(), FileTracker::GetOpenedFilesCount(), FileTracker::GetClosedFilesCount());
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
 			if (ImGui::Button(buffer))
 				showFileWindow = !showFileWindow;
@@ -115,9 +118,9 @@ namespace Hazel {
 			}
 
 			ImGui::Text("");
-			ImGui::Text("Current Allocs %lu, Total Allocs %lu, Total Frees %lu", AllocTracker::GetCurrentAllocCount(), AllocTracker::GetTotalAllocCount(), AllocTracker::GetTotalFreeCount());
-			ImGui::Text("Allocs/s %lu, Frees /s %lu", AllocTracker::GetAllocCountSec(), AllocTracker::GetFreeCountSec());
-			ImGui::Text("Allocs/frame %lu, Frees /frame %lu", AllocTracker::GetAllocsPerFrame(), AllocTracker::GetFreesPerFrame());
+			ImGui::Text("Current Allocs %" PRIu64 ", Total Allocs %" PRIu64 ", Total Frees %" PRIu64, AllocTracker::GetCurrentAllocCount(), AllocTracker::GetTotalAllocCount(), AllocTracker::GetTotalFreeCount());
+			ImGui::Text("Allocs/s %" PRIu64 ", Frees /s %" PRIu64, AllocTracker::GetAllocCountSec(), AllocTracker::GetFreeCountSec());
+			ImGui::Text("Allocs/frame %" PRIu64 ", Frees /frame %" PRIu64, AllocTracker::GetAllocsPerFrame(), AllocTracker::GetFreesPerFrame());
 
 			window_pos = ImVec2(viewport->Pos.x + viewport->Size.x - ImGui::GetWindowWidth() - DISTANCE, viewport->Pos.y + DISTANCE);
 			ImGui::SetWindowPos(window_pos);

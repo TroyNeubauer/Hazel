@@ -30,6 +30,9 @@ namespace Hazel {
 		virtual void RemoveWindow(Window* window) = 0;
 
 		virtual ImGuiLayer* CreateImGuiLayer() = 0;
+
+		virtual ~GraphicsContext() {}
+
 	protected:
 		virtual void PreInit() = 0;
 		virtual void Init() = 0;

@@ -8,7 +8,8 @@ class World;
 class Body
 {
 public:
-	Body() {}
+	//m_Body must be initalized in the child's constructor
+	Body() :m_Body(nullptr) {}
 
 	inline b2Body* GetBody() { return m_Body; }
 	
@@ -17,12 +18,10 @@ public:
 	//Returns the angle in radains
 	inline float GetRotation() { return m_Body->GetAngle(); }
 
-	void ApplyGravity(const World& world);
-
 	virtual void Render(const World& world) = 0;
 	virtual void Update(const World& world) = 0;
 
-
+	virtual ~Body() {}
 protected:
 	b2Body* m_Body;
 
