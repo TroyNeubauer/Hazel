@@ -10,26 +10,37 @@ namespace Hazel {
 
 	CountTracker AllocTracker::m_Tracker;
 
+	static thread_local bool inAlloc = false, inFree = false;
+
 	void* AllocTracker::Alloc(size_t bytes)
 	{
-		HZ_PROFILE_FUNCTION();
+		if (!inAlloc) {
+			HZ_PROFILE_FUNCTION();
+			inAlloc = true;
+		}
 
 		void* result = malloc(bytes);
 		if (result)
 			m_Tracker.IncrementStarted();
 		else
 			throw std::bad_alloc();
+
+		inAlloc = false;
 		return result;
 	}
 
 	void AllocTracker::Delete(void* pointer)
 	{
-		HZ_PROFILE_FUNCTION();
+		if (!inFree) {
+			HZ_PROFILE_FUNCTION();
+			inFree = true;
+		}
 
 		if (pointer) {
 			free(pointer);
 			m_Tracker.IncrementFinished();
 		}
+		inFree = false;
 	}
 }
 #define HZ_TRACK_ALLOCS
