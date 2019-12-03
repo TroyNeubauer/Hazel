@@ -18,6 +18,11 @@ namespace Hazel {
 			s_RendererAPI->DrawIndexed(vertexArray);
 		}
 
+		static inline void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count)
+		{
+			s_RendererAPI->DrawIndexed(vertexArray, count);
+		}
+
 		static inline void SetClearColor(const glm::vec4& color)
 		{
 			s_RendererAPI->SetClearColor(color);

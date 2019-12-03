@@ -90,7 +90,7 @@ namespace Hazel {
 		virtual void* Map(MapAccess access) = 0;
 		virtual void Unmap(void* buffer) = 0;
 
-		inline uint32_t Count() const { return Bytes() / ElementSize(); }
+		inline uint32_t Count() const { return static_cast<uint32_t>(Bytes() / ElementSize()); }
 		inline uint32_t VertexCount() const { return Bytes() / GetLayout().GetStride(); }
 		inline uint64_t ElementSize() const { return sizeof(T); }
 		virtual uint64_t Bytes() const = 0;
@@ -98,11 +98,8 @@ namespace Hazel {
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
-		static Ref<Buffer<float, BufferType::VERTEX>> Create(float* data, uint64_t bytes);
-		static Ref<Buffer<uint32_t, BufferType::INDEX>> Create(uint32_t* data, uint64_t bytes);
-
-		static Ref<Buffer<float, BufferType::VERTEX>> Create(uint64_t bytes);
-		static Ref<Buffer<uint32_t, BufferType::INDEX>> Create(uint64_t bytes);
+		static Ref<Buffer<T, type>> Create(T* data, uint64_t bytes);
+		static Ref<Buffer<T, type>> Create(uint64_t bytes);
 
 		virtual ~Buffer() {}
 	};
@@ -110,6 +107,9 @@ namespace Hazel {
 	typedef Buffer<float, BufferType::VERTEX> VertexBuffer;
 	typedef Buffer<uint16_t, BufferType::INDEX> ShortIndexBuffer;
 	typedef Buffer<uint32_t, BufferType::INDEX> IndexBuffer;
-
-
 }
+
+#include "Platform/NoAPI/NoAPI.h"
+#include "Platform/OpenGL/OpenGLBuffer.h"
+
+#include "Buffer.inl"

@@ -1,7 +1,6 @@
 #pragma once
 #ifdef HZ_ENABLE_OPEN_GL
 
-#include "Hazel/Renderer/Buffer.h"
 #include "Hazel/Core/Core.h"
 #include "Hazel/Core/Log.h"
 #include "OpenGLMacro.h"
@@ -22,18 +21,31 @@ namespace Hazel {
 
 	template<typename T, BufferType TYPE>
 	class OpenGLBuffer : public Buffer<T, TYPE> {
+	private:
+		void SetData(T* data, uint64_t bytes, GLenum usane)
+		{
+			glBufferData(GetTarget(TYPE), bytes, data, usage);
+			m_Bytes = bytes;
+		}
+
 	public:
 		OpenGLBuffer(T* data, uint64_t bytes)
 		{
 			glCreateBuffers(1, &m_BufferID);
 			glBindBuffer(GetTarget(TYPE), m_BufferID);
-			SetData(data, bytes);
+			SetData(data, bytes, GL_STATIC_DRAW);
+		}
+
+		OpenGLBuffer(uint64_t bytes)
+		{
+			glCreateBuffers(1, &m_BufferID);
+			glBindBuffer(GetTarget(TYPE), m_BufferID);
+			SetData(nullptr, bytes, GL_DYNAMIC_DRAW);
 		}
 
 		virtual void SetData(T* data, uint64_t bytes) override
 		{
-			glBufferData(GetTarget(TYPE), bytes, data, GL_STATIC_DRAW);
-			m_Bytes = bytes;
+			SetData(data, bytes, GL_DYNAMIC_DRAW);
 		}
 
 		virtual void* Map(MapAccess access) override

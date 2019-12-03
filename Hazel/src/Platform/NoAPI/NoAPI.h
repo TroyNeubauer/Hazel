@@ -6,10 +6,10 @@
 #include "Hazel/Context/GraphicsContext.h"
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/ImGui/ImGuiLayer.h"
-#include "Hazel/Renderer/Buffer.h"
 #include "Hazel/Renderer/VertexArray.h"
 #include "Hazel/Renderer/RendererAPI.h"
 #include "Hazel/Renderer/Texture.h"
+
 
 namespace Hazel {
 	class NoAPIRendererAPI : public RendererAPI
@@ -18,7 +18,7 @@ namespace Hazel {
 		virtual void Clear() override {}
 		virtual void SetClearColor(const glm::vec4& color) override {}
 
-		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) override {}
+		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count) override {}
 		virtual void Begin() override {}
 
 		virtual void Shutdown () override {}
@@ -44,6 +44,7 @@ namespace Hazel {
 	{
 	public:
 		NoAPIBuffer(T* data, uint64_t bytes) {}
+		NoAPIBuffer(uint64_t bytes) {}
 
 		virtual void SetData(T* data, uint64_t bytes) override {}
 		virtual void* Map(MapAccess access) override { return nullptr; }
