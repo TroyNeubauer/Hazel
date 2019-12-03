@@ -45,6 +45,11 @@ namespace Hazel {
 		return { (float)xpos, (float)ypos };
 	}
 
+	bool Input::DidMouseMove()
+	{
+		return s_MouseDelta.x || s_MouseDelta.y;
+	}
+
 	void Input::NextFrame()
 	{
 		HZ_PROFILE_FUNCTION();

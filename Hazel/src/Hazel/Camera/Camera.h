@@ -88,6 +88,25 @@ namespace Hazel {
 			m_ViewMatrix = inverse(transform);
 		}
 
+		inline glm::vec2 ToWorldCoordinates(glm::ivec2 screenPos)
+		{
+			screenPos.y = Application::Get().GetWindow().GetHeight() - screenPos.y - 1;
+			screenPos -= glm::ivec2(Application::Get().GetWindow().GetWidth() / 2, Application::Get().GetWindow().GetHeight() / 2 );
+			//([-width/2, width/2], [-height/2, height/2])
+
+			float halfHeight = Application::Get().GetWindow().GetHeight() / 2.0f;
+			glm::vec2 result = glm::vec2(screenPos) / glm::vec2(halfHeight);
+			//([-aspect, aspect], [-1, 1])
+
+			result *= m_Zoom;//Account for zoom
+			return result;
+		}
+
+		inline glm::vec2 GetWorldDelta(glm::ivec2 delta)
+		{
+			return ToWorldCoordinates(delta) - ToWorldCoordinates({ 0, 0 });
+		}
+
 	public:
 		mat4 m_ProjectionMatrix;
 		mat4 m_ViewMatrix;

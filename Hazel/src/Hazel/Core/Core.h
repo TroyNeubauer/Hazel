@@ -31,6 +31,7 @@
 
 #elif defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__BORLANDC__)
 	#define HZ_PLATFORM_WINDOWS
+	#define HZ_LITTLE_ENDIAN
 
 #elif defined(__APPLE__) || defined(__MACH__)
 	#include <TargetConditionals.h>
@@ -56,6 +57,7 @@
 #elif defined(__linux__)//Defined after android to target desktop linux
 	#define HZ_PLATFORM_UNIX
 	#define HZ_PLATFORM_LINUX
+	#define HZ_LITTLE_ENDIAN
 #else
 	#error Unknown platform
 #endif

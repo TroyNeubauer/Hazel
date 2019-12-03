@@ -74,7 +74,7 @@ namespace Hazel {
 	class Texture2D
 	{
 	public:
-		inline Texture2D() : Texture2D(INVALID_LENGTH, INVALID_LENGTH) {}
+		inline explicit Texture2D() : Texture2D(INVALID_LENGTH, INVALID_LENGTH) {}
 		inline Texture2D(uint32_t width, uint32_t height) : m_Width(width), m_Height(height) {}
 
 		static Ref<Texture2D> Load(Path path, TextureBuilder builder = TextureBuilder::Default());

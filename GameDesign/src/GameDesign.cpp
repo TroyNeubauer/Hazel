@@ -1,13 +1,13 @@
 
 #include "GameDesign.h"
-#include "layers/WorldLayer.h"
+#include "layers/SandboxLayer.h"
 
 #include "Hazel.h"
 
 GameDesign::GameDesign()
 {
 	PushOverlay(new Hazel::DebugLayer());
-	PushLayer(new WorldLayer(new World()));
+	PushLayer(new SandboxLayer(new World()));
 }
 
 void GameDesign::Update()
@@ -17,7 +17,7 @@ void GameDesign::Update()
 
 void GameDesign::Render()
 {
-	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 0.5f, 1.0f));
+	Hazel::RenderCommand::SetClearColor(glm::vec4(glm::vec3(0.6f), 1.0f));
 	Hazel::RenderCommand::Clear();
 	if (Hazel::Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_5) || Hazel::Input::IsKeyPressed(HZ_KEY_H))
 	{

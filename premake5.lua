@@ -282,6 +282,7 @@ project "GameDesign"
 
 	includedirs
 	{
+		"%{prj.name}/src/",
 		"Hazel/vendor/spdlog/include",
 		"Hazel/src",
 		"Hazel/vendor",

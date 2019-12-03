@@ -17,6 +17,7 @@ namespace Hazel {
 		static inline glm::vec2 GetMousePosition() { return s_MousePos; }
 		static inline glm::vec2 GetMouseDelta() { return s_MouseDelta; }
 
+		static bool DidMouseMove();
 		static void NextFrame();
 	private:
 		static glm::vec2 s_MousePos, s_LastMousePos, s_MouseDelta, s_ScrollDelta;
