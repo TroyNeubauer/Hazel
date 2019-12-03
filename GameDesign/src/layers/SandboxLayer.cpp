@@ -85,7 +85,8 @@ public:
 	}
 private:
 	T m_Func;
-};
+};
+
 
 bool SandboxLayer::OnMousePressed(Hazel::MouseButtonPressedEvent* event)
 {
@@ -132,6 +133,43 @@ static void Tooltip(const char* text)
 	}
 }
 
+int radioButtonCount = 0;
+bool lastEnabled = true;
+
+static void EndRadioButtons()
+{
+	if (!lastEnabled)
+	{
+		ImGui::PopStyleVar();
+	}
+	radioButtonCount = 0;
+}
+
+static void RadioButton(const char* title, int* var, int num)
+{
+	if (radioButtonCount > 0 && !lastEnabled) ImGui::PopStyleVar();
+
+	lastEnabled = ImGui::RadioButton(title, var, num) || *var == num;
+	
+	if (!lastEnabled)
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+	}
+
+	radioButtonCount++;
+	
+}
+
+float create_Angle = 0.0f, create_Radius = 1.0f, create_Width = 1.0f, create_Height = 1.0f;
+
+
+enum CursorMode
+{
+	CreateEngine, CreateCapsule, CreateRocket, CreateSphere, CreateRect, Delete
+};
+
+CursorMode s_CurrentMode = CursorMode::CreateCapsule;
+
 void SandboxLayer::OnImGuiRender()
 {
 	ImGui::Begin("World Settings");
@@ -171,6 +209,37 @@ void SandboxLayer::OnImGuiRender()
 			m_World->Remove(m_SelectedBody);
 		}
 	}
+	ImGui::End();
+
+	ImGui::Begin("Cursor Modes");
+
+	RadioButton("Create Capsule", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::CreateCapsule);
+	ImGui::Text("Creates a new rocket astronaut capsule part when the mouse is clicked");
+	ImGui::SliderAngle("Angle", &create_Angle, 0.0f);
+
+	RadioButton("Create Engine", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::CreateEngine);
+	ImGui::Text("Creates a new rocket engine part when the mouse is clicked");
+	ImGui::SliderAngle("Angle", &create_Angle, 0.0f);
+	
+	RadioButton("Create Rocket", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::CreateRocket);
+	ImGui::Text("Creates a new rocket when the mouse is clicked");
+	ImGui::SliderAngle("Angle", &create_Angle, 0.0f);
+
+	RadioButton("Create Sphere", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::CreateSphere);
+	ImGui::Text("Creates a new sphere part when the mouse is clicked");
+	ImGui::SliderAngle("Angle", &create_Angle, 0.0f);
+	ImGui::SliderFloat("Radius", &create_Radius, 0.001f, 100.0f, "%0.3f", 2.0f);
+
+	RadioButton("Create Rect", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::CreateRect);
+	ImGui::Text("Creates a new rectangle part when the mouse is clicked");
+	ImGui::SliderAngle("Angle", &create_Angle, 0.0f);
+	ImGui::SliderFloat("Width", &create_Width, 0.001f, 100.0f, "%0.3f", 2.0f);
+	ImGui::SliderFloat("Height", &create_Height, 0.001f, 100.0f, "%0.3f", 2.0f);
+
+	RadioButton("Delete", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::Delete);
+	ImGui::Text("Click an object to delete it");
+
+	EndRadioButtons();
 	ImGui::End();
 }
 
