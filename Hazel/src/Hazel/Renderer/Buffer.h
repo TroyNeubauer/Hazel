@@ -98,8 +98,11 @@ namespace Hazel {
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
-		static Ref<Buffer<T, type>> Create(T* data, uint64_t bytes);
-		static Ref<Buffer<T, type>> Create(uint64_t bytes);
+		static Ref<Buffer<float, BufferType::VERTEX>> Create(float* data, uint64_t bytes);
+		static Ref<Buffer<uint32_t, BufferType::INDEX>> Create(uint32_t* data, uint64_t bytes);
+
+		static Ref<Buffer<float, BufferType::VERTEX>> CreateVertex(uint64_t bytes);
+		static Ref<Buffer<uint32_t, BufferType::INDEX>> CreateIndex(uint64_t bytes);
 
 		virtual ~Buffer() {}
 	};
@@ -108,8 +111,3 @@ namespace Hazel {
 	typedef Buffer<uint16_t, BufferType::INDEX> ShortIndexBuffer;
 	typedef Buffer<uint32_t, BufferType::INDEX> IndexBuffer;
 }
-
-#include "Platform/NoAPI/NoAPI.h"
-#include "Platform/OpenGL/OpenGLBuffer.h"
-
-#include "Buffer.inl"

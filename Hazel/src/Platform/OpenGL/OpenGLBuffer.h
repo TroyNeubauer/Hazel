@@ -22,7 +22,7 @@ namespace Hazel {
 	template<typename T, BufferType TYPE>
 	class OpenGLBuffer : public Buffer<T, TYPE> {
 	private:
-		void SetData(T* data, uint64_t bytes, GLenum usane)
+		void SetData(T* data, uint64_t bytes, GLenum usage)
 		{
 			glBufferData(GetTarget(TYPE), bytes, data, usage);
 			m_Bytes = bytes;

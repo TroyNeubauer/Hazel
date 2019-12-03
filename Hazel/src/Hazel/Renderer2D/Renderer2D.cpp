@@ -46,7 +46,7 @@ namespace Hazel {
 		s_Data = new Renderer2DStorage();
 		s_Data->VertexArray = VertexArray::Create();
 
-		s_Data->VertexBuffer = VertexBuffer::Create(VERTEX_BUFFER_SIZE);
+		s_Data->VertexBuffer = VertexBuffer::CreateVertex(VERTEX_BUFFER_SIZE);
 
 		s_Data->VertexBuffer->SetLayout({
 			{ ShaderDataType::Float3, "a_Position" },
@@ -70,7 +70,7 @@ namespace Hazel {
 			offset += 4;
 		}
 
-		s_Data->IndexBuffer = IndexBuffer::Create(sizeof(indices));
+		s_Data->IndexBuffer = IndexBuffer::Create(indices, sizeof(indices));
 		s_Data->VertexArray->SetIndexBuffer(s_Data->IndexBuffer);
 
 		s_Data->VertexArray->Unbind();
@@ -104,6 +104,7 @@ namespace Hazel {
 	static void Flush(bool reBind)
 	{
 		s_Data->VertexBuffer->Unmap(s_Data->MapedVertexBuffer);
+		s_Data->Texture->Bind();
 
 		RenderCommand::DrawIndexed(s_Data->VertexArray, s_Data->IndexCount);
 		if (reBind)
@@ -124,7 +125,7 @@ namespace Hazel {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float rotation)
 	{
-		DrawQuad(position, size, { 0.0f, 0.0f }, { 1.0f, 1.0f }, texture, {1.0f, 1.0f, 1.0f , 1.0f}, rotation);
+		DrawQuad(position, size, { 0.0f, 0.0f }, { 1.0f, 1.0f }, texture, {1.0f, 1.0f, 1.0f, 1.0f}, rotation);
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, const glm::vec4& color, float rotation)
@@ -145,30 +146,30 @@ namespace Hazel {
 		}
 		s_Data->Texture = texture;
 
-		glm::vec2 rotatedSizePlus = glm::rotate(size, rotation);
-		glm::vec2 halfSizePlus = { rotatedSizePlus.x / 2.0f, rotatedSizePlus.y / 2.0f };
-
-		glm::vec2 negSize = { -size.x, size.y };
-		glm::vec2 rotatedSizeNeg = glm::rotate(negSize, rotation);
-		glm::vec2 halfSizeNeg = { rotatedSizeNeg.x / 2.0f, rotatedSizeNeg.y / 2.0f };
+		glm::vec2 halfSize = size / 2.0f;
+		glm::vec2 v1 = { -halfSize.x, -halfSize.y }, v2 = { -halfSize.x, +halfSize.y }, v3 = { +halfSize.x, +halfSize.y }, v4 = { +halfSize.x, -halfSize.y };
+		v1 = glm::rotate(v1, rotation);
+		v2 = glm::rotate(v2, rotation);
+		v3 = glm::rotate(v3, rotation);
+		v4 = glm::rotate(v4, rotation);
 		
 
-		s_Data->MapedVertexBuffer[s_Data->VertexCount].Position = { position.x - halfSizeNeg.x, position.y - halfSizeNeg.y, position.z };
+		s_Data->MapedVertexBuffer[s_Data->VertexCount].Position = { v1.x + position.x, v1.y + position.y, position.z };
 		s_Data->MapedVertexBuffer[s_Data->VertexCount].Color = color;
 		s_Data->MapedVertexBuffer[s_Data->VertexCount].TexCoord = textureTop;
 		s_Data->VertexCount++;
 
-		s_Data->MapedVertexBuffer[s_Data->VertexCount].Position = { position.x - halfSizePlus.x, position.y + halfSizePlus.y, position.z };
+		s_Data->MapedVertexBuffer[s_Data->VertexCount].Position = { v2.x + position.x, v2.y + position.y, position.z };
 		s_Data->MapedVertexBuffer[s_Data->VertexCount].Color = color;
 		s_Data->MapedVertexBuffer[s_Data->VertexCount].TexCoord = { textureTop.x, textureBottom.y };
 		s_Data->VertexCount++;
 
-		s_Data->MapedVertexBuffer[s_Data->VertexCount].Position = { position.x + halfSizeNeg.x, position.y + halfSizeNeg.y, position.z };
+		s_Data->MapedVertexBuffer[s_Data->VertexCount].Position = { v3.x + position.x, v3.y + position.y, position.z };
 		s_Data->MapedVertexBuffer[s_Data->VertexCount].Color = color;
 		s_Data->MapedVertexBuffer[s_Data->VertexCount].TexCoord = textureBottom;
 		s_Data->VertexCount++;
 
-		s_Data->MapedVertexBuffer[s_Data->VertexCount].Position = { position.x + halfSizePlus.x, position.y - halfSizePlus.y, position.z };
+		s_Data->MapedVertexBuffer[s_Data->VertexCount].Position = { v4.x + position.x, v4.y + position.y, position.z };
 		s_Data->MapedVertexBuffer[s_Data->VertexCount].Color = color;
 		s_Data->MapedVertexBuffer[s_Data->VertexCount].TexCoord = { textureBottom.x, textureTop.y };
 		s_Data->VertexCount++;

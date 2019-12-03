@@ -1,6 +1,8 @@
 #include "hzpch.h"
 #include "Buffer.h"
 
+#include "Platform/NoAPI/NoAPI.h"
+#include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace Hazel {
 	uint32_t SizeOfShaderDataType(ShaderDataType type)
@@ -95,6 +97,71 @@ namespace Hazel {
 				HZ_CORE_ASSERT(false, "Unknown ShaderDataType!");
 		}
 		return 0;
+	}
+
+	template<>
+	Ref<VertexBuffer> VertexBuffer::Create(float* data, uint64_t bytes)
+	{
+		switch (GraphicsAPI::Get())
+		{
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
+			case GraphicsAPIType::NONE:		return Ref<VertexBuffer>(new NoAPIBuffer <float, BufferType::VERTEX>(data, bytes));
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+			case GraphicsAPIType::OPEN_GL:	return Ref<VertexBuffer>(new OpenGLBuffer<float, BufferType::VERTEX>(data, bytes));
+#endif
+			default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
+		}
+		return nullptr;
+	}
+
+	template<>
+	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* data, uint64_t bytes)
+	{
+		switch (GraphicsAPI::Get())
+		{
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
+			case GraphicsAPIType::NONE:		return Ref<IndexBuffer>(new NoAPIBuffer <uint32_t, BufferType::INDEX>(data, bytes));
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+			case GraphicsAPIType::OPEN_GL:	return Ref<IndexBuffer>(new OpenGLBuffer<uint32_t, BufferType::INDEX>(data, bytes));
+#endif
+			default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
+		}
+		return nullptr;
+	}
+
+	template<>
+	Ref<VertexBuffer> VertexBuffer::CreateVertex(uint64_t bytes)
+	{
+		switch (GraphicsAPI::Get())
+		{
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
+			case GraphicsAPIType::NONE:		return Ref<VertexBuffer>(new NoAPIBuffer <float, BufferType::VERTEX>(bytes));
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+			case GraphicsAPIType::OPEN_GL:	return Ref<VertexBuffer>(new OpenGLBuffer<float, BufferType::VERTEX>(bytes));
+#endif
+			default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
+		}
+		return nullptr;
+	}
+
+
+	template<>
+	Ref<IndexBuffer> IndexBuffer::CreateIndex(uint64_t bytes)
+	{
+		switch (GraphicsAPI::Get())
+		{
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
+			case GraphicsAPIType::NONE:		return Ref<IndexBuffer>(new NoAPIBuffer <uint32_t, BufferType::INDEX>(bytes));
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+			case GraphicsAPIType::OPEN_GL:	return Ref<IndexBuffer>(new OpenGLBuffer<uint32_t, BufferType::INDEX>(bytes));
+#endif
+			default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
+		}
+		return nullptr;
 	}
 
 }
