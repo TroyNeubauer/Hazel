@@ -1,12 +1,14 @@
-#include "../Renderer2D/Renderer2D.h"
-
 #include "hzpch.h"
+
+#include "Renderer2D.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "Hazel/Renderer/VertexArray.h"
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/Renderer/RenderCommand.h"
+#include "Hazel/Core/Core.h"
 
-#include <glm/gtc/matrix_transform.hpp>
-#include "../Core/Core.h"
 
 namespace Hazel {
 
@@ -24,14 +26,9 @@ namespace Hazel {
 		s_Data = new Renderer2DStorage();
 		s_Data->QuadVertexArray = VertexArray::Create();
 
-		float squareVertices[5 * 4] = {
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
-		};
 
 		Ref<VertexBuffer> squareVB = VertexBuffer::Create(squareVertices, sizeof(squareVertices));
+
 		squareVB->SetLayout({
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float2, "a_TexCoord" }
@@ -57,10 +54,10 @@ namespace Hazel {
 		delete s_Data;
 	}
 
-	void Renderer2D::BeginScene(const Camera2D& camera)
+	void Renderer2D::BeginScene(const Camera2D& cam)
 	{
 		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_Data->TextureShader->SetMat4("u_ViewProjection", cam.GetViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene()
@@ -100,6 +97,25 @@ namespace Hazel {
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 		* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f })
 		* glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0, 0, 1));
+		s_Data->TextureShader->SetMat4("u_Transform", transform);
+
+		s_Data->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, float rotation)
+	{
+		DrawQuad({ position.x, position.y, 0.0f }, size, textureTop, textureBottom, texture, rotation);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, float rotation)
+	{
+		s_Data->TextureShader->SetFloat4("u_Color", glm::vec4(1.0f));
+		s_Data->TextureShader->SetTexture("u_Texture", texture);
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f })
+			* glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0, 0, 1));
 		s_Data->TextureShader->SetMat4("u_Transform", transform);
 
 		s_Data->QuadVertexArray->Bind();

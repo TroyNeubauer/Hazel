@@ -9,16 +9,21 @@ namespace Hazel {
 
 	Ref<Shader> Shader::Create(Path shader)
 	{
+		HZ_PROFILE_FUNCTION();
+		
 		HZ_CORE_INFO("Reading shader file {}", shader.ToString());
-		Timer timer;
 		FileError error = FileError::NONE;
-		File* shaderFile = shader.Open(FileOpenOptions::READ, error);
-		if (error != FileError::NONE)
+		File* shaderFile;
 		{
-			HZ_CORE_ASSERT(false, "Unable to find shader file {}, Error: {}", shader.ToString(), FileErrorToString(error));
-			return nullptr;
+			HZ_PROFILE_SCOPE("File Read");
+
+			shaderFile = shader.Open(FileOpenOptions::READ, error);
+			if (error != FileError::NONE)
+			{
+				HZ_CORE_ASSERT(false, "Unable to find shader file {}, Error: {}", shader.ToString(), FileErrorToString(error));
+				return nullptr;
+			}
 		}
-		timer.Stop().Print("Reading shader file took"/*, spdlog::level::level_enum::trace*/);
 		GraphicsAPIType api = GraphicsAPI::Get();
 		Shader* result = nullptr;
 		switch (api)

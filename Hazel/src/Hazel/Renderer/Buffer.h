@@ -101,6 +101,9 @@ namespace Hazel {
 		static Ref<Buffer<float, BufferType::VERTEX>> Create(float* data, uint64_t bytes);
 		static Ref<Buffer<uint32_t, BufferType::INDEX>> Create(uint32_t* data, uint64_t bytes);
 
+		static Ref<Buffer<float, BufferType::VERTEX>> Create(uint64_t bytes);
+		static Ref<Buffer<uint32_t, BufferType::INDEX>> Create(uint64_t bytes);
+
 		virtual ~Buffer() {}
 	};
 

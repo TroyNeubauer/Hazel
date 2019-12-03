@@ -74,7 +74,7 @@
 	#endif
 
 	#define HZ_ASSERT(x, ...) { if(!(x)) {  HZ_ERROR("Assertion Failed: " #x); HZ_ERROR(__VA_ARGS__); HZ_DEBUGBREAK(); } }
-#define HZ_CORE_ASSERT(x, ...) { if(!(x)) { HZ_CORE_CRITICAL("Assertion Failed: " #x); HZ_CORE_CRITICAL(__VA_ARGS__); HZ_DEBUGBREAK(); } }
+	#define HZ_CORE_ASSERT(x, ...) { if(!(x)) { HZ_CORE_CRITICAL("Assertion Failed: " #x); HZ_CORE_CRITICAL(__VA_ARGS__); HZ_DEBUGBREAK(); } }
 
 #else
 	#define HZ_ASSERT(x, ...)

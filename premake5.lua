@@ -7,7 +7,7 @@ newoption {
 	{
 		{ "clang",    "Clang LLVM Compiler" },
 		{ "gcc",  "GNU Compiler" },
-		{ "msc",  "MSVC (Windows only)" }
+		{ "msc",  "MSVC (Windows only)" },
 	}
 }
 

@@ -1,15 +1,32 @@
-#include "Engine.h"
-
 #include "hzpch.h"
+
 #include <GLFW/glfw3.h>
 #include <FreeImage.h>
+
+#include "Engine.h"
 #include "Hazel/Core/Log.h"
 #include "Hazel/Context/ContextManager.h"
 
 namespace Hazel {
 
+	static float m_DeltaTime = 1.0f / 60.0f;
+	static float m_LastTime = -1.0f;
+
+	static bool staticInitComplete = false, initDone = false;
+
+	bool Engine::IsStaticInitializationComplete()
+	{
+		return staticInitComplete;
+	}
+
+	bool Engine::IsInitialized()
+	{
+		return initDone;
+	}
+
 	void Init()
 	{
+		staticInitComplete = true;
 		HZ_PROFILE_FUNCTION();
 
 		Hazel::Log::Init();
@@ -21,6 +38,8 @@ namespace Hazel {
 			HZ_PROFILE_SCOPE("System::Init()");
 			System::Init();
 		}
+
+		initDone = true;
 	}
 
 	void Shutdown()
@@ -36,9 +55,6 @@ namespace Hazel {
 
 		Hazel::Log::DisableLogging();
 	}
-
-	float Engine::m_DeltaTime = 1.0f / 60.0f;
-	float Engine::m_LastTime = -1.0f;
 
 	float Engine::GetDeltaTime()
 	{

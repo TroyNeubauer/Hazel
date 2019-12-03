@@ -85,6 +85,40 @@ namespace Hazel {
 	}
 
 
+
+	template <>
+	Ref<VertexBuffer> Buffer<float, BufferType::VERTEX>::Create(uint64_t bytes) {
+		switch (GraphicsAPI::Get())
+		{
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
+		case GraphicsAPIType::NONE:		return Ref<VertexBuffer>(new NoAPIBuffer <float, BufferType::VERTEX>(bytes));
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+		case GraphicsAPIType::OPEN_GL:	return Ref<VertexBuffer>(new OpenGLBuffer<float, BufferType::VERTEX>(bytes));
+#endif
+		default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
+		}
+		return nullptr;
+	}
+
+	template <>
+	Ref<Buffer<uint32_t, BufferType::INDEX>> Buffer<uint32_t, BufferType::INDEX>::Create(uint64_t bytes) {
+		switch (GraphicsAPI::Get())
+		{
+#ifdef HZ_ENABLE_GRAPHICS_API_NONE
+		case GraphicsAPIType::NONE:		return Ref<IndexBuffer>(new NoAPIBuffer <uint32_t, BufferType::INDEX>(bytes));
+#endif
+#ifdef HZ_ENABLE_OPEN_GL
+		case GraphicsAPIType::OPEN_GL:	return Ref<IndexBuffer>(new OpenGLBuffer<uint32_t, BufferType::INDEX>(bytes));
+#endif
+		default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
+		}
+		return nullptr;
+	}
+
+
+
+
 	uint32_t BufferElement::GetElementCount() const
 	{
 		switch (Type)

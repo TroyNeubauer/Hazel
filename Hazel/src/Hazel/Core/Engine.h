@@ -4,18 +4,17 @@
 
 namespace Hazel {
 
-	class Engine
+	namespace Engine
 	{
-	public:
-		static float GetDeltaTime();
-		static float GetTime();
-		static void SetDeltaTime(float delta);
+		bool IsStaticInitializationComplete();
+		bool IsInitialized();
 
-		static void Update();
+		float GetDeltaTime();
+		float GetTime();
+		void SetDeltaTime(float delta);
 
-	private:
-		static float m_DeltaTime;
-		static float m_LastTime;
+		void Update();
+
 	};
 
 	void Init();
