@@ -9,8 +9,10 @@
 namespace Hazel {
 	Ref<Texture2D> Texture2D::Load(Path path, TextureBuilder builder)
 	{
-		HZ_CORE_INFO("Reading texture file {}", path.ToString());
-		Timer timer;
+		HZ_PROFILE_FUNCTION();
+
+		HZ_CORE_TRACE("Reading texture file {}", path.ToString());
+
 		FileError error = FileError::NONE;
 		File* file = path.Open(FileOpenOptions::READ, error);
 		if (error != FileError::NONE)
@@ -18,7 +20,6 @@ namespace Hazel {
 			HZ_CORE_ERROR("Unable open texture: {0}, Error: {1}", path.ToString(), FileErrorToString(error));
 			return nullptr;
 		}
-		timer.Stop().Print("Reading texture took"/*, spdlog::level::level_enum::trace*/);
 		GraphicsAPIType api = GraphicsAPI::Get();
 		switch (api)
 		{

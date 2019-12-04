@@ -95,11 +95,13 @@ namespace Hazel {
 		virtual void* Map(MapAccess access) = 0;
 		virtual void Unmap(void* buffer) = 0;
 
-		inline uint32_t Count() const { return static_cast<uint32_t>(Bytes() / ElementSize()); }
-		inline uint32_t VertexCount() const { return Bytes() / GetLayout().GetStride(); }
-		inline uint64_t ElementSize() const { return sizeof(T); }
+		//Returns the number of elements in this buffer (usually index count or vertex count)
+		inline uint32_t Count() const { return Bytes() / GetLayout().GetStride(); }
+		
 		virtual uint64_t Bytes() const = 0;
 
+		//Sets this buffer to have the desired layout and uses the structSize parameter (is specified) to verify that the size of the layout
+		//requested and the size of the c++ struct maps to that data are the same size
 		virtual void SetLayout(const BufferLayout& layout, size_t structSize = 0) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 

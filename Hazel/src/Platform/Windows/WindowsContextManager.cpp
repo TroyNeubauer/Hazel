@@ -14,6 +14,7 @@ namespace Hazel {
 	static void GLFWErrorCallback(int error, const char* description)
 	{
 		HZ_CORE_ERROR("GLFW Error ({}): {}", error, description);
+		HZ_CORE_ASSERT(false, "");
 	}
 
 	WindowsContextManager::WindowsContextManager()

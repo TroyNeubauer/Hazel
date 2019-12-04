@@ -119,7 +119,6 @@ namespace Hazel {
 		HZ_PROFILE_FUNCTION();
 
 
-		Timer timer;
 		std::vector<GLuint> shaderIDs;
 		for (auto& kv : shaders)
 		{
@@ -200,18 +199,17 @@ namespace Hazel {
 		char name[128];
 		if (count)
 		{
-			HZ_CORE_INFO("{} Uniforms in shader: {}", count, m_Path);
+			HZ_CORE_TRACE("{} Uniforms in shader: {}", count, m_Path);
 		}
 		for (int i = 0; i < count; i++)
 		{
 			glGetActiveUniform(program, i, sizeof(name), &length, &size, &type, name);
 			m_UniformCache[std::string(name, length)] = glGetUniformLocation(m_ID, name);
-			HZ_CORE_INFO("Name: {}, type: {}", name, type);
+			HZ_CORE_TRACE("Name: {}, type: {}", name, type);
 #ifdef HZ_DEBUG
 			m_UniformTypes[std::string(name, length)] = type;
 #endif
 		}
-		timer.Stop().Print("Compiling and linking shader took"/*, spdlog::level::level_enum::trace*/);
 	}
 
 

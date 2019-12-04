@@ -64,8 +64,6 @@ namespace Hazel {
 			}
 			uint8_t* result = (uint8_t*) glMapBuffer(GetTarget(TYPE), glAccess);
 			HZ_CORE_ASSERT(result, "Unable to map buffer!")
-			if (result == nullptr)
-				HZ_CORE_WARN();
 			return result;
 		}
 

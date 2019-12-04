@@ -3,13 +3,6 @@
 
 #include <GLFW/glfw3.h>
 
-namespace TUtil {
-	float GetTime()
-	{
-		return (float) glfwGetTime();
-	}
-}
-
 namespace Hazel {
 	uint32_t Utils::ToCompactColor(glm::vec4 color)
 	{

@@ -11,7 +11,7 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 		
-		HZ_CORE_INFO("Reading shader file {}", shader.ToString());
+		HZ_CORE_TRACE("Reading shader file {}", shader.ToString());
 		FileError error = FileError::NONE;
 		File* shaderFile;
 		{

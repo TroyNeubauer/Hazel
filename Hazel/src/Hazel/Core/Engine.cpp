@@ -1,6 +1,5 @@
 #include "hzpch.h"
 
-#include <GLFW/glfw3.h>
 #include <FreeImage.h>
 
 #include "Engine.h"
@@ -63,8 +62,7 @@ namespace Hazel {
 	
 	float Engine::GetTime()
 	{
-		if (!Log::CanLog()) return 0.0f;
-		return (float) glfwGetTime();
+		return TUtil::System::GetTime();
 	}
 
 	void Engine::SetDeltaTime(float delta)

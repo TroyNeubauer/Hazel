@@ -67,6 +67,7 @@ namespace Hazel {
 #ifndef HZ_DIST
 			ImGui::Text("Current Frame: %d", frames);
 #endif
+			ImGui::Text("Time: %.3fs", Engine::GetTime());
 			ImGui::End();
 		}
 
