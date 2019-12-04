@@ -24,6 +24,8 @@ namespace Hazel {
 	private:
 		void SetData(T* data, uint64_t bytes, GLenum usage)
 		{
+			HZ_PROFILE_FUNCTION();
+
 			glBufferData(GetTarget(TYPE), bytes, data, usage);
 			m_Bytes = bytes;
 		}
@@ -50,6 +52,8 @@ namespace Hazel {
 
 		virtual void* Map(MapAccess access) override
 		{
+			HZ_PROFILE_FUNCTION();
+
 			GLenum glAccess;
 			switch (access)
 			{
@@ -59,25 +63,25 @@ namespace Hazel {
 				default: HZ_CORE_ASSERT(false, "");
 			}
 			uint8_t* result = (uint8_t*) glMapBuffer(GetTarget(TYPE), glAccess);
+			HZ_CORE_ASSERT(result, "Unable to map buffer!")
 			if (result == nullptr)
-				HZ_CORE_WARN("Unable to map buffer!");
+				HZ_CORE_WARN();
 			return result;
 		}
 
-		virtual void Unmap(void* buffer) override
-		{
-			glUnmapBuffer(GetTarget(TYPE));
-		}
+		virtual void Unmap(void* buffer) override { HZ_PROFILE_FUNCTION(); glUnmapBuffer(GetTarget(TYPE)); }
 
-		virtual void Bind() const override { glBindBuffer(GetTarget(TYPE), m_BufferID); }
+		virtual void Bind() const override { HZ_PROFILE_FUNCTION(); glBindBuffer(GetTarget(TYPE), m_BufferID); }
 
-		virtual void Unbind() const override { glBindBuffer(GetTarget(TYPE), 0); }
+		virtual void Unbind() const override { HZ_PROFILE_FUNCTION(); glBindBuffer(GetTarget(TYPE), 0); }
 
 		virtual uint64_t Bytes() const override { return m_Bytes; }
 
-		virtual void SetLayout(const BufferLayout& layout) override
+		virtual void SetLayout(const BufferLayout& layout, size_t structSize) override
 		{
 			m_Layout = layout;
+			if (structSize) HZ_CORE_ASSERT(structSize == layout.GetStride(), 
+				"Size of struct doesn't match expected size from BufferLayout! Expected {}, but got {}", layout.GetStride(), structSize);
 		}
 
 
@@ -88,6 +92,8 @@ namespace Hazel {
 
 		virtual ~OpenGLBuffer()
 		{
+			HZ_PROFILE_FUNCTION();
+
 			glDeleteBuffers(1, &m_BufferID);
 		}
 

@@ -31,12 +31,14 @@ namespace Hazel {
 	#define HZ_CORE_WARN(...)		::Hazel::Log::GetCoreLogger()->warn(__VA_ARGS__)
 	#define HZ_CORE_ERROR(...)		::Hazel::Log::GetCoreLogger()->error(__VA_ARGS__)
 	#define HZ_CORE_CRITICAL(...)	::Hazel::Log::GetCoreLogger()->critical(__VA_ARGS__)
+	#define HZ_CORE_LOG(level, ...)	::Hazel::Log::GetCoreLogger()->log(level, __VA_ARGS__)
 #else //Srtip out logging in dist builds
 	#define HZ_CORE_TRACE(...)
 	#define HZ_CORE_INFO(...)
 	#define HZ_CORE_WARN(...)
 	#define HZ_CORE_ERROR(...)
 	#define HZ_CORE_CRITICAL(...)
+	#define HZ_CORE_LOG(level, ...)
 #endif
 
 // Client log macros
@@ -45,3 +47,4 @@ namespace Hazel {
 #define HZ_WARN(...)			::Hazel::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define HZ_ERROR(...)			::Hazel::Log::GetClientLogger()->error(__VA_ARGS__)
 #define HZ_CRITICAL(...)		::Hazel::Log::GetClientLogger()->critical(__VA_ARGS__)
+#define HZ_LOG(level, ...)		::Hazel::Log::GetClientLogger()->log(level, __VA_ARGS__)

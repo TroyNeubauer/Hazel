@@ -7,7 +7,7 @@
 #include "Body.h"
 #include "ship/Ship.h"
 #include "Hazel/Camera/Camera.h"
-
+#include "Hazel/Physics/Box2D/DebugRenderer.h"
 
 struct LinkedListIterator
 {
@@ -78,6 +78,8 @@ private:
 	Hazel::Scope<b2World> m_World;
 	Hazel::Camera2D m_Camera;
 	std::function<void(Body*)> m_OnRemovedFunction;
+
+	Hazel::Scope<Hazel::B2D_DebugDraw> m_DebugDraw;
 };
 
 class WorldCameraController : public Hazel::CameraController2D

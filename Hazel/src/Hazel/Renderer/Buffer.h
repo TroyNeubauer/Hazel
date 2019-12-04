@@ -9,6 +9,11 @@
 
 namespace Hazel {
 
+	enum class GPUPrimitive
+	{
+		TRIANGLES, LINES
+	};
+
 	enum class ShaderDataType {
 		None = 0,
 		Float16, Float16_2, Float16_3, Float16_4, 
@@ -95,7 +100,7 @@ namespace Hazel {
 		inline uint64_t ElementSize() const { return sizeof(T); }
 		virtual uint64_t Bytes() const = 0;
 
-		virtual void SetLayout(const BufferLayout& layout) = 0;
+		virtual void SetLayout(const BufferLayout& layout, size_t structSize = 0) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
 		static Ref<Buffer<float, BufferType::VERTEX>> Create(float* data, uint64_t bytes);

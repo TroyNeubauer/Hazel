@@ -26,8 +26,8 @@ namespace Hazel {
 
 	void Instrumentor::WriteProfile(const ProfileResult& result)
 	{
-		if (!Engine::IsStaticInitializationComplete()) return; //We have no way to profile a session in a initalizer
-		HZ_CORE_ASSERT(m_CurrentSession, "No session is active!");
+		if (!Engine::IsStaticInitializationComplete() || m_CurrentSession == nullptr) return; //We have no way to profile a session in a initalizer
+		//HZ_CORE_ASSERT(m_CurrentSession, "No session is active!");
 
 		if (m_ProfileCount++ > 0)
 			fputc(',', m_File);

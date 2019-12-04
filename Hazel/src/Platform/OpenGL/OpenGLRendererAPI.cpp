@@ -29,11 +29,18 @@ namespace Hazel {
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count)
+	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count, GPUPrimitive primitive)
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+		GLenum mode;
+		switch (primitive)
+		{
+			case GPUPrimitive::TRIANGLES: mode = GL_TRIANGLES; break;
+			case GPUPrimitive::LINES: mode = GL_LINES; break;
+			default: HZ_CORE_ASSERT(false, "Unsupported primitive");
+		}
+		glDrawElements(mode, count, GL_UNSIGNED_INT, nullptr);
 	}
 
 	void OpenGLRendererAPI::Begin()

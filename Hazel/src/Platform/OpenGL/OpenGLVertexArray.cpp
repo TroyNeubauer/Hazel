@@ -14,17 +14,23 @@ namespace Hazel {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glGenVertexArrays(1, &m_ID);
 		glBindVertexArray(m_ID);
 	}
 
 	void OpenGLVertexArray::Bind() const
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_ID);
 	}
 
 	void OpenGLVertexArray::Unbind() const
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 
@@ -38,6 +44,8 @@ namespace Hazel {
 
 	void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer> vertexBuffer)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		HZ_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex buffer has no layout");
 		vertexBuffer->Bind();
 
@@ -45,6 +53,7 @@ namespace Hazel {
 		uint32_t index = 0;
 		const auto& layout = vertexBuffer->GetLayout();
 		for (const auto& element : layout) {
+			HZ_PROFILE_SCOPE("glVertexAttribPointer");
 			glEnableVertexAttribArray(index);
 			glVertexAttribPointer(index,
 				element.GetElementCount(),
@@ -82,6 +91,8 @@ namespace Hazel {
 
 	void OpenGLVertexArray::CalculateNormals()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		HZ_CORE_ASSERT(m_IndexBuffer.get(), "Index buffer cannot be null");
 		if (m_VertexBuffers.size() != 1)
 			HZ_CORE_ASSERT(false, "Only Vertex arrays with one buffer can be used to calculate normals");
@@ -151,11 +162,15 @@ namespace Hazel {
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glDeleteVertexArrays(1, &m_ID);
 	}
 
 	void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		indexBuffer->Bind();
 
 		m_IndexBuffer = indexBuffer;

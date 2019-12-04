@@ -16,59 +16,89 @@ World::World() : m_Camera(new WorldCameraController())
 	Hazel::Ref<Hazel::Texture2D> RocketComponents = Hazel::Texture2D::Load("assets/textures/RocketComponents.png", builder);
 	Hazel::Ref<Hazel::Texture2D> DefaultShip = Hazel::Texture2D::Load("assets/textures/Rocket.png", builder);
 
-	Parts::MK1Capsule.reset(new PartDef{ "MK1 Capsule", 1.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 0, 16 }, { 14, 16 }), 1.0f });
-	Parts::FlyingShip.reset(new PartDef{ "Flying Ship", 1.5f, 15.0f, Hazel::AnimationDef2D::Create(DefaultShip, 0.2f, {25, 47}, {{0, 1}, {1, 1}, {2, 1}, {3, 1}, {4, 1}}), 2.0f });
-	Parts::StaticShip.reset(new PartDef{ "Ship", 1.5f, 15.0f, Hazel::AnimationDef2D::Create(DefaultShip, {0, 0}, {25, 47}), 2.0f });
+	Parts::MK1Capsule.reset(new PartDef{ "MK1 Capsule", 20.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 0, 16 }, { 14, 16 }), 1.0f });
+	Parts::FlyingShip.reset(new PartDef{ "Flying Ship", 25.0f, 15.0f, Hazel::AnimationDef2D::Create(DefaultShip, 0.2f, {25, 47}, {{0, 1}, {1, 1}, {2, 1}, {3, 1}, {4, 1}}), 2.0f });
+	Parts::StaticShip.reset(new PartDef{ "Ship", 25.0f, 15.0f, Hazel::AnimationDef2D::Create(DefaultShip, {0, 0}, {25, 47}), 2.0f });
 
 	m_Camera.SetPosition(vec2(0.0, 0.0));
 	m_Camera.SetRotation(0.0f);
 	m_Camera.SetZoom(10.0f);
+
+#ifdef HZ_DEBUG
+	m_DebugDraw.reset(new Hazel::B2D_DebugDraw());
+	m_DebugDraw->SetFlags(b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit);
+	m_World->SetDebugDraw(m_DebugDraw.get());
+#endif
 }
 
 void World::Update()
 {
-	m_Camera.Update();
-	b2Body* body = m_World->GetBodyList();
-	for (int i = 0; i < m_World->GetBodyCount(); i++, body = body->GetNext())
-	{
-		if (body->GetType() == b2_dynamicBody)
-		{
-			b2Body* other = m_World->GetBodyList();
-			for (int j = 0; j < i; j++, other = other->GetNext())
-			{
-				b2Vec2 force = other->GetPosition() - body->GetPosition();
-				double distance = force.Normalize();// Determine the amount of force to give
-				force *= static_cast<float>((World::Constants::G * (double) body->GetMass() * (double) other->GetMass()) / (distance * distance));
+	HZ_PROFILE_FUNCTION();
 
-				body->ApplyForceToCenter(force, true);
-				other->ApplyForceToCenter(-force, true);
+	m_Camera.Update();
+	{
+		HZ_PROFILE_SCOPE("Box2D Gravity");
+
+		b2Body* body = m_World->GetBodyList();
+		for (int i = 0; i < m_World->GetBodyCount(); i++, body = body->GetNext())
+		{
+			if (body->GetType() == b2_dynamicBody)
+			{
+				b2Body* other = m_World->GetBodyList();
+				for (int j = 0; j < i; j++, other = other->GetNext())
+				{
+					b2Vec2 force = other->GetPosition() - body->GetPosition();
+					double distance = force.Normalize();// Determine the amount of force to give
+					force *= static_cast<float>((World::Constants::G * (double)body->GetMass() * (double)other->GetMass()) / (distance * distance));
+
+					body->ApplyForceToCenter(force, true);
+					other->ApplyForceToCenter(-force, true);
+				}
 			}
 		}
+		body = m_World->GetBodyList();
+		for (int i = 0; i < m_World->GetBodyCount(); i++, body = body->GetNext())
+		{
+			Body* myBody = ToBody(body);
+			myBody->Update(*this);
+		}
 	}
-	body = m_World->GetBodyList();
-	for (int i = 0; i < m_World->GetBodyCount(); i++, body = body->GetNext())
 	{
-		Body* myBody = ToBody(body);
-		myBody->Update(*this);
+		HZ_PROFILE_SCOPE("Box2D Step");
+		m_World->Step(Hazel::Engine::GetDeltaTime(), 10, 10);
+		m_World->ClearForces();
 	}
-	m_World->Step(Hazel::Engine::GetDeltaTime(), 10, 10);
-	m_World->ClearForces();
 }
 
 void World::Render()
 {
-	Hazel::Renderer2D::BeginScene(m_Camera);
-	for (auto it = BodiesBegin(); it != BodiesEnd(); it++)
-	{
-		Body* body = ToBody(*it);
-		body->Render(*this);
+	HZ_PROFILE_FUNCTION();
 
+	if (m_DebugDraw)
+	{
+		HZ_PROFILE_SCOPE("Box2D Debug Draw");
+		m_DebugDraw->BeginScene(m_Camera);
+		m_World->DrawDebugData();
+		m_DebugDraw->EndScene();
 	}
-	Hazel::Renderer2D::EndScene();
+
+	{
+		HZ_PROFILE_SCOPE("Main Draw");
+		Hazel::Renderer2D::BeginScene(m_Camera);
+		for (auto it = BodiesBegin(); it != BodiesEnd(); it++)
+		{
+			Body* body = ToBody(*it);
+			body->Render(*this);
+		}
+		Hazel::Renderer2D::DrawQuad(m_Camera.ToWorldCoordinates(Hazel::Input::GetMousePosition()), { 0.1f, 0.1f }, 0xFF00FFFF);
+		Hazel::Renderer2D::EndScene();
+	}
 }
 
 Part& World::AddPart(b2Vec2 pos, const Hazel::Ref<PartDef>& partDef, float rot)
 {
+	HZ_PROFILE_FUNCTION();
+
 	Ship* ship = new Ship();
 	m_Ships.push_back(Hazel::S(ship));
 	Part& part = ship->GetParts().emplace_back(*this, pos, partDef);
@@ -77,6 +107,7 @@ Part& World::AddPart(b2Vec2 pos, const Hazel::Ref<PartDef>& partDef, float rot)
 
 void World::Remove(Body* body)
 {
+	HZ_PROFILE_FUNCTION();
 
 	if(m_OnRemovedFunction)
 		m_OnRemovedFunction(body);
@@ -108,6 +139,8 @@ const float ACCEL_SPEED = 25.0f;
 
 void WorldCameraController::Update(Hazel::Camera2D& camera)
 {
+	HZ_PROFILE_FUNCTION();
+
 	glm::vec2 move = { 0, 0 };
 	glm::vec2 right = glm::rotate(glm::vec2(1.0f, 0.0f), glm::radians(camera.m_Rot));
 	glm::vec2 up = glm::rotate(glm::vec2(0.0f, 1.0f), glm::radians(camera.m_Rot));

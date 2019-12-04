@@ -52,7 +52,7 @@ namespace Hazel {
 	public:
 		Camera2D(CameraController2D* controller) : m_Controller(controller) {}
 
-		inline void Update () { if (m_Controller) { m_Controller->Update(*this); ForceUpdate(); } }
+		inline void Update () { HZ_PROFILE_FUNCTION(); if (m_Controller) { m_Controller->Update(*this); ForceUpdate(); } }
 
 		inline const mat4& GetViewMatrix() const override { return m_ViewMatrix; }
 		inline const mat4& GetProjectionMatrix() const override { return m_ProjectionMatrix; }
@@ -60,6 +60,8 @@ namespace Hazel {
 
 		inline void ForceUpdate()
 		{
+			HZ_PROFILE_FUNCTION();
+
 			RecalculateProjectionMatrix();
 			RecalculateViewMatrix();
 			m_VPMatrix = m_ProjectionMatrix * m_ViewMatrix;
@@ -99,6 +101,7 @@ namespace Hazel {
 			//([-aspect, aspect], [-1, 1])
 
 			result *= m_Zoom;//Account for zoom
+			result += m_Pos;//Account for displacement
 			return result;
 		}
 

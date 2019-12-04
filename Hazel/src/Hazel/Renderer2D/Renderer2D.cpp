@@ -8,7 +8,7 @@
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/Renderer/RenderCommand.h"
 #include "Hazel/Core/Core.h"
-
+#include "Hazel/Util/Utils.h"
 
 namespace Hazel {
 
@@ -43,6 +43,7 @@ namespace Hazel {
 		Ref<IndexBuffer> IndexBuffer;
 
 		Ref<Shader> TextureShader;
+		Ref<Texture2D> WhiteTexture;
 
 		std::unordered_map<Texture2D*, Scope<PerTextureData>> DataMap;
 	};
@@ -51,6 +52,8 @@ namespace Hazel {
 
 	static PerTextureData* InitForTexture(const Ref<Texture2D>& texture)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		PerTextureData* data = new PerTextureData();
 		data->Texture = texture;
 
@@ -62,7 +65,7 @@ namespace Hazel {
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float2, "a_TexCoord" },
 			{ ShaderDataType::Float4, "a_Color" },
-		});
+		}, sizeof(VertexData));
 		data->VertexArray->AddVertexBuffer(data->VertexBuffer);
 
 		data->VertexArray->SetIndexBuffer(s_Data->IndexBuffer);
@@ -74,6 +77,8 @@ namespace Hazel {
 
 	void Renderer2D::Init()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		s_Data = new Renderer2DStorage();
 
 		uint32_t indices[INDEX_BUFFER_COUNT];
@@ -94,26 +99,38 @@ namespace Hazel {
 		s_Data->IndexBuffer = IndexBuffer::Create(indices, sizeof(indices));
 
 		s_Data->TextureShader = Shader::Create("assets/shaders/Texture.glsl");
+
+		int textureData = 0xFFFFFFFF;
+		s_Data->WhiteTexture = Texture2D::Create(1, 1, &textureData, TextureFormat::RGBA);
 	}
 
 	void Renderer2D::Shutdown()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		delete s_Data;
 	}
 
 	void Renderer2D::BeginScene(const Camera2D& cam)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		s_Data->TextureShader->Bind();
 		s_Data->TextureShader->SetMat4("u_ViewProjection", cam.GetViewProjectionMatrix());
 	}
 
 	static void Flush(PerTextureData* data)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		data->VertexBuffer->Bind();
 		data->VertexArray->Bind();
 
 		VertexData* glData = reinterpret_cast<VertexData*>(data->VertexBuffer->Map(MapAccess::WRITE_ONLY));
-		std::copy(data->Vertices, data->Vertices + data->VertexCount, glData);
+		{
+			HZ_PROFILE_SCOPE("Copy vertex data");
+			std::copy(data->Vertices, data->Vertices + data->VertexCount, glData);
+		}
 		data->VertexBuffer->Unmap(glData);
 
 		data->Texture->Bind();
@@ -125,6 +142,8 @@ namespace Hazel {
 
 	void Renderer2D::EndScene()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		for (auto it = s_Data->DataMap.begin(); it != s_Data->DataMap.end(); it++)
 		{
 			PerTextureData* data = it->second.get();
@@ -133,7 +152,7 @@ namespace Hazel {
 	}
 
 
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, const glm::vec4& color, float degrees)
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, uint32_t color, float degrees)
 	{
 		PerTextureData* data;
 		if (s_Data->DataMap.find(texture.get()) == s_Data->DataMap.end())
@@ -161,26 +180,45 @@ namespace Hazel {
 		
 
 		data->Vertices[data->VertexCount].Position = { v1.x + position.x, v1.y + position.y, position.z };
-		data->Vertices[data->VertexCount].Color = color;
 		data->Vertices[data->VertexCount].TexCoord = textureTop;
+		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
 		data->VertexCount++;
 
 		data->Vertices[data->VertexCount].Position = { v2.x + position.x, v2.y + position.y, position.z };
-		data->Vertices[data->VertexCount].Color = color;
 		data->Vertices[data->VertexCount].TexCoord = { textureTop.x, textureBottom.y };
+		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
 		data->VertexCount++;
 
 		data->Vertices[data->VertexCount].Position = { v3.x + position.x, v3.y + position.y, position.z };
-		data->Vertices[data->VertexCount].Color = color;
 		data->Vertices[data->VertexCount].TexCoord = textureBottom;
+		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
 		data->VertexCount++;
 
 		data->Vertices[data->VertexCount].Position = { v4.x + position.x, v4.y + position.y, position.z };
-		data->Vertices[data->VertexCount].Color = color;
 		data->Vertices[data->VertexCount].TexCoord = { textureBottom.x, textureTop.y };
+		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
 		data->VertexCount++;
 
 		data->IndexCount += 6;
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, uint32_t color, float degrees)
+	{
+		DrawQuad({ position.x, position.y, 0.0f }, size, { 0.0f, 0.0f }, { 1.0f, 1.0f }, s_Data->WhiteTexture, color, degrees);
+	}
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees)
+	{
+		DrawQuad({ position.x, position.y, 0.0f }, size, texture, degrees);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees)
+	{
+		DrawQuad(position, size, { 0.0f, 0.0f }, { 1.0f, 1.0f }, texture, 0xFFFFFFFF, degrees);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, uint32_t color, float degrees)
+	{
+		DrawQuad({ position.x, position.y, 0.0f }, size, textureTop, textureBottom, texture, color, degrees);
 	}
 
 }

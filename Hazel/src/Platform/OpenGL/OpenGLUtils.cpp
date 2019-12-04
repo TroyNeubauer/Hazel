@@ -222,7 +222,6 @@ namespace Hazel {
 		HZ_PROFILE_FUNCTION();
 
 		GLuint id;
-		glEnable(GL_TEXTURE_2D);
 		{
 			HZ_PROFILE_SCOPE("glGenTextures");
 			glGenTextures(1, &id);

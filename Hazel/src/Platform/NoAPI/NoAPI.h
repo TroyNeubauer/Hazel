@@ -18,7 +18,7 @@ namespace Hazel {
 		virtual void Clear() override {}
 		virtual void SetClearColor(const glm::vec4& color) override {}
 
-		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count) override {}
+		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count, GPUPrimitive primitive) override {}
 		virtual void Begin() override {}
 
 		virtual void Shutdown () override {}
@@ -53,7 +53,7 @@ namespace Hazel {
 		virtual void Bind() const override {}
 		virtual void Unbind() const override {}
 		virtual uint64_t Bytes() const override { return 0; }
-		virtual void SetLayout(const BufferLayout& layout) override {}
+		virtual void SetLayout(const BufferLayout& layout, size_t structSize) override {}
 		virtual const BufferLayout& GetLayout() const override { return layout; }
 
 		virtual ~NoAPIBuffer() {}

@@ -3,6 +3,8 @@
 #include "RendererAPI.h"
 #include "GraphicsAPI.h"
 
+#include "Buffer.h"
+
 namespace Hazel {
 
 	class RenderCommand
@@ -13,14 +15,14 @@ namespace Hazel {
 			s_RendererAPI->Init();
 		}
 
-		static inline void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
+		static inline void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, GPUPrimitive primitive = GPUPrimitive::TRIANGLES)
 		{
-			s_RendererAPI->DrawIndexed(vertexArray);
+			s_RendererAPI->DrawIndexed(vertexArray, primitive);
 		}
 
-		static inline void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count)
+		static inline void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count, GPUPrimitive primitive = GPUPrimitive::TRIANGLES)
 		{
-			s_RendererAPI->DrawIndexed(vertexArray, count);
+			s_RendererAPI->DrawIndexed(vertexArray, count, primitive);
 		}
 
 		static inline void SetClearColor(const glm::vec4& color)

@@ -9,7 +9,7 @@ void SandboxLayer::OnAttach()
 	std::uniform_real_distribution<float> pos(-12.0f, 12.0f);
 	Part& part = m_World->AddPart({ 0.0f, 0.0f }, Parts::StaticShip);
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		Part& part = m_World->AddPart({ pos(gen), pos(gen) }, Parts::MK1Capsule);
 	}
@@ -33,6 +33,8 @@ float lastMoved = 0.0f;
 
 void SandboxLayer::OnUpdate()
 {
+	HZ_PROFILE_FUNCTION();
+
 	if (Hazel::Input::GetMouseDelta().x || Hazel::Input::GetMouseDelta().y) lastMoved = Hazel::Engine::GetTime();
 
 	if (m_Paused)
@@ -74,17 +76,24 @@ template<typename T>
 class QueryCallback : public b2QueryCallback
 {
 public:
-	QueryCallback(T func) : m_Func(func) {}
+	QueryCallback(b2Vec2 point, T func) : m_Func(func), m_Point(point) {}
 
 	bool ReportFixture(b2Fixture* fixture)
 	{
-		b2Body* body = fixture->GetBody();
-		m_Func(World::ToBody(body));
+		if (fixture->TestPoint(m_Point))
+		{
+			m_Func(World::ToBody(fixture->GetBody()));
+			return false;
+		}
+		else// The point doesnt actually overlap
+		{
+			return true;// Return true to continue the query.
+		}
 
-		return false;// Return true to continue the query.
 	}
 private:
 	T m_Func;
+	b2Vec2 m_Point;
 };
 
 
@@ -93,9 +102,10 @@ bool SandboxLayer::OnMousePressed(Hazel::MouseButtonPressedEvent* event)
 	glm::vec2 worldCoords = m_World->GetCamera().ToWorldCoordinates(Hazel::Input::GetMousePosition());
 	b2AABB aabb;
 	aabb.lowerBound.Set(worldCoords.x, worldCoords.y);
-	aabb.upperBound.Set(worldCoords.x + 0.001f, worldCoords.y + 0.001f);
+	//aabb.upperBound.Set(worldCoords.x + 0.001f, worldCoords.y + 0.001f);
+	aabb.upperBound.Set(worldCoords.x, worldCoords.y);
 	bool found = false;
-	auto callback = QueryCallback([this, &found](Body* body) {
+	auto callback = QueryCallback(b2Vec2(worldCoords.x, worldCoords.y), [this, &found](Body* body) {
 		found = true;
 		m_SelectedBody = body;
 		m_DraggedBody = body;
@@ -202,7 +212,7 @@ void SandboxLayer::OnImGuiRender()
 	{
 		ImGui::Text("mass %.2f kg", m_SelectedBody->GetBody()->GetMass());
 		ImGui::Text("speed %.3f m/s", m_SelectedBody->GetBody()->GetLinearVelocity().Length());
-		ImGui::Text("speed %.2f rad/s", m_SelectedBody->GetBody()->GetAngularVelocity());
+		ImGui::Text("speed %.2f degrees/s", glm::degrees(m_SelectedBody->GetBody()->GetAngularVelocity()));
 
 		if (ImGui::Button("Delete"))
 		{

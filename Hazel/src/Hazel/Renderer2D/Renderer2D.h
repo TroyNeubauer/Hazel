@@ -25,15 +25,18 @@ namespace Hazel {
 
 			glm::vec2 top = glm::vec2(frame.Top.x, frame.Top.y) / textureSize;
 			glm::vec2 bottom = glm::vec2(frame.Bottom.x, frame.Bottom.y) / textureSize;
-			DrawQuad({ position.x, position.y, 0.0f }, size, top, bottom, animation.GetTexture(), { 1.0f, 1.0f, 1.0f, 1.0f }, degrees);
+			DrawQuad({ position.x, position.y, 0.0f }, size, top, bottom, animation.GetTexture(), 0xFFFFFFFF, degrees);
 		}
 
 
-		inline static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees) { DrawQuad({ position.x, position.y, 0.0f }, size, texture, degrees); }
-		inline static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees) { DrawQuad(position, size, { 0.0f, 0.0f }, { 1.0f, 1.0f }, texture, { 1.0f, 1.0f, 1.0f, 1.0f }, degrees); }
-		inline static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, const glm::vec4& color, float degrees) { DrawQuad({ position.x, position.y, 0.0f }, size, textureTop, textureBottom, texture, color, degrees); }
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, uint32_t color, float degrees = 0.0f);
+
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees);
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees);
 		
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, const glm::vec4& color = { 1.0f, 1.0f , 1.0f , 1.0f }, float degrees = 0.0f);
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, uint32_t color = 0xFFFFFFFF, float degrees = 0.0f);
+		
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, uint32_t color = 0xFFFFFFFF, float degrees = 0.0f);
 	};
 
 }
