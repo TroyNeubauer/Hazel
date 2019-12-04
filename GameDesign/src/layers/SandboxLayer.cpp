@@ -128,7 +128,7 @@ static void Tooltip(const char* text)
 	if (ImGui::IsItemHovered() && (Hazel::Engine::GetTime() - lastMoved) > 0.05f)
 	{
 		ImGui::BeginTooltip();
-		ImGui::Text(text);
+		ImGui::TextUnformatted(text);
 		ImGui::EndTooltip();
 	}
 }
@@ -214,30 +214,30 @@ void SandboxLayer::OnImGuiRender()
 	ImGui::Begin("Cursor Modes");
 
 	RadioButton("Create Capsule", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::CreateCapsule);
-	ImGui::Text("Creates a new rocket astronaut capsule part when the mouse is clicked");
+	ImGui::TextUnformatted("Creates a new rocket astronaut capsule part when the mouse is clicked");
 	ImGui::SliderAngle("Angle", &create_Angle, 0.0f);
 
 	RadioButton("Create Engine", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::CreateEngine);
-	ImGui::Text("Creates a new rocket engine part when the mouse is clicked");
+	ImGui::TextUnformatted("Creates a new rocket engine part when the mouse is clicked");
 	ImGui::SliderAngle("Angle", &create_Angle, 0.0f);
 	
 	RadioButton("Create Rocket", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::CreateRocket);
-	ImGui::Text("Creates a new rocket when the mouse is clicked");
+	ImGui::TextUnformatted("Creates a new rocket when the mouse is clicked");
 	ImGui::SliderAngle("Angle", &create_Angle, 0.0f);
 
 	RadioButton("Create Sphere", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::CreateSphere);
-	ImGui::Text("Creates a new sphere part when the mouse is clicked");
+	ImGui::TextUnformatted("Creates a new sphere part when the mouse is clicked");
 	ImGui::SliderAngle("Angle", &create_Angle, 0.0f);
 	ImGui::SliderFloat("Radius", &create_Radius, 0.001f, 100.0f, "%0.3f", 2.0f);
 
 	RadioButton("Create Rect", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::CreateRect);
-	ImGui::Text("Creates a new rectangle part when the mouse is clicked");
+	ImGui::TextUnformatted("Creates a new rectangle part when the mouse is clicked");
 	ImGui::SliderAngle("Angle", &create_Angle, 0.0f);
 	ImGui::SliderFloat("Width", &create_Width, 0.001f, 100.0f, "%0.3f", 2.0f);
 	ImGui::SliderFloat("Height", &create_Height, 0.001f, 100.0f, "%0.3f", 2.0f);
 
 	RadioButton("Delete", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::Delete);
-	ImGui::Text("Click an object to delete it");
+	ImGui::TextUnformatted("Click an object to delete it");
 
 	EndRadioButtons();
 	ImGui::End();

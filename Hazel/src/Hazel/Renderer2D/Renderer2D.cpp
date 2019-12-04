@@ -125,7 +125,7 @@ namespace Hazel {
 
 	void Renderer2D::EndScene()
 	{
-		for (auto& it = s_Data->DataMap.begin(); it != s_Data->DataMap.end(); it++)
+		for (auto it = s_Data->DataMap.begin(); it != s_Data->DataMap.end(); it++)
 		{
 			PerTextureData* data = it->second.get();
 			Flush(data);

@@ -18,7 +18,7 @@ namespace Hazel {
 
 		// Primitives
 
-		inline static void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Animation2D& animation, float degrees) 
+		inline static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Animation2D& animation, float degrees)
 		{
 			const Frame& frame = animation.GetFrame();
 			glm::vec2 textureSize = { animation.GetTexture()->GetWidth(), animation.GetTexture()->GetHeight() };
@@ -29,9 +29,9 @@ namespace Hazel {
 		}
 
 
-		inline static void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees) { DrawQuad({ position.x, position.y, 0.0f }, size, texture, degrees); }
-		inline static void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees) { DrawQuad(position, size, { 0.0f, 0.0f }, { 1.0f, 1.0f }, texture, { 1.0f, 1.0f, 1.0f, 1.0f }, degrees); }
-		inline static void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, const glm::vec4& color, float degrees) { DrawQuad({ position.x, position.y, 0.0f }, size, textureTop, textureBottom, texture, color, degrees); }
+		inline static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees) { DrawQuad({ position.x, position.y, 0.0f }, size, texture, degrees); }
+		inline static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees) { DrawQuad(position, size, { 0.0f, 0.0f }, { 1.0f, 1.0f }, texture, { 1.0f, 1.0f, 1.0f, 1.0f }, degrees); }
+		inline static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, const glm::vec4& color, float degrees) { DrawQuad({ position.x, position.y, 0.0f }, size, textureTop, textureBottom, texture, color, degrees); }
 		
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, const glm::vec4& color = { 1.0f, 1.0f , 1.0f , 1.0f }, float degrees = 0.0f);
 	};

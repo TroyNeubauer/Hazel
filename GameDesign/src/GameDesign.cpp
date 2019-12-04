@@ -1,6 +1,7 @@
 
 #include "GameDesign.h"
 #include "layers/SandboxLayer.h"
+#include "layers/WorldLayer.h"
 
 #include "Hazel.h"
 

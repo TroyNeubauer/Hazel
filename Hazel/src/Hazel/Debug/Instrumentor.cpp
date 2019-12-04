@@ -1,5 +1,6 @@
 #include "hzpch.h"
 #include "Instrumentor.h"
+#include <inttypes.h>
 
 #include "Hazel/Core/Engine.h"
 
@@ -38,12 +39,12 @@ namespace Hazel {
 
 		fprintf(m_File, "{"
 			"\"cat\":\"function\","
-			"\"dur\":%" PRId64 ","
+			"\"dur\":%" PRIu64 ","
 			"\"name\":\"%" "s" "\","
 			"\"ph\":\"X\","
 			"\"pid\":0,"
-			"\"tid\":%" PRId64 ","
-			"\"ts\":%" PRId64
+			"\"tid\":%" PRIu32 ","
+			"\"ts\":%" PRIu64
 			"}", result.End - result.Start, name, result.ThreadID, result.Start);
 	}
 
@@ -68,8 +69,8 @@ namespace Hazel {
 	{
 		auto endTimepoint = std::chrono::high_resolution_clock::now();
 
-		long long start = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch().count();
-		long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
+		uint64_t start = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch().count();
+		uint64_t end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
 
 		uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
 		Instrumentor::Get().WriteProfile({ m_Name, start, end, threadID });

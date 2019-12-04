@@ -32,7 +32,7 @@ namespace Hazel {
 		}
 		AnimationDef2D* result = new AnimationDef2D();
 		result->m_Texture = texture;
-		result->m_Frames = std::vector<Frame>(std::initializer_list<Frame>(s_TempFrames, s_TempFrames + spriteCoordinates.size()));
+		result->m_Frames = std::vector<Frame>(s_TempFrames, s_TempFrames + spriteCoordinates.size());
 
 		return Hazel::R(result);
 	}

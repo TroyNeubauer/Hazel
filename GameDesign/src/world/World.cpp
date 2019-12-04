@@ -82,10 +82,10 @@ void World::Remove(Body* body)
 		m_OnRemovedFunction(body);
 
 	m_World->DestroyBody(body->GetBody());
-	for (auto& it = m_Ships.begin(); it != m_Ships.end(); it++)
+	for (auto it = m_Ships.begin(); it != m_Ships.end(); ++it)
 	{
 		Ship* ship = it->get();
-		for (auto& it2 = ship->GetParts().begin(); it2 != ship->GetParts().end(); it2++)
+		for (auto it2 = ship->GetParts().begin(); it2 != ship->GetParts().end(); ++it2)
 		{
 			const Part& part = *it2;
 			if (part.GetBody() == body->GetBody())
