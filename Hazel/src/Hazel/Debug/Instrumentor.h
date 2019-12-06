@@ -28,7 +28,7 @@ namespace Hazel {
 		int m_ProfileCount;
 	public:
 		Instrumentor()
-			: m_CurrentSession(nullptr), m_ProfileCount(0)
+			: m_CurrentSession(nullptr), m_ProfileCount(0), m_File(nullptr)
 		{
 		}
 
@@ -62,7 +62,7 @@ namespace Hazel {
 	};
 }
 
-//#define HZ_PROFILE
+#define HZ_PROFILE
 
 #ifdef HZ_PROFILE
 	#define HZ_PROFILE_BEGIN_SESSION(name, filepath) ::Hazel::Instrumentor::Get().BeginSession(name, filepath)

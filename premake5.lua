@@ -200,6 +200,7 @@ project "Sandbox"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.TUtil}",
+		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.ImGui}",
 
 		"Hazel/vendor/freeimage/Source/",
