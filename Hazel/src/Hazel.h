@@ -28,11 +28,6 @@
 #include "Hazel/Mesh/Mesh.h"
 #include "Hazel/Mesh/IcoashedronMesh.h"
 
-#include <FreeImage.h>
-
-//std
-#include <memory>
-
 #include "Hazel/Core/Application.h"
 #include "Hazel/Core/Core.h"
 #include "Hazel/Core/Engine.h"
@@ -44,4 +39,13 @@
 #include "Hazel/Core/TUtil.h"
 #include "Hazel/Core/TUtil.h"
 #include "Hazel/Renderer2D/Renderer2D.h"
+
+#include <FreeImage.h>
+
+//std
+#include <memory>
+#include <vector>
+#include <map>
+#include <utility>
+
 

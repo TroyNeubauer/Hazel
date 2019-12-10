@@ -87,7 +87,8 @@ namespace Hazel {
 	{
 	public:
 		Buffer() {}
-		virtual void SetData(T* data, uint64_t bytes) = 0;
+		inline void SetData(T* data, uint64_t bytes) { SetData(reinterpret_cast<void*>(data), bytes); };
+		virtual void SetData(void* data, uint64_t bytes) = 0;
 		inline void SetData(std::vector<T>& vec) { SetData(vec.data(), sizeof(T) * vec.size()); }
 
 		virtual void Bind() const = 0;

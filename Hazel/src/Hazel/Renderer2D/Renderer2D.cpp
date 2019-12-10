@@ -126,12 +126,16 @@ namespace Hazel {
 		data->VertexBuffer->Bind();
 		data->VertexArray->Bind();
 
+#if 0
+		data->VertexBuffer->SetData(data->Vertices, data->VertexCount * sizeof(VertexData));
+#else
 		VertexData* glData = reinterpret_cast<VertexData*>(data->VertexBuffer->Map(MapAccess::WRITE_ONLY));
 		{
 			HZ_PROFILE_SCOPE("Copy vertex data");
 			std::copy(data->Vertices, data->Vertices + data->VertexCount, glData);
 		}
 		data->VertexBuffer->Unmap(glData);
+#endif
 
 		data->Texture->Bind();
 

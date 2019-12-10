@@ -4,6 +4,8 @@
 #include "Hazel/Core/Core.h"
 #include "Hazel/Core/glm.h"
 
+#include <utility>
+
 namespace Hazel {
 
 	struct Frame
@@ -21,6 +23,7 @@ namespace Hazel {
 		static Ref<AnimationDef2D> Create(Ref<Texture2D> texture, glm::ivec2 top, glm::ivec2 size);
 		static Ref<AnimationDef2D> Create(Ref<Texture2D> texture, float frameDuration, glm::ivec2 spriteSize, std::initializer_list<glm::ivec2> spriteCoordinates);
 
+		std::pair<glm::vec2, glm::vec2> GetFirstFrame();
 	};
 
 	class Animation2D
@@ -28,10 +31,12 @@ namespace Hazel {
 	public:
 
 		Animation2D(const Ref<AnimationDef2D>& def) : m_Def(def) { }
+		Animation2D(const Animation2D& other) = default;
 
 		//Must be called every frame to update the animation
 		//Advanced m_CurrentFrame if neccsarry
 		void Update();
+
 
 		inline void RepeatOnEnd() { m_RepeatOnEnd = true; }
 		inline void StopOnEnd() { m_RepeatOnEnd = false; }

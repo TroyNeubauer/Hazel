@@ -19,8 +19,8 @@ namespace Hazel {
 
 	Ref<AnimationDef2D> AnimationDef2D::Create(Ref<Texture2D> texture, float frameDuration, glm::ivec2 spriteSize, std::initializer_list<glm::ivec2> spriteCoordinates)
 	{
-		if (spriteCoordinates.size() > TEMP_FRAME_COUNT)
-			HZ_CORE_ASSERT(false, "Too many frames!");
+		HZ_CORE_ASSERT(spriteCoordinates.size() <= TEMP_FRAME_COUNT , "Too many frames!");
+		HZ_CORE_ASSERT(spriteCoordinates.size(), "Animation cannot contain 0 frames");
 
 		const glm::ivec2* spriteCoords = spriteCoordinates.begin();
 		for (int i = 0; i < spriteCoordinates.size(); i++)
@@ -35,6 +35,18 @@ namespace Hazel {
 		result->m_Frames = std::vector<Frame>(s_TempFrames, s_TempFrames + spriteCoordinates.size());
 
 		return Hazel::R(result);
+	}
+
+	std::pair<glm::vec2, glm::vec2> AnimationDef2D::GetFirstFrame()
+	{
+		std::pair<glm::vec2, glm::vec2> result;
+		result.first.x = static_cast<float>(m_Frames[0].Top.x) / static_cast<float>(m_Texture->GetWidth());
+		result.first.y = static_cast<float>(m_Frames[0].Top.y) / static_cast<float>(m_Texture->GetHeight());
+
+		result.second.x = static_cast<float>(m_Frames[0].Bottom.x) / static_cast<float>(m_Texture->GetWidth());
+		result.second.y = static_cast<float>(m_Frames[0].Bottom.y) / static_cast<float>(m_Texture->GetHeight());
+
+		return result;
 	}
 
 	
