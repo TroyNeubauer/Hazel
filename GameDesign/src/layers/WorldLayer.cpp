@@ -10,7 +10,7 @@ void WorldLayer::OnAttach()
 	std::uniform_real_distribution<float> pos(-6.0f, 6.0f);
 	for (int i = 0; i < 2; i++)
 	{
-		Part& part = m_World->AddPart({ pos(gen), pos(gen) }, Parts::MK1Capsule);
+		//Part& part = m_World->AddPart({ pos(gen), pos(gen) }, Parts::MK1Capsule);
 		
 	}
 }

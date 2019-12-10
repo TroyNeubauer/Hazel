@@ -6,12 +6,31 @@
 void SandboxLayer::OnAttach()
 {
 	std::default_random_engine gen;
-	std::uniform_real_distribution<float> pos(-12.0f, 12.0f);
-	Part& part = m_World->AddPart({ 0.0f, 0.0f }, Parts::StaticShip);
+	std::uniform_real_distribution<float> pos(-60.0f, 60.0f);
 
-	for (int i = 0; i < 200; i++)
+	Hazel::Ref<EditorShip> ship = Hazel::R(new EditorShip());
+
+	Hazel::Ref<EditorPart> a = Hazel::R(new EditorPart());
+	ship->GetParts().push_back(a);
+	a->m_Def = Parts::FlyingShip;
+	a->m_ParentPart = nullptr;
+
+	Hazel::Ref<EditorPart> b = Hazel::R(new EditorPart());
+	ship->GetParts().push_back(b);
+	b->m_Def = Parts::MK1Capsule;
+	b->m_Offset = { 0.0f, -a->m_Def->Size.y / 2.0f - b->m_Def->Size.y / 2.0f };
+	b->m_ParentPart = a;
+
+	Hazel::Ref<EditorPart> c = Hazel::R(new EditorPart());
+	ship->GetParts().push_back(c);
+	c->m_Def = Parts::MK1Capsule;
+	c->m_Offset = { 0.0f, -b->m_Def->Size.y / 2.0f - c->m_Def->Size.y / 2.0f};
+	c->m_ParentPart = b;
+
+
+	for (int i = 0; i < 2; i++)
 	{
-		Part& part = m_World->AddPart({ pos(gen), pos(gen) }, Parts::MK1Capsule);
+		m_World->AddShip(ship, { pos(gen), pos(gen) }, 0.0f);
 	}
 	m_World->SetBodyRemovedCallback([this](Body* body) {
 		if (body == m_SelectedBody) m_SelectedBody = nullptr;
@@ -22,6 +41,7 @@ void SandboxLayer::OnAttach()
 		}
 		
 	});
+	m_World->GetCamera().SetZoom(100.0f);
 }
 
 void SandboxLayer::OnDetach()
@@ -37,10 +57,24 @@ void SandboxLayer::OnUpdate()
 
 	if (Hazel::Input::GetMouseDelta().x || Hazel::Input::GetMouseDelta().y) lastMoved = Hazel::Engine::GetTime();
 
+	bool update = false;
 	if (m_Paused)
-		m_World->GetCamera().Update();
+	{
+		if (m_Steps > 0)
+		{
+			update = true;
+			m_Steps -= 1;
+		}
+
+	}
 	else
+	{
+		update = true;
+	}
+	if(update)
 		m_World->Update();
+	else
+		m_World->GetCamera().Update();
 
 	if (m_DraggedBody && m_MouseDragged)
 	{
@@ -52,7 +86,7 @@ void SandboxLayer::OnUpdate()
 			velocity = { result.x, result.y };
 		}
 		
-		m_DraggedBody->GetBody()->SetLinearVelocity(velocity);
+		m_DraggedBody->GetPhsicsBody()->SetLinearVelocity(velocity);
 	}
 
 }
@@ -191,6 +225,11 @@ void SandboxLayer::OnImGuiRender()
 	{
 		count++;
 	}
+	if (m_Paused)
+	{
+		if (ImGui::Button("Step"))
+			m_Steps++;
+	}
 
 	ImGui::Text("%d bodies exist", count);
 	if (ImGui::Button("Stop all bodies"))
@@ -210,9 +249,9 @@ void SandboxLayer::OnImGuiRender()
 	}
 	else
 	{
-		ImGui::Text("mass %.2f kg", m_SelectedBody->GetBody()->GetMass());
-		ImGui::Text("speed %.3f m/s", m_SelectedBody->GetBody()->GetLinearVelocity().Length());
-		ImGui::Text("speed %.2f degrees/s", glm::degrees(m_SelectedBody->GetBody()->GetAngularVelocity()));
+		ImGui::Text("mass %.2f kg", m_SelectedBody->GetPhsicsBody()->GetMass());
+		ImGui::Text("speed %.3f m/s", m_SelectedBody->GetPhsicsBody()->GetLinearVelocity().Length());
+		ImGui::Text("speed %.2f degrees/s", glm::degrees(m_SelectedBody->GetPhsicsBody()->GetAngularVelocity()));
 
 		if (ImGui::Button("Delete"))
 		{

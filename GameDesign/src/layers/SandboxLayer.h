@@ -27,5 +27,6 @@ private:
 	Hazel::Scope<World> m_World;
 	Body* m_SelectedBody = nullptr;
 	Body* m_DraggedBody = nullptr; bool m_MouseDragged = false;
-	bool m_Paused = false;
+	bool m_Paused = true;
+	int m_Steps = -1;
 };

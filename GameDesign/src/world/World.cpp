@@ -1,10 +1,14 @@
 #include "World.h"
 #include "ship/Ship.h"
 #include "Planet.h"
+#include "ship/Part.h"
+
+#include <map>
 
 
 double World::Constants::G = 6.67430E-11 * 10000000.0f;
 Hazel::Ref<PartDef> Parts::MK1Capsule = nullptr;
+Hazel::Ref<PartDef> Parts::MK1Engine = nullptr;
 Hazel::Ref<PartDef> Parts::FlyingShip = nullptr;
 Hazel::Ref<PartDef> Parts::StaticShip = nullptr;
 
@@ -19,12 +23,13 @@ World::World() : m_Camera(new WorldCameraController())
 	Parts::MK1Capsule.reset(new PartDef{ "MK1 Capsule", 20.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 0, 16 }, { 14, 16 }), 1.0f });
 	Parts::FlyingShip.reset(new PartDef{ "Flying Ship", 25.0f, 15.0f, Hazel::AnimationDef2D::Create(DefaultShip, 0.2f, {25, 47}, {{0, 1}, {1, 1}, {2, 1}, {3, 1}, {4, 1}}), 2.0f });
 	Parts::StaticShip.reset(new PartDef{ "Ship", 25.0f, 15.0f, Hazel::AnimationDef2D::Create(DefaultShip, {0, 0}, {25, 47}), 2.0f });
+	Parts::MK1Engine.reset(new PartDef{ "MK1 Engine", 20.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 0, 16 }, { 14, 16 }), 1.0f });
 
 	m_Camera.SetPosition(vec2(0.0, 0.0));
 	m_Camera.SetRotation(0.0f);
 	m_Camera.SetZoom(10.0f);
 
-#ifdef HZ_DEBUG
+#if defined(HZ_DEBUG) && 1
 	m_DebugDraw.reset(new Hazel::B2D_DebugDraw());
 	m_DebugDraw->SetFlags(b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit);
 	m_World->SetDebugDraw(m_DebugDraw.get());
@@ -47,12 +52,13 @@ void World::Update()
 				b2Body* other = m_World->GetBodyList();
 				for (int j = 0; j < i; j++, other = other->GetNext())
 				{
-					b2Vec2 force = other->GetPosition() - body->GetPosition();
-					double distance = force.Normalize();// Determine the amount of force to give
-					force *= static_cast<float>((World::Constants::G * (double)body->GetMass() * (double)other->GetMass()) / (distance * distance));
-
-					body->ApplyForceToCenter(force, true);
-					other->ApplyForceToCenter(-force, true);
+					glm::dvec2 force = glm::dvec2(other->GetPosition().x, other->GetPosition().y) - glm::dvec2(body->GetPosition().x, body->GetPosition().y);
+					force = glm::normalize(force);
+					double distance = glm::length(force);// Determine the amount of force to give
+					force *= (World::Constants::G * (double)body->GetMass() * (double)other->GetMass()) / (distance * distance);
+					b2Vec2 resultForce = b2Vec2(static_cast<float>(force.x), static_cast<float>(force.y));
+					body->ApplyForceToCenter(resultForce, true);
+					other->ApplyForceToCenter(-resultForce, true);
 				}
 			}
 		}
@@ -95,14 +101,13 @@ void World::Render()
 	}
 }
 
-Part& World::AddPart(b2Vec2 pos, const Hazel::Ref<PartDef>& partDef, float rot)
+Ship& World::AddShip(const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, float rot)
 {
 	HZ_PROFILE_FUNCTION();
 
-	Ship* ship = new Ship();
+	Ship* ship = new Ship(*this, shipDef, pos, rot);
 	m_Ships.push_back(Hazel::S(ship));
-	Part& part = ship->GetParts().emplace_back(*this, pos, partDef);
-	return part;
+	return *ship;
 }
 
 void World::Remove(Body* body)
@@ -112,26 +117,16 @@ void World::Remove(Body* body)
 	if(m_OnRemovedFunction)
 		m_OnRemovedFunction(body);
 
-	m_World->DestroyBody(body->GetBody());
+	m_World->DestroyBody(body->GetPhsicsBody());
 	for (auto it = m_Ships.begin(); it != m_Ships.end(); ++it)
 	{
-		Ship* ship = it->get();
-		for (auto it2 = ship->GetParts().begin(); it2 != ship->GetParts().end(); ++it2)
-		{
-			const Part& part = *it2;
-			if (part.GetBody() == body->GetBody())
-			{
-				ship->GetParts().erase(it2);
-				break;
-			}
-		}
-		if (ship->GetParts().empty())
+		Hazel::Scope<Ship>& ship = *it;
+		if (ship->GetPhsicsBody() == body->GetPhsicsBody())
 		{
 			m_Ships.erase(it);
 			break;
 		}
 	}
-
 }
 
 

@@ -1,11 +1,11 @@
 #include "Planet.h"
 
-void Planet::Render(const World & world)
+void Planet::Render(World& world)
 {
 
 }
 
-void Planet::Update(const World & world)
+void Planet::Update(World& world)
 {
 
 }

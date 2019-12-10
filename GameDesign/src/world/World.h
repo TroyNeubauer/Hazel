@@ -33,8 +33,9 @@ private:
 class Parts {
 public:
 	static Hazel::Ref<PartDef> MK1Capsule;
-	static Hazel::Ref <PartDef> FlyingShip;
-	static Hazel::Ref <PartDef> StaticShip;
+	static Hazel::Ref<PartDef> FlyingShip;
+	static Hazel::Ref<PartDef> StaticShip;
+	static Hazel::Ref<PartDef> MK1Engine;
 };
 
 class World
@@ -49,7 +50,7 @@ public:
 	void Update();
 	void Render();
 
-	Part& AddPart(b2Vec2 pos, const Hazel::Ref<PartDef>& partDef, float rot = 0.0f);
+	Ship& AddShip(const Hazel::Ref<EditorShip>& partDef, glm::vec2 pos, float rot = 0.0f);
 	void Remove(Body* body);
 
 	inline LinkedListIterator BodiesBegin() { return m_World->GetBodyList();  }
