@@ -3,6 +3,7 @@
 
 #include "OpenGLShader.h"
 #include "OpenGLMacro.h"
+#include "OpenGLUtils.h"
 
 #include "Hazel/Core/Core.h"
 
@@ -205,7 +206,7 @@ namespace Hazel {
 		{
 			glGetActiveUniform(program, i, sizeof(name), &length, &size, &type, name);
 			m_UniformCache[std::string(name, length)] = glGetUniformLocation(m_ID, name);
-			HZ_CORE_TRACE("Name: {}, type: {}", name, type);
+			HZ_CORE_TRACE("Name: {}, type: {} (0x{:x})", name, OpenGLUtils::GetGLShaderTypeString(type), type);
 #ifdef HZ_DEBUG
 			m_UniformTypes[std::string(name, length)] = type;
 #endif

@@ -18,5 +18,7 @@ namespace Hazel {
 
 		static GLuint Upload2DTexture(uint32_t width, uint32_t height, void* data, int imageFormat, int imageType, TextureBuilder builder = TextureBuilder::Default());
 		static GLuint Upload2DTexture(uint32_t width, uint32_t height, void* data, TextureFormat format, TextureBuilder builder);
+
+		static const char* GetGLShaderTypeString(GLenum type);
 	};
 }

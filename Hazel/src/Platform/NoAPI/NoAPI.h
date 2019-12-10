@@ -46,7 +46,7 @@ namespace Hazel {
 		NoAPIBuffer(T* data, uint64_t bytes) {}
 		NoAPIBuffer(uint64_t bytes) {}
 
-		virtual void SetData(T* data, uint64_t bytes) override {}
+		virtual void SetData(void* data, uint64_t bytes) override {}
 		virtual void* Map(MapAccess access) override { return nullptr; }
 		virtual void Unmap(void* buffer) override {}
 

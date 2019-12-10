@@ -6,6 +6,44 @@
 #include "OpenGLMacro.h"
 
 namespace Hazel {
+
+	const char* OpenGLUtils::GetGLShaderTypeString(GLenum type)
+	{
+		switch (type)
+		{
+			case GL_BYTE: return "GL BYTE";
+			case GL_UNSIGNED_BYTE: return "GL UNSIGNED BYTE";
+			case GL_SHORT: return "GL SHORT";
+			case GL_UNSIGNED_SHORT: return "GL UNSIGNED SHORT";
+			case GL_INT: return "GL INT";
+			case GL_UNSIGNED_INT: return "GL UNSIGNED INT";
+			case GL_HALF_FLOAT: return "GL HALF FLOAT";
+			case GL_FLOAT: return "GL FLOAT";
+			case GL_DOUBLE: return "GL DOUBLE";
+			case GL_FLOAT_VEC2: return "GL FLOAT VEC2";
+			case GL_FLOAT_VEC3: return "GL FLOAT VEC3";
+			case GL_FLOAT_VEC4: return "GL FLOAT VEC4";
+			case GL_INT_VEC2: return "GL INT VEC2";
+			case GL_INT_VEC3: return "GL INT VEC3";
+			case GL_INT_VEC4: return "GL INT VEC4";
+			case GL_BOOL: return "GL BOOL";
+			case GL_BOOL_VEC2: return "GL BOOL VEC2";
+			case GL_BOOL_VEC3: return "GL BOOL VEC3";
+			case GL_BOOL_VEC4: return "GL BOOL VEC4";
+			case GL_FLOAT_MAT2: return "GL FLOAT MAT2";
+			case GL_FLOAT_MAT3: return "GL FLOAT MAT3";
+			case GL_FLOAT_MAT4: return "GL FLOAT MAT4";
+			case GL_SAMPLER_1D: return "GL SAMPLER 1D";
+			case GL_SAMPLER_2D: return "GL SAMPLER 2D";
+			case GL_SAMPLER_3D: return "GL SAMPLER 3D";
+			case GL_SAMPLER_CUBE: return "GL SAMPLER CUBE";
+			case GL_SAMPLER_1D_SHADOW: return "GL SAMPLER 1D SHADOW";
+			case GL_SAMPLER_2D_SHADOW: return "GL SAMPLER 2D SHADOW";
+			default: return "Unknown OpgnGL type";
+		}
+	}
+
+
 	GLenum OpenGLUtils::ShaderDataTypeToGLType(ShaderDataType type) {
 		switch (type)
 		{

@@ -22,7 +22,7 @@ namespace Hazel {
 	template<typename T, BufferType TYPE>
 	class OpenGLBuffer : public Buffer<T, TYPE> {
 	private:
-		void SetData(T* data, uint64_t bytes, GLenum usage)
+		void SetData(void* data, uint64_t bytes, GLenum usage)
 		{
 			HZ_PROFILE_FUNCTION();
 
@@ -45,7 +45,7 @@ namespace Hazel {
 			SetData(nullptr, bytes, GL_DYNAMIC_DRAW);
 		}
 
-		virtual void SetData(T* data, uint64_t bytes) override
+		virtual void SetData(void* data, uint64_t bytes) override
 		{
 			SetData(data, bytes, GL_DYNAMIC_DRAW);
 		}

@@ -8,6 +8,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+//#include <GL/gletx.h>
 
 
 namespace Hazel {
@@ -35,21 +36,26 @@ namespace Hazel {
 				case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: typeStr = "GL UNDEFINED BEHAVIOR"; break;
 				case GL_DEBUG_TYPE_PORTABILITY: typeStr = "GL PORTABILITY"; break;
 				case GL_DEBUG_TYPE_OTHER: typeStr = "GL OTHER"; break;
+				/*case GL_DEBUG_TYPE_ERROR_ARB: typeStr = "GL ERROR ARB"; break;
+				case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB: typeStr = "GL DEPRECATED BEHAVIOR ARB"; break;
+				case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB: typeStr = "GL UNDEFINED BEHAVIOR ARB"; break;
+				case GL_DEBUG_TYPE_PORTABILITY_ARB: typeStr = "GL PORTABILITY ARB"; break;
+				case GL_DEBUG_TYPE_PERFORMANCE_ARB: typeStr = "GL PERFORMANCE ARB"; break;
+				case GL_DEBUG_TYPE_OTHER_ARB: typeStr = "GL OTHER ARB"; break;*/
 				default: typeStr = "Unknown"; break;
-
 			}
 			spdlog::level::level_enum level;
 			const char* severityStr;
 			switch (severity)
 			{
-				case GL_DEBUG_LOGGED_MESSAGES:			level = spdlog::level::level_enum::trace;	severityStr = "logged messages";	break;
-				case GL_DEBUG_SEVERITY_HIGH:			level = spdlog::level::level_enum::err;		severityStr = "high";				break;
-				case GL_DEBUG_SEVERITY_MEDIUM:			level = spdlog::level::level_enum::warn;	severityStr = "medium";				break;
-				case GL_DEBUG_SEVERITY_LOW:				level = spdlog::level::level_enum::info;	severityStr = "low";				break;
-				case GL_DEBUG_TYPE_MARKER:				level = spdlog::level::level_enum::info;	severityStr = "marker";				break;
-				case GL_DEBUG_TYPE_PUSH_GROUP:			level = spdlog::level::level_enum::trace;	severityStr = "push group";			break;
-				case GL_DEBUG_TYPE_POP_GROUP:			level = spdlog::level::level_enum::trace;	severityStr = "pop group";			break;
-				case GL_DEBUG_SEVERITY_NOTIFICATION:	level = spdlog::level::level_enum::off;		severityStr = "notification";		break;
+				case GL_DEBUG_LOGGED_MESSAGES:				level = spdlog::level::level_enum::trace;	severityStr = "logged messages";	break;
+				case GL_DEBUG_SEVERITY_HIGH:				level = spdlog::level::level_enum::err;		severityStr = "high";				break;
+				case GL_DEBUG_SEVERITY_MEDIUM:				level = spdlog::level::level_enum::warn;	severityStr = "medium";				break;
+				case GL_DEBUG_SEVERITY_LOW:					level = spdlog::level::level_enum::info;	severityStr = "low";				break;
+				case GL_DEBUG_TYPE_MARKER:					level = spdlog::level::level_enum::info;	severityStr = "marker";				break;
+				case GL_DEBUG_TYPE_PUSH_GROUP:				level = spdlog::level::level_enum::trace;	severityStr = "push group";			break;
+				case GL_DEBUG_TYPE_POP_GROUP:				level = spdlog::level::level_enum::trace;	severityStr = "pop group";			break;
+				case GL_DEBUG_SEVERITY_NOTIFICATION:		level = spdlog::level::level_enum::off;		severityStr = "notification";		break;
 			}
 
 			if (level != spdlog::level::level_enum::off)
