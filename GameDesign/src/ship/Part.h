@@ -59,6 +59,8 @@ public:
 	Part(World& world, Ship& ship, Hazel::Ref<EditorPart>& partDef);
 
 	inline const Hazel::Ref<EditorPart>& GetEditorPart() const { return m_EditorPart; }
+	inline bool IsRoot() { return m_ParentPart.get() == nullptr; }
+	inline void Advance(Part*& part) { part = part->m_ParentPart.get(); }
 
 	void AddFixtures(b2Body* body);
 	void RemoveFixtures(b2Body* body);

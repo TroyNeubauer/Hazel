@@ -1,5 +1,7 @@
 #include "SandboxLayer.h"
 
+#include "ship/Part.h"
+
 #include <imgui.h>
 #include <random>
 
@@ -216,6 +218,7 @@ CursorMode s_CurrentMode = CursorMode::CreateCapsule;
 
 void SandboxLayer::OnImGuiRender()
 {
+
 	ImGui::Begin("World Settings");
 
 	SliderDouble("G", &World::Constants::G, -0.01f, 10.0f, "%.5f", 3.0f); Tooltip("G is a universal constant like PI that determines how much objects attract each other");
@@ -230,6 +233,7 @@ void SandboxLayer::OnImGuiRender()
 		if (ImGui::Button("Step"))
 			m_Steps++;
 	}
+
 
 	ImGui::Text("%d bodies exist", count);
 	if (ImGui::Button("Stop all bodies"))
@@ -256,6 +260,42 @@ void SandboxLayer::OnImGuiRender()
 		if (ImGui::Button("Delete"))
 		{
 			m_World->Remove(m_SelectedBody);
+		}
+		Ship* ship = dynamic_cast<Ship*>(m_SelectedBody);
+		if (ship != nullptr && ImGui::Button("Stage"))
+		{
+			int distance = -1;
+			std::vector<Hazel::Ref<Part>> partsToStage;
+			for (auto& part : ship->GetParts())
+			{
+				int currentDistance = 0;
+				Part* partPtr = part.get();
+				while (!partPtr->IsRoot())
+				{
+					currentDistance++;
+					partPtr->Advance(partPtr);
+				}
+				//Root part
+				if (currentDistance == 0) continue;
+				//Reset for new maxes
+				if (distance == -1 || currentDistance > distance)
+				{
+					partsToStage.clear();
+					distance = currentDistance;
+				}
+
+				//Add all parts that match the best distance found so far
+				if (distance == currentDistance)
+				{
+					partsToStage.push_back(part);
+				}
+			}
+
+			for (Hazel::Ref<Part> part : partsToStage)
+			{
+				Ship* newShip = ship->Split(*m_World, part);
+				m_World->AddShip(newShip);
+			}
 		}
 	}
 	ImGui::End();

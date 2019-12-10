@@ -18,7 +18,7 @@ void GameDesign::Update()
 
 void GameDesign::Render()
 {
-	Hazel::RenderCommand::SetClearColor(glm::vec4(glm::vec3(/*0.6f*/0.0f), 1.0f));
+	Hazel::RenderCommand::SetClearColor(glm::vec4(glm::vec3(0.6f), 1.0f));
 	Hazel::RenderCommand::Clear();
 	if (Hazel::Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_5) || Hazel::Input::IsKeyPressed(HZ_KEY_H))
 	{

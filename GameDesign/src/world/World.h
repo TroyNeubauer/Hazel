@@ -51,6 +51,7 @@ public:
 	void Render();
 
 	Ship& AddShip(const Hazel::Ref<EditorShip>& partDef, glm::vec2 pos, float rot = 0.0f);
+	void AddShip(Ship* ship);//Takes ownership
 	void Remove(Body* body);
 
 	inline LinkedListIterator BodiesBegin() { return m_World->GetBodyList();  }

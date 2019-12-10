@@ -31,7 +31,7 @@ public:
 	virtual void Render(World& world) override;
 	virtual void Update(World& world) override;
 
-	Ship* Split(World& world, Hazel::Ref<Part> newRoot);
+	Ship* Split(World& world, Hazel::Ref<Part>& newRoot);
 
 	inline std::vector<Hazel::Ref<Part>>& GetParts() { return m_Parts; }
 

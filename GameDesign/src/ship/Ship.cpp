@@ -28,6 +28,15 @@ Ship::Ship(World& world, const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, f
 	CreatePhysicsBody(world, pos, rot);
 }
 
+Ship::Ship(const Ship& other) : m_Parts(other.m_Parts.size())
+{
+	int i = 0;
+	for (Hazel::Ref<Part>& part : other.m_Parts)
+	{
+		m_Parts[i++] = Hazel::S(new Part(*part.get()));
+	}
+}
+
 void Ship::Render(World& world)
 {
 	glm::vec2 rootPos = { GetPhsicsBody()->GetPosition().x, GetPhsicsBody()->GetPosition().y };
@@ -49,7 +58,7 @@ void Ship::Update(World& world)
 }
 
 
-Ship* Ship::Split(World& world, Hazel::Ref<Part> newRoot)
+Ship* Ship::Split(World& world, Hazel::Ref<Part>& newRoot)
 {
 	HZ_ASSERT(&GetRoot() != newRoot.get(), "Cannot split the root part!");
 	Ship* result = new Ship();
@@ -78,23 +87,18 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part> newRoot)
 	}
 	if (newPartsIndices.empty()) return nullptr;//No work to do
 
-	float rot = GetRotation();
-	glm::vec2 pos = GetPosition() + newRoot->m_EditorPart->GetTotalOffset(rot);
-
-	result->CreatePhysicsBody(world, pos, rot);
-	b2Body* resultBody = result->GetPhsicsBody();
-
-	//Make newPartsIndices be in descending order
 	std::sort(newPartsIndices.begin(), newPartsIndices.end());
-	std::reverse(newPartsIndices.begin(), newPartsIndices.end());
 
 	result->m_Parts.resize(newPartsIndices.size());
 	int i = newPartsIndices.size() - 1;
+
+	//Iterate and remove parts in from the higher indices first to minimize copying
 	for (auto it = newPartsIndices.rbegin(); it != newPartsIndices.rend(); it++)
 	{
 		size_t index = *it;
 		Hazel::Ref<Part>& origionalPart = m_Parts[index];
 		Hazel::Ref<Part>& newPart = result->m_Parts[i];
+		//Add the fixtures of this part to the new body
 		origionalPart->RemoveFixtures(GetPhsicsBody());
 
 		//Transfer ownership to the new part
@@ -102,9 +106,7 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part> newRoot)
 		//Remove the part from the old ship's list
 		m_Parts.erase(m_Parts.begin() + index);
 
-		//Add the fixtures of this part to the new body
-		newPart->AddFixtures(resultBody);
-		if (newPart.get() == newRoot)
+		if (newPart.get() == newRoot.get())
 		{
 			result->m_RootIndex = i;
 			newPart->m_ParentPart = nullptr;//Disconnect from the main ship
@@ -116,6 +118,12 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part> newRoot)
 	HZ_ASSERT(i == -1, "Did not iterate properly!");
 	HZ_ASSERT(result->m_RootIndex != -1, "No root found on new body");
 	HZ_ASSERT(result->GetRoot().m_ParentPart == nullptr, "Root is not a real root!");
+
+	//Create the new physics body
+	float rot = GetRotation();
+	glm::vec2 pos = GetPosition();
+	pos += newRoot->m_EditorPart->GetTotalOffset(rot);
+	result->CreatePhysicsBody(world, pos, rot);//CreatePhysicsBody adds the fixtures for each part
 
 	return result;
 }

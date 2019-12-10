@@ -63,6 +63,8 @@ namespace Hazel {
 		{
 			return GetCategoryFlags() & category;
 		}
+
+		virtual ~Event() {}
 	};
 
 	class EventDispatcher

@@ -101,6 +101,11 @@ void World::Render()
 	}
 }
 
+void World::AddShip(Ship* ship)
+{
+	m_Ships.push_back(Hazel::S(ship));
+}
+
 Ship& World::AddShip(const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, float rot)
 {
 	HZ_PROFILE_FUNCTION();

@@ -17,7 +17,7 @@ public:
 	glm::vec2 GetPosition() const;
 
 	//Returns the angle in degrees
-	inline float GetRotation() const;
+	float GetRotation() const;
 
 	void SetRotation(float degrees);
 

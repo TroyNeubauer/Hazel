@@ -41,7 +41,7 @@ namespace Hazel {
 		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		{
 			HZ_PROFILE_SCOPE("ImGui_ImplGlfw_InitForOpenGL()");
-			ImGui_ImplGlfw_InitForOpenGL(window, true);
+			ImGui_ImplGlfw_InitForOpenGL(window, false);
 		}
 		{
 			HZ_PROFILE_SCOPE("ImGui_ImplOpenGL3_Init(\"#version 410\")");
@@ -59,7 +59,18 @@ namespace Hazel {
 	}
 
 	void OpenGLImGuiLayer::OnEvent(Event* event) {
-
+		ImGuiIO& io = ImGui::GetIO();
+		int flags = event->GetCategoryFlags();
+		if (flags & EventCategory::EventCategoryKeyboard)
+		{
+			if (io.WantCaptureKeyboard)
+				event->Handled = true;
+		}
+		if (flags & (EventCategory::EventCategoryMouse | EventCategory::EventCategoryMouseButton))
+		{
+			if (io.WantCaptureMouse)
+				event->Handled = true;
+		}
 	}
 
 	void OpenGLImGuiLayer::Begin()
