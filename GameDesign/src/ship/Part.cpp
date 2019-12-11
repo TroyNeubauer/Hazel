@@ -2,6 +2,7 @@
 #include "Part.h"
 #include "Ship.h"
 #include "world/World.h"
+#include "Helper.h"
 
 #include <time.h>
 #include <utility>
@@ -84,7 +85,11 @@ float Part::GetTotalRotation() const
 void Part::AddFixtures(b2Body* body)
 {
 	b2PolygonShape rect;
-	rect.SetAsBox(m_EditorPart->m_Def->Size.x / 2.0f, m_EditorPart->m_Def->Size.y / 2.0f);
+	float angle = 0.0f;
+	if (!IsRoot()) angle = glm::radians(m_EditorPart->m_RotOffset);
+
+	rect.SetAsBox(m_EditorPart->m_Def->Size.x / 2.0f, m_EditorPart->m_Def->Size.y / 2.0f, {0.0f, 0.0f}, angle);
+
 	glm::vec2 glmOffset = GetTotalOffset();
 	b2Vec2 offset = { glmOffset.x, glmOffset.y };
 

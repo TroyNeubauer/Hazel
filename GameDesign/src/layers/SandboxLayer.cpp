@@ -32,30 +32,31 @@ void SandboxLayer::OnAttach()
 		last = part;
 	}
 
-	/*Hazel::Ref<EditorShip> ship2 = Hazel::R(new EditorShip(ship));
+	//Hazel::Ref<EditorShip> ship2 = Hazel::R(new EditorShip(ship));
+	Hazel::Ref<EditorShip> ship2 = ship;
 
 	Hazel::Ref<EditorPart> d = Hazel::R(new EditorPart());
 	ship2->GetParts().push_back(d);
 	d->m_Def = Parts::StaticShip;
-	d->m_Offset = { c->m_Def->Size.x / 2.0f + d->m_Def->Size.x / 2.0f, 0.0f };
+	d->m_Offset = { 0.0f, -last->m_Def->Size.x / 2.0f - d->m_Def->Size.y / 2.0f };
 	d->m_RotOffset = 90.0f;
-	d->m_ParentPart = ship2->GetParts()[2];
+	d->m_ParentPart = last;
 
 	Hazel::Ref<EditorPart> e = Hazel::R(new EditorPart());
 	ship2->GetParts().push_back(e);
 	e->m_Def = Parts::StaticShip;
-	e->m_Offset = { -c->m_Def->Size.x / 2.0f - e->m_Def->Size.x / 2.0f, 0.0f };
+	e->m_Offset = { 0.0f, -last->m_Def->Size.x / 2.0f - e->m_Def->Size.y / 2.0f };
 	e->m_RotOffset = -90.0f;
-	e->m_ParentPart = ship2->GetParts()[2];*/
+	e->m_ParentPart = last;
 
-	for (int i = 0; i < 2; i++)
-	{
-		m_World->AddShip(ship, { pos(mt), pos(mt) }, 0.0f);
-	}
 	/*for (int i = 0; i < 2; i++)
 	{
-		m_World->AddShip(ship2, { pos(mt), pos(mt) }, 0.0f);
+		m_World->AddShip(ship, { pos(mt), pos(mt) }, 0.0f);
 	}*/
+	for (int i = 0; i < 2; i++)
+	{
+		m_World->AddShip(ship2, { pos(mt), pos(mt) }, 0.0f);
+	}
 	m_World->SetBodyRemovedCallback([this](Body* body) {
 		if (body == m_SelectedBody) m_SelectedBody = nullptr;
 		if (body == m_DraggedBody)

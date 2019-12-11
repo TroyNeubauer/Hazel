@@ -82,7 +82,7 @@ public:
 	float GetTotalRotation() const;
 
 	virtual void Update(World& world);
-	virtual ~Part() { HZ_INFO("Desturcted part!");}
+	virtual ~Part() {}
 
 
 private:

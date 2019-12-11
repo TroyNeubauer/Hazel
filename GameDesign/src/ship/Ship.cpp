@@ -125,7 +125,7 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part>& newRoot)
 	glm::vec2 pos = GetPosition();
 	glm::vec2 offset = newRoot->GetTotalOffset(rot);
 	pos += offset;
-	glm::vec2 velocity = newRoot->GetAngularVelocityAsLinear(*this);
+	glm::vec2 velocity = newRoot->GetAngularVelocityAsLinear(*this) + b2v2(GetPhsicsBody()->GetLinearVelocity());
 
 	//Iterate and remove parts in from the higher indices first to minimize copying
 	for (auto it = newPartsIndices.rbegin(); it != newPartsIndices.rend(); it++)
@@ -157,6 +157,7 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part>& newRoot)
 	//Create the new physics body
 	result->CreatePhysicsBody(world, pos, rot);//CreatePhysicsBody adds the fixtures for each part
 	result->GetPhsicsBody()->SetLinearVelocity(v2b2(velocity));
+	result->SetRotation(newRoot->m_EditorPart->m_RotOffset + GetRotation());
 	return result;
 }
 
