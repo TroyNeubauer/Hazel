@@ -2,13 +2,40 @@
 #include "Ship.h"
 #include "Part.h"
 #include "world/World.h"
+#include "Helper.h"
 
 #include <map>
 
-Ship::Ship(World& world, const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, float rot)
+EditorShip::EditorShip(const EditorShip& other)
+{
+	//Maps other parts to new parts
+	std::unordered_map<Hazel::Ref<EditorPart>, Hazel::Ref<EditorPart>> partLinking(other.m_Parts.size());
+	for (int i = 0; i < other.m_Parts.size(); i++)
+	{
+		const Hazel::Ref<EditorPart>& otherPart = other.m_Parts[i];
+		Hazel::Ref<EditorPart>& part = m_Parts.emplace_back(new EditorPart(otherPart));
+		partLinking[otherPart] = part;
+	}
+
+	for (int i = 0; i < other.m_Parts.size(); i++)
+	{
+		const Hazel::Ref<EditorPart>& otherPart = other.m_Parts[i];
+		Hazel::Ref<EditorPart>& part = m_Parts[i];
+		if (otherPart->m_ParentPart != nullptr)
+		{
+			std::unordered_map<Hazel::Ref<EditorPart>, Hazel::Ref<EditorPart>>::iterator it = partLinking.find(otherPart);
+			HZ_ASSERT(it != partLinking.end(), "Invalid parent part is not on this ship!");
+			Hazel::Ref<EditorPart>& parentPart = it->second;
+			part->m_ParentPart = parentPart;
+		}
+
+	}
+}
+
+Ship::Ship(World& world, const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, float degrees)
 {
 	std::unordered_map<Hazel::Ref<EditorPart>, Hazel::Ref<Part>> partLinking(shipDef->GetParts().size());
-	for (Hazel::Ref<EditorPart>& partDef : shipDef->GetParts())
+	for (const Hazel::Ref<EditorPart>& partDef : shipDef->GetParts())
 	{
 		Hazel::Ref<Part>& part = m_Parts.emplace_back(new Part(world, *this, partDef));
 		partLinking[partDef] = part;
@@ -25,16 +52,7 @@ Ship::Ship(World& world, const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, f
 		}
 
 	}
-	CreatePhysicsBody(world, pos, rot);
-}
-
-Ship::Ship(const Ship& other) : m_Parts(other.m_Parts.size())
-{
-	int i = 0;
-	for (Hazel::Ref<Part>& part : other.m_Parts)
-	{
-		m_Parts[i++] = Hazel::S(new Part(*part.get()));
-	}
+	CreatePhysicsBody(world, pos, degrees);
 }
 
 void Ship::Render(World& world)
@@ -42,10 +60,10 @@ void Ship::Render(World& world)
 	glm::vec2 rootPos = { GetPhsicsBody()->GetPosition().x, GetPhsicsBody()->GetPosition().y };
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
-		float angle = GetPhsicsBody()->GetAngle() + part->GetEditorPart()->GetTotalRotation();
-		glm::vec2 pos = rootPos + part->GetEditorPart()->GetTotalOffset(GetPhsicsBody()->GetAngle());
+		float degrees = GetRotation() + part->GetTotalRotation();
+		glm::vec2 pos = rootPos + part->GetTotalOffset(GetRotation());
 		glm::vec2 size = { part->GetEditorPart()->m_Def->Size.x, part->GetEditorPart()->m_Def->Size.y };
-		Hazel::Renderer2D::DrawQuad(pos, size, part->m_Animation, glm::degrees(angle));
+		Hazel::Renderer2D::DrawQuad(pos, size, part->m_Animation, degrees);
 	}
 }
 
@@ -54,6 +72,17 @@ void Ship::Update(World& world)
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
 		part->Update(world);
+	}
+}
+
+void Ship::B2DRender(Hazel::B2D_DebugDraw* draw)
+{
+	for (size_t i = 0; i < m_Parts.size(); i++)
+	{
+		Hazel::Ref<Part>& part = m_Parts[i];
+		glm::vec2 a = GetPosition() + part->GetTotalOffset(GetRotation());
+		glm::vec2 b = a + part->GetAngularVelocityAsLinear(*this);
+		draw->DrawSegment(v2b2(a), v2b2(b), b2Color(1.0f, 0.0f, 1.0f, 1.0f));
 	}
 }
 
@@ -92,6 +121,12 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part>& newRoot)
 	result->m_Parts.resize(newPartsIndices.size());
 	int i = newPartsIndices.size() - 1;
 
+	float rot = GetRotation();
+	glm::vec2 pos = GetPosition();
+	glm::vec2 offset = newRoot->GetTotalOffset(rot);
+	pos += offset;
+	glm::vec2 velocity = newRoot->GetAngularVelocityAsLinear(*this);
+
 	//Iterate and remove parts in from the higher indices first to minimize copying
 	for (auto it = newPartsIndices.rbegin(); it != newPartsIndices.rend(); it++)
 	{
@@ -113,26 +148,23 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part>& newRoot)
 		}
 
 		i--;
-
 	}
+
 	HZ_ASSERT(i == -1, "Did not iterate properly!");
 	HZ_ASSERT(result->m_RootIndex != -1, "No root found on new body");
 	HZ_ASSERT(result->GetRoot().m_ParentPart == nullptr, "Root is not a real root!");
 
 	//Create the new physics body
-	float rot = GetRotation();
-	glm::vec2 pos = GetPosition();
-	pos += newRoot->m_EditorPart->GetTotalOffset(rot);
 	result->CreatePhysicsBody(world, pos, rot);//CreatePhysicsBody adds the fixtures for each part
-
+	result->GetPhsicsBody()->SetLinearVelocity(v2b2(velocity));
 	return result;
 }
 
-void Ship::CreatePhysicsBody(World& world, glm::vec2 pos, float rot)
+void Ship::CreatePhysicsBody(World& world, glm::vec2 pos, float degrees)
 {
 	b2BodyDef def;
 	def.position = b2Vec2(pos.x, pos.y);
-	def.angle = rot;
+	def.angle = glm::radians(degrees);
 	def.userData = this;
 	def.type = b2_dynamicBody;
 	def.active = true;
@@ -163,4 +195,13 @@ Part& Ship::GetRoot()
 	}
 	end:
 	return *m_Parts[m_RootIndex].get();
+}
+
+Ship::~Ship()
+{
+	for (Hazel::Ref<Part>& part : m_Parts)
+	{
+		//Unlink parents so that that each part can be freed when the vector gets destructed
+		part->m_ParentPart = nullptr;
+	}
 }

@@ -17,6 +17,12 @@ void Body::SetRotation(float degrees)
 	m_Body->SetTransform(m_Body->GetWorldCenter(), glm::radians(degrees));
 }
 
+glm::vec2 Body::GetLocalCenterOfMass() const
+{
+	b2Vec2 center = m_Body->GetLocalCenter();
+	return { center.x, center.y };
+}
+
 void Body::SetPhysicsBody(b2Body* newBody)
 {
 	HZ_ASSERT(m_Body == nullptr || newBody == m_Body, "Physics body already exists!");

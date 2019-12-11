@@ -6,6 +6,8 @@
 #include <time.h>
 #include <utility>
 
+
+
 void EditorPart::Render()
 {
 
@@ -14,41 +16,76 @@ void EditorPart::Render()
 			frame.first, frame.second, m_Def->Animation->m_Texture, 0xFFFFFFFF, glm::degrees(GetTotalRotation()));
 }
 
-glm::vec2 EditorPart::GetTotalOffset(float initalRotation)
+glm::vec2 EditorPart::GetTotalOffset(float initalRotation) const
 {
 	glm::vec2 result = { 0.0f, 0.0f };
-	EditorPart* part = this;
+	const EditorPart* part = this;
 	while (part)
 	{
-		result += glm::rotate(part->m_Offset, m_RotOffset + initalRotation);
+		if (!part->IsRoot())//Root parts don't care about the offset
+			result += glm::rotate(part->m_Offset, glm::radians(part->m_RotOffset + initalRotation));
 		part = part->m_ParentPart.get();
 	}
 	return result;
 }
 
-float EditorPart::GetTotalRotation()
+float EditorPart::GetTotalRotation() const
 {
 	float result = 0.0f;
-	EditorPart* part = this;
+	const EditorPart* part = this;
 	while (part)
 	{
-		result += part->m_RotOffset;
+		if (!part->IsRoot())
+			result += part->m_RotOffset;
 		part = part->m_ParentPart.get();
 	}
 	return result;
 }
 
+//==================== PART Implementations ====================
 
-Part::Part(World& world, Ship& ship, Hazel::Ref<EditorPart>& editorPart)
-	: m_EditorPart(editorPart), m_Animation(editorPart->m_Def->Animation)
+glm::vec2 Part::GetAngularVelocityAsLinear(const Ship& ship) const
 {
+	float angularVelocityRad = ship.GetPhsicsBody()->GetAngularVelocity();
+	glm::vec2 realOffset = GetTotalOffset() - ship.GetLocalCenterOfMass();
+	float angularVelocityLength = glm::length(realOffset) * angularVelocityRad;
 
+	float angle = glm::pi<float>() / 2.0f + ship.GetPhsicsBody()->GetAngle();
+	return angularVelocityLength * glm::rotate(glm::normalize(realOffset), angle);
 }
+
+glm::vec2 Part::GetTotalOffset(float initalRotation) const
+{
+	glm::vec2 result = { 0.0f, 0.0f };
+	const Part* part = this;
+	while (part)
+	{
+		if (!part->IsRoot())
+			result += glm::rotate(part->m_EditorPart->m_Offset, glm::radians(part->m_EditorPart->m_RotOffset + initalRotation));
+		part = part->m_ParentPart.get();
+	}
+	return result;
+}
+
+float Part::GetTotalRotation() const
+{
+	float degrees = 0.0f;
+	const Part* part = this;
+	while (part)
+	{
+		if (!part->IsRoot())
+			degrees += part->m_EditorPart->m_RotOffset;
+		part = part->m_ParentPart.get();
+	}
+	return degrees;
+}
+
+
 void Part::AddFixtures(b2Body* body)
 {
 	b2PolygonShape rect;
 	rect.SetAsBox(m_EditorPart->m_Def->Size.x / 2.0f, m_EditorPart->m_Def->Size.y / 2.0f);
-	glm::vec2 glmOffset = m_EditorPart->GetTotalOffset();
+	glm::vec2 glmOffset = GetTotalOffset();
 	b2Vec2 offset = { glmOffset.x, glmOffset.y };
 
 	for (int i = 0; i < rect.m_count; i++)

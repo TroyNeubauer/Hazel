@@ -74,6 +74,7 @@ public:
 	}
 
 	static inline Body* ToBody(b2Body* body) { return reinterpret_cast<Body*>(body->GetUserData()); }
+	inline Hazel::B2D_DebugDraw* GetDebugDraw() { return m_DebugDraw.get(); }
 
 private:
 	std::vector<Hazel::Scope<Ship>> m_Ships;

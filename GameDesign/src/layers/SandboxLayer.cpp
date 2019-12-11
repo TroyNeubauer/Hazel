@@ -1,14 +1,16 @@
 #include "SandboxLayer.h"
 
 #include "ship/Part.h"
+#include "ship/Ship.h"
 
 #include <imgui.h>
 #include <random>
 
 void SandboxLayer::OnAttach()
 {
-	std::default_random_engine gen;
-	std::uniform_real_distribution<float> pos(-60.0f, 60.0f);
+    std::random_device rd;
+    std::mt19937 mt(rd());
+	std::uniform_real_distribution<float> pos(-15.0f, 15.0f);
 
 	Hazel::Ref<EditorShip> ship = Hazel::R(new EditorShip());
 
@@ -16,24 +18,44 @@ void SandboxLayer::OnAttach()
 	ship->GetParts().push_back(a);
 	a->m_Def = Parts::FlyingShip;
 	a->m_ParentPart = nullptr;
+	Hazel::Ref<EditorPart>& last = a;
+	Hazel::Ref<EditorPart> part;
+	float rot = 0.0f;
+	for (int i = 0; i < 10; i++) {
+		part = Hazel::R(new EditorPart());
+		ship->GetParts().push_back(part);
+		part->m_Def = Parts::MK1Capsule;
+		part->m_Offset = { 0.0f, -last->m_Def->Size.y / 2.0f - part->m_Def->Size.y / 2.0f };
+		part->m_ParentPart = last;
+		part->m_RotOffset = 0.0f;
+		rot += 90.0f;
+		last = part;
+	}
 
-	Hazel::Ref<EditorPart> b = Hazel::R(new EditorPart());
-	ship->GetParts().push_back(b);
-	b->m_Def = Parts::MK1Capsule;
-	b->m_Offset = { 0.0f, -a->m_Def->Size.y / 2.0f - b->m_Def->Size.y / 2.0f };
-	b->m_ParentPart = a;
+	/*Hazel::Ref<EditorShip> ship2 = Hazel::R(new EditorShip(ship));
 
-	Hazel::Ref<EditorPart> c = Hazel::R(new EditorPart());
-	ship->GetParts().push_back(c);
-	c->m_Def = Parts::MK1Capsule;
-	c->m_Offset = { 0.0f, -b->m_Def->Size.y / 2.0f - c->m_Def->Size.y / 2.0f};
-	c->m_ParentPart = b;
+	Hazel::Ref<EditorPart> d = Hazel::R(new EditorPart());
+	ship2->GetParts().push_back(d);
+	d->m_Def = Parts::StaticShip;
+	d->m_Offset = { c->m_Def->Size.x / 2.0f + d->m_Def->Size.x / 2.0f, 0.0f };
+	d->m_RotOffset = 90.0f;
+	d->m_ParentPart = ship2->GetParts()[2];
 
+	Hazel::Ref<EditorPart> e = Hazel::R(new EditorPart());
+	ship2->GetParts().push_back(e);
+	e->m_Def = Parts::StaticShip;
+	e->m_Offset = { -c->m_Def->Size.x / 2.0f - e->m_Def->Size.x / 2.0f, 0.0f };
+	e->m_RotOffset = -90.0f;
+	e->m_ParentPart = ship2->GetParts()[2];*/
 
 	for (int i = 0; i < 2; i++)
 	{
-		m_World->AddShip(ship, { pos(gen), pos(gen) }, 0.0f);
+		m_World->AddShip(ship, { pos(mt), pos(mt) }, 0.0f);
 	}
+	/*for (int i = 0; i < 2; i++)
+	{
+		m_World->AddShip(ship2, { pos(mt), pos(mt) }, 0.0f);
+	}*/
 	m_World->SetBodyRemovedCallback([this](Body* body) {
 		if (body == m_SelectedBody) m_SelectedBody = nullptr;
 		if (body == m_DraggedBody)
@@ -43,7 +65,7 @@ void SandboxLayer::OnAttach()
 		}
 		
 	});
-	m_World->GetCamera().SetZoom(100.0f);
+	m_World->GetCamera().SetZoom(10.0f);
 }
 
 void SandboxLayer::OnDetach()
@@ -294,7 +316,7 @@ void SandboxLayer::OnImGuiRender()
 			for (Hazel::Ref<Part> part : partsToStage)
 			{
 				Ship* newShip = ship->Split(*m_World, part);
-				m_World->AddShip(newShip);
+				if (newShip) m_World->AddShip(newShip);
 			}
 		}
 	}

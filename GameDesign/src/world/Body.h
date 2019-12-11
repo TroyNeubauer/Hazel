@@ -18,8 +18,10 @@ public:
 
 	//Returns the angle in degrees
 	float GetRotation() const;
-
 	void SetRotation(float degrees);
+
+	glm::vec2 GetLocalCenterOfMass() const;
+	inline glm::vec2 GetCenterOfMass() const { return GetPosition() + GetLocalCenterOfMass(); }
 
 	virtual void Render(World& world) = 0;
 	virtual void Update(World& world) = 0;

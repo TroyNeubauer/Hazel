@@ -85,6 +85,10 @@ void World::Render()
 		HZ_PROFILE_SCOPE("Box2D Debug Draw");
 		m_DebugDraw->BeginScene(m_Camera);
 		m_World->DrawDebugData();
+		for (const auto& ship : m_Ships)
+		{
+			ship->B2DRender(m_DebugDraw.get());
+		}
 		m_DebugDraw->EndScene();
 	}
 
