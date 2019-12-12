@@ -2,11 +2,13 @@
 #include "GameDesign.h"
 #include "layers/SandboxLayer.h"
 #include "layers/WorldLayer.h"
+#include "ship/Parts.h"
 
 #include "Hazel.h"
 
 GameDesign::GameDesign()
 {
+	Parts::Init();
 	PushOverlay(new Hazel::DebugLayer());
 	PushLayer(new SandboxLayer(new World()));
 }

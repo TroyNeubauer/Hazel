@@ -42,7 +42,7 @@ namespace Hazel {
 		inline void StopOnEnd() { m_RepeatOnEnd = false; }
 
 		inline const Ref<Texture2D>& GetTexture() const { return m_Def->m_Texture; }
-
+		inline const Ref<const AnimationDef2D>& GetDef() const { return m_Def; }
 		inline const Frame& GetFrame() const { return m_Def->m_Frames[m_CurrentFrame]; }
 
 	private:

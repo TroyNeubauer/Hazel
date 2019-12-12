@@ -4,6 +4,7 @@
 #include "world/World.h"
 #include "Helper.h"
 
+#include <Hazel.h>
 #include <map>
 
 EditorShip::EditorShip(const EditorShip& other)
@@ -37,9 +38,10 @@ Ship::Ship(World& world, const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, f
 	std::unordered_map<Hazel::Ref<EditorPart>, Hazel::Ref<Part>> partLinking(shipDef->GetParts().size());
 	for (const Hazel::Ref<EditorPart>& partDef : shipDef->GetParts())
 	{
-		Hazel::Ref<Part>& part = m_Parts.emplace_back(new Part(world, *this, partDef));
+		Hazel::Ref<Part>& part = m_Parts.emplace_back(partDef->m_Def->CreatePart(world, *this, partDef));
 		partLinking[partDef] = part;
 	}
+
 
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
@@ -61,9 +63,12 @@ void Ship::Render(World& world)
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
 		float degrees = GetRotation() + part->GetTotalRotation();
-		glm::vec2 pos = rootPos + part->GetTotalOffset(GetRotation());
-		glm::vec2 size = { part->GetEditorPart()->m_Def->Size.x, part->GetEditorPart()->m_Def->Size.y };
-		Hazel::Renderer2D::DrawQuad(pos, size, part->m_Animation, degrees);
+		Hazel::Ref<PartDef>& def = part->GetEditorPart()->m_Def;
+		glm::vec2 pos = rootPos + part->GetTotalOffset(GetRotation()) + glm::rotate(def->SpriteOffset, glm::radians(degrees));
+
+		glm::vec2 textureSize = { def->Animation->m_Texture->GetWidth(), def->Animation->m_Texture->GetHeight() };
+
+		Hazel::Renderer2D::DrawQuad(pos, def->SpriteSize, part->m_Animation, degrees);
 	}
 }
 
@@ -71,7 +76,7 @@ void Ship::Update(World& world)
 {
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
-		part->Update(world);
+		part->Update(*this, world);
 	}
 }
 
@@ -126,6 +131,7 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part>& newRoot)
 	glm::vec2 offset = newRoot->GetTotalOffset(rot);
 	pos += offset;
 	glm::vec2 velocity = newRoot->GetAngularVelocityAsLinear(*this) + b2v2(GetPhsicsBody()->GetLinearVelocity());
+	float rotation = newRoot->GetTotalRotation() + GetRotation();
 
 	//Iterate and remove parts in from the higher indices first to minimize copying
 	for (auto it = newPartsIndices.rbegin(); it != newPartsIndices.rend(); it++)
@@ -157,7 +163,8 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part>& newRoot)
 	//Create the new physics body
 	result->CreatePhysicsBody(world, pos, rot);//CreatePhysicsBody adds the fixtures for each part
 	result->GetPhsicsBody()->SetLinearVelocity(v2b2(velocity));
-	result->SetRotation(newRoot->m_EditorPart->m_RotOffset + GetRotation());
+	result->SetRotation(rotation);
+
 	return result;
 }
 

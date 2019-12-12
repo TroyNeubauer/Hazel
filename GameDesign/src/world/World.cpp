@@ -7,24 +7,10 @@
 
 
 double World::Constants::G = 6.67430E-11 * 10000000.0f;
-Hazel::Ref<PartDef> Parts::MK1Capsule = nullptr;
-Hazel::Ref<PartDef> Parts::MK1Engine = nullptr;
-Hazel::Ref<PartDef> Parts::FlyingShip = nullptr;
-Hazel::Ref<PartDef> Parts::StaticShip = nullptr;
-
-Hazel::TextureBuilder builder = Hazel::TextureBuilder::Default().NearestFiltering().ClampEdges();
 
 World::World() : m_Camera(new WorldCameraController())
 {
 	m_World.reset(new b2World( {0.0f, 0.0f} ));//No gravity since we handle it ourselves
-	Hazel::Ref<Hazel::Texture2D> RocketComponents = Hazel::Texture2D::Load("assets/textures/RocketComponents.png", builder);
-	Hazel::Ref<Hazel::Texture2D> DefaultShip = Hazel::Texture2D::Load("assets/textures/Rocket.png", builder);
-
-	Parts::MK1Capsule.reset(new PartDef{ "MK1 Capsule", 20.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 0, 16 }, { 14, 16 }), 1.0f });
-	Parts::FlyingShip.reset(new PartDef{ "Flying Ship", 25.0f, 15.0f, Hazel::AnimationDef2D::Create(DefaultShip, 0.2f, {25, 47}, {{0, 1}, {1, 1}, {2, 1}, {3, 1}, {4, 1}}), 2.0f });
-	Parts::StaticShip.reset(new PartDef{ "Ship", 25.0f, 15.0f, Hazel::AnimationDef2D::Create(DefaultShip, {0, 0}, {25, 47}), 2.0f });
-	Parts::MK1Engine.reset(new PartDef{ "MK1 Engine", 20.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 0, 16 }, { 14, 16 }), 1.0f });
-
 	m_Camera.SetPosition(vec2(0.0, 0.0));
 	m_Camera.SetRotation(0.0f);
 	m_Camera.SetZoom(10.0f);
@@ -47,19 +33,20 @@ void World::Update()
 		b2Body* body = m_World->GetBodyList();
 		for (int i = 0; i < m_World->GetBodyCount(); i++, body = body->GetNext())
 		{
-			if (body->GetType() == b2_dynamicBody)
+			b2Vec2 bodyPos = body->GetWorldCenter();
+
+			b2Body* other = m_World->GetBodyList();
+			for (int j = 0; j < i; j++, other = other->GetNext())
 			{
-				b2Body* other = m_World->GetBodyList();
-				for (int j = 0; j < i; j++, other = other->GetNext())
-				{
-					glm::dvec2 force = glm::dvec2(other->GetPosition().x, other->GetPosition().y) - glm::dvec2(body->GetPosition().x, body->GetPosition().y);
-					force = glm::normalize(force);
-					double distance = glm::length(force);// Determine the amount of force to give
-					force *= (World::Constants::G * (double)body->GetMass() * (double)other->GetMass()) / (distance * distance);
-					b2Vec2 resultForce = b2Vec2(static_cast<float>(force.x), static_cast<float>(force.y));
-					body->ApplyForceToCenter(resultForce, true);
-					other->ApplyForceToCenter(-resultForce, true);
-				}
+				b2Vec2 otherPos = other->GetWorldCenter();
+
+				glm::dvec2 force = glm::dvec2(otherPos.x, otherPos.y) - glm::dvec2(bodyPos.x, bodyPos.y);
+				force = glm::normalize(force);
+				double distance = glm::length(force);// Determine the amount of force to give
+				force *= (World::Constants::G * (double)body->GetMass() * (double)other->GetMass()) / (distance * distance);
+				b2Vec2 resultForce = b2Vec2(static_cast<float>(force.x), static_cast<float>(force.y));
+				body->ApplyForceToCenter(resultForce, true);
+				other->ApplyForceToCenter(-resultForce, true);
 			}
 		}
 		body = m_World->GetBodyList();

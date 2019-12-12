@@ -14,6 +14,9 @@
 
 #include "Hazel/Util/Utils.h"
 
+#include "Hazel/Renderer2D/Animation2D.h"
+#include "Hazel/Renderer2D/Renderer2D.h"
+
 #include "Hazel/Renderer/Buffer.h"
 #include "Hazel/Renderer/GraphicsAPI.h"
 #include "Hazel/Renderer/RenderCommand.h"

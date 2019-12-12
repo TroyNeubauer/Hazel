@@ -29,15 +29,6 @@ private:
 
 };
 
-
-class Parts {
-public:
-	static Hazel::Ref<PartDef> MK1Capsule;
-	static Hazel::Ref<PartDef> FlyingShip;
-	static Hazel::Ref<PartDef> StaticShip;
-	static Hazel::Ref<PartDef> MK1Engine;
-};
-
 class World
 {
 public:

@@ -2,6 +2,7 @@
 
 #include "ship/Part.h"
 #include "ship/Ship.h"
+#include "ship/Parts.h"
 
 #include <imgui.h>
 #include <random>
@@ -20,15 +21,13 @@ void SandboxLayer::OnAttach()
 	a->m_ParentPart = nullptr;
 	Hazel::Ref<EditorPart>& last = a;
 	Hazel::Ref<EditorPart> part;
-	float rot = 0.0f;
 	for (int i = 0; i < 10; i++) {
 		part = Hazel::R(new EditorPart());
 		ship->GetParts().push_back(part);
-		part->m_Def = Parts::MK1Capsule;
-		part->m_Offset = { 0.0f, -last->m_Def->Size.y / 2.0f - part->m_Def->Size.y / 2.0f };
+		part->m_Def = Parts::FlyingShip;
+		part->m_Offset = { 0.0f, -last->m_Def->HitboxSize.y / 2.0f - part->m_Def->HitboxSize.y / 2.0f };
 		part->m_ParentPart = last;
 		part->m_RotOffset = 0.0f;
-		rot += 90.0f;
 		last = part;
 	}
 
@@ -38,14 +37,14 @@ void SandboxLayer::OnAttach()
 	Hazel::Ref<EditorPart> d = Hazel::R(new EditorPart());
 	ship2->GetParts().push_back(d);
 	d->m_Def = Parts::StaticShip;
-	d->m_Offset = { 0.0f, -last->m_Def->Size.x / 2.0f - d->m_Def->Size.y / 2.0f };
+	d->m_Offset = { 0.0f, -last->m_Def->HitboxSize.x / 2.0f - d->m_Def->HitboxSize.y / 2.0f };
 	d->m_RotOffset = 90.0f;
 	d->m_ParentPart = last;
 
 	Hazel::Ref<EditorPart> e = Hazel::R(new EditorPart());
 	ship2->GetParts().push_back(e);
 	e->m_Def = Parts::StaticShip;
-	e->m_Offset = { 0.0f, -last->m_Def->Size.x / 2.0f - e->m_Def->Size.y / 2.0f };
+	e->m_Offset = { 0.0f, -last->m_Def->HitboxSize.x / 2.0f - e->m_Def->HitboxSize.y / 2.0f };
 	e->m_RotOffset = -90.0f;
 	e->m_ParentPart = last;
 
@@ -261,7 +260,7 @@ void SandboxLayer::OnImGuiRender()
 	ImGui::Text("%d bodies exist", count);
 	if (ImGui::Button("Stop all bodies"))
 	{
-		m_World->ForEachBody([](b2Body* body) {	body->SetLinearVelocity({ 0.0f, 0.0f }); });
+		m_World->ForEachBody([](b2Body* body) {	body->SetLinearVelocity({ 0.0f, 0.0f }); body->SetAngularVelocity(0.0f); });
 	}
 	if (ImGui::Button("Delete all bodies"))
 	{

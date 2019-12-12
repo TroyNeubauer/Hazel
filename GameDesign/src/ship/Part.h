@@ -14,23 +14,32 @@ struct FixtureData
 	Hazel::Scope<b2Shape> Shape;
 };
 
+class Part;
+class EditorPart;
 
 struct PartDef {
-	PartDef(const char* name, float density, float maxGForce, const Hazel::Ref<Hazel::AnimationDef2D> animation, float realWidth)
-		: Name(name), Density(density), MaxGForce(maxGForce), Animation(animation)
-	{
-		glm::vec2 spriteSize = { animation->m_Frames[0].Bottom - animation->m_Frames[0].Top };
-		Size.x = realWidth;
-		Size.y = realWidth * (spriteSize.y / spriteSize.x);
-	}
+
+public:
+	PartDef(const char* name, float density, float maxGForce, const Hazel::Ref<Hazel::AnimationDef2D> animation,
+			float hitboxWidth, glm::ivec2 topRightHBOffset = glm::ivec2(0, 0), glm::ivec2 bottomLeftHBOffset = glm::ivec2(0, 0));
 
 	PartDef(const PartDef& other) = default;
 
+	virtual Part* CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart);
+
+	virtual ~PartDef() {}
+
+public:
 	const char* Name;
 	float Density, Friction = 0.1f, Restitution = 0.2f;
 
 	float MaxGForce = 10.0f;
-	glm::vec2 Size;
+
+	//{0,0} on a part is always the center of its hitbox
+	glm::vec2 HitboxSize;
+	//Offset for where the sprite should be rendered relative to the center of the hitbox
+	glm::vec2 SpriteOffset, SpriteSize;
+
 
 	Hazel::Ref<Hazel::AnimationDef2D> Animation;
 };
@@ -81,9 +90,10 @@ public:
 	glm::vec2 GetTotalOffset(float initalRotation = 0.0f) const;
 	float GetTotalRotation() const;
 
-	virtual void Update(World& world);
+	virtual void Update(Ship& ship, World& world);
 	virtual ~Part() {}
-
+private:
+	static int FillInParts(const Part* leaf);
 
 private:
 
