@@ -63,13 +63,16 @@ void Ship::Render(World& world)
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
 		float shipRot = GetRotation();
-		float degrees = shipRot + part->GetTotalRotation();
+		float rotation = shipRot + part->GetTotalRotation();
 		Hazel::Ref<PartDef>& def = part->GetEditorPart()->m_Def;
-		glm::vec2 pos = rootPos + part->GetTotalOffset(shipRot) + glm::rotate(def->SpriteOffset, glm::radians(degrees));
+		Hazel::Renderer2DRenderable renderable;
 
-		glm::vec2 textureSize = { def->Animation->m_Texture->GetWidth(), def->Animation->m_Texture->GetHeight() };
+		renderable.Position = { rootPos + part->GetTotalOffset(shipRot) + glm::rotate(def->SpriteOffset, rotation), 0.0f };
+		renderable.Size = def->SpriteSize;
 
-		Hazel::Renderer2D::DrawQuad(pos, def->SpriteSize, part->m_Animation, degrees);
+		renderable.Rotation = rotation;
+		renderable.ApplyAnimation(def->Animation);
+		Hazel::Renderer2D::DrawQuad(renderable);
 	}
 }
 
@@ -169,11 +172,11 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part>& newRoot)
 	return result;
 }
 
-void Ship::CreatePhysicsBody(World& world, glm::vec2 pos, float degrees)
+void Ship::CreatePhysicsBody(World& world, glm::vec2 pos, float radians)
 {
 	b2BodyDef def;
 	def.position = b2Vec2(pos.x, pos.y);
-	def.angle = glm::radians(degrees);
+	def.angle = radians;
 	def.userData = this;
 	def.type = b2_dynamicBody;
 	def.active = true;

@@ -35,7 +35,7 @@ void EnginePart::Update(Ship& ship, World& world)
 	{
 		float rot = GetTotalRotation() + ship.GetRotation();
 		glm::vec2 force = { 0.0f, thrust };
-		force = glm::rotate(force, glm::radians(rot));
+		force = glm::rotate(force, rot);
 		ship.GetPhsicsBody()->ApplyForce(v2b2(force), v2b2(GetTotalOffset(ship.GetRotation()) + ship.GetPosition()), true);
 
 	}

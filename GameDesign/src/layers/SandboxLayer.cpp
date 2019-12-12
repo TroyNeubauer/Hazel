@@ -241,6 +241,8 @@ void SandboxLayer::OnImGuiRender()
 	}
 	else
 	{
+		ImGui::Text("pos {%.2f, %.2f} m", m_SelectedBody->GetCenterOfMass().x, m_SelectedBody->GetCenterOfMass().y);
+		ImGui::Text("rotation %.2f degrees", glm::degrees(m_SelectedBody->GetRotation()));
 		ImGui::Text("mass %.2f kg", m_SelectedBody->GetPhsicsBody()->GetMass());
 		ImGui::Text("speed %.3f m/s", m_SelectedBody->GetPhsicsBody()->GetLinearVelocity().Length());
 		ImGui::Text("speed %.2f degrees/s", glm::degrees(m_SelectedBody->GetPhsicsBody()->GetAngularVelocity()));
@@ -293,7 +295,6 @@ void SandboxLayer::OnImGuiRender()
 				ship->ForEachPartIfType<EnginePart>([ship](EnginePart& part) {
 					part.SetThrottle(ship->GetThrottle());
 				});
-				HZ_INFO("True");
 			}
 		}
 	}

@@ -61,7 +61,7 @@ struct EditorPart
 	inline EditorPart(const Hazel::Ref<EditorPart>& other) : EditorPart(*other.get()) {}
 
 	glm::vec2 m_Offset = { 0.0f, 0.0f };
-	float m_RotOffset = 0.0f;//Degrees
+	float m_RotOffset = 0.0f;//Radians
 
 	Hazel::Ref<PartDef> m_Def;
 	Hazel::Ref<EditorPart> m_ParentPart;

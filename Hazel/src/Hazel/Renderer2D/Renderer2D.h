@@ -7,6 +7,19 @@
 
 namespace Hazel {
 
+	struct Renderer2DRenderable
+	{
+		glm::vec3 Position;
+		glm::vec2 Size;
+		glm::vec2 TextureTop = { 1.0f, 1.0f };
+		glm::vec2 TextureBottom = { 0.0f, 0.0f };
+		Ref<Texture2D> Texture;
+		uint32_t Color = 0xFFFFFFFF;
+		float Rotation = 0.0f;//Radians
+
+		void ApplyAnimation(const Animation2D& animation);
+	};
+
 	class Renderer2D
 	{
 	public:
@@ -16,27 +29,17 @@ namespace Hazel {
 		static void BeginScene(const Camera2D& cam);
 		static void EndScene();
 
-		// Primitives
 
-		inline static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Animation2D& animation, float degrees)
+		static inline void DrawQuad(const glm::vec2& position, const glm::vec2& size, uint32_t color)
 		{
-			const Frame& frame = animation.GetFrame();
-			glm::vec2 textureSize = { animation.GetTexture()->GetWidth(), animation.GetTexture()->GetHeight() };
-
-			glm::vec2 top = glm::vec2(frame.Top.x, frame.Top.y) / textureSize;
-			glm::vec2 bottom = glm::vec2(frame.Bottom.x, frame.Bottom.y) / textureSize;
-			DrawQuad({ position.x, position.y, 0.0f }, size, top, bottom, animation.GetTexture(), 0xFFFFFFFF, degrees);
+			Renderer2DRenderable renderable;
+			renderable.Position = { position, 0.0f };
+			renderable.Size = size;
+			renderable.Color = color;
+			DrawQuad(renderable);
 		}
 
-
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, uint32_t color, float degrees = 0.0f);
-
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees);
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees);
-		
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, uint32_t color = 0xFFFFFFFF, float degrees = 0.0f);
-		
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, uint32_t color = 0xFFFFFFFF, float degrees = 0.0f);
+		static void DrawQuad(Renderer2DRenderable& renderable);
 	};
 
 }

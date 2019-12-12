@@ -45,7 +45,7 @@ namespace Hazel {
 		Ref<Shader> TextureShader;
 		Ref<Texture2D> WhiteTexture;
 
-		std::unordered_map<Texture2D*, Scope<PerTextureData>> DataMap;
+		std::unordered_map<Hazel::Ref<Texture2D>, Scope<PerTextureData>> DataMap;
 	};
 
 	static Renderer2DStorage* s_Data;
@@ -155,18 +155,21 @@ namespace Hazel {
 		}
 	}
 
-
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, uint32_t color, float degrees)
+	void Renderer2D::DrawQuad(Renderer2DRenderable& renderable)
 	{
-		PerTextureData* data;
-		if (s_Data->DataMap.find(texture.get()) == s_Data->DataMap.end())
+		if (!renderable.Texture)
 		{
-			data = InitForTexture(texture);
-			s_Data->DataMap[texture.get()] = Hazel::S(data);
+			renderable.Texture = s_Data->WhiteTexture;
+		}
+		PerTextureData* data;
+		if (s_Data->DataMap.find(renderable.Texture) == s_Data->DataMap.end())
+		{
+			data = InitForTexture(renderable.Texture);
+			s_Data->DataMap[renderable.Texture] = Hazel::S(data);
 		}
 		else
 		{
-			data = s_Data->DataMap.find(texture.get())->second.get();
+			data = s_Data->DataMap.find(renderable.Texture)->second.get();
 		}
 		if (data->VertexCount >= MAX_VERTICES)
 		{
@@ -174,55 +177,49 @@ namespace Hazel {
 			Flush(data);
 		}
 
-		glm::vec2 halfSize = size / 2.0f;
+		glm::vec2 halfSize = renderable.Size / 2.0f;
 		glm::vec2 v1 = { -halfSize.x, -halfSize.y }, v2 = { -halfSize.x, +halfSize.y }, v3 = { +halfSize.x, +halfSize.y }, v4 = { +halfSize.x, -halfSize.y };
-		float rotation = glm::radians(degrees);
-		v1 = glm::rotate(v1, rotation);
-		v2 = glm::rotate(v2, rotation);
-		v3 = glm::rotate(v3, rotation);
-		v4 = glm::rotate(v4, rotation);
-		
+		if (renderable.Rotation != 0.0f)
+		{
+			v1 = glm::rotate(v1, renderable.Rotation);
+			v2 = glm::rotate(v2, renderable.Rotation);
+			v3 = glm::rotate(v3, renderable.Rotation);
+			v4 = glm::rotate(v4, renderable.Rotation);
+		}
 
-		data->Vertices[data->VertexCount].Position = { v1.x + position.x, v1.y + position.y, position.z };
-		data->Vertices[data->VertexCount].TexCoord = { textureTop.x, textureBottom.y };
-		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
+
+		data->Vertices[data->VertexCount].Position = { v1.x + renderable.Position.x, v1.y + renderable.Position.y, renderable.Position.z };
+		data->Vertices[data->VertexCount].TexCoord = { renderable.TextureTop.x, renderable.TextureBottom.y };
+		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(renderable.Color);
 		data->VertexCount++;
 
-		data->Vertices[data->VertexCount].Position = { v2.x + position.x, v2.y + position.y, position.z };
-		data->Vertices[data->VertexCount].TexCoord = textureTop; 
-		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
+		data->Vertices[data->VertexCount].Position = { v2.x + renderable.Position.x, v2.y + renderable.Position.y, renderable.Position.z };
+		data->Vertices[data->VertexCount].TexCoord = renderable.TextureTop;
+		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(renderable.Color);
 		data->VertexCount++;
 
-		data->Vertices[data->VertexCount].Position = { v3.x + position.x, v3.y + position.y, position.z };
-		data->Vertices[data->VertexCount].TexCoord = { textureBottom.x, textureTop.y };
-		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
+		data->Vertices[data->VertexCount].Position = { v3.x + renderable.Position.x, v3.y + renderable.Position.y, renderable.Position.z };
+		data->Vertices[data->VertexCount].TexCoord = { renderable.TextureBottom.x, renderable.TextureTop.y };
+		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(renderable.Color);
 		data->VertexCount++;
 
-		data->Vertices[data->VertexCount].Position = { v4.x + position.x, v4.y + position.y, position.z };
-		data->Vertices[data->VertexCount].TexCoord = textureBottom; 
-		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
+		data->Vertices[data->VertexCount].Position = { v4.x + renderable.Position.x, v4.y + renderable.Position.y, renderable.Position.z };
+		data->Vertices[data->VertexCount].TexCoord = renderable.TextureBottom;
+		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(renderable.Color);
 		data->VertexCount++;
 
 		data->IndexCount += 6;
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, uint32_t color, float degrees)
-	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, { 0.0f, 0.0f }, { 1.0f, 1.0f }, s_Data->WhiteTexture, color, degrees);
-	}
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees)
-	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, texture, degrees);
-	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float degrees)
+	void Renderer2DRenderable::ApplyAnimation(const Animation2D& animation)
 	{
-		DrawQuad(position, size, { 0.0f, 0.0f }, { 1.0f, 1.0f }, texture, 0xFFFFFFFF, degrees);
-	}
-
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec2& textureTop, const glm::vec2& textureBottom, const Ref<Texture2D>& texture, uint32_t color, float degrees)
-	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, textureTop, textureBottom, texture, color, degrees);
+		const Frame& frame = animation.GetFrame();
+		glm::vec2 textureSize = { animation.GetTexture()->GetWidth(), animation.GetTexture()->GetHeight() };
+		
+		this->TextureTop = glm::vec2(frame.Top.x, frame.Top.y) / textureSize;
+		this->TextureBottom = glm::vec2(frame.Bottom.x, frame.Bottom.y) / textureSize;
+		this->Texture = animation.GetTexture();
 	}
 
 }

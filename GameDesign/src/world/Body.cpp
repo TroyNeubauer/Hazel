@@ -9,12 +9,12 @@ glm::vec2 Body::GetPosition() const
 //Returns the angle in degrees
 float Body::GetRotation() const
 {
-	return glm::degrees(m_Body->GetAngle());
+	return m_Body->GetAngle();
 }
 
-void Body::SetRotation(float degrees)
+void Body::SetRotation(float radians)
 {
-	m_Body->SetTransform(m_Body->GetWorldCenter(), glm::radians(degrees));
+	m_Body->SetTransform(m_Body->GetWorldCenter(), radians);
 }
 
 glm::vec2 Body::GetLocalCenterOfMass() const

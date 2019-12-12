@@ -59,7 +59,7 @@ public:
 	virtual ~Ship();
 private:
 	explicit Ship() {}
-	void CreatePhysicsBody(World& world, glm::vec2 pos, float degrees);
+	void CreatePhysicsBody(World& world, glm::vec2 pos, float radians);
 
 private:
 	std::vector<Hazel::Ref<Part>> m_Parts;

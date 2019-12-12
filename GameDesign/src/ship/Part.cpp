@@ -54,8 +54,17 @@ void EditorPart::Render()
 	glm::vec2 SpriteOffset, SpriteSize;
 
 	std::pair<glm::vec2, glm::vec2> frame = m_Def->Animation->GetFirstFrame();
-	Hazel::Renderer2D::DrawQuad( GetTotalOffset() + m_Def->SpriteOffset, m_Def->SpriteSize,
-			frame.first, frame.second, m_Def->Animation->m_Texture, 0xFFFFFFFF, glm::degrees(GetTotalRotation()));
+
+	Hazel::Renderer2DRenderable renderable;
+
+	renderable.Position = { GetTotalOffset() + m_Def->SpriteOffset, 0.0f };
+	renderable.Size = m_Def->SpriteSize;
+	renderable.Rotation = GetTotalRotation();
+	renderable.Texture = m_Def->Animation->m_Texture;
+	renderable.TextureTop = frame.first;
+	renderable.TextureBottom = frame.second;
+
+	Hazel::Renderer2D::DrawQuad(renderable);
 }
 
 glm::vec2 EditorPart::GetTotalOffset(float initalRotation) const
@@ -65,10 +74,10 @@ glm::vec2 EditorPart::GetTotalOffset(float initalRotation) const
 	while (part)
 	{
 		if (!part->IsRoot())//Root parts don't care about the offset
-			result += glm::rotate(part->m_Offset, glm::radians(GetTotalRotation()));
+			result += glm::rotate(part->m_Offset, GetTotalRotation());
 		part = part->m_ParentPart.get();
 	}
-	result = glm::rotate(result, glm::radians(initalRotation));
+	result = glm::rotate(result, initalRotation);
 	return result;
 }
 
@@ -105,9 +114,9 @@ glm::vec2 Part::GetTotalOffset(float initalRotation) const
 	for (int i = count -2; i >= 0; i--)// -2 to start at the first non root part
 	{
 		totalRotation += tempParts[i]->m_EditorPart->m_RotOffset;
-		result += glm::rotate(tempParts[i]->m_EditorPart->m_Offset, glm::radians(totalRotation));
+		result += glm::rotate(tempParts[i]->m_EditorPart->m_Offset, totalRotation);
 	}
-	result = glm::rotate(result, glm::radians(initalRotation));
+	result = glm::rotate(result, initalRotation);
 	return result;
 }
 
@@ -127,7 +136,7 @@ void Part::AddFixtures(b2Body* body)
 {
 	b2PolygonShape rect;
 	float angle = 0.0f;
-	if (!IsRoot()) angle = glm::radians(GetTotalRotation());
+	if (!IsRoot()) angle = GetTotalRotation();
 
 	glm::vec2 glmOffset = GetTotalOffset();
 	rect.SetAsBox(m_EditorPart->m_Def->HitboxSize.x / 2.0f, m_EditorPart->m_Def->HitboxSize.y / 2.0f,
