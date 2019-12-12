@@ -24,6 +24,7 @@ namespace Hazel {
 		
 		glfwSwapInterval(0);
 		HZ_CORE_INFO("Created OpenGL Context, Version: {}", glGetString(GL_VERSION));
+		glEnable(GL_MULTISAMPLE);
 #ifdef HZ_DEBUG
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glEnable(GL_DEBUG_OUTPUT);
@@ -36,12 +37,6 @@ namespace Hazel {
 				case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: typeStr = "GL UNDEFINED BEHAVIOR"; break;
 				case GL_DEBUG_TYPE_PORTABILITY: typeStr = "GL PORTABILITY"; break;
 				case GL_DEBUG_TYPE_OTHER: typeStr = "GL OTHER"; break;
-				/*case GL_DEBUG_TYPE_ERROR_ARB: typeStr = "GL ERROR ARB"; break;
-				case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB: typeStr = "GL DEPRECATED BEHAVIOR ARB"; break;
-				case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB: typeStr = "GL UNDEFINED BEHAVIOR ARB"; break;
-				case GL_DEBUG_TYPE_PORTABILITY_ARB: typeStr = "GL PORTABILITY ARB"; break;
-				case GL_DEBUG_TYPE_PERFORMANCE_ARB: typeStr = "GL PERFORMANCE ARB"; break;
-				case GL_DEBUG_TYPE_OTHER_ARB: typeStr = "GL OTHER ARB"; break;*/
 				default: typeStr = "Unknown"; break;
 			}
 			spdlog::level::level_enum level;
@@ -61,7 +56,7 @@ namespace Hazel {
 			if (level != spdlog::level::level_enum::off)
 				HZ_CORE_LOG(level, "GL CALLBACK: type {} (0x{:x}), severity {} (0x{:x}): {}\n", typeStr, type, severityStr, severity, message);
 
-			if (severity == GL_DEBUG_SEVERITY_HIGH)
+			if (severity == GL_DEBUG_SEVERITY_HIGH || severity == GL_DEBUG_SEVERITY_MEDIUM)
 				HZ_CORE_ASSERT(false, "");
 		}, this);
 #endif
@@ -70,7 +65,6 @@ namespace Hazel {
 	void OpenGLContext::PreInit()
 	{
 		HZ_PROFILE_FUNCTION();
-		glfwWindowHint(GLFW_SAMPLES, 4);
 		//Nop
 		//We cant do anything until the Open GL context is current
 	}

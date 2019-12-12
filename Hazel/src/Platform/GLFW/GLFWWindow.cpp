@@ -42,20 +42,25 @@ namespace Hazel {
 			HZ_PROFILE_SCOPE("GraphicsAPI Prep");
 			api = GraphicsAPI::Select();
 			context = ContextManager::Get()->GetContext();
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-#ifdef HZ_DEBUG
-			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-#else
-			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_FALSE);
-#endif
 		}
 
 
 		if (api != GraphicsAPIType::NONE) {
 			HZ_CORE_INFO("Creating window \"{0}\" ({1}, {2})", props.Title, props.Width, props.Height);
 
-			if (api != GraphicsAPIType::OPEN_GL) {
+			if (api == GraphicsAPIType::OPEN_GL)
+			{
+				glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+				glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+				glfwWindowHint(GLFW_SAMPLES, 4);
+#ifdef HZ_DEBUG
+				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+#else
+				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_FALSE);
+#endif
+			}
+			else
+			{
 				glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 			}
 			HZ_PROFILE_CALL(m_Window = glfwCreateWindow(props.Width, props.Height, m_Data.Title, nullptr, nullptr));

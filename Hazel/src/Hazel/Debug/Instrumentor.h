@@ -62,7 +62,9 @@ namespace Hazel {
 	};
 }
 
+#if !defined(HZ_PROFILE) && defined(HZ_DEBUG)
 #define HZ_PROFILE
+#endif
 
 #ifdef HZ_PROFILE
 	#define HZ_PROFILE_BEGIN_SESSION(name, filepath) ::Hazel::Instrumentor::Get().BeginSession(name, filepath)

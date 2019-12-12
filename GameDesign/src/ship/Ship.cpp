@@ -62,9 +62,10 @@ void Ship::Render(World& world)
 	glm::vec2 rootPos = { GetPhsicsBody()->GetPosition().x, GetPhsicsBody()->GetPosition().y };
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
-		float degrees = GetRotation() + part->GetTotalRotation();
+		float shipRot = GetRotation();
+		float degrees = shipRot + part->GetTotalRotation();
 		Hazel::Ref<PartDef>& def = part->GetEditorPart()->m_Def;
-		glm::vec2 pos = rootPos + part->GetTotalOffset(GetRotation()) + glm::rotate(def->SpriteOffset, glm::radians(degrees));
+		glm::vec2 pos = rootPos + part->GetTotalOffset(shipRot) + glm::rotate(def->SpriteOffset, glm::radians(degrees));
 
 		glm::vec2 textureSize = { def->Animation->m_Texture->GetWidth(), def->Animation->m_Texture->GetHeight() };
 

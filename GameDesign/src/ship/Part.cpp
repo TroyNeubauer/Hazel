@@ -42,7 +42,7 @@ PartDef::PartDef(const char* name, float density, float maxGForce, const Hazel::
 
 }
 
-Part* PartDef::CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart)
+Part* PartDef::CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart) const
 {
 	return new Part(world, ship, editorPart);
 }

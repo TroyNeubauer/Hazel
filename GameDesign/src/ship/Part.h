@@ -3,6 +3,7 @@
 #include "Hazel.h"
 
 #include <Box2D/Box2D.h>
+#include <map>
 
 class World;
 class EditorShip;
@@ -15,7 +16,12 @@ struct FixtureData
 };
 
 class Part;
-class EditorPart;
+struct EditorPart;
+
+enum class ResourceType
+{
+	FUEL, PASSENGERS
+};
 
 struct PartDef {
 
@@ -25,7 +31,7 @@ public:
 
 	PartDef(const PartDef& other) = default;
 
-	virtual Part* CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart);
+	virtual Part* CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart) const;
 
 	virtual ~PartDef() {}
 
@@ -90,6 +96,8 @@ public:
 	glm::vec2 GetTotalOffset(float initalRotation = 0.0f) const;
 	float GetTotalRotation() const;
 
+	inline bool HasResource(ResourceType type) { return m_Resources.find(type) != m_Resources.end() || m_Resources[type] >= 0.0f; }
+
 	virtual void Update(Ship& ship, World& world);
 	virtual ~Part() {}
 private:
@@ -101,6 +109,7 @@ private:
 	Hazel::Ref<Part> m_ParentPart;
 	Hazel::Animation2D m_Animation;
 	std::vector<b2Fixture*> m_Fixtures;
+	std::unordered_map<ResourceType, float> m_Resources;
 
 	friend class World;
 	friend class Ship;

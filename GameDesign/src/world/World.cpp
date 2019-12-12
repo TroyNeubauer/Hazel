@@ -61,6 +61,13 @@ void World::Update()
 		m_World->Step(Hazel::Engine::GetDeltaTime(), 10, 10);
 		m_World->ClearForces();
 	}
+	{
+		HZ_PROFILE_SCOPE("Ships Update");
+		for (auto& ship : m_Ships)
+		{
+			ship->Update(*this);
+		}
+	}
 }
 
 void World::Render()

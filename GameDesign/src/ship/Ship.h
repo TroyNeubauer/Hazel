@@ -41,7 +41,21 @@ public:
 
 	Ship* Split(World& world, Hazel::Ref<Part>& newRoot);
 
+	template<typename T, typename F>
+	void ForEachPartIfType(F func)
+	{
+		for (auto& part : m_Parts)
+		{
+			if (T* ptr = dynamic_cast<T*>(part.get()))
+			{
+				func(*ptr);
+			}
+		}
+	}
+
 	inline std::vector<Hazel::Ref<Part>>& GetParts() { return m_Parts; }
+	inline float& GetThrottle() { return m_Throttle; }
+
 	virtual ~Ship();
 private:
 	explicit Ship() {}
@@ -50,4 +64,6 @@ private:
 private:
 	std::vector<Hazel::Ref<Part>> m_Parts;
 	int m_RootIndex = -1;
+
+	float m_Throttle = 0.0f;
 };

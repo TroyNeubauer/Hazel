@@ -184,22 +184,22 @@ namespace Hazel {
 		
 
 		data->Vertices[data->VertexCount].Position = { v1.x + position.x, v1.y + position.y, position.z };
-		data->Vertices[data->VertexCount].TexCoord = textureTop;
-		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
-		data->VertexCount++;
-
-		data->Vertices[data->VertexCount].Position = { v2.x + position.x, v2.y + position.y, position.z };
 		data->Vertices[data->VertexCount].TexCoord = { textureTop.x, textureBottom.y };
 		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
 		data->VertexCount++;
 
+		data->Vertices[data->VertexCount].Position = { v2.x + position.x, v2.y + position.y, position.z };
+		data->Vertices[data->VertexCount].TexCoord = textureTop; 
+		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
+		data->VertexCount++;
+
 		data->Vertices[data->VertexCount].Position = { v3.x + position.x, v3.y + position.y, position.z };
-		data->Vertices[data->VertexCount].TexCoord = textureBottom;
+		data->Vertices[data->VertexCount].TexCoord = { textureBottom.x, textureTop.y };
 		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
 		data->VertexCount++;
 
 		data->Vertices[data->VertexCount].Position = { v4.x + position.x, v4.y + position.y, position.z };
-		data->Vertices[data->VertexCount].TexCoord = { textureBottom.x, textureTop.y };
+		data->Vertices[data->VertexCount].TexCoord = textureBottom; 
 		data->Vertices[data->VertexCount].Color = Utils::ExpandColor(color);
 		data->VertexCount++;
 

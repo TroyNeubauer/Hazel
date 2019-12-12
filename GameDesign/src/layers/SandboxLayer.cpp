@@ -1,8 +1,9 @@
 #include "SandboxLayer.h"
 
 #include "ship/Part.h"
-#include "ship/Ship.h"
 #include "ship/Parts.h"
+#include "ship/Ship.h"
+#include "ship/Ships.h"
 
 #include <imgui.h>
 #include <random>
@@ -13,48 +14,13 @@ void SandboxLayer::OnAttach()
     std::mt19937 mt(rd());
 	std::uniform_real_distribution<float> pos(-15.0f, 15.0f);
 
-	Hazel::Ref<EditorShip> ship = Hazel::R(new EditorShip());
-
-	Hazel::Ref<EditorPart> a = Hazel::R(new EditorPart());
-	ship->GetParts().push_back(a);
-	a->m_Def = Parts::FlyingShip;
-	a->m_ParentPart = nullptr;
-	Hazel::Ref<EditorPart>& last = a;
-	Hazel::Ref<EditorPart> part;
-	for (int i = 0; i < 10; i++) {
-		part = Hazel::R(new EditorPart());
-		ship->GetParts().push_back(part);
-		part->m_Def = Parts::FlyingShip;
-		part->m_Offset = { 0.0f, -last->m_Def->HitboxSize.y / 2.0f - part->m_Def->HitboxSize.y / 2.0f };
-		part->m_ParentPart = last;
-		part->m_RotOffset = 0.0f;
-		last = part;
-	}
-
-	//Hazel::Ref<EditorShip> ship2 = Hazel::R(new EditorShip(ship));
-	Hazel::Ref<EditorShip> ship2 = ship;
-
-	Hazel::Ref<EditorPart> d = Hazel::R(new EditorPart());
-	ship2->GetParts().push_back(d);
-	d->m_Def = Parts::StaticShip;
-	d->m_Offset = { 0.0f, -last->m_Def->HitboxSize.x / 2.0f - d->m_Def->HitboxSize.y / 2.0f };
-	d->m_RotOffset = 90.0f;
-	d->m_ParentPart = last;
-
-	Hazel::Ref<EditorPart> e = Hazel::R(new EditorPart());
-	ship2->GetParts().push_back(e);
-	e->m_Def = Parts::StaticShip;
-	e->m_Offset = { 0.0f, -last->m_Def->HitboxSize.x / 2.0f - e->m_Def->HitboxSize.y / 2.0f };
-	e->m_RotOffset = -90.0f;
-	e->m_ParentPart = last;
-
 	/*for (int i = 0; i < 2; i++)
 	{
 		m_World->AddShip(ship, { pos(mt), pos(mt) }, 0.0f);
 	}*/
 	for (int i = 0; i < 2; i++)
 	{
-		m_World->AddShip(ship2, { pos(mt), pos(mt) }, 0.0f);
+		m_World->AddShip(Ships::MK1Ship, { pos(mt), pos(mt) }, 0.0f);
 	}
 	m_World->SetBodyRemovedCallback([this](Body* body) {
 		if (body == m_SelectedBody) m_SelectedBody = nullptr;
@@ -283,40 +249,51 @@ void SandboxLayer::OnImGuiRender()
 		{
 			m_World->Remove(m_SelectedBody);
 		}
-		Ship* ship = dynamic_cast<Ship*>(m_SelectedBody);
-		if (ship != nullptr && ImGui::Button("Stage"))
+		Ship* ship = dynamic_cast<Ship*>(m_SelectedBody);//ForEachPartIfType
+		if (ship != nullptr)
 		{
-			int distance = -1;
-			std::vector<Hazel::Ref<Part>> partsToStage;
-			for (auto& part : ship->GetParts())
+			if (ImGui::Button("Stage"))
 			{
-				int currentDistance = 0;
-				Part* partPtr = part.get();
-				while (!partPtr->IsRoot())
+				int distance = -1;
+				std::vector<Hazel::Ref<Part>> partsToStage;
+				for (auto& part : ship->GetParts())
 				{
-					currentDistance++;
-					partPtr->Advance(partPtr);
-				}
-				//Root part
-				if (currentDistance == 0) continue;
-				//Reset for new maxes
-				if (distance == -1 || currentDistance > distance)
-				{
-					partsToStage.clear();
-					distance = currentDistance;
+					int currentDistance = 0;
+					Part* partPtr = part.get();
+					while (!partPtr->IsRoot())
+					{
+						currentDistance++;
+						partPtr->Advance(partPtr);
+					}
+					//Root part
+					if (currentDistance == 0) continue;
+					//Reset for new maxes
+					if (distance == -1 || currentDistance > distance)
+					{
+						partsToStage.clear();
+						distance = currentDistance;
+					}
+
+					//Add all parts that match the best distance found so far
+					if (distance == currentDistance)
+					{
+						partsToStage.push_back(part);
+					}
 				}
 
-				//Add all parts that match the best distance found so far
-				if (distance == currentDistance)
+				for (Hazel::Ref<Part> part : partsToStage)
 				{
-					partsToStage.push_back(part);
+					Ship* newShip = ship->Split(*m_World, part);
+					if (newShip) m_World->AddShip(newShip);
 				}
 			}
-
-			for (Hazel::Ref<Part> part : partsToStage)
+			
+			if (ImGui::SliderFloat("Throttle", &ship->GetThrottle(), 0.0f, 1.0f))
 			{
-				Ship* newShip = ship->Split(*m_World, part);
-				if (newShip) m_World->AddShip(newShip);
+				ship->ForEachPartIfType<EnginePart>([ship](EnginePart& part) {
+					part.SetThrottle(ship->GetThrottle());
+				});
+				HZ_INFO("True");
 			}
 		}
 	}
