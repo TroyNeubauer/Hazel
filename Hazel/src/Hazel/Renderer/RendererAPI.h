@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "VertexArray.h"
+#include "Texture.h"
 
 namespace Hazel {
 
@@ -16,6 +17,7 @@ namespace Hazel {
 		
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count, GPUPrimitive primitive = GPUPrimitive::TRIANGLES) = 0;
 		inline void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, GPUPrimitive primitive = GPUPrimitive::TRIANGLES) { DrawIndexed(vertexArray, vertexArray->GetIndexBuffer()->Count(), primitive); }
+		virtual void ApplyBlendMode(BlendMode mode) = 0;
 
 		virtual void Begin() = 0;
 

@@ -43,6 +43,18 @@ namespace Hazel {
 		glDrawElements(mode, count, GL_UNSIGNED_INT, nullptr);
 	}
 
+	void OpenGLRendererAPI::ApplyBlendMode(BlendMode mode)
+	{
+		if (mode == BlendMode::NONE) glDisable(GL_BLEND);
+		else glEnable(GL_BLEND);
+
+		switch (mode)
+		{
+			case BlendMode::NONE:		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			case BlendMode::ADDATIVE:	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		}
+	}
+
 	void OpenGLRendererAPI::Begin()
 	{
 		HZ_PROFILE_FUNCTION();

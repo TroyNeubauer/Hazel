@@ -5,6 +5,9 @@
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Renderer2D/Animation2D.h"
 
+#include <functional>
+#include <map>
+
 namespace Hazel {
 
 	struct Renderer2DRenderable
@@ -16,8 +19,17 @@ namespace Hazel {
 		Ref<Texture2D> Texture;
 		uint32_t Color = 0xFFFFFFFF;
 		float Rotation = 0.0f;//Radians
+		BlendMode BlendSettings;
 
 		void ApplyAnimation(const Animation2D& animation);
+	};
+
+	struct BatchSettings
+	{
+		Ref<Texture2D> Texture;
+		BlendMode BlendSettings;
+
+		bool operator==(const BatchSettings& other) const;
 	};
 
 	class Renderer2D

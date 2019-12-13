@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazel/Core/Core.h"
+#include "Timestep.h"
 
 namespace Hazel {
 
@@ -9,7 +10,7 @@ namespace Hazel {
 		bool IsStaticInitializationComplete();
 		bool IsInitialized();
 
-		float GetDeltaTime();
+		Timestep GetDeltaTime();
 		float GetTime();
 		void SetDeltaTime(float delta);
 

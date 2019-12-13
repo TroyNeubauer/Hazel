@@ -68,15 +68,16 @@ namespace Hazel {
 		{	
 			HZ_PROFILE_SCOPE("Application::Run()");
 			Engine::Update();
+			Timestep ts = Engine::GetDeltaTime();
 #ifndef HZ_DIST
 			AllocTracker::BeginFrame();//Begin tracking for the next frame
 #endif
 			DispatchEvents();
-			Update();
+			Update(ts);
 			{
 				HZ_PROFILE_SCOPE("Update Layerstacks");
 				for (Layer* layer : m_LayerStack)
-					layer->OnUpdate();
+					layer->OnUpdate(ts);
 			}
 			DoRenderPass();
 			Input::NextFrame();

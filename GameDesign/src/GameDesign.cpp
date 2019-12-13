@@ -15,7 +15,7 @@ GameDesign::GameDesign()
 	PushLayer(new SandboxLayer(new World()));
 }
 
-void GameDesign::Update()
+void GameDesign::Update(Hazel::Timestep ts)
 {
 
 }

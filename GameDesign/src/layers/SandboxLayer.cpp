@@ -41,11 +41,11 @@ void SandboxLayer::OnDetach()
 
 float lastMoved = 0.0f;
 
-void SandboxLayer::OnUpdate()
+void SandboxLayer::OnUpdate(Hazel::Timestep ts)
 {
 	HZ_PROFILE_FUNCTION();
 
-	if (Hazel::Input::GetMouseDelta().x || Hazel::Input::GetMouseDelta().y) lastMoved = Hazel::Engine::GetTime();
+	if (Hazel::Input::GetMouseDelta().x || Hazel::Input::GetMouseDelta().y) lastMoved = ts.Seconds();
 
 	bool update = false;
 	if (m_Paused)
@@ -62,16 +62,16 @@ void SandboxLayer::OnUpdate()
 		update = true;
 	}
 	if(update)
-		m_World->Update();
+		m_World->Update(ts);
 	else
-		m_World->GetCamera().Update();
+		m_World->GetCamera().Update(ts);
 
 	if (m_DraggedBody && m_MouseDragged)
 	{
 		b2Vec2 velocity = {0.0f, 0.0f};
 		if (Hazel::Input::DidMouseMove()) {
 			glm::vec2 delta = { Hazel::Input::GetMouseDelta().x, Hazel::Input::GetMouseDelta().y };
-			delta /= Hazel::Engine::GetDeltaTime();
+			delta /= ts.Seconds();
 			glm::vec2 result = m_World->GetCamera().GetWorldDelta(delta);
 			velocity = { result.x, result.y };
 		}

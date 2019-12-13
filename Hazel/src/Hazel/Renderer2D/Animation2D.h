@@ -35,7 +35,7 @@ namespace Hazel {
 
 		//Must be called every frame to update the animation
 		//Advanced m_CurrentFrame if neccsarry
-		void Update();
+		void Update(Timestep ts);
 
 
 		inline void RepeatOnEnd() { m_RepeatOnEnd = true; }

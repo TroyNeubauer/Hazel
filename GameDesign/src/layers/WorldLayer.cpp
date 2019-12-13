@@ -20,9 +20,9 @@ void WorldLayer::OnDetach()
 
 }
 
-void WorldLayer::OnUpdate()
+void WorldLayer::OnUpdate(Hazel::Timestep ts)
 {
-	m_World->Update();
+	m_World->Update(ts);
 }
 
 void WorldLayer::OnEvent(Hazel::Event* event)

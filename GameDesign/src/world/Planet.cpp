@@ -5,7 +5,7 @@ void Planet::Render(World& world)
 
 }
 
-void Planet::Update(World& world)
+void Planet::Update(Hazel::Timestep ts, World& world)
 {
 
 }

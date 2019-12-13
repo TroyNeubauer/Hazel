@@ -26,6 +26,8 @@ namespace Hazel {
 	const uint32_t VERTEX_BUFFER_SIZE = SPRITE_SIZE * MAX_SPRITES;
 	const uint32_t INDEX_BUFFER_COUNT = 6 * MAX_SPRITES;
 
+
+
 	struct PerTextureData
 	{
 		Ref<VertexArray> VertexArray;
@@ -34,7 +36,14 @@ namespace Hazel {
 
 		VertexData Vertices[MAX_VERTICES];
 
-		Ref<Texture2D> Texture;
+		BatchSettings Settings;
+	};
+
+	struct BatchSettingsHash {
+		size_t operator()(const BatchSettings& p) const
+		{
+			return static_cast<size_t>(p.BlendSettings) ^ reinterpret_cast<size_t>(p.Texture.get());
+		}
 	};
 
 
@@ -45,17 +54,17 @@ namespace Hazel {
 		Ref<Shader> TextureShader;
 		Ref<Texture2D> WhiteTexture;
 
-		std::unordered_map<Hazel::Ref<Texture2D>, Scope<PerTextureData>> DataMap;
+		std::unordered_map<BatchSettings, Scope<PerTextureData>, BatchSettingsHash> DataMap;
 	};
 
 	static Renderer2DStorage* s_Data;
 
-	static PerTextureData* InitForTexture(const Ref<Texture2D>& texture)
+	static PerTextureData* InitForSettings(BatchSettings settings)
 	{
 		HZ_PROFILE_FUNCTION();
 
 		PerTextureData* data = new PerTextureData();
-		data->Texture = texture;
+		data->Settings = settings;
 
 		data->VertexArray = VertexArray::Create();
 
@@ -137,7 +146,8 @@ namespace Hazel {
 		data->VertexBuffer->Unmap(glData);
 #endif
 
-		data->Texture->Bind();
+		data->Settings.Texture->Bind();
+		RenderCommand::ApplyBlendParameters(data->Settings.BlendSettings);
 
 		RenderCommand::DrawIndexed(data->VertexArray, data->IndexCount);
 		data->IndexCount = 0;
@@ -162,14 +172,15 @@ namespace Hazel {
 			renderable.Texture = s_Data->WhiteTexture;
 		}
 		PerTextureData* data;
-		if (s_Data->DataMap.find(renderable.Texture) == s_Data->DataMap.end())
+		BatchSettings settings = { renderable.Texture, renderable.BlendSettings };
+		if (s_Data->DataMap.find(settings) == s_Data->DataMap.end())
 		{
-			data = InitForTexture(renderable.Texture);
-			s_Data->DataMap[renderable.Texture] = Hazel::S(data);
+			data = InitForSettings(settings);
+			s_Data->DataMap[settings] = Hazel::S(data);
 		}
 		else
 		{
-			data = s_Data->DataMap.find(renderable.Texture)->second.get();
+			data = s_Data->DataMap.find(settings)->second.get();
 		}
 		if (data->VertexCount >= MAX_VERTICES)
 		{
@@ -220,6 +231,11 @@ namespace Hazel {
 		this->TextureTop = glm::vec2(frame.Top.x, frame.Top.y) / textureSize;
 		this->TextureBottom = glm::vec2(frame.Bottom.x, frame.Bottom.y) / textureSize;
 		this->Texture = animation.GetTexture();
+	}
+
+	bool BatchSettings::operator==(const BatchSettings& other) const
+	{
+		return this->Texture == other.Texture && this->BlendSettings == other.BlendSettings;
 	}
 
 }

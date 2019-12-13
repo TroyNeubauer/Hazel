@@ -26,7 +26,7 @@ namespace Hazel {
 #endif
 	{}
 
-	void DebugLayer::Update()
+	void DebugLayer::Update(Timestep ts)
 	{
 		frames++;
 
@@ -39,10 +39,10 @@ namespace Hazel {
 			frames = 0;
 		}
 
-		if (min == -1.0f || Engine::GetDeltaTime() < min)
-			min = Engine::GetDeltaTime();
-		if (max == -1.0f || Engine::GetDeltaTime() > max)
-			max = Engine::GetDeltaTime();
+		if (min.Seconds() == -1.0f || ts < min)
+			min = ts;
+		if (max.Seconds() == -1.0f || ts > max)
+			max = ts;
 #ifndef HZ_DIST
 		m_FrameTime->Update();
 #endif
@@ -53,7 +53,7 @@ namespace Hazel {
 	void DebugLayer::OnImGuiRender()
 	{
 		const float DISTANCE = 10.0f;
-		Update();
+		Update(Engine::GetDeltaTime());
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImVec2 window_pos = ImVec2(viewport->Pos.x + DISTANCE, viewport->Pos.y + DISTANCE);
 		ImVec2 window_pos_pivot = ImVec2(0.0f, 0.0f);
@@ -61,8 +61,8 @@ namespace Hazel {
 		ImGui::SetNextWindowViewport(viewport->ID);
 		if (ImGui::Begin("Video Performance Overlay", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs))
 		{
-			ImGui::Text("Average Frame Time %.2f (FPS: %d) | Frame Time %.2f (FPS: %.1f) ", lastSecondDelta / averageFPS * 1000.0f, averageFPS, Engine::GetDeltaTime() * 1000.0f, 1.0f / Engine::GetDeltaTime());
-			ImGui::Text("Min FT: %.2f (FPS: %.1f) | Max FT: %.2f (FPS: %.1f)", min * 1000.0f, 1.0f / min, max * 1000.0f, 1.0f / max);
+			ImGui::Text("Average Frame Time %.2fms (FPS: %d) | Frame Time %.2fms (FPS: %.1f) ", lastSecondDelta / averageFPS * 1000.0f, averageFPS, Engine::GetDeltaTime().MilliSeconds(), 1.0f / Engine::GetDeltaTime().Seconds());
+			ImGui::Text("Min FT: %.2fms (FPS: %.1f) | Max FT: %.2fms (FPS: %.1f)", min.MilliSeconds(), 1.0f / min.Seconds(), max.MilliSeconds(), 1.0f / max.Seconds());
 			
 #ifndef HZ_DIST
 			ImGui::Text("Current Frame: %d", frames);
@@ -133,7 +133,7 @@ namespace Hazel {
 	void DebugLayer::OnAttach()
 	{
 #ifndef HZ_DIST
-		m_FrameTime = new Graph("Frame Time", []() { return Engine::GetDeltaTime(); }, 5, 60);
+		m_FrameTime = new Graph("Frame Time", []() { return Engine::GetDeltaTime().MilliSeconds(); }, 5, 60);
 		m_FrameTime->SetDataMode(GraphDataMode::CurrentValue);
 		m_FrameTime->SetDisplayMode(GraphDisplayMode::Linear);
 #endif

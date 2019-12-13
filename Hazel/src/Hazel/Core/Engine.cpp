@@ -55,9 +55,9 @@ namespace Hazel {
 		Hazel::Log::DisableLogging();
 	}
 
-	float Engine::GetDeltaTime()
+	Timestep Engine::GetDeltaTime()
 	{
-		return m_DeltaTime;
+		return Timestep(m_DeltaTime);
 	}
 	
 	float Engine::GetTime()

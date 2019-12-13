@@ -36,7 +36,7 @@ public:
 	Part& GetRoot();
 
 	virtual void Render(World& world) override;
-	virtual void Update(World& world) override;
+	virtual void Update(Hazel::Timestep ts, World& world) override;
 	void B2DRender(Hazel::B2D_DebugDraw* draw);
 
 	Ship* Split(World& world, Hazel::Ref<Part>& newRoot);

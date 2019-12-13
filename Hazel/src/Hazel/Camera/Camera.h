@@ -31,7 +31,7 @@ namespace Hazel {
 		virtual const mat4& GetViewProjectionMatrix() const override = 0;
 
 		virtual void ForceUpdate() = 0;
-		virtual void Update() = 0;
+		virtual void Update(Hazel::Timestep ts) = 0;
 
 		virtual const vec3 GetPosition() = 0;
 		virtual const quat GetRotation() = 0;
@@ -52,7 +52,7 @@ namespace Hazel {
 	public:
 		Camera2D(CameraController2D* controller) : m_Controller(controller) {}
 
-		inline void Update () { HZ_PROFILE_FUNCTION(); if (m_Controller) { m_Controller->Update(*this); ForceUpdate(); } }
+		inline void Update (Hazel::Timestep ts) { HZ_PROFILE_FUNCTION(); if (m_Controller) { m_Controller->Update(ts, *this); ForceUpdate(); } }
 
 		inline const mat4& GetViewMatrix() const override { return m_ViewMatrix; }
 		inline const mat4& GetProjectionMatrix() const override { return m_ProjectionMatrix; }
@@ -127,7 +127,7 @@ namespace Hazel {
 	public:
 
 		DefaultCamera3D(CameraController3D* controller, CameraStorage3D* storage, CameraProjection3D* projection)
-			: m_Controller(controller), m_Storage(storage), m_Projection(projection), m_ViewProjectionMatrix() { Update(); }
+			: m_Controller(controller), m_Storage(storage), m_Projection(projection), m_ViewProjectionMatrix() { }
 		
 		inline virtual void ForceUpdate() override
 		{
@@ -136,9 +136,9 @@ namespace Hazel {
 			UpdateViewProjectionMatrix();
 		}
 
-		inline virtual void Update() override
+		inline virtual void Update(Hazel::Timestep ts) override
 		{
-			if (m_Controller->Update(*m_Storage.get())) {
+			if (m_Controller->Update(ts, *m_Storage.get())) {
 				m_Storage->RecalculateViewMatrix();
 			}
 			UpdateViewProjectionMatrix();

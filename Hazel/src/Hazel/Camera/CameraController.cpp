@@ -12,7 +12,7 @@ namespace Hazel {
 
 	const float ROT_AMOUNT = radians(1.0f), MOVE_AMOUNT = 10, PI_2 = pi<float>() / 2.0f;
 
-	bool AdvancedCameraController::Update(CameraStorage3D& camera)
+	bool AdvancedCameraController::Update(Hazel::Timestep ts, CameraStorage3D& camera)
 	{
 		bool update = false;
 		vec3 pos = camera.GetPosition();
@@ -58,14 +58,14 @@ namespace Hazel {
 			update = true;
 			move = normalize(move);
 			move *= MOVE_AMOUNT;
-			pos += move * Engine::GetDeltaTime();
+			pos += move * ts.Seconds();
 			camera.SetPosition(pos);
 		}
 
 		return update;
 	}
 
-	bool FPSCameraController::Update(CameraStorage3D& camera)
+	bool FPSCameraController::Update(Hazel::Timestep ts, CameraStorage3D& camera)
 	{
 		bool update = false;
 		vec3 pos = camera.GetPosition();
@@ -106,7 +106,7 @@ namespace Hazel {
 			update = true;
 			move = normalize(move);
 			move *= MOVE_AMOUNT;
-			pos += move * Engine::GetDeltaTime();
+			pos += move * ts.Seconds();
 			camera.SetPosition(pos);
 		}
 		return update;

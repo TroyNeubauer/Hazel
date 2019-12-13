@@ -19,6 +19,7 @@ namespace Hazel {
 		virtual void SetClearColor(const glm::vec4& color) override {}
 
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count, GPUPrimitive primitive) override {}
+		virtual void ApplyBlendMode(BlendMode mode) override {}
 		virtual void Begin() override {}
 
 		virtual void Shutdown () override {}

@@ -10,7 +10,7 @@ public:
 
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
-	virtual void OnUpdate() override;
+	virtual void OnUpdate(Hazel::Timestep ts) override;
 
 	virtual void OnEvent(Hazel::Event* event) override;
 	virtual void OnImGuiRender() override;

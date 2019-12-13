@@ -57,7 +57,7 @@ public:
 	SubPartConstructor(EnginePart)
 	SubPartGetPartDef(EnginePartDef)
 
-	virtual void Update(Ship& ship, World& world) override;
+	virtual void Update(Hazel::Timestep ts, Ship& ship, World& world) override;
 
 	float GetThrust();
 	void SetThrottle(float throttle);

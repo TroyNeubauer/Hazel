@@ -26,9 +26,9 @@ void Parts::Init()
 
 }
 
-void EnginePart::Update(Ship& ship, World& world)
+void EnginePart::Update(Hazel::Timestep ts, Ship& ship, World& world)
 {
-	Part::Update(ship, world);
+	Part::Update(ts, ship, world);
 
 	float thrust = GetThrust();
 	if (thrust > 0.0f)

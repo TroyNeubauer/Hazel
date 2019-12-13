@@ -52,9 +52,9 @@ namespace Hazel {
 	
 
 
-	void Animation2D::Update()
+	void Animation2D::Update(Timestep ts)
 	{
-		float timestep = Engine::GetDeltaTime() + m_InFrameFor;
+		float timestep = ts.Seconds() + m_InFrameFor;
 		bool advance = true;
 
 		if (m_Def->m_Frames.size() == 1)// Always display the only frame

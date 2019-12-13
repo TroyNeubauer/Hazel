@@ -164,8 +164,8 @@ void Part::RemoveFixtures(b2Body* body)
 	}
 }
 
-void Part::Update(Ship& ship, World& world)
+void Part::Update(Hazel::Timestep ts, Ship& ship, World& world)
 {
-	m_Animation.Update();
+	m_Animation.Update(ts);
 }
 

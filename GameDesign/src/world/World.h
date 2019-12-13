@@ -38,7 +38,7 @@ public:
 		static double G;
 	};
 
-	void Update();
+	void Update(Hazel::Timestep ts);
 	void Render();
 
 	Ship& AddShip(const Hazel::Ref<EditorShip>& partDef, glm::vec2 pos, float rot = 0.0f);
@@ -78,8 +78,8 @@ private:
 
 class WorldCameraController : public Hazel::CameraController2D
 {
-	friend class Camera2D;
-	virtual void Update(Hazel::Camera2D& camera);
+	friend class Hazel::Camera2D;
+	virtual void Update(Hazel::Timestep ts, Hazel::Camera2D& camera) override;
 };
 
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../Core/TUtil.h"
+#include "Hazel/Core/TUtil.h"
 #include "Hazel/Layer/Layer.h"
 #include "Hazel/Util/Graph.h"
-
+#include "Hazel/Core/Timestep.h"
 
 
 #define GRAPHS_WIDTH 400
@@ -21,11 +21,11 @@ namespace Hazel {
 		virtual ~DebugLayer() override;
 	private:
 		void Reset();// Resets the min amd max frametimes
-		void Update();
+		void Update(Timestep ts);
 
 		float lastSecondDelta = 0.0f;
 		float lastSecond = 0.0f;
-		float min = -1.0, max = -1.0;
+		Timestep min = Timestep(-1.0), max = Timestep(-1.0);
 		int frames = 0;
 		int averageFPS = 0;
 

@@ -25,6 +25,11 @@ namespace Hazel {
 			s_RendererAPI->DrawIndexed(vertexArray, count, primitive);
 		}
 
+		static inline void ApplyBlendParameters(BlendMode settings)
+		{
+			s_RendererAPI->ApplyBlendMode(settings);
+		}
+
 		static inline void SetClearColor(const glm::vec4& color)
 		{
 			s_RendererAPI->SetClearColor(color);

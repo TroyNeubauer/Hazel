@@ -19,7 +19,7 @@ namespace Hazel {
 
 		virtual ~Application();
 
-		virtual void Update() = 0;
+		virtual void Update(Timestep ts) = 0;
 		virtual void Render() = 0;
 
 		void PushLayer(Layer* layer);

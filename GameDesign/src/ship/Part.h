@@ -98,7 +98,7 @@ public:
 
 	inline bool HasResource(ResourceType type) { return m_Resources.find(type) != m_Resources.end() || m_Resources[type] >= 0.0f; }
 
-	virtual void Update(Ship& ship, World& world);
+	virtual void Update(Hazel::Timestep ts, Ship& ship, World& world);
 	virtual ~Part() {}
 private:
 	static int FillInParts(const Part* leaf);

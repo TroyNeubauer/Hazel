@@ -22,11 +22,11 @@ World::World() : m_Camera(new WorldCameraController())
 #endif
 }
 
-void World::Update()
+void World::Update(Hazel::Timestep ts)
 {
 	HZ_PROFILE_FUNCTION();
 
-	m_Camera.Update();
+	m_Camera.Update(ts);
 	{
 		HZ_PROFILE_SCOPE("Box2D Gravity");
 
@@ -53,19 +53,19 @@ void World::Update()
 		for (int i = 0; i < m_World->GetBodyCount(); i++, body = body->GetNext())
 		{
 			Body* myBody = ToBody(body);
-			myBody->Update(*this);
+			myBody->Update(ts, *this);
 		}
 	}
 	{
 		HZ_PROFILE_SCOPE("Box2D Step");
-		m_World->Step(Hazel::Engine::GetDeltaTime(), 10, 10);
+		m_World->Step(ts.Seconds(), 10, 10);
 		m_World->ClearForces();
 	}
 	{
 		HZ_PROFILE_SCOPE("Ships Update");
 		for (auto& ship : m_Ships)
 		{
-			ship->Update(*this);
+			ship->Update(ts, *this);
 		}
 	}
 }
@@ -135,7 +135,7 @@ void World::Remove(Body* body)
 
 const float ACCEL_SPEED = 25.0f;
 
-void WorldCameraController::Update(Hazel::Camera2D& camera)
+void WorldCameraController::Update(Hazel::Timestep ts, Hazel::Camera2D& camera)
 {
 	HZ_PROFILE_FUNCTION();
 
@@ -153,7 +153,7 @@ void WorldCameraController::Update(Hazel::Camera2D& camera)
 	} if (Hazel::Input::IsKeyPressed(HZ_KEY_A)) {
 		move -= right; moving = true;
 	}
-	float length = move.length();
+	float length = glm::length(move);
 	if (length > 0.0f)
 	{
 		move /= length;
@@ -162,15 +162,15 @@ void WorldCameraController::Update(Hazel::Camera2D& camera)
 
 	camera.m_ZoomVel -= Hazel::Input::GetScrollDelta() * 3.0f;
 
-	camera.m_Vel += move * Hazel::Engine::GetDeltaTime();
-	camera.m_Pos += camera.m_Vel * Hazel::Engine::GetDeltaTime();
+	camera.m_Vel += move * ts.Seconds();
+	camera.m_Pos += camera.m_Vel * ts.Seconds();
 	if (!moving)
 	{
-		camera.m_Vel *= (1.0f - Hazel::Engine::GetDeltaTime() * 2.0f);
+		camera.m_Vel *= (1.0f - ts.Seconds() * 2.0f);
 	}
 
-	camera.m_Zoom += camera.m_ZoomVel * Hazel::Engine::GetDeltaTime();
-	camera.m_ZoomVel *= (1.0f - Hazel::Engine::GetDeltaTime() * 5.0f);
+	camera.m_Zoom += camera.m_ZoomVel * ts.Seconds();
+	camera.m_ZoomVel *= (1.0f - ts.Seconds() * 5.0f);
 
 	if (camera.m_Zoom <= 0.00001f)
 		camera.m_Zoom = 0.00001f;

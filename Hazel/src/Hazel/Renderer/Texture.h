@@ -5,6 +5,12 @@
 
 namespace Hazel {
 
+	enum class BlendMode
+	{
+		NONE, ADDATIVE
+	};
+
+
 	enum class TextureFormat
 	{
 		RED, RGB, RGBA

@@ -1,7 +1,9 @@
 #pragma once
 
 #include <Box2D/Box2D.h>
+#include <Hazel/Core/Core.h>
 #include <Hazel/Core/glm.h>
+
 
 class World;
 
@@ -24,7 +26,7 @@ public:
 	inline glm::vec2 GetCenterOfMass() const { return GetPosition() + GetLocalCenterOfMass(); }
 
 	virtual void Render(World& world) = 0;
-	virtual void Update(World& world) = 0;
+	virtual void Update(Hazel::Timestep ts, World& world) = 0;
 
 	virtual ~Body() {}
 
