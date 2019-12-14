@@ -164,8 +164,23 @@ void Part::RemoveFixtures(b2Body* body)
 	}
 }
 
-void Part::Update(Hazel::Timestep ts, Ship& ship, World& world)
+void Part::Update(Hazel::Timestep ts, World& world, Ship& ship)
 {
 	m_Animation.Update(ts);
+}
+
+void Part::Render(World& world, Ship& ship)
+{
+	float shipRot = ship.GetRotation();
+	float rotation = shipRot + GetTotalRotation();
+	Hazel::Ref<PartDef>& def = GetEditorPart()->m_Def;
+	Hazel::Renderer2DRenderable renderable;
+
+	renderable.Position = { ship.GetPosition() + GetTotalOffset(shipRot) + glm::rotate(def->SpriteOffset, rotation), 0.0f };
+	renderable.Size = def->SpriteSize;
+
+	renderable.Rotation = rotation;
+	renderable.ApplyAnimation(def->Animation);
+	Hazel::Renderer2D::DrawQuad(renderable);
 }
 

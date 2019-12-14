@@ -22,6 +22,7 @@ namespace Hazel {
 		BlendMode BlendSettings;
 
 		void ApplyAnimation(const Animation2D& animation);
+		inline void ApplyAnimation(const Ref<Animation2D>& animation) { ApplyAnimation(*animation.get()); }
 	};
 
 	struct BatchSettings

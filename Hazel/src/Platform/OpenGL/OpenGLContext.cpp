@@ -55,9 +55,10 @@ namespace Hazel {
 
 			if (level != spdlog::level::level_enum::off)
 				HZ_CORE_LOG(level, "GL CALLBACK: type {} (0x{:x}), severity {} (0x{:x}): {}\n", typeStr, type, severityStr, severity, message);
+#ifdef HZ_PLATFORM_WINDOWS
+			HZ_CORE_ASSERT(severity != GL_DEBUG_SEVERITY_HIGH && severity != GL_DEBUG_SEVERITY_MEDIUM, "Severe OpenGL Error");
 
-			if (severity == GL_DEBUG_SEVERITY_HIGH || severity == GL_DEBUG_SEVERITY_MEDIUM)
-				HZ_CORE_ASSERT(false, "");
+#endif
 		}, this);
 #endif
 	}

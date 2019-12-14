@@ -29,7 +29,6 @@ namespace Hazel {
 	class Animation2D
 	{
 	public:
-
 		Animation2D(const Ref<AnimationDef2D>& def) : m_Def(def) { }
 		Animation2D(const Animation2D& other) = default;
 

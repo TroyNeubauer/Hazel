@@ -33,6 +33,11 @@ workspace "Hazel"
 		"Dist"
 	}
 
+	defines
+	{
+		"HAZEL"
+	}
+
 	filter "system:windows"
 		defines 
 		{

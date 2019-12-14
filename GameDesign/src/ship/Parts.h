@@ -1,6 +1,9 @@
 #pragma once
 
-#include "Hazel/Core/Core.h"
+#include <Hazel/Core/Core.h>
+#include <Hazel/Renderer2D/Animation2D.h>
+#include <Hazel/Renderer2D/Particle.h>
+
 #include "Part.h"
 
 /*
@@ -46,7 +49,7 @@ struct EnginePartDef : public PartDef {
 
 #define SubPartDefCreatePartMethod(ClassName)inline virtual Part* CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart) const override { return new ClassName(world, ship, editorPart); }
 
-#define SubPartGetPartDef(PartDefClassName)inline PartDefClassName* GetPartDef() const { return reinterpret_cast<PartDefClassName*>(GetEditorPart()->m_Def.get()); }
+#define SubPartGetPartDef(PartDefClassName)inline PartDefClassName* GetPartDef() const { return reinterpret_cast<PartDefClassName*>(GetEditorPart()->m_Def.get()); } friend class PartDefClassName
 
 #define SubPartConstructor(ClassName)inline ClassName(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart) : Part(world, ship, editorPart) {}
 
@@ -54,13 +57,17 @@ struct EnginePartDef;
 
 class EnginePart : public Part {
 public:
-	SubPartConstructor(EnginePart)
-	SubPartGetPartDef(EnginePartDef)
 
-	virtual void Update(Hazel::Timestep ts, Ship& ship, World& world) override;
+	EnginePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart);
+
+	SubPartGetPartDef(EnginePartDef);
+
+	virtual void Update(Hazel::Timestep ts, World& world, Ship& ship) override;
+	virtual void Render(World& world, Ship& ship) override;
 
 	float GetThrust();
 	void SetThrottle(float throttle);
+	void SetGimbal(float gimbal);
 
 	inline float GetThrottle() const { return m_Throttle; }
 	inline void CutThrottle() { SetThrottle(0.0f); }
@@ -68,6 +75,8 @@ public:
 
 private:
 	float m_Throttle = 0.0f;
+	Hazel::ParticleEmitter m_Emitter;
+	float m_Gimbal = 0.0f;
 
 
 };
@@ -80,11 +89,12 @@ struct EnginePartDef : public PartDef {
 	SubPartDefCreatePartMethod(EnginePart)
 	
 	//How fast this engine burns mass (kg/s)
-	float MassBurn;
+	float MassBurn = 1.0f;
 	//This engine's specific impulse
-	float ISP;
+	float ISP = 100.0f;
 
-	float MinThrottle;
+	float MinThrottle = 0.1f;
+	float GimbalLimit = 0.0f;
 
 };
 

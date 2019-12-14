@@ -62,17 +62,7 @@ void Ship::Render(World& world)
 	glm::vec2 rootPos = { GetPhsicsBody()->GetPosition().x, GetPhsicsBody()->GetPosition().y };
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
-		float shipRot = GetRotation();
-		float rotation = shipRot + part->GetTotalRotation();
-		Hazel::Ref<PartDef>& def = part->GetEditorPart()->m_Def;
-		Hazel::Renderer2DRenderable renderable;
-
-		renderable.Position = { rootPos + part->GetTotalOffset(shipRot) + glm::rotate(def->SpriteOffset, rotation), 0.0f };
-		renderable.Size = def->SpriteSize;
-
-		renderable.Rotation = rotation;
-		renderable.ApplyAnimation(def->Animation);
-		Hazel::Renderer2D::DrawQuad(renderable);
+		part->Render(world, *this);
 	}
 }
 
@@ -80,7 +70,7 @@ void Ship::Update(Hazel::Timestep ts, World& world)
 {
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
-		part->Update(ts, *this, world);
+		part->Update(ts, world, *this);
 	}
 }
 

@@ -1,6 +1,8 @@
 #include "hzpch.h"
 #include "Particle.h"
+
 #include "Hazel/Core/Engine.h"
+#include "Renderer2D.h"
 
 #include <random>
 
@@ -10,6 +12,24 @@ namespace Hazel {
 	{
 		Age += ts.Seconds();
 		Position += Velocity * ts.Seconds();
+
+		if (Age > Lifetime) Alive = false;
+	}
+
+	void ParticleEmitter::Render()
+	{
+		for (int i = 0; i < min(m_PoolIndex, m_PoolCapacity); i++)
+		{
+			Particle& particle = m_Pool[i];
+			if (particle.Alive)
+			{
+				Renderer2DRenderable renderable;
+				renderable.Position = vec3(particle.Position, 0.0f);
+				renderable.Size = particle.Size;
+				renderable.ApplyAnimation(particle.Animation);
+				//renderable.BlendSettings = BlendMode::ADDATIVE;
+			}
+		}
 	}
 
 	void ParticleEmitter::Update(Timestep ts)
@@ -39,16 +59,18 @@ namespace Hazel {
 
 	Particle& ParticleEmitter::CreateParticle()
 	{
-		int index = m_PoolIndex++ % m_Pool.capacity();
-		Particle& particle = *m_Pool.emplace(m_Pool.begin() + index);
-		std::normal_distribution<float> lifetime(m_Def.LifetimeMean, m_Def.LifetimeStdDev);
+		int index = m_PoolIndex++ % m_PoolCapacity;
+		Particle& particle = m_Pool[index];
+		particle.Alive = true;
+		particle.Animation = m_Def->Animation;
+		std::normal_distribution<float> lifetime(m_Def->LifetimeMean, m_Def->LifetimeStdDev);
 
 		particle.Lifetime = lifetime(rng);
 		glm::vec2 error = { 0.0f, 0.0f };
-		if (m_Def.IVErrorEnabled)
+		if (m_Def->IVErrorEnabled)
 		{
-			std::normal_distribution<float> angleError(0.0f, m_Def.IVAngleErrorStdDev);
-			std::normal_distribution<float> angleLength(m_Def.IVErrorLengthMean, m_Def.IvErrorLengthStdDev);
+			std::normal_distribution<float> angleError(0.0f, m_Def->IVAngleErrorStdDev);
+			std::normal_distribution<float> angleLength(m_Def->IVErrorLengthMean, m_Def->IvErrorLengthStdDev);
 
 			error = glm::normalize(m_InitalVelocity);
 			error = glm::rotate(error, glm::radians(angleError(rng)));
@@ -62,5 +84,13 @@ namespace Hazel {
 		return particle;
 	}
 
+	ParticleEmitter::ParticleEmitter(const Ref<ParticleEmitterDef>& def, int maxParticles, float pps)
+		: m_Def(def), m_PoolCapacity(maxParticles), m_ParticleDelay(1.0f / pps)
+	{
+		m_Pool.reset(new Particle[maxParticles]);
+	}
+
 }
+
+
 

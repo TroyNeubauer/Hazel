@@ -13,7 +13,7 @@ public:
 
 	}
 
-	virtual void OnUpdate() override
+	virtual void OnUpdate(Hazel::Timestep ts) override
 	{
 
 	}

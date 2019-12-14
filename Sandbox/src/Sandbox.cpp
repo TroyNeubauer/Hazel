@@ -58,9 +58,9 @@ Sandbox::Sandbox()
 
 std::ostream& operator<<(std::ostream& os, const vec3& vec) { return os << '[' << vec.x << ", " << vec.y << ", " << vec.z << ", " << ']'; }
 
-void Sandbox::Update()
+void Sandbox::Update(Hazel::Timestep ts)
 {
-	if(!Paused) m_Camera->Update();
+	if(!Paused) m_Camera->Update(ts);
 	GetWindow().ShowCursor(Paused);
 }
 

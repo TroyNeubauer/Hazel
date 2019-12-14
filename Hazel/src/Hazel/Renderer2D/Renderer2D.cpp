@@ -223,6 +223,7 @@ namespace Hazel {
 	}
 
 
+
 	void Renderer2DRenderable::ApplyAnimation(const Animation2D& animation)
 	{
 		const Frame& frame = animation.GetFrame();

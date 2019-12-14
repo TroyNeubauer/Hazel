@@ -13,7 +13,7 @@ class Sandbox : public Hazel::Application
 public:
 	Sandbox();
 
-	virtual void Update() override;
+	virtual void Update(Hazel::Timestep ts) override;
 	virtual void Render() override;
 
 	~Sandbox();

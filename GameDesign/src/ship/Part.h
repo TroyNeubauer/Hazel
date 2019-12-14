@@ -1,7 +1,7 @@
 #pragma once
 #include "world/Body.h"
-#include "Hazel.h"
 
+#include <Hazel.h>
 #include <Box2D/Box2D.h>
 #include <map>
 
@@ -98,7 +98,9 @@ public:
 
 	inline bool HasResource(ResourceType type) { return m_Resources.find(type) != m_Resources.end() || m_Resources[type] >= 0.0f; }
 
-	virtual void Update(Hazel::Timestep ts, Ship& ship, World& world);
+	virtual void Update(Hazel::Timestep ts, World& world, Ship& ship);
+	virtual void Render(World& world, Ship& ship);
+
 	virtual ~Part() {}
 private:
 	static int FillInParts(const Part* leaf);
