@@ -1,0 +1,18 @@
+Hazel is a high performanace cross platform C++ game engine that supports the folowing platforms:
+ *Windows
+ *Linux
+ *MacOSX (Needs devolepment)
+ *Android (not started)
+ *IOS (not started)
+
+
+For building installing on linux, the:
+ * xorg-dev
+ *e2fslibs-dev
+ *nettle-dev
+ *acl-dev
+ *libghc-bzlib-dev
+ *lzma-dev
+ *lz4
+
+packages must be installed.
