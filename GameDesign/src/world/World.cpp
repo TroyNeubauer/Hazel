@@ -87,6 +87,17 @@ void World::Render()
 	}
 
 	{
+		HZ_PROFILE_SCOPE("Particles Draw");
+		Hazel::Renderer2D::BeginScene(m_Camera);
+		for (auto it = BodiesBegin(); it != BodiesEnd(); it++)
+		{
+			Ship* ship = dynamic_cast<Ship*>(ToBody(*it));
+			ship->RenderParticles(*this);
+		}
+		Hazel::Renderer2D::EndScene();
+	}
+
+	{
 		HZ_PROFILE_SCOPE("Main Draw");
 		Hazel::Renderer2D::BeginScene(m_Camera);
 		for (auto it = BodiesBegin(); it != BodiesEnd(); it++)
@@ -96,6 +107,8 @@ void World::Render()
 		}
 		Hazel::Renderer2D::DrawQuad(m_Camera.ToWorldCoordinates(Hazel::Input::GetMousePosition()), { 0.1f, 0.1f }, 0xFF00FFFF);
 		Hazel::Renderer2D::EndScene();
+
+
 	}
 }
 

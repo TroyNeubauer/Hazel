@@ -19,16 +19,17 @@ namespace Hazel {
 		Ref<Texture2D> Texture;
 		uint32_t Color = 0xFFFFFFFF;
 		float Rotation = 0.0f;//Radians
-		BlendMode BlendSettings;
+		BlendMode BlendSettings = BlendMode::NONE;
 
-		void ApplyAnimation(const Animation2D& animation);
+		void ApplyAnimation(const Hazel::Ref<const AnimationDef2D>& animation, const Frame& frame);
+		inline void ApplyAnimation(const Animation2D& animation) { ApplyAnimation(animation.GetDef(), animation.GetFrame()); }
 		inline void ApplyAnimation(const Ref<Animation2D>& animation) { ApplyAnimation(*animation.get()); }
 	};
 
 	struct BatchSettings
 	{
 		Ref<Texture2D> Texture;
-		BlendMode BlendSettings;
+		BlendMode BlendSettings = BlendMode::NONE;
 
 		bool operator==(const BatchSettings& other) const;
 	};

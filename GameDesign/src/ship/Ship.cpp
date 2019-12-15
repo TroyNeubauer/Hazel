@@ -66,6 +66,15 @@ void Ship::Render(World& world)
 	}
 }
 
+void Ship::RenderParticles(World& world)
+{
+	for (Hazel::Ref<Part>& part : m_Parts)
+	{
+		part->RenderParticles(world, *this);
+	}
+	
+}
+
 void Ship::Update(Hazel::Timestep ts, World& world)
 {
 	for (Hazel::Ref<Part>& part : m_Parts)

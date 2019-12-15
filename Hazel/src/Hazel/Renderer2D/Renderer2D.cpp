@@ -223,20 +223,18 @@ namespace Hazel {
 	}
 
 
-
-	void Renderer2DRenderable::ApplyAnimation(const Animation2D& animation)
-	{
-		const Frame& frame = animation.GetFrame();
-		glm::vec2 textureSize = { animation.GetTexture()->GetWidth(), animation.GetTexture()->GetHeight() };
-		
-		this->TextureTop = glm::vec2(frame.Top.x, frame.Top.y) / textureSize;
-		this->TextureBottom = glm::vec2(frame.Bottom.x, frame.Bottom.y) / textureSize;
-		this->Texture = animation.GetTexture();
-	}
-
 	bool BatchSettings::operator==(const BatchSettings& other) const
 	{
 		return this->Texture == other.Texture && this->BlendSettings == other.BlendSettings;
+	}
+
+	void Renderer2DRenderable::ApplyAnimation(const Hazel::Ref<const AnimationDef2D>& animation, const Frame & frame)
+	{
+		glm::vec2 textureSize = { animation->m_Texture->GetWidth() - 1, animation->m_Texture->GetHeight() - 1 };
+
+		this->TextureTop = glm::vec2(frame.Top.x, frame.Top.y) / textureSize;
+		this->TextureBottom = glm::vec2(frame.Bottom.x, frame.Bottom.y) / textureSize;
+		this->Texture = animation->m_Texture;
 	}
 
 }

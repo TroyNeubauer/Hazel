@@ -24,6 +24,7 @@ namespace Hazel {
 		static Ref<AnimationDef2D> Create(Ref<Texture2D> texture, float frameDuration, glm::ivec2 spriteSize, std::initializer_list<glm::ivec2> spriteCoordinates);
 
 		std::pair<glm::vec2, glm::vec2> GetFirstFrame();
+		float AspectRatio();
 	};
 
 	class Animation2D

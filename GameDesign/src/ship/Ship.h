@@ -36,6 +36,7 @@ public:
 	Part& GetRoot();
 
 	virtual void Render(World& world) override;
+	virtual void RenderParticles(World& world);
 	virtual void Update(Hazel::Timestep ts, World& world) override;
 	void B2DRender(Hazel::B2D_DebugDraw* draw);
 

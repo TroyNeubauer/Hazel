@@ -131,6 +131,36 @@ float Part::GetTotalRotation() const
 	return degrees;
 }
 
+glm::vec2 Part::ToWorldPos(glm::vec2 partPos, const Ship& ship)
+{
+	float rot = ship.GetRotation() + GetTotalRotation();
+	glm::vec2 partOffset = GetTotalOffset(rot);
+	partPos = glm::rotate(partPos, rot);
+	return ship.GetPosition() + partOffset + partPos;
+}
+
+glm::vec2 Part::GetBBVertex(BBVertices target, const Ship& ship)
+{
+	for (b2Fixture* f = m_Fixtures[0]; f; f = f->GetNext())
+	{
+		HZ_ASSERT(f->GetType() == b2Shape::Type::e_polygon, "Cannot get exact vertices from a non polygon fixture!");
+		b2PolygonShape* shape = reinterpret_cast<b2PolygonShape*>(f->GetShape());
+		glm::vec2 partOffset = GetTotalOffset();
+		for (int i = 0; i < shape->m_count; i++)
+		{
+			//Undo the offset so that the vertices are centered around the part
+			glm::vec2 bodyVertex = b2v2(shape->m_vertices[i]) - partOffset;
+			if (target == BBVertices::TOP_RIGHT		&& bodyVertex.x > 0.0f && bodyVertex.y > 0.0f) return ToWorldPos(bodyVertex, ship);
+			if (target == BBVertices::TOP_LEFT		&& bodyVertex.x < 0.0f && bodyVertex.y > 0.0f) return ToWorldPos(bodyVertex, ship);
+			if (target == BBVertices::BOTTOM_RIGHT	&& bodyVertex.x > 0.0f && bodyVertex.y < 0.0f) return ToWorldPos(bodyVertex, ship);
+			if (target == BBVertices::BOTTOM_LEFT	&& bodyVertex.x < 0.0f && bodyVertex.y < 0.0f) return ToWorldPos(bodyVertex, ship);
+		}
+		HZ_ASSERT(false, "Unable to find requested vertex. Bad fixture");
+	}
+
+	return { 0.0f, 0.0f };
+}
+
 
 void Part::AddFixtures(b2Body* body)
 {

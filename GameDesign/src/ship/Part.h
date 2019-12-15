@@ -76,6 +76,11 @@ private:
 
 };
 
+enum class BBVertices
+{
+	TOP_RIGHT, TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT
+};
+
 
 class Part
 {
@@ -92,20 +97,24 @@ public:
 	void AddFixtures(b2Body* body);
 	void RemoveFixtures(b2Body* body);
 
+	float GetTotalRotation() const;
 	glm::vec2 GetAngularVelocityAsLinear(const Ship& ship) const;
 	glm::vec2 GetTotalOffset(float initalRotation = 0.0f) const;
-	float GetTotalRotation() const;
+	glm::vec2 ToWorldPos(glm::vec2 partPos, const Ship& ship);
+
+	glm::vec2 GetBBVertex(BBVertices vertex, const Ship& ship);
 
 	inline bool HasResource(ResourceType type) { return m_Resources.find(type) != m_Resources.end() || m_Resources[type] >= 0.0f; }
 
 	virtual void Update(Hazel::Timestep ts, World& world, Ship& ship);
 	virtual void Render(World& world, Ship& ship);
+	virtual void RenderParticles(World& world, Ship& ship) {}
 
 	virtual ~Part() {}
 private:
 	static int FillInParts(const Part* leaf);
 
-private:
+protected:
 
 	Hazel::Ref<EditorPart> m_EditorPart;
 	Hazel::Ref<Part> m_ParentPart;

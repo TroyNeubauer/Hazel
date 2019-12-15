@@ -11,7 +11,6 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
@@ -50,8 +49,7 @@ namespace Hazel {
 
 		switch (mode)
 		{
-			case BlendMode::NONE:		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			case BlendMode::ADDATIVE:	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			case BlendMode::ADDATIVE:	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); break;
 		}
 	}
 
@@ -60,8 +58,11 @@ namespace Hazel {
 		HZ_PROFILE_FUNCTION();
 
 		glEnable(GL_DEPTH_TEST);
-		//glEnable(GL_CULL_FACE);
-		//glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_POLYGON_SMOOTH);
 	}
 
 	void OpenGLRendererAPI::Shutdown()

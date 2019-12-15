@@ -49,7 +49,7 @@ struct EnginePartDef : public PartDef {
 
 #define SubPartDefCreatePartMethod(ClassName)inline virtual Part* CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart) const override { return new ClassName(world, ship, editorPart); }
 
-#define SubPartGetPartDef(PartDefClassName)inline PartDefClassName* GetPartDef() const { return reinterpret_cast<PartDefClassName*>(GetEditorPart()->m_Def.get()); } friend class PartDefClassName
+#define SubPartGetPartDef(PartDefClassName)inline PartDefClassName* GetPartDef() const { return reinterpret_cast<PartDefClassName*>(GetEditorPart()->m_Def.get()); } friend struct PartDefClassName
 
 #define SubPartConstructor(ClassName)inline ClassName(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart) : Part(world, ship, editorPart) {}
 
@@ -64,7 +64,9 @@ public:
 
 	virtual void Update(Hazel::Timestep ts, World& world, Ship& ship) override;
 	virtual void Render(World& world, Ship& ship) override;
+	virtual void RenderParticles(World& world, Ship& ship) override;
 
+	float GetExitVelocity();
 	float GetThrust();
 	void SetThrottle(float throttle);
 	void SetGimbal(float gimbal);
@@ -106,6 +108,9 @@ private:
 
 public:
 	static Hazel::Ref<PartDef> MK1Capsule;
+	static Hazel::Ref<PartDef> MK1LeftWing;
+	static Hazel::Ref<PartDef> MK1RightWing;
+
 	static Hazel::Ref<PartDef> MK2Capsule;
 	static Hazel::Ref<EnginePartDef> MK1Engine;
 };

@@ -2,6 +2,7 @@
 #include "Animation2D.h"
 
 #include "Hazel/Core/Engine.h"
+#include <xaudio2.h>
 
 namespace Hazel {
 
@@ -47,6 +48,13 @@ namespace Hazel {
 		result.second.y = static_cast<float>(m_Frames[0].Bottom.y) / static_cast<float>(m_Texture->GetHeight());
 
 		return result;
+	}
+
+	float AnimationDef2D::AspectRatio()
+	{
+		glm::ivec2 top = m_Frames[0].Top, bottom = m_Frames[0].Bottom;
+		glm::vec2 size = glm::vec2(top - bottom);
+		return size.x / size.y;
 	}
 
 	
