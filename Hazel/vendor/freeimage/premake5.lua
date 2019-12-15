@@ -3,7 +3,6 @@ project "freeimage"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++14"
-	staticruntime "on"
 	systemversion "latest"
 	
 	targetdir ("../../../bin/" .. outputdir .. "/%{prj.name}")

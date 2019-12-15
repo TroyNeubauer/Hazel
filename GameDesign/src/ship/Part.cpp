@@ -49,9 +49,6 @@ Part* PartDef::CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>
 
 void EditorPart::Render()
 {
-	glm::vec2 HitboxSize;
-	//Offset for where the sprite should be rendered relative to the center of the hitbox
-	glm::vec2 SpriteOffset, SpriteSize;
 
 	std::pair<glm::vec2, glm::vec2> frame = m_Def->Animation->GetFirstFrame();
 

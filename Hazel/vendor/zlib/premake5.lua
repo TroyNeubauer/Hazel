@@ -1,7 +1,6 @@
 project "zlib"
 	kind "StaticLib"
 	language "C"
-	staticruntime "on"
 	systemversion "latest"
 	
 	targetdir ("../../../bin/" .. outputdir .. "/%{prj.name}")

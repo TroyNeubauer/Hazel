@@ -21,9 +21,9 @@ workspace "Hazel"
 	startproject "GameDesign"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on" 
 	intrinsics "on"
 	systemversion "latest"
+	staticruntime "off"
 	
 
 	configurations
@@ -86,6 +86,7 @@ IncludeDir["freeimage"] = "Hazel/vendor/freeimage/Source"
 IncludeDir["FastNoiseSIMD"] = "Hazel/vendor/FastNoiseSIMD/FastNoiseSIMD"
 IncludeDir["TUtil"] = "Hazel/vendor/TUtil/TUtil/include"
 IncludeDir["Box2D"] = "Hazel/vendor/Box2D"
+IncludeDir["LabSound"] = "Hazel/vendor/LabSound/include"
 
 include "Hazel/vendor/zlib"
 include "Hazel/vendor/GLFW"
@@ -93,7 +94,6 @@ include "Hazel/vendor/Glad"
 include "Hazel/vendor/imgui"
 include "Hazel/vendor/freeimage"
 include "Hazel/vendor/FastNoiseSIMD"
-include "Hazel/vendor/LabSound"
 
 include "Hazel/vendor/TUtil/TUtil_project.lua"
 include "Hazel/vendor/Box2D/Box2D_project.lua"
@@ -132,6 +132,7 @@ project "Hazel"
 		"%{IncludeDir.FastNoiseSIMD}",
 		"%{IncludeDir.TUtil}",
 		"%{IncludeDir.Box2D}",
+		"%{IncludeDir.LabSound}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -158,8 +159,6 @@ project "Hazel"
 	}
 
 	filter "system:windows"
-
-		links "Pdh.lib"
 
 		defines
 		{
@@ -208,6 +207,7 @@ project "Sandbox"
 		"%{IncludeDir.TUtil}",
 		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.LabSound}",
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
@@ -229,6 +229,7 @@ project "Sandbox"
 		"glad",
 		"glfw",
 		"zlib",
+		"LabSound",
 	}
 
 	defines
@@ -242,16 +243,54 @@ project "Sandbox"
 
 		libdirs
 		{
-			"Hazel/vendor/Vulkan/lib"
+			"Hazel/vendor/Vulkan/lib",
 		}
 
 		links
 		{
+			"Pdh.lib",
 			"kernel32.lib",
 			"Onecore.lib",
 			"opengl32.lib",
 			"vulkan.lib",
+			"dsound.lib",
+			"dxguid.lib",
+			"winmm.lib",
 		}
+
+		filter "configurations:Debug"
+			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Debug" }
+			
+			links
+			{
+				"LabSound_d.lib",
+				"libnyquist_d.lib",
+				"libopus_d.lib",
+				"libwavpack_d.lib",
+			}
+
+		filter "configurations:Release"
+			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
+
+			links
+			{
+				"LabSound.lib",
+				"libnyquist.lib",
+				"libopus.lib",
+				"libwavpack.lib",
+			}
+
+		filter "configurations:Dist"
+			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
+
+			links
+			{
+				"LabSound.lib",
+				"libnyquist.lib",
+				"libopus.lib",
+				"libwavpack.lib",
+			}
+
 
 	filter "system:linux"
 		
@@ -300,14 +339,8 @@ project "GameDesign"
 		"%{IncludeDir.TUtil}",
 		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.LabSound}",
 
---[[		"Hazel/vendor/freeimage/Source/",
-		"Hazel/vendor/freeimage/Source/FreeImage",
-		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
-		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
-		"Hazel/vendor/freeimage/Source/LibPNG",
-		"Hazel/vendor/freeimage/Source/Metadata",
-		"Hazel/vendor/freeimage/Source/ZLib",]]
 	}
 
 	links
@@ -333,16 +366,54 @@ project "GameDesign"
 
 		libdirs
 		{
-			"Hazel/vendor/Vulkan/lib"
+			"Hazel/vendor/Vulkan/lib",
 		}
 
 		links
 		{
+			"Pdh.lib",
 			"kernel32.lib",
 			"Onecore.lib",
 			"opengl32.lib",
 			"vulkan.lib",
+			"dsound.lib",
+			"dxguid.lib",
+			"winmm.lib",
 		}
+
+		filter "configurations:Debug"
+			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Debug" }
+			
+			links
+			{
+				"LabSound_d.lib",
+				"libnyquist_d.lib",
+				"libopus_d.lib",
+				"libwavpack_d.lib",
+			}
+
+		filter "configurations:Release"
+			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
+
+			links
+			{
+				"LabSound.lib",
+				"libnyquist.lib",
+				"libopus.lib",
+				"libwavpack.lib",
+			}
+
+		filter "configurations:Dist"
+			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
+
+			links
+			{
+				"LabSound.lib",
+				"libnyquist.lib",
+				"libopus.lib",
+				"libwavpack.lib",
+			}
+
 	filter "system:linux"
 	
 		libdirs

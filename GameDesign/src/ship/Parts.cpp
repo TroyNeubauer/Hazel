@@ -21,10 +21,10 @@ void Parts::Init()
 	Hazel::Ref<Hazel::Texture2D> RocketComponents = Hazel::Texture2D::Load("assets/textures/RocketComponents.png", builder);
 	Hazel::Ref<Hazel::AnimationDef2D> fireParticleAnimation = Hazel::AnimationDef2D::Create(RocketComponents, 0.25f, { 16, 16 }, { {0, 2}, {1, 2}, {2, 2}, {3, 2}, });
 
-	Parts::MK1Capsule.reset(new PartDef{ "MK1 Capsule", 25.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents,	{32,  0}, {13, 30}), 11.0f / 3, {-1, 0}, {1, 0} });
+	Parts::MK1Capsule.reset(new PartDef{ "MK1 Capsule", 40.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents,	{32,  0}, {13, 30}), 11.0f / 3, {-1, 0}, {1, 0} });
 	Parts::MK2Capsule.reset(new PartDef{ "MK2 Capsule", 20.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents,	{ 2, 16}, {14, 16}), 2.0f });
-	Parts::MK1LeftWing.reset(new PartDef{ "Left Wing", 10.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents,	{16, 16}, { 7, 11}), 7.0f / 3 });
-	Parts::MK1RightWing.reset(new PartDef{ "Right Wing", 10.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents,	{23, 16}, { 7, 11}), 7.0f / 3 });
+	Parts::MK1LeftWing.reset(new PartDef{ "Left Wing", 1.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents,	{16, 16}, { 7, 11}), 7.0f / 3 });
+	Parts::MK1RightWing.reset(new PartDef{ "Right Wing", 1.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents,	{23, 16}, { 7, 11}), 7.0f / 3 });
 
 	Parts::MK1Engine.reset(new EnginePartDef{ "MK1 Engine", 20.0f, 10.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 16, 0 }, { 14, 7 }), 2.5f});
 	MK1Engine->ISP = 100.0f;
