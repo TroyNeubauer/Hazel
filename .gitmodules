@@ -23,3 +23,6 @@
 	path = Hazel/vendor/Box2D
 	url = https://github.com/TroyNeubauer/Box2D.git
 	
+[submodule "Hazel/vendor/LabSound"]
+	path = Hazel/vendor/LabSound
+	url = https://github.com/TroyNeubauer/LabSound.git

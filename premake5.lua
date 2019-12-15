@@ -93,9 +93,10 @@ include "Hazel/vendor/Glad"
 include "Hazel/vendor/imgui"
 include "Hazel/vendor/freeimage"
 include "Hazel/vendor/FastNoiseSIMD"
+include "Hazel/vendor/LabSound"
+
 include "Hazel/vendor/TUtil/TUtil_project.lua"
 include "Hazel/vendor/Box2D/Box2D_project.lua"
---include "Hazel/vendor/openssl"
 
 
 project "Hazel"
