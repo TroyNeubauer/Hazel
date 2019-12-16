@@ -1,3 +1,5 @@
+
+-- ====================########## HAZEL PREMAKE COMMAND LINE OPTIONS ##########====================
 newoption {
 	trigger     = "compiler",
 	value       = "compiler",
@@ -11,6 +13,7 @@ newoption {
 	}
 }
 
+-- ====================########## HAZEL WORKSPACE SETTINGS ##########====================
 workspace "Hazel"
 	if _OPTIONS["compiler"] ~= "" then
 		print("Using compiler ".._OPTIONS["compiler"])
@@ -30,12 +33,12 @@ workspace "Hazel"
 	{
 		"Debug",
 		"Release",
-		"Dist"
+		"Dist",
 	}
 
 	defines
 	{
-		"HAZEL"
+		"HAZEL",
 	}
 
 	filter "system:windows"
@@ -78,6 +81,141 @@ workspace "Hazel"
 		inlining "auto"
 		floatingpoint "Fast"
 
+
+-- ====================########## HAZEL DEPENDENCIES (FOR USE BY EXECUTABLES PROJECTS USING HAZEL) ##########====================
+
+--Adds the links needed by Hazel to premake
+local function HazelEXEDependencies()
+	includedirs
+	{
+		"Hazel/vendor/spdlog/include",
+		"Hazel/src",
+		"Hazel/vendor",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.freeimage}",
+		"%{IncludeDir.TUtil}",
+		"%{IncludeDir.Box2D}",
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.LabSound}",
+
+		"Hazel/vendor/freeimage/Source/",
+		"Hazel/vendor/freeimage/Source/FreeImage",
+		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
+		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
+		"Hazel/vendor/freeimage/Source/LibPNG",
+		"Hazel/vendor/freeimage/Source/Metadata",
+		"Hazel/vendor/freeimage/Source/ZLib",
+	}
+
+	links 
+	{
+		"Hazel",
+		"TUtil",
+		"ImGui",
+		"FastNoiseSIMD",
+		"Box2D",
+		"freeimage",
+		"glad",
+		"zlib",
+		"glfw",
+	}
+
+	defines
+	{
+		"GLM_FORCE_INTRINSICS",
+		"FREEIMAGE_LIB"
+	}
+
+	libdirs
+	{
+		"Hazel/vendor/Vulkan/lib",
+	}
+
+
+	filter "system:windows"
+
+		links
+		{
+			"Pdh.lib",
+			"kernel32.lib",
+			"Onecore.lib",
+			"opengl32.lib",
+			"vulkan.lib",
+			"dsound.lib",
+			"dxguid.lib",
+			"winmm.lib",
+		}
+
+	filter { "system:windows", "configurations:Debug" }
+		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Debug" }
+		
+		print("Using debug windows libs")
+		links
+		{
+			"LabSound_d.lib",
+			"libnyquist_d.lib",
+			"libopus_d.lib",
+			"libwavpack_d.lib",
+		}
+
+	filter { "system:windows", "configurations:Release or configurations:Dist" }
+		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
+
+		print("Using release windows libs")
+		links
+		{
+			"LabSound.lib",
+			"libnyquist.lib",
+			"libopus.lib",
+			"libwavpack.lib",
+		}
+
+	filter "system:linux"
+	
+		links
+		{
+			"GL",
+			"X11",
+			"Xrandr",
+			"Xinerama",
+			"Xcursor",
+			"pthread",
+			"dl",
+			"vulkan",
+		}		
+
+	filter { "system:linux", "configurations:Debug" }
+		libdirs { "Hazel/vendor/LabSound/build/linux/Debug/bin" }
+		
+		links
+		{
+			"LabSound_d",
+			"libnyquist_d",
+			"libopus_d",
+			"libwavpack_d",
+		}
+
+	filter { "system:linux", "configurations:Release or configurations:Dist" }
+		libdirs { "Hazel/vendor/LabSound/build/linux/Release/bin" }
+
+		links
+		{
+			"LabSound",
+			"libnyquist",
+			"libopus",
+			"libwavpack",
+		}
+
+end
+
+
+
+
+
+-- ====================########## MAIN HAZEL SETTINGS ##########====================
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
@@ -104,7 +242,10 @@ include "Hazel/vendor/TUtil/TUtil_project.lua"
 include "Hazel/vendor/Box2D/Box2D_project.lua"
 
 
--- ##########============================== HAZEL ==============================##########
+
+
+
+-- ====================########## HAZEL ##########====================
 
 project "Hazel"
 	location "Hazel"
@@ -189,7 +330,7 @@ project "Hazel"
 		}
 
 
--- ##########============================== SANDBOX ==============================##########
+-- ====================########## SANDBOX ##########====================
 
 project "Sandbox"
 	location "Sandbox"
@@ -204,144 +345,24 @@ project "Sandbox"
 		"%{prj.name}/src/**.cpp"
 	}
 
+
 	includedirs
 	{
-		"Hazel/vendor/spdlog/include",
-		"Hazel/src",
-		"Hazel/vendor",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.freeimage}",
-		"%{IncludeDir.TUtil}",
-		"%{IncludeDir.Box2D}",
-		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.LabSound}",
-
-		"Hazel/vendor/freeimage/Source/",
-		"Hazel/vendor/freeimage/Source/FreeImage",
-		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
-		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
-		"Hazel/vendor/freeimage/Source/LibPNG",
-		"Hazel/vendor/freeimage/Source/Metadata",
-		"Hazel/vendor/freeimage/Source/ZLib",
+		"%{prj.name}/src/",
 	}
 
-	links 
-	{
-		"TUtil",
-		"ImGui",
-		"FastNoiseSIMD",
-		"Box2D",
-		"freeimage",
-		"glad",
-		"zlib",
-		"LabSound",
-		"glfw",
-		"Hazel",
-	}
-
-	defines
-	{
-		"GLM_FORCE_INTRINSICS",
-		"FREEIMAGE_LIB"
-	}
-
-	libdirs
-	{
-		"Hazel/vendor/Vulkan/lib",
-	}
-
-
--- ============================== SANDBOX WINDOWS ==============================
-
-
-	filter "system:windows"
-
-		links
-		{
-			"Pdh.lib",
-			"kernel32.lib",
-			"Onecore.lib",
-			"opengl32.lib",
-			"vulkan.lib",
-			"dsound.lib",
-			"dxguid.lib",
-			"winmm.lib",
-		}
-
-	filter { "system:windows", "configurations:Debug" }
-		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Debug" }
-		
-		links
-		{
-			"LabSound_d.lib",
-			"libnyquist_d.lib",
-			"libopus_d.lib",
-			"libwavpack_d.lib",
-		}
-
-	filter { "system:windows", "configurations:Release or configurations:Dist" }
-		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
-
-		links
-		{
-			"LabSound.lib",
-			"libnyquist.lib",
-			"libopus.lib",
-			"libwavpack.lib",
-		}
+	HazelEXEDependencies()
 
 
 
--- ============================== SANDBOX LINUX ==============================
-
-	filter "system:linux"
-	
-		links
-		{
-			"GL",
-			"X11",
-			"Xrandr",
-			"Xinerama",
-			"Xcursor",
-			"pthread",
-			"dl",
-			"vulkan",
-		}		
-
-	filter { "system:linux", "configurations:Debug" }
-		libdirs { "Hazel/vendor/LabSound/build/linux/Debug/bin" }
-		
-		links
-		{
-			"LabSound_d",
-			"libnyquist_d",
-			"libopus_d",
-			"libwavpack_d",
-		}
-
-	filter { "system:linux", "configurations:Release or configurations:Dist" }
-		libdirs { "Hazel/vendor/LabSound/build/linux/Release/bin" }
-
-		links
-		{
-			"LabSound",
-			"libnyquist",
-			"libopus",
-			"libwavpack",
-		}
-
-
-
--- ##########============================== GAME DESIGN ==============================##########
+-- ====================########## GAME DESIGN ##########====================
 
 
 project "GameDesign"
 	location "GameDesign"
 	kind "ConsoleApp"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	targetdir ("bin/" .. outputdir .. "/Opportunity2024")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
@@ -353,122 +374,9 @@ project "GameDesign"
 	includedirs
 	{
 		"%{prj.name}/src/",
-		"Hazel/vendor/spdlog/include",
-		"Hazel/src",
-		"Hazel/vendor",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.freeimage}",
-		"%{IncludeDir.TUtil}",
-		"%{IncludeDir.Box2D}",
-		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.LabSound}",
-
 	}
 
-	links
-	{
-		"TUtil",
-		"ImGui",
-		"FastNoiseSIMD",
-		"Box2D",
-		"freeimage",
-		"glad",
-		"glfw",
-		"zlib",
-		"Hazel",
-	}
-
-	defines
-	{
-		"GLM_FORCE_INTRINSICS",
-		"FREEIMAGE_LIB"
-	}
-
-	libdirs
-	{
-		"Hazel/vendor/Vulkan/lib"
-	}
-
-
--- ============================== GAME DESIGN WINDOWS ==============================
-
-	filter "system:windows"
-
-		links
-		{
-			"Pdh.lib",
-			"kernel32.lib",
-			"Onecore.lib",
-			"opengl32.lib",
-			"vulkan.lib",
-			"dsound.lib",
-			"dxguid.lib",
-			"winmm.lib",
-		}
-
-	filter { "system:windows", "configurations:Debug" }
-		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Debug" }
-		
-		links
-		{
-			"LabSound_d.lib",
-			"libnyquist_d.lib",
-			"libopus_d.lib",
-			"libwavpack_d.lib",
-		}
-
-	filter { "system:windows", "configurations:Release or configurations:Dist" }
-		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
-
-		links
-		{
-			"LabSound.lib",
-			"libnyquist.lib",
-			"libopus.lib",
-			"libwavpack.lib",
-		}
-
-
-
--- ============================== GAME DESIGN LINUX ==============================
-
-	filter "system:linux"
-	
-		links
-		{
-			"GL",
-			"X11",
-			"Xrandr",
-			"Xinerama",
-			"Xcursor",
-			"pthread",
-			"dl",
-			"vulkan",
-		}		
-
-	filter { "system:linux", "configurations:Debug" }
-		libdirs { "Hazel/vendor/LabSound/build/linux/Debug/bin" }
-		
-		links
-		{
-			"LabSound_d",
-			"libnyquist_d",
-			"libopus_d",
-			"libwavpack_d",
-		}
-
-	filter { "system:linux", "configurations:Release or configurations:Dist" }
-		libdirs { "Hazel/vendor/LabSound/build/linux/Release/bin" }
-
-		links
-		{
-			"LabSound",
-			"libnyquist",
-			"libopus",
-			"libwavpack",
-		}
+	HazelEXEDependencies()
 
 
 -- ##########============================== OTHER ==============================##########

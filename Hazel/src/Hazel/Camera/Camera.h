@@ -90,7 +90,7 @@ namespace Hazel {
 			m_ViewMatrix = inverse(transform);
 		}
 
-		inline glm::vec2 ToWorldCoordinates(glm::ivec2 screenPos)
+		inline glm::vec2 ToWorldCoordinates(glm::ivec2 screenPos) const
 		{
 			screenPos.y = Application::Get().GetWindow().GetHeight() - screenPos.y - 1;
 			screenPos -= glm::ivec2(Application::Get().GetWindow().GetWidth() / 2, Application::Get().GetWindow().GetHeight() / 2 );

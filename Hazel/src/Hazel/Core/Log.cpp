@@ -6,6 +6,7 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
 
+#include "HazelExterns.h"
 
 namespace Hazel {
 
@@ -37,7 +38,11 @@ namespace Hazel {
 		auto clientFile = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/client.txt", true);
 		clientFile->set_pattern(filePattern);
 
-		s_ClientLogger = new spdlog::logger("APP", { clientStdOut, clientFile });
+		ApplicationInfo info;
+		HZGetApplicationInfo(&info);
+
+		s_ClientLogger = new spdlog::logger(info.Name, { clientStdOut, clientFile });
+		s_ClientLogger->info("Version: {}, Publisher {}, Beginning Initialization", info.Version, info.Publisher);
 
 #if   defined(HZ_DEBUG)
 		coreStdOut->set_level(spdlog::level::level_enum::trace);

@@ -1,11 +1,11 @@
 #include "Sandbox.h"
 
-#include "Hazel/Enviorment/Material.h"
+#include <Hazel/Enviorment/Material.h>
+#include <Hazel/Core/EntryPoint.h>
 
 #include <iostream>
 #include <random>
 
-#include "../../Hazel/src/Hazel/Core/EntryPoint.h"
 #include "ExampleLayer.h"
 
 Sandbox* sandbox;
@@ -112,8 +112,12 @@ Sandbox::~Sandbox()
 
 }
 
-
-Hazel::Application* Hazel::CreateApplication(int argc, char** argv)
+Hazel::Application* HZCreateApplication(int argc, char** argv)
 {
 	return new Sandbox();
+}
+
+void HZGetApplicationInfo(Hazel::ApplicationInfo* info)
+{
+	info->Name = "Sandbox";
 }

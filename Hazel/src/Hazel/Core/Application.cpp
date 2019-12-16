@@ -29,9 +29,6 @@ namespace Hazel {
 		GraphicsAPI::AddWantedAPI(GraphicsAPIType::OPEN_GL);
 		HZ_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
-
-		HZ_CORE_INFO("Creating audio context");
-		m_AudioContext = lab::Sound::MakeRealtimeAudioContext(lab::Channels::Stereo);
 		
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));

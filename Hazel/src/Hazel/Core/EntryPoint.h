@@ -4,14 +4,13 @@
 #include <string>
 
 #include "Hazel/Core/Core.h"
-
-extern Hazel::Application* Hazel::CreateApplication(int argc, char** argv);
+#include "Hazel/Core/HazelExterns.h"
 
 int main(int argc, char** argv)
 {
 	HZ_PROFILE_BEGIN_SESSION("Startup", "Startup.hzp.json");
 	Hazel::Init();
-	auto app = Hazel::CreateApplication(argc, argv);
+	auto app = HZCreateApplication(argc, argv);
 	HZ_PROFILE_END_SESSION();
 
 

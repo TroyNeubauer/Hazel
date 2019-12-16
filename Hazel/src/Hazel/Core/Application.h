@@ -9,7 +9,6 @@
 #include "Hazel/Core/Window.h"
 
 #include <memory>
-#include <LabSound/LabSound.h>
 
 namespace Hazel {
 
@@ -28,7 +27,6 @@ namespace Hazel {
 		void PushOverlay(Layer* layer);
 		void OnEvent(Event* e);
 		inline Window& GetWindow() { return *m_Window; }
-		inline lab::AudioContext& GetAudioContext() const { return *m_AudioContext.get(); }
 
 		inline static Application& Get() { return *s_Instance; }
 
@@ -45,13 +43,9 @@ namespace Hazel {
 		std::vector<Event*> m_EventQueue;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
-		Hazel::Scope<lab::AudioContext> m_AudioContext;
 
 	private:
 		static Application* s_Instance;
 	};
-
-	// To be defined in CLIENT
-	Application* CreateApplication(int argc, char** argv);
 
 }

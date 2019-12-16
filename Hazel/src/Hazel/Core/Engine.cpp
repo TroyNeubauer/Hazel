@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "Hazel/Core/Log.h"
 #include "Hazel/Context/ContextManager.h"
+#include "Hazel/Audio/AudioManager.h"
 
 namespace Hazel {
 
@@ -28,7 +29,14 @@ namespace Hazel {
 		staticInitComplete = true;
 		HZ_PROFILE_FUNCTION();
 
-		Hazel::Log::Init();
+		{
+			HZ_PROFILE_SCOPE("Log::Init()");
+			Log::Init();
+		}
+		{
+			HZ_PROFILE_SCOPE("AudioManager::Init()");
+			AudioManager::Init();
+		}
 		{
 			HZ_PROFILE_SCOPE("FreeImage_Initialise()");
 			FreeImage_Initialise();

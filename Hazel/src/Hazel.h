@@ -26,6 +26,9 @@
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Renderer/VertexArray.h"
 
+#include "Hazel/Audio/Audio.h"
+#include "Hazel/Audio/AudioManager.h"
+
 #include "Hazel/Enviorment/Light.h"
 
 #include "Hazel/Mesh/Mesh.h"

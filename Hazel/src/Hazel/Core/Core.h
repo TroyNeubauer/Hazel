@@ -10,6 +10,7 @@
 
 #include "Log.h"
 #include "Timestep.h"
+#include "HazelExterns.h"
 
 //========== COMPILER detect ==========
 #if defined(_MSC_VER)
@@ -24,12 +25,12 @@
 	#error Unsupported compiler
 #endif
 
-
 //========== PLATFORM detect ==========
 #if defined(__ANDROID__)
 	#define HZ_PLATFORM_ANDROID
 	#define HZ_PLATFORM_UNIX
 	#define HZ_PLATFORM_LINUX
+	#error Android is not supported for now!
 
 #elif defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__BORLANDC__)
 	#define HZ_PLATFORM_WINDOWS
@@ -54,6 +55,7 @@
 	#else
 		#error "Unknown Apple platform!"
 	#endif
+	#error Apple is not supported for now!
 
 
 #elif defined(__linux__)//Defined after android to target desktop linux
@@ -92,6 +94,12 @@
 #endif
 
 
+//Enable debug graphics contexts by default in debug mode
+#if !defined(HZ_DEBUG_GRAPHICS_CONTEXT) && defined(HZ_DEBUG)
+	#define HZ_DEBUG_GRAPHICS_CONTEXT 1
+#endif
+
+
 #define BIT(x) (1 << x)
 
 #define HZ_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
@@ -111,3 +119,12 @@ namespace Hazel {
 	inline Scope<T> S(T* t) { return Scope<T>(t); }
 }
 
+
+//Conditional defines
+
+
+#ifdef HZ_COMPILER_EMSCRIPTEN
+	#define HZ_USE_JS_AUDIO
+#else
+	#define HZ_USE_LAB_AUDIO
+#endif
