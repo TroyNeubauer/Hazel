@@ -20,6 +20,8 @@ World::World() : m_Camera(new WorldCameraController())
 	m_DebugDraw->SetFlags(b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit);
 	m_World->SetDebugDraw(m_DebugDraw.get());
 #endif
+
+	new Planet(*this, 10.0f, glm::vec4(0.8f, 0.1f, 0.2f, 1.0f), glm::vec4(0.8f, 0.3f, 0.5f, 1.0f));
 }
 
 void World::Update(Hazel::Timestep ts)

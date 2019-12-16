@@ -52,7 +52,7 @@ void EditorPart::Render()
 
 	std::pair<glm::vec2, glm::vec2> frame = m_Def->Animation->GetFirstFrame();
 
-	Hazel::Renderer2DRenderable renderable;
+	Hazel::Renderer2D::Renderable renderable;
 
 	renderable.Position = { GetTotalOffset() + m_Def->SpriteOffset, 0.0f };
 	renderable.Size = m_Def->SpriteSize;
@@ -201,7 +201,7 @@ void Part::Render(World& world, Ship& ship)
 	float shipRot = ship.GetRotation();
 	float rotation = shipRot + GetTotalRotation();
 	Hazel::Ref<PartDef>& def = GetEditorPart()->m_Def;
-	Hazel::Renderer2DRenderable renderable;
+	Hazel::Renderer2D::Renderable renderable;
 
 	renderable.Position = { ship.GetPosition() + GetTotalOffset(shipRot) + glm::rotate(def->SpriteOffset, rotation), 0.0f };
 	renderable.Size = def->SpriteSize;

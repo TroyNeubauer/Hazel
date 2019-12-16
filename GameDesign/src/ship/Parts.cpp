@@ -87,7 +87,7 @@ void EnginePart::Render(World& world, Ship& ship)
 	float shipRot = ship.GetRotation();
 	float rotation = shipRot + GetTotalRotation();
 	Hazel::Ref<PartDef>& def = GetEditorPart()->m_Def;
-	Hazel::Renderer2DRenderable renderable;
+	Hazel::Renderer2D::Renderable renderable;
 
 	renderable.Position = { ship.GetPosition() + GetTotalOffset(shipRot) + glm::rotate(def->SpriteOffset, rotation), 0.0f };
 	renderable.Size = def->SpriteSize;

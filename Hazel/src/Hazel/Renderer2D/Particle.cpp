@@ -24,7 +24,7 @@ namespace Hazel {
 			Particle& particle = m_Pool[i];
 			if (particle.Alive)
 			{
-				Renderer2DRenderable renderable;
+				Hazel::Renderer2D::Renderable renderable;
 				renderable.Position = vec3(particle.Position, -0.1f);
 				renderable.Size = particle.Size;
 				const ParticleDef& particleDef = *m_Def->Def.get();
@@ -36,7 +36,7 @@ namespace Hazel {
 				renderable.BlendSettings = BlendMode::ADDATIVE;
 				renderable.Color = Hazel::Utils::ToCompactColor(glm::vec4(1.0f, 1.0f, 1.0f, particleDef.AlphaCurve.Sample(ageRatio)));
 
-				Renderer2D::DrawQuad(renderable);
+				Hazel::Renderer2D::DrawQuad(renderable);
 			}
 		}
 	}
