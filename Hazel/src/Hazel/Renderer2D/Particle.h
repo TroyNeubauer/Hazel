@@ -24,9 +24,9 @@ namespace Hazel {
 
 	struct ParticleEmitterDef
 	{
-		ParticleEmitterDef(const Ref<ParticleDef>& particleDef) : ParticleDef(particleDef) {}
+		ParticleEmitterDef(const Ref<ParticleDef>& particleDef) : Def(particleDef) {}
 
-		Ref<ParticleDef> ParticleDef;
+		Ref<ParticleDef> Def;
 
 		float LifetimeMean = 1.0f;
 		float LifetimeStdDev = 0.0f;

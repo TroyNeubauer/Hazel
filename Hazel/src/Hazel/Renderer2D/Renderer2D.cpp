@@ -30,8 +30,8 @@ namespace Hazel {
 
 	struct PerTextureData
 	{
-		Ref<VertexArray> VertexArray;
-		Ref<VertexBuffer> VertexBuffer;
+		Ref<VertexArray> VA;
+		Ref<VertexBuffer> VB;
 		uint32_t IndexCount = 0, VertexCount = 0;
 
 		VertexData Vertices[MAX_VERTICES];
@@ -49,7 +49,7 @@ namespace Hazel {
 
 	struct Renderer2DStorage
 	{		
-		Ref<IndexBuffer> IndexBuffer;
+		Ref<IndexBuffer> IB;
 
 		Ref<Shader> TextureShader;
 		Ref<Texture2D> WhiteTexture;
@@ -66,20 +66,20 @@ namespace Hazel {
 		PerTextureData* data = new PerTextureData();
 		data->Settings = settings;
 
-		data->VertexArray = VertexArray::Create();
+		data->VA = VertexArray::Create();
 
-		data->VertexBuffer = VertexBuffer::CreateVertex(VERTEX_BUFFER_SIZE);
+		data->VB = VertexBuffer::CreateVertex(VERTEX_BUFFER_SIZE);
 
-		data->VertexBuffer->SetLayout({
+		data->VB->SetLayout({
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float2, "a_TexCoord" },
 			{ ShaderDataType::Float4, "a_Color" },
 		}, sizeof(VertexData));
-		data->VertexArray->AddVertexBuffer(data->VertexBuffer);
+		data->VA->AddVertexBuffer(data->VB);
 
-		data->VertexArray->SetIndexBuffer(s_Data->IndexBuffer);
+		data->VA->SetIndexBuffer(s_Data->IB);
 
-		data->VertexArray->Unbind();
+		data->VA->Unbind();
 
 		return data;
 	}
@@ -105,7 +105,7 @@ namespace Hazel {
 			offset += 4;
 		}
 
-		s_Data->IndexBuffer = IndexBuffer::Create(indices, sizeof(indices));
+		s_Data->IB = IndexBuffer::Create(indices, sizeof(indices));
 
 		s_Data->TextureShader = Shader::Create("assets/shaders/Texture.glsl");
 
@@ -132,24 +132,24 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		data->VertexBuffer->Bind();
-		data->VertexArray->Bind();
+		data->VB->Bind();
+		data->VA->Bind();
 
 #if 0
 		data->VertexBuffer->SetData(data->Vertices, data->VertexCount * sizeof(VertexData));
 #else
-		VertexData* glData = reinterpret_cast<VertexData*>(data->VertexBuffer->Map(MapAccess::WRITE_ONLY));
+		VertexData* glData = reinterpret_cast<VertexData*>(data->VB->Map(MapAccess::WRITE_ONLY));
 		{
 			HZ_PROFILE_SCOPE("Copy vertex data");
 			std::copy(data->Vertices, data->Vertices + data->VertexCount, glData);
 		}
-		data->VertexBuffer->Unmap(glData);
+		data->VB->Unmap(glData);
 #endif
 
 		data->Settings.Texture->Bind();
 		RenderCommand::ApplyBlendParameters(data->Settings.BlendSettings);
 
-		RenderCommand::DrawIndexed(data->VertexArray, data->IndexCount);
+		RenderCommand::DrawIndexed(data->VA, data->IndexCount);
 		data->IndexCount = 0;
 		data->VertexCount = 0;
 	}

@@ -50,6 +50,11 @@ workspace "Hazel"
 			"_GLFW_X11",
 		}
 
+		libdirs
+		{
+			"/usr/lib/x86_64-linux-gnu/",
+		}
+
 
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
@@ -98,6 +103,8 @@ include "Hazel/vendor/FastNoiseSIMD"
 include "Hazel/vendor/TUtil/TUtil_project.lua"
 include "Hazel/vendor/Box2D/Box2D_project.lua"
 
+
+-- ##########============================== HAZEL ==============================##########
 
 project "Hazel"
 	location "Hazel"
@@ -182,6 +189,8 @@ project "Hazel"
 		}
 
 
+-- ##########============================== SANDBOX ==============================##########
+
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
@@ -220,16 +229,16 @@ project "Sandbox"
 
 	links 
 	{
-		"Hazel",
 		"TUtil",
 		"ImGui",
 		"FastNoiseSIMD",
 		"Box2D",
 		"freeimage",
 		"glad",
-		"glfw",
 		"zlib",
 		"LabSound",
+		"glfw",
+		"Hazel",
 	}
 
 	defines
@@ -238,13 +247,16 @@ project "Sandbox"
 		"FREEIMAGE_LIB"
 	}
 
-	filter "system:windows"
-		systemversion "latest"
+	libdirs
+	{
+		"Hazel/vendor/Vulkan/lib",
+	}
 
-		libdirs
-		{
-			"Hazel/vendor/Vulkan/lib",
-		}
+
+-- ============================== SANDBOX WINDOWS ==============================
+
+
+	filter "system:windows"
 
 		links
 		{
@@ -258,47 +270,34 @@ project "Sandbox"
 			"winmm.lib",
 		}
 
-		filter "configurations:Debug"
-			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Debug" }
-			
-			links
-			{
-				"LabSound_d.lib",
-				"libnyquist_d.lib",
-				"libopus_d.lib",
-				"libwavpack_d.lib",
-			}
-
-		filter "configurations:Release"
-			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
-
-			links
-			{
-				"LabSound.lib",
-				"libnyquist.lib",
-				"libopus.lib",
-				"libwavpack.lib",
-			}
-
-		filter "configurations:Dist"
-			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
-
-			links
-			{
-				"LabSound.lib",
-				"libnyquist.lib",
-				"libopus.lib",
-				"libwavpack.lib",
-			}
-
-
-	filter "system:linux"
+	filter { "system:windows", "configurations:Debug" }
+		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Debug" }
 		
-		libdirs
+		links
 		{
-			"Hazel/vendor/Vulkan/lib"
+			"LabSound_d.lib",
+			"libnyquist_d.lib",
+			"libopus_d.lib",
+			"libwavpack_d.lib",
 		}
 
+	filter { "system:windows", "configurations:Release or configurations:Dist" }
+		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
+
+		links
+		{
+			"LabSound.lib",
+			"libnyquist.lib",
+			"libopus.lib",
+			"libwavpack.lib",
+		}
+
+
+
+-- ============================== SANDBOX LINUX ==============================
+
+	filter "system:linux"
+	
 		links
 		{
 			"GL",
@@ -309,8 +308,33 @@ project "Sandbox"
 			"pthread",
 			"dl",
 			"vulkan",
+		}		
+
+	filter { "system:linux", "configurations:Debug" }
+		libdirs { "Hazel/vendor/LabSound/build/linux/Debug/bin" }
+		
+		links
+		{
+			"LabSound_d",
+			"libnyquist_d",
+			"libopus_d",
+			"libwavpack_d",
 		}
 
+	filter { "system:linux", "configurations:Release or configurations:Dist" }
+		libdirs { "Hazel/vendor/LabSound/build/linux/Release/bin" }
+
+		links
+		{
+			"LabSound",
+			"libnyquist",
+			"libopus",
+			"libwavpack",
+		}
+
+
+
+-- ##########============================== GAME DESIGN ==============================##########
 
 
 project "GameDesign"
@@ -345,7 +369,6 @@ project "GameDesign"
 
 	links
 	{
-		"Hazel",
 		"TUtil",
 		"ImGui",
 		"FastNoiseSIMD",
@@ -354,6 +377,7 @@ project "GameDesign"
 		"glad",
 		"glfw",
 		"zlib",
+		"Hazel",
 	}
 
 	defines
@@ -362,12 +386,15 @@ project "GameDesign"
 		"FREEIMAGE_LIB"
 	}
 
-	filter "system:windows"
+	libdirs
+	{
+		"Hazel/vendor/Vulkan/lib"
+	}
 
-		libdirs
-		{
-			"Hazel/vendor/Vulkan/lib",
-		}
+
+-- ============================== GAME DESIGN WINDOWS ==============================
+
+	filter "system:windows"
 
 		links
 		{
@@ -381,46 +408,33 @@ project "GameDesign"
 			"winmm.lib",
 		}
 
-		filter "configurations:Debug"
-			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Debug" }
-			
-			links
-			{
-				"LabSound_d.lib",
-				"libnyquist_d.lib",
-				"libopus_d.lib",
-				"libwavpack_d.lib",
-			}
+	filter { "system:windows", "configurations:Debug" }
+		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Debug" }
+		
+		links
+		{
+			"LabSound_d.lib",
+			"libnyquist_d.lib",
+			"libopus_d.lib",
+			"libwavpack_d.lib",
+		}
 
-		filter "configurations:Release"
-			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
+	filter { "system:windows", "configurations:Release or configurations:Dist" }
+		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
 
-			links
-			{
-				"LabSound.lib",
-				"libnyquist.lib",
-				"libopus.lib",
-				"libwavpack.lib",
-			}
+		links
+		{
+			"LabSound.lib",
+			"libnyquist.lib",
+			"libopus.lib",
+			"libwavpack.lib",
+		}
 
-		filter "configurations:Dist"
-			libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
 
-			links
-			{
-				"LabSound.lib",
-				"libnyquist.lib",
-				"libopus.lib",
-				"libwavpack.lib",
-			}
+
+-- ============================== GAME DESIGN LINUX ==============================
 
 	filter "system:linux"
-	
-		libdirs
-		{
-			"Hazel/vendor/Vulkan/lib"
-		}
-	
 	
 		links
 		{
@@ -433,6 +447,31 @@ project "GameDesign"
 			"dl",
 			"vulkan",
 		}		
+
+	filter { "system:linux", "configurations:Debug" }
+		libdirs { "Hazel/vendor/LabSound/build/linux/Debug/bin" }
+		
+		links
+		{
+			"LabSound_d",
+			"libnyquist_d",
+			"libopus_d",
+			"libwavpack_d",
+		}
+
+	filter { "system:linux", "configurations:Release or configurations:Dist" }
+		libdirs { "Hazel/vendor/LabSound/build/linux/Release/bin" }
+
+		links
+		{
+			"LabSound",
+			"libnyquist",
+			"libopus",
+			"libwavpack",
+		}
+
+
+-- ##########============================== OTHER ==============================##########
 
 --[[
 project "ImGuiTest"

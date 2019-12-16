@@ -27,7 +27,7 @@ namespace Hazel {
 				Renderer2DRenderable renderable;
 				renderable.Position = vec3(particle.Position, -0.1f);
 				renderable.Size = particle.Size;
-				const ParticleDef& particleDef = *m_Def->ParticleDef.get();
+				const ParticleDef& particleDef = *m_Def->Def.get();
 				float ageRatio = particle.GetAgeRatio();
 				int index = static_cast<int>(particleDef.Animation->m_Frames.size() * ageRatio);
 
@@ -101,7 +101,7 @@ namespace Hazel {
 
 		std::normal_distribution<float> size(m_Def->SizeMean, m_Def->SizeStdDev);
 		float height = size(rng);
-		particle.Size = { height * m_Def->ParticleDef->Animation->AspectRatio(), height };
+		particle.Size = { height * m_Def->Def->Animation->AspectRatio(), height };
 
 		std::normal_distribution<float> lifetime(m_Def->LifetimeMean, m_Def->LifetimeStdDev);
 		particle.Lifetime = lifetime(rng);

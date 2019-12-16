@@ -2,7 +2,6 @@
 #include "Animation2D.h"
 
 #include "Hazel/Core/Engine.h"
-#include <xaudio2.h>
 
 namespace Hazel {
 
