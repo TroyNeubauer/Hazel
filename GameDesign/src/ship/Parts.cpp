@@ -11,6 +11,7 @@ Hazel::Ref<PartDef> Parts::MK1RightWing = nullptr;
 Hazel::Ref<PartDef> Parts::MK2Capsule = nullptr;
 Hazel::Ref<EnginePartDef> Parts::MK1Engine = nullptr;
 Hazel::Ref<EnginePartDef> Parts::MK2Engine = nullptr;
+Hazel::Ref<DecouplerPartDef> Parts::Decoupler1 = nullptr;
 
 std::vector<Hazel::Ref<PartDef>> Parts::AllParts;
 
@@ -32,19 +33,28 @@ void Parts::Init()
 
 	MK1Capsule->Friction = 0.1f;
 	MK1Capsule->Resources.Maxes[ResourceType::FUEL] = 1000;
+	MK1Capsule->Connections.Bottom = true;
 
 	MK2Capsule->Resources.Maxes[ResourceType::FUEL] = 200;
+	MK2Capsule->Connections.Bottom = true;
+	MK2Capsule->Connections.Top = true;
 
 	Parts::MK1Engine.reset(new EnginePartDef{ "MK1 Engine", 10.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 16, 0 }, { 14, 7 }), 2.5f, 20.0f });
 	MK1Engine->ISP = 305.0f;
 	MK1Engine->MassBurn = 10.0f;
 	MK1Engine->Friction = 0.1f;
+	MK1Engine->Connections.Top = true;
 	
-	Parts::MK2Engine.reset(new EnginePartDef{ "MK1 Engine", 10.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 16, 0 }, { 14, 7 }), 5.0f, 20.0f });
+	Parts::MK2Engine.reset(new EnginePartDef{ "MK2 Engine", 10.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 16, 0 }, { 14, 7 }), 5.0f, 20.0f });
 	MK2Engine->ISP = 421.0f;
 	MK2Engine->MassBurn = 30.5f;
 	MK2Engine->Friction = 0.1f;
+	MK2Engine->Connections.Top = true;
 
+	Parts::Decoupler1.reset(new DecouplerPartDef{"Decoupler 1", 40, Hazel::AnimationDef2D::Create(RocketComponents, {48,  0}, {16, 0}), 11.0f / 3});
+	Decoupler1->ReleaseForce = 10.0f;
+	Decoupler1->Connections.Top = true;
+	Decoupler1->Connections.Bottom = true;
 
 	Hazel::Ref<Hazel::ParticleDef> fireParticle = Hazel::R(new Hazel::ParticleDef());
 	fireParticle->Animation = fireParticleAnimation;
@@ -70,7 +80,7 @@ void Parts::Init()
 	AllParts.push_back(MK1RightWing);
 	AllParts.push_back(MK1Engine);
 	AllParts.push_back(MK2Engine);
-
+	AllParts.push_back(Decoupler1);
 
 }
 

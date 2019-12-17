@@ -3,8 +3,6 @@
 #include "layers/SandboxLayer.h"
 #include "layers/WorldLayer.h"
 #include "layers/EditorLayer.h"
-#include "ship/Parts.h"
-#include "ship/Ships.h"
 
 #include <Hazel.h>
 #include <LabSound/LabSound.h>
@@ -15,6 +13,8 @@ Hazel::Ref<Hazel::AudioSource> sound;
 
 GameDesign::GameDesign()
 {
+	s_Instance = this;
+
 	Parts::Init();
 	Ships::Init();
 	PushOverlay(new Hazel::DebugLayer());

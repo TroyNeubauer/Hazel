@@ -133,6 +133,7 @@ public:
 	static Hazel::Ref<PartDef> MK1Capsule;
 	static Hazel::Ref<PartDef> MK1LeftWing;
 	static Hazel::Ref<PartDef> MK1RightWing;
+	static Hazel::Ref<DecouplerPartDef> Decoupler1;
 
 	static Hazel::Ref<PartDef> MK2Capsule;
 	static Hazel::Ref<EnginePartDef> MK1Engine, MK2Engine;

@@ -40,6 +40,11 @@ struct Resources
 	ResourceDef& Def;
 };
 
+struct PartConnections
+{
+	unsigned int Top : 1, Right : 1, Bottom : 1, Left : 1;
+};
+
 struct PartDef
 {
 	
@@ -64,9 +69,10 @@ public:
 	//Offset for where the sprite should be rendered relative to the center of the hitbox
 	glm::vec2 SpriteOffset, SpriteSize;
 
-
 	Hazel::Ref<Hazel::AnimationDef2D> Animation;
 	ResourceDef Resources;
+
+	PartConnections Connections;
 };
 
 struct EditorPart
@@ -86,7 +92,7 @@ struct EditorPart
 	Hazel::Ref<EditorPart> m_ParentPart;
 
 public:
-	void Render(const Hazel::Camera& camera);
+	void Render(const Hazel::Camera& camera, uint32_t color = 0xFFFFFFFF);
 	inline bool IsRoot() const { return m_ParentPart.get() == nullptr; }
 
 	glm::vec2 GetTotalOffset(float initalRotation = 0.0f) const;

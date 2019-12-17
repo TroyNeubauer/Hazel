@@ -39,6 +39,10 @@ PartDef::PartDef(const char* name, float dryMass, const Hazel::Ref<Hazel::Animat
 	this->HitboxSize = hbSizePx * pxToM;
 	this->SpriteSize = spriteSizePx * pxToM;
 	this->SpriteOffset = -hbCenter * pxToM;
+	Connections.Top = false;
+	Connections.Right = false;
+	Connections.Bottom = false;
+	Connections.Left = false;
 
 }
 
@@ -47,7 +51,7 @@ Part* PartDef::CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>
 	return new Part(world, ship, editorPart);
 }
 
-void EditorPart::Render(const Hazel::Camera& camera)
+void EditorPart::Render(const Hazel::Camera& camera, uint32_t color)
 {
 
 	std::pair<glm::vec2, glm::vec2> frame = m_Def->Animation->GetFirstFrame();
@@ -60,6 +64,7 @@ void EditorPart::Render(const Hazel::Camera& camera)
 	renderable.Texture = m_Def->Animation->m_Texture;
 	renderable.TextureTop = frame.first;
 	renderable.TextureBottom = frame.second;
+	renderable.Color = color;
 
 	Hazel::Renderer2D::DrawQuad(renderable);
 }

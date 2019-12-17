@@ -15,7 +15,7 @@ public:
 	virtual void OnUpdate(Hazel::Timestep) override;
 
 	virtual void OnEvent(Hazel::Event* event) override;
-	Hazel::Ref<EditorPart> Raycast(glm::ivec2 cursorPos);
+	Hazel::Ref<EditorPart> Raycast();
 
 	bool OnMouseMoved(Hazel::MouseMovedEvent* event);
 	bool OnMousePressed(Hazel::MouseButtonPressedEvent* event);
@@ -27,7 +27,8 @@ public:
 	virtual ~EditorLayer() override;
 
 private:
-	Hazel::Ref<EditorPart> RenderPartsList();
+	void RenderPartsList();
+	Hazel::Ref<EditorPart> FindOverlap();
 
 private:
 	Hazel::Ref<EditorShip> m_ActiveShip;
@@ -37,5 +38,6 @@ private:
 	Hazel::Ref<PartDef> m_HoveredShop;
 	Hazel::Ref<EditorPart> m_HoveredReal;
 	Hazel::Ref<EditorPart> m_DraggedReal;
+	Hazel::Ref<EditorPart> m_GohstPlace, m_GohstParent;
 
 };
