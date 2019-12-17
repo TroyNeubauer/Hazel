@@ -34,10 +34,14 @@ void Parts::Init()
 	MK1Capsule->Friction = 0.1f;
 	MK1Capsule->Resources.Maxes[ResourceType::FUEL] = 1000;
 	MK1Capsule->Connections.Bottom = true;
+	MK1Capsule->Connections.Left = true;
+	MK1Capsule->Connections.Right = true;
 
 	MK2Capsule->Resources.Maxes[ResourceType::FUEL] = 200;
 	MK2Capsule->Connections.Bottom = true;
 	MK2Capsule->Connections.Top = true;
+	MK2Capsule->Connections.Left = true;
+	MK2Capsule->Connections.Right = true;
 
 	Parts::MK1Engine.reset(new EnginePartDef{ "MK1 Engine", 10.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 16, 0 }, { 14, 7 }), 2.5f, 20.0f });
 	MK1Engine->ISP = 305.0f;
@@ -51,7 +55,7 @@ void Parts::Init()
 	MK2Engine->Friction = 0.1f;
 	MK2Engine->Connections.Top = true;
 
-	Parts::Decoupler1.reset(new DecouplerPartDef{"Decoupler 1", 40, Hazel::AnimationDef2D::Create(RocketComponents, {48,  0}, {16, 0}), 11.0f / 3});
+	Parts::Decoupler1.reset(new DecouplerPartDef{"Decoupler 1", 40, Hazel::AnimationDef2D::Create(RocketComponents, {48,  0}, {16, 3}), 11.0f / 3});
 	Decoupler1->ReleaseForce = 10.0f;
 	Decoupler1->Connections.Top = true;
 	Decoupler1->Connections.Bottom = true;
@@ -148,7 +152,7 @@ void EnginePart::Render(const Hazel::Camera& camera, Ship& ship)
 {
 	float shipRot = ship.GetRotation();
 	float rotation = shipRot + GetTotalRotation();
-	Hazel::Ref<PartDef>& def = GetEditorPart()->m_Def;
+	Hazel::Ref<PartDef>& def = GetEditorPart()->Def;
 	Hazel::Renderer2D::Renderable renderable;
 
 	renderable.Position = { ship.GetPosition() + GetTotalOffset(shipRot) + glm::rotate(def->SpriteOffset, rotation), 0.0f };

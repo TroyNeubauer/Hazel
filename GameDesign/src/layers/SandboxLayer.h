@@ -6,7 +6,7 @@
 class SandboxLayer : public Hazel::Layer
 {
 public:
-	inline SandboxLayer(World* world) : Hazel::Layer("Sandbox Layer") { m_World.reset(world); }
+	SandboxLayer();
 
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
@@ -25,8 +25,15 @@ public:
 
 private:
 	Hazel::Scope<World> m_World;
+	Hazel::Camera2D m_Camera;
 	Body* m_SelectedBody = nullptr;
 	Body* m_DraggedBody = nullptr; bool m_MouseDragged = false;
 	bool m_Paused = false;
 	int m_Steps = -1;
+};
+
+class SandboxCameraController : public Hazel::CameraController2D
+{
+	friend class Hazel::Camera2D;
+	virtual void Update(Hazel::Timestep ts, Hazel::Camera2D& camera) override;
 };

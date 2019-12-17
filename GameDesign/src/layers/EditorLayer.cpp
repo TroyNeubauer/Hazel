@@ -8,7 +8,7 @@
 
 EditorLayer::EditorLayer() : m_Camera(nullptr), m_UICamera(nullptr), m_ActiveShip(GameDesign::GetInstance().CreateShip())
 {
-	m_Camera.SetZoom(100.0f);
+	m_Camera.SetZoom(30.0f);
 	m_UICamera.SetZoom(1.0f);
 
 	m_Camera.SetPosition({ 0.0f, 0.0f });
@@ -56,14 +56,14 @@ Hazel::Ref<EditorPart> EditorLayer::Raycast()
 	glm::vec2 worldPos = m_Camera.ToWorldCoordinates(Hazel::Input::GetMousePosition());
 	for (auto& part : m_ActiveShip->GetParts())
 	{
-		if (Intersects(worldPos, part->GetTotalOffset(), part->m_Def->HitboxSize, part->GetTotalRotation()))
+		if (Intersects(worldPos, part->GetTotalOffset(), part->Def->HitboxSize, part->GetTotalRotation()))
 		{
 			return part;
 		}
 	}
 	for (auto& part : m_DetachedParts)
 	{
-		if (Intersects(worldPos, part->GetTotalOffset(), part->m_Def->HitboxSize, part->GetTotalRotation()))
+		if (Intersects(worldPos, part->GetTotalOffset(), part->Def->HitboxSize, part->GetTotalRotation()))
 		{
 			return part;
 		}
@@ -76,7 +76,94 @@ bool EditorLayer::OnMouseMoved(Hazel::MouseMovedEvent* event)
 {
 	if (m_HeldPart)
 	{
-		m_HeldPart->m_Offset += m_Camera.GetWorldDelta(Hazel::Input::GetMouseDelta());
+		glm::vec2 heldPos = m_HeldPart->GetTotalOffset();
+		glm::vec2& heldHitbox = m_HeldPart->Def->HitboxSize;
+		m_HeldPart->m_Offset = m_Camera.ToWorldCoordinates(glm::ivec2(Hazel::Input::GetMousePosition()));
+		//Check for parts to connect to
+
+		int bestSide = -1;
+		float bestDistance;
+		Hazel::Ref<EditorPart> bestPart;
+		for (auto& part : m_ActiveShip->GetParts())
+		{
+			glm::vec2 partPos = part->GetTotalOffset();
+			float partRot = part->GetTotalRotation();
+			glm::vec2& partHitbox = part->Def->HitboxSize;
+			for (int i = 0; i < 4; i++)
+			{
+				glm::vec2 partCmp = partPos, heldCmp = heldPos;
+				if (i == TOP_INDEX)
+				{
+					partCmp += glm::rotate(glm::vec2(0.0f, partHitbox.y / 2.0f), partRot);
+					heldCmp.y -= heldHitbox.y / 2.0f;
+					if (!part->Def->Connections[TOP_INDEX] || !m_HeldPart->Def->Connections[BOTTOM_INDEX]) continue;
+				}
+				else if (i == RIGHT_INDEX)
+				{
+					partCmp += glm::rotate(glm::vec2(partHitbox.x / 2.0f, 0.0f), partRot);
+					heldCmp.x -= heldHitbox.x / 2.0f;
+					if (!part->Def->Connections[RIGHT_INDEX] || !m_HeldPart->Def->Connections[LEFT_INDEX]) continue;
+				}
+				else if (i == BOTTOM_INDEX)
+				{
+					partCmp -= glm::rotate(glm::vec2(0.0f, partHitbox.y / 2.0f), partRot);
+					heldCmp.y += heldHitbox.y / 2.0f;
+					if (!part->Def->Connections[BOTTOM_INDEX] || !m_HeldPart->Def->Connections[TOP_INDEX]) continue;
+				}
+				else if (i == LEFT_INDEX)
+				{
+					partCmp -= glm::rotate(glm::vec2(partHitbox.x / 2.0f, 0.0f), partRot);
+					heldCmp.x += heldHitbox.x / 2.0f;
+					if (!part->Def->Connections[LEFT_INDEX] || !m_HeldPart->Def->Connections[RIGHT_INDEX]) continue;
+				}
+				float distance = glm::length(heldCmp - partCmp);
+				if (bestSide == -1 || distance < bestDistance)
+				{
+					bestSide = i;
+					bestDistance = distance;
+					bestPart = part;
+				}
+			}
+			
+		}
+		if (bestSide != -1 && bestDistance < glm::length(heldHitbox / 2.0f))
+		{
+			m_GohstPlace = Hazel::R(new EditorPart(m_HeldPart));
+			m_GohstParent = bestPart;
+			glm::vec2 pos = m_GohstParent->GetTotalOffset();
+			float parentRot = m_GohstParent->GetTotalRotation();
+			switch (bestSide)
+			{
+				case TOP_INDEX:	
+					pos += glm::rotate(glm::vec2(0.0f, m_GohstParent->Def->HitboxSize.y / 2.0f), parentRot);
+					pos += glm::rotate(glm::vec2(0.0f, m_GohstPlace->Def->HitboxSize.y / 2.0f), parentRot);
+					break;
+
+				case RIGHT_INDEX:
+					pos += glm::rotate(glm::vec2(m_GohstParent->Def->HitboxSize.x / 2.0f, 0.0f), parentRot);
+					pos += glm::rotate(glm::vec2(m_GohstPlace->Def->HitboxSize.x / 2.0f, 0.0f), parentRot);
+					break;
+
+				case BOTTOM_INDEX:
+					pos += glm::rotate(glm::vec2(0.0f, -m_GohstParent->Def->HitboxSize.y / 2.0f), parentRot);
+					pos += glm::rotate(glm::vec2(0.0f, -m_GohstPlace->Def->HitboxSize.y / 2.0f), parentRot);
+					break;
+
+				case LEFT_INDEX:
+					pos += glm::rotate(glm::vec2(-m_GohstParent->Def->HitboxSize.x / 2.0f, 0.0f), parentRot);
+					pos += glm::rotate(glm::vec2(-m_GohstPlace->Def->HitboxSize.x / 2.0f, 0.0f), parentRot);
+					break;
+			}
+			m_GohstSide = bestSide;
+			m_GohstPlace->m_Offset = pos;
+		}
+		else
+		{
+			//The old gohst isnt good enough
+			m_GohstPlace = nullptr;
+			m_GohstParent = nullptr;
+		}
+
 	}
 	else
 	{
@@ -96,11 +183,20 @@ bool EditorLayer::OnMousePressed(Hazel::MouseButtonPressedEvent* event)
 			//Delete the part they are holding
 			m_HeldPart = nullptr;
 		}
+		else if (m_ActiveShip->GetParts().size() == 0)
+		{
+			//Add the root part then leave
+
+			auto& part = m_ActiveShip->GetParts().emplace_back(new EditorPart());
+			part->Def = m_HoveredShop;
+			part->m_Offset = { 0.0f, 0.0f };
+			return true;
+		}
 		else
 		{
 			//Pick up a new part
 			m_HeldPart = Hazel::R(new EditorPart());
-			m_HeldPart->m_Def = m_HoveredShop;
+			m_HeldPart->Def = m_HoveredShop;
 			m_HeldPart->m_Offset = m_Camera.ToWorldCoordinates(glm::ivec2(Hazel::Input::GetMousePosition()));
 		}
 		return true;		
@@ -113,7 +209,7 @@ bool EditorLayer::OnMousePressed(Hazel::MouseButtonPressedEvent* event)
 		if (m_GohstPlace)
 		{
 			m_GohstPlace->m_Offset = m_GohstPlace->m_Offset - m_GohstParent->m_Offset;
-			m_GohstPlace->m_ParentPart = m_GohstParent;
+			m_GohstPlace->ParentPart = m_GohstParent;
 			m_ActiveShip->GetParts().push_back(m_GohstPlace);
 
 			//Reset state
@@ -140,7 +236,14 @@ bool EditorLayer::OnMouseReleased(Hazel::MouseButtonReleasedEvent* event)
 	if (m_HeldPart)
 	{
 		//Attempt to place the part on the body
+		m_ActiveShip->GetParts().emplace_back(m_GohstPlace);
+		m_GohstPlace->ParentPart = m_GohstParent;
+		m_GohstPlace->m_Offset = m_GohstPlace->m_Offset - m_GohstParent->m_Offset;
 
+		m_GohstParent->Connections.
+
+		m_GohstPlace = nullptr;
+		m_GohstParent = nullptr;
 	}
 
 	m_HeldPart = nullptr;
@@ -186,32 +289,13 @@ void EditorLayer::Render()
 	if (m_GohstPlace)
 	{
 		m_GohstPlace->Render(m_Camera, 0xFFFFFFAA);
+		m_HeldPart->Render(m_Camera, 0xFFFFFF66);
 	}
 	else if (m_HeldPart)
 	{
 		m_HeldPart->Render(m_Camera);
 	}
 	Hazel::Renderer2D::EndScene();
-}
-
-
-static bool IsOverlapImpl(Hazel::Ref<EditorPart>& part, const Hazel::Camera2D& camera)
-{
-	glm::vec2 pos = part->GetTotalOffset();
-	glm::vec2 pointPos = camera.ToWorldCoordinates(glm::ivec2(Hazel::Input::GetMousePosition()));
-	Intersects(pos, pos, part->m_Def->HitboxSize, part->GetTotalRotation());
-}
-
-Hazel::Ref<EditorPart> EditorLayer::FindOverlap()
-{
-	for (auto& part : m_ActiveShip->GetParts())
-	{
-		part->Render(m_Camera);
-	}
-	for (auto& part : m_DetachedParts)
-	{
-		part->Render(m_Camera);
-	}
 }
 
 
