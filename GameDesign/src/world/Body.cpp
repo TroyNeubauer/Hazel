@@ -1,5 +1,11 @@
 #include "Body.h"
 #include "Hazel.h"
+#include "Helper.h"
+
+void Body::SetPosition(glm::vec2 pos)
+{
+	m_Body->SetTransform(v2b2(pos), 0.0f);
+}
 
 glm::vec2 Body::GetPosition() const
 {
@@ -15,6 +21,11 @@ float Body::GetRotation() const
 void Body::SetRotation(float radians)
 {
 	m_Body->SetTransform(m_Body->GetWorldCenter(), radians);
+}
+
+float Body::GetMass() const
+{
+	return m_Body->GetMass();
 }
 
 glm::vec2 Body::GetLocalCenterOfMass() const

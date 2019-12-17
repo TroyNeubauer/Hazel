@@ -35,11 +35,13 @@ public:
 	World();
 
 	struct Constants {
-		static double G;
+		const static double G;
 	};
+	static float GetAccelerationDueToGravity(float r, float mass);
 
 	void Update(Hazel::Timestep ts);
 	void Render();
+	void RenderImpl(bool fullRender, const Hazel::Camera2D& camera);
 
 	Ship& AddShip(const Hazel::Ref<EditorShip>& partDef, glm::vec2 pos, float rot = 0.0f);
 	void AddShip(Ship* ship);//Takes ownership
@@ -70,10 +72,12 @@ public:
 private:
 	std::vector<Hazel::Scope<Ship>> m_Ships;
 	Hazel::Scope<b2World> m_World;
-	Hazel::Camera2D m_Camera;
+	Hazel::Camera2D m_Camera, m_Camera2;
 	std::function<void(Body*)> m_OnRemovedFunction;
 
 	Hazel::Scope<Hazel::B2D_DebugDraw> m_DebugDraw;
+	Hazel::Ref<Hazel::Shader> m_PlanetShader;
+	Hazel::Ref<Hazel::FBO> m_MapFBO, m_DefaultFBO;
 };
 
 class WorldCameraController : public Hazel::CameraController2D

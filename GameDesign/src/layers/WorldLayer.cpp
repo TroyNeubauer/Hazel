@@ -37,7 +37,7 @@ static bool SliderDouble(const char* label, double* v, double v_min, double v_ma
 
 void WorldLayer::OnImGuiRender()
 {
-	SliderDouble("G", &World::Constants::G, -0.01f, 10.0f, "%.5f", 1.0f);
+
 }
 
 

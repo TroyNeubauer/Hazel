@@ -23,6 +23,8 @@ namespace Hazel {
 	private:
 		GLuint m_ID;
 		TextureBuilder m_Builder;
+
+		friend class OpenGL_FBO;
 	};
 
 }

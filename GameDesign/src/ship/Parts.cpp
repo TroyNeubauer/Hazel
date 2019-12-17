@@ -10,29 +10,43 @@ Hazel::Ref<PartDef> Parts::MK1LeftWing = nullptr;
 Hazel::Ref<PartDef> Parts::MK1RightWing = nullptr;
 Hazel::Ref<PartDef> Parts::MK2Capsule = nullptr;
 Hazel::Ref<EnginePartDef> Parts::MK1Engine = nullptr;
+Hazel::Ref<EnginePartDef> Parts::MK2Engine = nullptr;
+
 
 static Hazel::TextureBuilder builder = Hazel::TextureBuilder::Default().NearestFiltering().ClampEdges();
 static Hazel::Ref<Hazel::ParticleEmitterDef> engineEmitter;
 
-static const float BASE_ENGINE_PPS = 20000.0f;
+static const float BASE_ENGINE_PPS = 2000.0f;
 
 void Parts::Init()
 {
 	Hazel::Ref<Hazel::Texture2D> RocketComponents = Hazel::Texture2D::Load("assets/textures/RocketComponents.png", builder);
 	Hazel::Ref<Hazel::AnimationDef2D> fireParticleAnimation = Hazel::AnimationDef2D::Create(RocketComponents, 0.25f, { 16, 16 }, { {0, 2}, {1, 2}, {2, 2}, {3, 2}, });
 
-	Parts::MK1Capsule.reset(new PartDef{ "MK1 Capsule", 40.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents,	{32,  0}, {13, 30}), 11.0f / 3, {-1, 0}, {1, 0} });
-	Parts::MK2Capsule.reset(new PartDef{ "MK2 Capsule", 20.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents,	{ 2, 16}, {14, 16}), 2.0f });
-	Parts::MK1LeftWing.reset(new PartDef{ "Left Wing", 1.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents,	{16, 16}, { 7, 11}), 7.0f / 3 });
-	Parts::MK1RightWing.reset(new PartDef{ "Right Wing", 1.0f, 15.0f, Hazel::AnimationDef2D::Create(RocketComponents,	{23, 16}, { 7, 11}), 7.0f / 3 });
+	Parts::MK1Capsule.reset(new PartDef{ "MK1 Capsule", 400, Hazel::AnimationDef2D::Create(RocketComponents,	{32,  0}, {13, 30}), 11.0f / 3, 10.0f, {-1, 0}, {1, 0} });
+	Parts::MK2Capsule.reset(new PartDef{ "MK2 Capsule", 340, Hazel::AnimationDef2D::Create(RocketComponents,	{ 2, 16}, {14, 16}), 2.0f });
+	Parts::MK1LeftWing.reset(new PartDef{ "Left Wing",   15, Hazel::AnimationDef2D::Create(RocketComponents,	{16, 16}, { 7, 11}), 7.0f / 3 });
+	Parts::MK1RightWing.reset(new PartDef{ "Right Wing", 15, Hazel::AnimationDef2D::Create(RocketComponents,	{23, 16}, { 7, 11}), 7.0f / 3 });
 
-	Parts::MK1Engine.reset(new EnginePartDef{ "MK1 Engine", 20.0f, 10.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 16, 0 }, { 14, 7 }), 2.5f});
-	MK1Engine->ISP = 100.0f;
-	MK1Engine->MassBurn = 0.1f;
+	MK1Capsule->Friction = 0.1f;
+	MK1Capsule->Resources.Maxes[ResourceType::FUEL] = 1000;
+
+	MK2Capsule->Resources.Maxes[ResourceType::FUEL] = 200;
+
+	Parts::MK1Engine.reset(new EnginePartDef{ "MK1 Engine", 10.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 16, 0 }, { 14, 7 }), 2.5f, 20.0f });
+	MK1Engine->ISP = 305.0f;
+	MK1Engine->MassBurn = 10.0f;
+	MK1Engine->Friction = 0.1f;
+	
+	Parts::MK2Engine.reset(new EnginePartDef{ "MK1 Engine", 10.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 16, 0 }, { 14, 7 }), 5.0f, 20.0f });
+	MK2Engine->ISP = 421.0f;
+	MK2Engine->MassBurn = 30.5f;
+	MK2Engine->Friction = 0.1f;
+
 
 	Hazel::Ref<Hazel::ParticleDef> fireParticle = Hazel::R(new Hazel::ParticleDef());
 	fireParticle->Animation = fireParticleAnimation;
-	fireParticle->AlphaCurve = { {0.0f, 1.0f}, {0.2f, 0.4f},{1.0f, 0.0f} };
+	fireParticle->AlphaCurve = { {0.0f, 1.0f}, {0.2f, 0.9f},{1.0f, 0.0f} };
 	fireParticle->AlphaCurve.SetInterpMethod(TUtil::Math::InterpolationMethod::LINEAR);
 
 	engineEmitter.reset(new Hazel::ParticleEmitterDef(fireParticle));
@@ -45,7 +59,7 @@ void Parts::Init()
 	engineEmitter->IVAngleErrorStdDev = 10.0f;
 	engineEmitter->IVErrorPercentMean = 0.0f;
 	engineEmitter->IvErrorPercentStdDev = 0.1f;
-	engineEmitter->SizeMean = MK1Engine->HitboxSize.x / 2.0f;
+	engineEmitter->SizeMean = MK1Engine->HitboxSize.x;
 	engineEmitter->SizeStdDev = MK1Engine->HitboxSize.x / 20.0f;
 
 
@@ -54,11 +68,40 @@ void Parts::Init()
 void EnginePart::Update(Hazel::Timestep ts, World& world, Ship& ship)
 {
 	Part::Update(ts, world, ship);
-	m_Emitter.SetPPS(m_Throttle * BASE_ENGINE_PPS);
-	float thrust = GetThrust();
 	glm::vec2 partPosition = GetTotalOffset(ship.GetRotation()) + ship.GetPosition();
-	if (thrust > 0.0f)
+	if (m_Throttle > 0.0f)
 	{
+		int partCount = FillInPartsUntil(this, [](const Part* part)
+		{
+			return dynamic_cast<const DecouplerPart*>(part) == nullptr;//Get parts up to the next decoupler
+		});
+
+		float desiredMass = m_Throttle * GetPartDef()->MassBurn * ts.Seconds();
+		float burnedMass = 0.0f;
+		for (int i = 0; i < partCount && desiredMass > 0.0000001f; i++)
+		{
+			Part* part = s_TempParts[i];
+			auto& resources = part->m_Resources.Values;
+			auto& it = resources.find(ResourceType::FUEL);
+			if (it != resources.end())
+			{
+				float& fuelInTank = it->second;
+				float toTake = desiredMass;
+				if (fuelInTank < toTake)//We cannot take more than what the fuel tank has
+				{
+					toTake = it->second;
+				}
+				fuelInTank -= toTake;
+				desiredMass -= toTake;
+				burnedMass += toTake;
+				part->RecalculateMass();
+			}
+		}
+
+		float thrust = GetThrust(burnedMass / ts.Seconds());
+		if (thrust > 0.0f) m_Emitter.SetPPS(m_Throttle * BASE_ENGINE_PPS);
+		else m_Emitter.Stop();
+
 		float rot = GetTotalRotation() + ship.GetRotation();
 		glm::vec2 force = { 0.0f, thrust };
 		force = glm::rotate(force, rot);
@@ -71,7 +114,7 @@ void EnginePart::Update(Hazel::Timestep ts, World& world, Ship& ship)
 		spwaner->A = GetBBVertex(BBVertices::BOTTOM_LEFT, ship);
 		spwaner->B = GetBBVertex(BBVertices::BOTTOM_RIGHT, ship);
 
-		m_Emitter.SetInitalVelocity(-exitVelocity * m_Throttle);
+		m_Emitter.SetInitalVelocity(-exitVelocity * m_Throttle / 2.0f);
 		m_Emitter.Start();
 	}
 	else
@@ -82,7 +125,7 @@ void EnginePart::Update(Hazel::Timestep ts, World& world, Ship& ship)
 	m_Emitter.Update(ts);
 }
 
-void EnginePart::Render(World& world, Ship& ship)
+void EnginePart::Render(const Hazel::Camera& camera, Ship& ship)
 {
 	float shipRot = ship.GetRotation();
 	float rotation = shipRot + GetTotalRotation();
@@ -97,7 +140,7 @@ void EnginePart::Render(World& world, Ship& ship)
 	Hazel::Renderer2D::DrawQuad(renderable);
 }
 
-void EnginePart::RenderParticles(World & world, Ship & ship)
+void EnginePart::RenderParticles(const Hazel::Camera& camera, Ship & ship)
 {
 	m_Emitter.Render();
 }
@@ -107,9 +150,9 @@ float EnginePart::GetExitVelocity()
 	return 9.81f * GetPartDef()->ISP;
 }
 
-float EnginePart::GetThrust()
+float EnginePart::GetThrust(float massLoss)
 {
-	return GetExitVelocity() * GetPartDef()->MassBurn * m_Throttle;
+	return GetExitVelocity() * massLoss;
 }
 
 void EnginePart::SetThrottle(float throttle)
@@ -131,5 +174,16 @@ EnginePart::EnginePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>& e
 
 }
 
+Ship* DecouplerPart::Release(World& world, Ship& ship)
+{
+	glm::vec2 thisPosition = GetTotalOffset(ship.GetRotation());
 
+	Ship* lower = ship.Split(world, this);
 
+	glm::vec2 force = { 0.0f, GetPartDef()->ReleaseForce / 2.0f };
+	force = glm::rotate(force, ship.GetRotation() + GetTotalRotation());
+	ship.GetPhsicsBody()->ApplyForce(v2b2(force), v2b2(thisPosition), true);
+
+	lower->GetPhsicsBody()->ApplyForce(v2b2(-force), {0.0f, 0.0f}, true);
+	return lower;
+}

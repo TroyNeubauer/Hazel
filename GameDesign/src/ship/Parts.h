@@ -43,7 +43,7 @@ struct EnginePartDef : public PartDef {
 };
 */
 
-#define SubPartDefConstructor(ClassName)inline ClassName(const char* name, float density, float maxGForce, const Hazel::Ref<Hazel::AnimationDef2D> animation, float hitboxWidth, glm::ivec2 topRightHBOffset = glm::ivec2(0, 0), glm::ivec2 bottomLeftHBOffset = glm::ivec2(0, 0)) : PartDef(name, density, maxGForce, animation, hitboxWidth, topRightHBOffset, bottomLeftHBOffset) {}
+#define SubPartDefConstructor(ClassName)inline ClassName(const char* name, float dryMass, const Hazel::Ref<Hazel::AnimationDef2D> animation, float hitboxWidth, float maxGForce = 15.0, glm::ivec2 topRightHBOffset = glm::ivec2(0, 0), glm::ivec2 bottomLeftHBOffset = glm::ivec2(0, 0)) : PartDef(name, dryMass, animation, hitboxWidth, maxGForce, topRightHBOffset, bottomLeftHBOffset) {}
 
 #define SubPartDefCopyConstructor(ClassName)ClassName(const ClassName& other) = default;
 
@@ -63,11 +63,11 @@ public:
 	SubPartGetPartDef(EnginePartDef);
 
 	virtual void Update(Hazel::Timestep ts, World& world, Ship& ship) override;
-	virtual void Render(World& world, Ship& ship) override;
-	virtual void RenderParticles(World& world, Ship& ship) override;
+	virtual void Render(const Hazel::Camera& camera, Ship& ship) override;
+	virtual void RenderParticles(const Hazel::Camera& camera, Ship& ship) override;
 
 	float GetExitVelocity();
-	float GetThrust();
+	float GetThrust(float massLoss);
 	void SetThrottle(float throttle);
 	void SetGimbal(float gimbal);
 
@@ -79,7 +79,17 @@ private:
 	float m_Throttle = 0.0f;
 	Hazel::ParticleEmitter m_Emitter;
 	float m_Gimbal = 0.0f;
+};
 
+struct DecouplerPartDef;
+
+class DecouplerPart : public Part {
+public:
+	SubPartConstructor(DecouplerPart)
+
+	Ship* Release(World& world, Ship& ship);
+
+	SubPartGetPartDef(DecouplerPartDef);
 
 };
 
@@ -100,6 +110,17 @@ struct EnginePartDef : public PartDef {
 
 };
 
+struct DecouplerPartDef : public PartDef {
+
+	SubPartDefConstructor(DecouplerPartDef)
+	SubPartDefCopyConstructor(DecouplerPartDef)
+	SubPartDefCreatePartMethod(DecouplerPart)
+
+	//How fast this engine burns mass (kg/s)
+	float ReleaseForce = 10.0f;
+
+};
+
 
 class Parts {
 private:
@@ -112,5 +133,5 @@ public:
 	static Hazel::Ref<PartDef> MK1RightWing;
 
 	static Hazel::Ref<PartDef> MK2Capsule;
-	static Hazel::Ref<EnginePartDef> MK1Engine;
+	static Hazel::Ref<EnginePartDef> MK1Engine, MK2Engine;
 };

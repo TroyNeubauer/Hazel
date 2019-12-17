@@ -18,7 +18,9 @@
 #include "Hazel/Renderer2D/Renderer2D.h"
 
 #include "Hazel/Renderer/Buffer.h"
+#include "Hazel/Renderer/FBO.h"
 #include "Hazel/Renderer/GraphicsAPI.h"
+#include "Hazel/Renderer/PostprocessingEffects.h"
 #include "Hazel/Renderer/RenderCommand.h"
 #include "Hazel/Renderer/Renderer.h"
 #include "Hazel/Renderer/RendererAPI.h"

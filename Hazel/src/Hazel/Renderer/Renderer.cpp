@@ -1,9 +1,9 @@
 #include "hzpch.h"
 #include "Renderer.h"
 
-#include "../Renderer2D/Renderer2D.h"
+#include "Hazel/Renderer2D/Renderer2D.h"
 #include "RenderCommand.h"
-
+#include "PostprocessingEffects.h"
 namespace Hazel {
 
 	Renderer::SceneData* Renderer::s_SceneData = new SceneData;
@@ -12,6 +12,7 @@ namespace Hazel {
 	{
 		Renderer2D::Init();
 		RenderCommand::Init();
+		PostprocessingEffects::Init();
 	}
 
 	void Renderer::BeginScene(Camera3D& camera, std::vector<Light>& lights)
@@ -41,6 +42,7 @@ namespace Hazel {
 	{
 		RenderCommand::Shutdown();
 		Renderer2D::Shutdown();
+		PostprocessingEffects::Shutdown();
 	}
 
 }

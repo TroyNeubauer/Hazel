@@ -33,6 +33,9 @@ namespace Hazel {
 
 	uint32_t SizeOfShaderDataType(ShaderDataType type);
 
+	template<typename T>
+	static ShaderDataType ToShaderDataType();
+
 	struct BufferElement {
 		std::string Name;
 		ShaderDataType Type;

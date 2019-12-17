@@ -36,6 +36,14 @@ namespace Hazel {
 			glCreateBuffers(1, &m_BufferID);
 			glBindBuffer(GetTarget(TYPE), m_BufferID);
 			SetData(data, bytes, GL_STATIC_DRAW);
+			if (TYPE == BufferType::INDEX)
+			{
+				BufferLayout layout = 
+				{
+					{ ToShaderDataType<T>(), "v_Indices" }
+				};
+				SetLayout(layout, sizeof(T));
+			}
 		}
 
 		OpenGLBuffer(uint64_t bytes)

@@ -92,6 +92,7 @@ namespace Hazel {
 			case TextureFormat::RED: return GL_RED;
 			case TextureFormat::RGB: return GL_RGB;
 			case TextureFormat::RGBA: return GL_RGBA;
+			case TextureFormat::DEPTH: return GL_DEPTH_COMPONENT;
 			default: HZ_CORE_ASSERT(false, "Invalid GPUTextureFormat"); return 0;
 		}
 	}

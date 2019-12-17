@@ -52,7 +52,7 @@ namespace Hazel {
 	public:
 		Camera2D(CameraController2D* controller) : m_Controller(controller) {}
 
-		inline void Update (Hazel::Timestep ts) { HZ_PROFILE_FUNCTION(); if (m_Controller) { m_Controller->Update(ts, *this); ForceUpdate(); } }
+		inline void Update (Hazel::Timestep ts) { HZ_PROFILE_FUNCTION(); if (m_Controller) { m_Controller->Update(ts, *this); } ForceUpdate();  }
 
 		inline const mat4& GetViewMatrix() const override { return m_ViewMatrix; }
 		inline const mat4& GetProjectionMatrix() const override { return m_ProjectionMatrix; }

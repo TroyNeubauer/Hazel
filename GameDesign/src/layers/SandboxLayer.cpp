@@ -4,6 +4,7 @@
 #include "ship/Parts.h"
 #include "ship/Ship.h"
 #include "ship/Ships.h"
+#include "world/Planet.h"
 
 #include <imgui.h>
 #include <random>
@@ -12,7 +13,7 @@ void SandboxLayer::OnAttach()
 {
     std::random_device rd;
     std::mt19937 mt(rd());
-	std::uniform_real_distribution<float> pos(-15.0f, 15.0f);
+	std::uniform_real_distribution<float> pos(0, 30.0f);
 
 	/*for (int i = 0; i < 2; i++)
 	{
@@ -209,7 +210,6 @@ void SandboxLayer::OnImGuiRender()
 
 	ImGui::Begin("World Settings");
 
-	SliderDouble("G", &World::Constants::G, -0.01f, 10.0f, "%.5f", 3.0f); Tooltip("G is a universal constant like PI that determines how much objects attract each other");
 	ImGui::Checkbox("Paused", &m_Paused); Tooltip("Pauses the simulation");
 	int count = 0;
 	for (b2Body* body = m_World->GetWorld()->GetBodyList(); body != nullptr; body = body->GetNext())
@@ -285,7 +285,7 @@ void SandboxLayer::OnImGuiRender()
 
 				for (Hazel::Ref<Part> part : partsToStage)
 				{
-					Ship* newShip = ship->Split(*m_World, part);
+					Ship* newShip = ship->Split(*m_World, part.get());
 					if (newShip) m_World->AddShip(newShip);
 				}
 			}
@@ -297,10 +297,21 @@ void SandboxLayer::OnImGuiRender()
 				});
 			}
 		}
+		Planet* planet = dynamic_cast<Planet*>(m_SelectedBody);//ForEachPartIfType
+		if (planet != nullptr)
+		{
+			ImGui::Text("Density %f kgm^2", planet->GetPhsicsBody()->GetFixtureList()->GetDensity());
+			ImGui::Text("Radius %fm", planet->GetRadius()); 
+			ImGui::Text("Acceleration at sea level %fm/s^2", World::GetAccelerationDueToGravity(planet->GetRadius(), planet->GetMass()));
+			glm::vec2 planetCenter = planet->GetCenterOfMass();
+			glm::vec2 camPos = m_World->GetCamera().GetPosition();
+			glm::vec2 dif = planetCenter - camPos;
+			ImGui::Text("Acceleration at current height %fm/s^2", World::GetAccelerationDueToGravity(sqrt(dif.x * dif.x + dif.y * dif.y), planet->GetMass()));
+		}
 	}
 	ImGui::End();
 
-	ImGui::Begin("Cursor Modes");
+	/*ImGui::Begin("Cursor Modes");
 
 	RadioButton("Create Capsule", reinterpret_cast<int*>(&s_CurrentMode), CursorMode::CreateCapsule);
 	ImGui::TextUnformatted("Creates a new rocket astronaut capsule part when the mouse is clicked");
@@ -329,7 +340,7 @@ void SandboxLayer::OnImGuiRender()
 	ImGui::TextUnformatted("Click an object to delete it");
 
 	EndRadioButtons();
-	ImGui::End();
+	ImGui::End();*/
 }
 
 

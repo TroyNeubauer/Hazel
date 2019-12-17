@@ -35,12 +35,12 @@ public:
 
 	Part& GetRoot();
 
-	virtual void Render(World& world) override;
-	virtual void RenderParticles(World& world);
+	virtual void Render(const Hazel::Camera& camera) override;
+	virtual void RenderParticles(const Hazel::Camera& camera);
 	virtual void Update(Hazel::Timestep ts, World& world) override;
 	void B2DRender(Hazel::B2D_DebugDraw* draw);
 
-	Ship* Split(World& world, Hazel::Ref<Part>& newRoot);
+	Ship* Split(World& world, Part* newRoot);
 
 	template<typename T, typename F>
 	void ForEachPartIfType(F func)

@@ -57,20 +57,20 @@ Ship::Ship(World& world, const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, f
 	CreatePhysicsBody(world, pos, degrees);
 }
 
-void Ship::Render(World& world)
+void Ship::Render(const Hazel::Camera& camera)
 {
 	glm::vec2 rootPos = { GetPhsicsBody()->GetPosition().x, GetPhsicsBody()->GetPosition().y };
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
-		part->Render(world, *this);
+		part->Render(camera, *this);
 	}
 }
 
-void Ship::RenderParticles(World& world)
+void Ship::RenderParticles(const Hazel::Camera& camera)
 {
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
-		part->RenderParticles(world, *this);
+		part->RenderParticles(camera, *this);
 	}
 	
 }
@@ -95,15 +95,15 @@ void Ship::B2DRender(Hazel::B2D_DebugDraw* draw)
 }
 
 
-Ship* Ship::Split(World& world, Hazel::Ref<Part>& newRoot)
+Ship* Ship::Split(World& world, Part* newRoot)
 {
-	HZ_ASSERT(&GetRoot() != newRoot.get(), "Cannot split the root part!");
+	HZ_ASSERT(&GetRoot() != newRoot, "Cannot split the root part!");
 	Ship* result = new Ship();
 	std::vector<size_t> newPartsIndices;
 	for (size_t i = 0; i < m_Parts.size(); i++)
 	{
 		Hazel::Ref<Part>& part = m_Parts[i];
-		if (part.get() == newRoot.get())
+		if (part.get() == newRoot)
 		{
 			newPartsIndices.push_back(i);
 			continue;
@@ -112,7 +112,7 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part>& newRoot)
 		Part* parent = part->m_ParentPart.get();
 		while (parent)
 		{
-			if (parent == newRoot.get())
+			if (parent == newRoot)
 			{
 				//Part is a child of newRoot
 				newPartsIndices.push_back(i);
@@ -144,13 +144,14 @@ Ship* Ship::Split(World& world, Hazel::Ref<Part>& newRoot)
 		Hazel::Ref<Part>& newPart = result->m_Parts[i];
 		//Add the fixtures of this part to the new body
 		origionalPart->RemoveFixtures(GetPhsicsBody());
+		origionalPart->m_Fixtures.clear();
 
 		//Transfer ownership to the new part
 		newPart = origionalPart;
 		//Remove the part from the old ship's list
 		m_Parts.erase(m_Parts.begin() + index);
 
-		if (newPart.get() == newRoot.get())
+		if (newPart.get() == newRoot)
 		{
 			result->m_RootIndex = i;
 			newPart->m_ParentPart = nullptr;//Disconnect from the main ship

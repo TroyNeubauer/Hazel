@@ -228,6 +228,7 @@ namespace Hazel {
 		void DrawMesh(Ref<VertexArray> mesh, Ref<Texture2D> texture, BlendMode blendSessings)
 		{
 			texture->Bind();
+			mesh->Bind();
 			RenderCommand::ApplyBlendParameters(blendSessings);
 			RenderCommand::DrawIndexed(mesh, mesh->GetIndexBuffer()->Count());
 		}

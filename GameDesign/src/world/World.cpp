@@ -4,11 +4,14 @@
 #include "ship/Part.h"
 
 #include <map>
+#include <glad/glad.h>
 
+const float MARS_RADIUS = 33895.0f;//meters
+const float MARS_GRAVITY = 3.711f;//meters/s2
 
-double World::Constants::G = 6.67430E-11 * 10000000.0f;
+const double World::Constants::G = 6.67430E-11;
 
-World::World() : m_Camera(new WorldCameraController())
+World::World() : m_Camera(new WorldCameraController()), m_Camera2(nullptr)
 {
 	m_World.reset(new b2World( {0.0f, 0.0f} ));//No gravity since we handle it ourselves
 	m_Camera.SetPosition(vec2(0.0, 0.0));
@@ -20,15 +23,46 @@ World::World() : m_Camera(new WorldCameraController())
 	m_DebugDraw->SetFlags(b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit);
 	m_World->SetDebugDraw(m_DebugDraw.get());
 #endif
+	
+	m_PlanetShader = Hazel::Shader::Create("assets/shaders/Planet.glsl");
+	
+	Planet* planet = new Planet(*this, MARS_RADIUS, MARS_GRAVITY, glm::vec4(0.8f, 0.1f, 0.2f, 1.0f), glm::vec4(0.8f, 0.3f, 0.5f, 1.0f));
+	planet->SetPosition({ 0.0f, -MARS_RADIUS - 10.0f });
 
-	new Planet(*this, 10.0f, glm::vec4(0.8f, 0.1f, 0.2f, 1.0f), glm::vec4(0.8f, 0.3f, 0.5f, 1.0f));
+	m_MapFBO = Hazel::FBO::Create(Hazel::Application::Get().GetWindow().GetWidth() / 4, Hazel::Application::Get().GetWindow().GetHeight() / 4);
+	Hazel::TextureBuilder b = Hazel::TextureBuilder::Default();
+	m_MapFBO->CreateColorBuffer(b);
+	m_MapFBO->CreateDepthBuffer();
+	m_MapFBO->Unbind();
+
+	m_DefaultFBO = Hazel::FBO::GetDefault();
+}
+
+float World::GetAccelerationDueToGravity(float r, float mass)
+{
+	return Constants::G * mass / (r * r);
 }
 
 void World::Update(Hazel::Timestep ts)
 {
 	HZ_PROFILE_FUNCTION();
 
+	float altitude = m_Camera.GetZoom();
+	
+	for (auto it = BodiesBegin(); it != BodiesEnd(); it++)
+	{
+		if (Planet* planet = dynamic_cast<Planet*>(ToBody(*it)))
+		{
+			glm::vec2 toShip = m_Camera.GetPosition() - planet->GetPosition();
+			altitude = glm::length(toShip) - planet->GetRadius();
+			m_Camera2.SetPosition(planet->GetPosition() + planet->GetRadius() * glm::normalize(toShip));
+			m_Camera2.SetZoom(max(altitude + 60.0f, 10.0f));
+			break;
+		}
+	}
+
 	m_Camera.Update(ts);
+	m_Camera2.Update(ts);
 	{
 		HZ_PROFILE_SCOPE("Box2D Gravity");
 
@@ -41,11 +75,11 @@ void World::Update(Hazel::Timestep ts)
 			for (int j = 0; j < i; j++, other = other->GetNext())
 			{
 				b2Vec2 otherPos = other->GetWorldCenter();
-
+				// Determine the amount of force to give
 				glm::dvec2 force = glm::dvec2(otherPos.x, otherPos.y) - glm::dvec2(bodyPos.x, bodyPos.y);
+				double distance = glm::length(force);
 				force = glm::normalize(force);
-				double distance = glm::length(force);// Determine the amount of force to give
-				force *= (World::Constants::G * (double)body->GetMass() * (double)other->GetMass()) / (distance * distance);
+				force *= (World::Constants::G * (double) ToBody(body)->GetMass() * (double)ToBody(other)->GetMass()) / (distance * distance);
 				b2Vec2 resultForce = b2Vec2(static_cast<float>(force.x), static_cast<float>(force.y));
 				body->ApplyForceToCenter(resultForce, true);
 				other->ApplyForceToCenter(-resultForce, true);
@@ -76,10 +110,22 @@ void World::Render()
 {
 	HZ_PROFILE_FUNCTION();
 
-	if (m_DebugDraw)
+	m_MapFBO->Bind();
+	Hazel::RenderCommand::SetClearColor( {0.0f, 1.0f, 1.0f, 1.0f} );
+	Hazel::RenderCommand::Clear();
+	RenderImpl(false, m_Camera2);
+
+	m_DefaultFBO->Bind();
+	RenderImpl(true, m_Camera);
+	Hazel::PostprocessingEffects::CopyToScreen(m_MapFBO, { 0.5f, -1.0f }, { 1.0f, -0.5 });
+}
+
+void World::RenderImpl(bool fullRender, const Hazel::Camera2D& camera)
+{
+	if (m_DebugDraw && fullRender)
 	{
 		HZ_PROFILE_SCOPE("Box2D Debug Draw");
-		m_DebugDraw->BeginScene(m_Camera);
+		m_DebugDraw->BeginScene(camera);
 		m_World->DrawDebugData();
 		for (const auto& ship : m_Ships)
 		{
@@ -88,26 +134,36 @@ void World::Render()
 		m_DebugDraw->EndScene();
 	}
 
-
 	{
 		HZ_PROFILE_SCOPE("Main Draw");
-		Hazel::Renderer2D::BeginScene(m_Camera);
+		//Render the planets first since they arent batched
 		for (auto it = BodiesBegin(); it != BodiesEnd(); it++)
 		{
 			Body* body = ToBody(*it);
-			body->Render(*this);
+			if (Planet* planet = dynamic_cast<Planet*>(body))
+			{
+				planet->Render(camera, m_PlanetShader);
+			}
 		}
-		Hazel::Renderer2D::DrawQuad(m_Camera.ToWorldCoordinates(Hazel::Input::GetMousePosition()), { 0.1f, 0.1f }, 0xFF00FFFF);
+		//Render everything else
+		Hazel::Renderer2D::BeginScene(camera);
+		for (auto it = BodiesBegin(); it != BodiesEnd(); it++)
+		{
+			Body* body = ToBody(*it);
+			if (!dynamic_cast<Planet*>(body)) body->Render(camera);
+		}
+
+		if (!fullRender) Hazel::Renderer2D::DrawQuad(m_Camera.ToWorldCoordinates(Hazel::Input::GetMousePosition()), { 0.1f, 0.1f }, 0xFF00FFFF);
 		Hazel::Renderer2D::EndScene();
 	}
-
+	if (fullRender)
 	{
 		HZ_PROFILE_SCOPE("Particles Draw");
-		Hazel::Renderer2D::BeginScene(m_Camera);
+		Hazel::Renderer2D::BeginScene(camera);
 		for (auto it = BodiesBegin(); it != BodiesEnd(); it++)
 		{
 			Ship* ship = dynamic_cast<Ship*>(ToBody(*it));
-			ship->RenderParticles(*this);
+			if (ship) ship->RenderParticles(camera);
 		}
 		Hazel::Renderer2D::EndScene();
 	}

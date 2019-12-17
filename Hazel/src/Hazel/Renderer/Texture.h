@@ -13,7 +13,7 @@ namespace Hazel {
 
 	enum class TextureFormat
 	{
-		RED, RGB, RGBA
+		RED, RGB, RGBA, DEPTH
 	};
 
 	class TextureBuilder
@@ -61,6 +61,12 @@ namespace Hazel {
 		inline TextureBuilder& FormatRGBA()
 		{
 			m_GPUFormat = TextureFormat::RGBA;
+			return *this;
+		}
+
+		inline TextureBuilder& FormatDepth()
+		{
+			m_GPUFormat = TextureFormat::DEPTH;
 			return *this;
 		}
 

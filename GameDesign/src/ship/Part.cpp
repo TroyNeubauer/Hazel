@@ -8,23 +8,23 @@
 #include <utility>
 #include <array>
 
-static std::array<const Part*, 10000> tempParts;
+thread_local std::array<Part*, 10000> Part::s_TempParts;
 
 int Part::FillInParts(const Part* leaf)
 {
 	int count = 0;
-	while(leaf)
+	while (leaf)
 	{
-		tempParts[count++] = leaf;
+		s_TempParts[count++] = const_cast<Part*>(leaf);
 		leaf = leaf->m_ParentPart.get();
 	}
 
 	return count;
 }
 
-PartDef::PartDef(const char* name, float density, float maxGForce, const Hazel::Ref<Hazel::AnimationDef2D> animation,
-		float hitboxWidth, glm::ivec2 topRightHBOffset, glm::ivec2 bottomLeftHBOffset)
-	: Name(name), Density(density), MaxGForce(maxGForce), Animation(animation)
+PartDef::PartDef(const char* name, float dryMass, const Hazel::Ref<Hazel::AnimationDef2D> animation,
+		float hitboxWidth, float maxGForce, glm::ivec2 topRightHBOffset, glm::ivec2 bottomLeftHBOffset)
+	: Name(name), DryMass(dryMass), MaxGForce(maxGForce), Animation(animation)
 {
 	glm::vec2 spriteSizePx = glm::vec2(animation->m_Frames[0].Bottom - animation->m_Frames[0].Top);
 	glm::vec2 halfSpriteSizePx = spriteSizePx / 2.0f;
@@ -110,8 +110,8 @@ glm::vec2 Part::GetTotalOffset(float initalRotation) const
 	float totalRotation = 0.0f;
 	for (int i = count -2; i >= 0; i--)// -2 to start at the first non root part
 	{
-		totalRotation += tempParts[i]->m_EditorPart->m_RotOffset;
-		result += glm::rotate(tempParts[i]->m_EditorPart->m_Offset, totalRotation);
+		totalRotation += s_TempParts[i]->m_EditorPart->m_RotOffset;
+		result += glm::rotate(s_TempParts[i]->m_EditorPart->m_Offset, totalRotation);
 	}
 	result = glm::rotate(result, initalRotation);
 	return result;
@@ -123,7 +123,7 @@ float Part::GetTotalRotation() const
 	int count = FillInParts(this);
 	for (int i = 0; i < count; i++)
 	{
-		if (!tempParts[i]->IsRoot()) degrees += tempParts[i]->m_EditorPart->m_RotOffset;
+		if (!s_TempParts[i]->IsRoot()) degrees += s_TempParts[i]->m_EditorPart->m_RotOffset;
 	}
 	return degrees;
 }
@@ -166,20 +166,15 @@ void Part::AddFixtures(b2Body* body)
 	if (!IsRoot()) angle = GetTotalRotation();
 
 	glm::vec2 glmOffset = GetTotalOffset();
-	rect.SetAsBox(m_EditorPart->m_Def->HitboxSize.x / 2.0f, m_EditorPart->m_Def->HitboxSize.y / 2.0f,
-			v2b2(glmOffset), angle);
+	rect.SetAsBox(m_EditorPart->m_Def->HitboxSize.x / 2.0f, m_EditorPart->m_Def->HitboxSize.y / 2.0f, v2b2(glmOffset), angle);
 
-	/*for (int i = 0; i < rect.m_count; i++)
-	{
-		rect.m_vertices[i] += ;
-	}*/
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &rect;
-	fixtureDef.density = m_EditorPart->m_Def->Density;
 	fixtureDef.friction = m_EditorPart->m_Def->Friction;
 	fixtureDef.restitution = m_EditorPart->m_Def->Restitution;
 	m_Fixtures.push_back(body->CreateFixture(&fixtureDef));
 
+	RecalculateMass();
 
 }
 
@@ -191,12 +186,30 @@ void Part::RemoveFixtures(b2Body* body)
 	}
 }
 
+void Part::RecalculateMass()
+{
+	HZ_ASSERT(m_Fixtures.size() == 1, "Only 1 fixture per part is supported for now!");
+	b2Fixture* fixture = m_Fixtures[0];
+
+	float mass = m_EditorPart->m_Def->DryMass;
+	for (auto& resource : m_Resources.Values)
+	{
+		mass += resource.second;
+	}
+	b2MassData data;
+	fixture->GetShape()->ComputeMass(&data, 1.0f);
+	float area = data.mass;//This looks wired but area===mass because density = 1
+
+	fixture->SetDensity(mass / area);
+	fixture->GetBody()->ResetMassData();
+}
+
 void Part::Update(Hazel::Timestep ts, World& world, Ship& ship)
 {
 	m_Animation.Update(ts);
 }
 
-void Part::Render(World& world, Ship& ship)
+void Part::Render(const Hazel::Camera& camera, Ship& ship)
 {
 	float shipRot = ship.GetRotation();
 	float rotation = shipRot + GetTotalRotation();
@@ -211,3 +224,17 @@ void Part::Render(World& world, Ship& ship)
 	Hazel::Renderer2D::DrawQuad(renderable);
 }
 
+Resources::Resources(ResourceDef& def) : Def(def), Values(def.Maxes)
+{
+}
+
+float GetResourceDensity(ResourceType type)
+{
+	static float RESOURCE_DENSITIES[2];
+	RESOURCE_DENSITIES[ResourceType::FUEL] = 810.0f;
+	RESOURCE_DENSITIES[ResourceType::PASSENGERS] = 60.0f;//Each passenger weighs 60kg
+
+	if (type >= sizeof(RESOURCE_DENSITIES) / sizeof(RESOURCE_DENSITIES[0]))
+		return 0.0f;
+	return RESOURCE_DENSITIES[type];
+}

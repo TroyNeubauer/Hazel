@@ -9,6 +9,7 @@
 #include "Hazel/Renderer/VertexArray.h"
 #include "Hazel/Renderer/RendererAPI.h"
 #include "Hazel/Renderer/Texture.h"
+#include "Hazel/Renderer/FBO.h"
 
 
 namespace Hazel {
@@ -138,6 +139,21 @@ namespace Hazel {
 
 		virtual void Bind() const override {}
 		virtual void Unbind() const override {}
+	};
+
+	class NoAPI_FBO : public FBO
+	{
+	public:
+		NoAPI_FBO(int width, int height) : FBO(width, height) {}
+
+		virtual Ref<Texture2D> GetTexture() override { return nullptr; }
+		static Ref<FBO> GetDefaultFramebuffer() { return nullptr; }
+
+		virtual void Bind() override {}
+		virtual void Unbind() override {}
+
+		virtual void CreateColorBuffer(TextureBuilder builder) override {}
+		virtual void CreateDepthBuffer() override {}
 	};
 }
 
