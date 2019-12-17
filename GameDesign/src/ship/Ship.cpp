@@ -33,6 +33,14 @@ EditorShip::EditorShip(const EditorShip& other)
 	}
 }
 
+void EditorShip::Render(const Hazel::Camera& camera)
+{
+	for (auto& partDef : m_Parts)
+	{
+		partDef->Render(camera);
+	}
+}
+
 Ship::Ship(World& world, const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, float degrees)
 {
 	std::unordered_map<Hazel::Ref<EditorPart>, Hazel::Ref<Part>> partLinking(shipDef->GetParts().size());

@@ -86,10 +86,9 @@ struct EditorPart
 	Hazel::Ref<EditorPart> m_ParentPart;
 
 public:
-	void Render();
+	void Render(const Hazel::Camera& camera);
 	inline bool IsRoot() const { return m_ParentPart.get() == nullptr; }
 
-private:
 	glm::vec2 GetTotalOffset(float initalRotation = 0.0f) const;
 	float GetTotalRotation() const;
 

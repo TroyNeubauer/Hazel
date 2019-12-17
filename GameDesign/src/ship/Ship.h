@@ -16,13 +16,15 @@ public:
 	EditorShip(const EditorShip& other);
 	inline EditorShip(const Hazel::Ref<EditorShip>& other) : EditorShip(*other.get()) {}
 
+	void Render(const Hazel::Camera& camera);
+
 	std::vector<Hazel::Ref<EditorPart>>& GetParts() { return m_Parts; }
 
 	Hazel::Ref<EditorPart>& GetRoot();
 
 private:
 	std::vector<Hazel::Ref<EditorPart>> m_Parts;
-
+	std::string name = "Un named ship";
 
 };
 

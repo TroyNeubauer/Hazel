@@ -12,6 +12,8 @@ Hazel::Ref<PartDef> Parts::MK2Capsule = nullptr;
 Hazel::Ref<EnginePartDef> Parts::MK1Engine = nullptr;
 Hazel::Ref<EnginePartDef> Parts::MK2Engine = nullptr;
 
+std::vector<Hazel::Ref<PartDef>> Parts::AllParts;
+
 
 static Hazel::TextureBuilder builder = Hazel::TextureBuilder::Default().NearestFiltering().ClampEdges();
 static Hazel::Ref<Hazel::ParticleEmitterDef> engineEmitter;
@@ -61,6 +63,13 @@ void Parts::Init()
 	engineEmitter->IvErrorPercentStdDev = 0.1f;
 	engineEmitter->SizeMean = MK1Engine->HitboxSize.x;
 	engineEmitter->SizeStdDev = MK1Engine->HitboxSize.x / 20.0f;
+
+	AllParts.push_back(MK1Capsule);
+	AllParts.push_back(MK2Capsule);
+	AllParts.push_back(MK1LeftWing);
+	AllParts.push_back(MK1RightWing);
+	AllParts.push_back(MK1Engine);
+	AllParts.push_back(MK2Engine);
 
 
 }

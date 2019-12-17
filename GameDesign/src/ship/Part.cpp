@@ -47,7 +47,7 @@ Part* PartDef::CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>
 	return new Part(world, ship, editorPart);
 }
 
-void EditorPart::Render()
+void EditorPart::Render(const Hazel::Camera& camera)
 {
 
 	std::pair<glm::vec2, glm::vec2> frame = m_Def->Animation->GetFirstFrame();

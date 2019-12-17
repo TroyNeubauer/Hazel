@@ -2,6 +2,7 @@
 #include "GameDesign.h"
 #include "layers/SandboxLayer.h"
 #include "layers/WorldLayer.h"
+#include "layers/EditorLayer.h"
 #include "ship/Parts.h"
 #include "ship/Ships.h"
 
@@ -17,7 +18,7 @@ GameDesign::GameDesign()
 	Parts::Init();
 	Ships::Init();
 	PushOverlay(new Hazel::DebugLayer());
-	PushLayer(new SandboxLayer(new World()));
+	PushLayer(new EditorLayer());
 	sound = Hazel::AudioManager::Load("assets/audio/computers_have_control.mp3");
 
 }

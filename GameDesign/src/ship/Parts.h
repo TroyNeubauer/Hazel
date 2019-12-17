@@ -128,6 +128,8 @@ private:
 	friend class GameDesign;
 
 public:
+	static std::vector<Hazel::Ref<PartDef>> AllParts;
+
 	static Hazel::Ref<PartDef> MK1Capsule;
 	static Hazel::Ref<PartDef> MK1LeftWing;
 	static Hazel::Ref<PartDef> MK1RightWing;
