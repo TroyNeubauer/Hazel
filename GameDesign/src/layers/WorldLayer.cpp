@@ -1,5 +1,8 @@
 #include "WorldLayer.h"
 
+#include "ship/Part.h"
+#include "ship/Parts.h"
+
 #include <imgui.h>
 #include <random>
 
@@ -55,7 +58,96 @@ static bool SliderDouble(const char* label, double* v, double v_min, double v_ma
 
 void WorldLayer::OnImGuiRender()
 {
+	ImGui::Begin("Ship");
+	ImGui::Text("pos {%.2f, %.2f} m", m_Ship->GetCenterOfMass().x, m_Ship->GetCenterOfMass().y);
+	ImGui::Text("rotation %.2f degrees", glm::degrees(m_Ship->GetRotation()));
+	ImGui::Text("mass %.2f kg", m_Ship->GetPhsicsBody()->GetMass());
+	ImGui::Text("speed %.3f m/s", m_Ship->GetPhsicsBody()->GetLinearVelocity().Length());
+	ImGui::Text("speed %.2f degrees/s", glm::degrees(m_Ship->GetPhsicsBody()->GetAngularVelocity()));
 
+	if (ImGui::Button("Break"))
+	{
+		int distance = -1;
+		std::vector<Hazel::Ref<Part>> partsToStage;
+		for (auto& part : m_Ship->GetParts())
+		{
+			int currentDistance = 0;
+			Part* partPtr = part.get();
+			while (!partPtr->IsRoot())
+			{
+				currentDistance++;
+				partPtr->Advance(partPtr);
+			}
+			//Root part
+			if (currentDistance == 0) continue;
+			//Reset for new maxes
+			if (distance == -1 || currentDistance > distance)
+			{
+				partsToStage.clear();
+				distance = currentDistance;
+			}
+
+			//Add all parts that match the best distance found so far
+			if (distance == currentDistance)
+			{
+				partsToStage.push_back(part);
+			}
+		}
+
+		for (Hazel::Ref<Part> part : partsToStage)
+		{
+			Ship* newShip = m_Ship->Split(*m_World, part.get());
+			if (newShip) m_World->AddShip(newShip);
+		}
+	}
+
+	if (ImGui::Button("Stage"))
+	{
+		int distance = -1;
+		std::vector<Hazel::Ref<Part>> partsToStage;
+		for (auto& part : m_Ship->GetParts())
+		{
+			int currentDistance = 0;
+			Part* partPtr = part.get();
+			if (!dynamic_cast<DecouplerPart*>(partPtr)) continue;
+
+			while (!partPtr->IsRoot())
+			{
+				currentDistance++;
+				partPtr->Advance(partPtr);
+			}
+			//Root part
+			if (currentDistance == 0) continue;
+			//Reset for new maxes
+			if (distance == -1 || currentDistance > distance)
+			{
+				partsToStage.clear();
+				distance = currentDistance;
+			}
+
+			//Add all parts that match the best distance found so far
+			if (distance == currentDistance)
+			{
+				partsToStage.push_back(part);
+			}
+		}
+
+		for (Hazel::Ref<Part> part : partsToStage)
+		{
+			DecouplerPart* dec = dynamic_cast<DecouplerPart*>(part.get());
+			Ship* newShip = dec->Release(*m_World, *m_Ship);
+			if (newShip) m_World->AddShip(newShip);
+		}
+	}
+
+	if (ImGui::SliderFloat("Throttle", &m_Ship->GetThrottle(), 0.0f, 1.0f))
+	{
+		Ship* ship = m_Ship.get();
+		m_Ship->ForEachPartIfType<EnginePart>([ship](EnginePart& part) {
+			part.SetThrottle(ship->GetThrottle());
+		});
+	}
+	ImGui::End();
 }
 
 
@@ -74,7 +166,7 @@ void WorldCameraController::Update(Hazel::Timestep ts, Hazel::Camera2D& camera)
 	HZ_PROFILE_FUNCTION();
 
 
-	camera.m_ZoomVel -= Hazel::Input::GetScrollDelta() * 3.0f;
+	camera.m_ZoomVel -= Hazel::Input::GetScrollDelta() * 2.0f;
 
 	camera.m_Zoom += camera.m_ZoomVel * ts.Seconds();
 	camera.m_ZoomVel *= (1.0f - ts.Seconds() * 5.0f);

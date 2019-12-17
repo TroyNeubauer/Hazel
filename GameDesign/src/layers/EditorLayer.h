@@ -38,7 +38,7 @@ private:
 	Hazel::Ref<EditorPart> m_HoveredReal;
 	Hazel::Ref<EditorPart> m_HeldPart;
 	Hazel::Ref<EditorPart> m_GohstPlace, m_GohstParent;
-	int gohstSize;
+	int m_GohstSide;
 
 
 };

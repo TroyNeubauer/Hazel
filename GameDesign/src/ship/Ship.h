@@ -18,13 +18,14 @@ public:
 
 	void Render(const Hazel::Camera& camera);
 
-	std::vector<Hazel::Ref<EditorPart>>& GetParts() { return m_Parts; }
+	inline std::vector<Hazel::Ref<EditorPart>>& GetParts() { return m_Parts; }
+	inline std::string& GetName() { return m_Name; }
 
 	Hazel::Ref<EditorPart>& GetRoot();
 
 private:
 	std::vector<Hazel::Ref<EditorPart>> m_Parts;
-	std::string name = "Un named ship";
+	std::string m_Name = "";
 
 };
 

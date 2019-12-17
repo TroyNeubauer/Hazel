@@ -3,6 +3,8 @@
 #include "GameDesign.h"
 #include "ship/Parts.h"
 
+#include "WorldLayer.h"
+
 #include <imgui.h>
 #include <Hazel.h>
 
@@ -96,25 +98,25 @@ bool EditorLayer::OnMouseMoved(Hazel::MouseMovedEvent* event)
 				{
 					partCmp += glm::rotate(glm::vec2(0.0f, partHitbox.y / 2.0f), partRot);
 					heldCmp.y -= heldHitbox.y / 2.0f;
-					if (!part->Def->Connections[TOP_INDEX] || !m_HeldPart->Def->Connections[BOTTOM_INDEX]) continue;
+					if (!part->Connections[TOP_INDEX] || !part->Def->Connections[TOP_INDEX] || !m_HeldPart->Def->Connections[BOTTOM_INDEX]) continue;
 				}
 				else if (i == RIGHT_INDEX)
 				{
 					partCmp += glm::rotate(glm::vec2(partHitbox.x / 2.0f, 0.0f), partRot);
 					heldCmp.x -= heldHitbox.x / 2.0f;
-					if (!part->Def->Connections[RIGHT_INDEX] || !m_HeldPart->Def->Connections[LEFT_INDEX]) continue;
+					if (!part->Connections[RIGHT_INDEX] || !part->Def->Connections[RIGHT_INDEX] || !m_HeldPart->Def->Connections[LEFT_INDEX]) continue;
 				}
 				else if (i == BOTTOM_INDEX)
 				{
 					partCmp -= glm::rotate(glm::vec2(0.0f, partHitbox.y / 2.0f), partRot);
 					heldCmp.y += heldHitbox.y / 2.0f;
-					if (!part->Def->Connections[BOTTOM_INDEX] || !m_HeldPart->Def->Connections[TOP_INDEX]) continue;
+					if (!part->Connections[BOTTOM_INDEX] || !part->Def->Connections[BOTTOM_INDEX] || !m_HeldPart->Def->Connections[TOP_INDEX]) continue;
 				}
 				else if (i == LEFT_INDEX)
 				{
 					partCmp -= glm::rotate(glm::vec2(partHitbox.x / 2.0f, 0.0f), partRot);
 					heldCmp.x += heldHitbox.x / 2.0f;
-					if (!part->Def->Connections[LEFT_INDEX] || !m_HeldPart->Def->Connections[RIGHT_INDEX]) continue;
+					if (!part->Connections[LEFT_INDEX] || !part->Def->Connections[LEFT_INDEX] || !m_HeldPart->Def->Connections[RIGHT_INDEX]) continue;
 				}
 				float distance = glm::length(heldCmp - partCmp);
 				if (bestSide == -1 || distance < bestDistance)
@@ -211,6 +213,7 @@ bool EditorLayer::OnMousePressed(Hazel::MouseButtonPressedEvent* event)
 			m_GohstPlace->m_Offset = m_GohstPlace->m_Offset - m_GohstParent->m_Offset;
 			m_GohstPlace->ParentPart = m_GohstParent;
 			m_ActiveShip->GetParts().push_back(m_GohstPlace);
+			m_GohstParent->Connections[m_GohstSide] = false;
 
 			//Reset state
 			m_GohstPlace = nullptr;
@@ -233,15 +236,16 @@ bool EditorLayer::OnMousePressed(Hazel::MouseButtonPressedEvent* event)
 
 bool EditorLayer::OnMouseReleased(Hazel::MouseButtonReleasedEvent* event)
 {
-	if (m_HeldPart)
+	if (m_HeldPart && m_GohstPlace)
 	{
 		//Attempt to place the part on the body
 		m_ActiveShip->GetParts().emplace_back(m_GohstPlace);
 		m_GohstPlace->ParentPart = m_GohstParent;
 		m_GohstPlace->m_Offset = m_GohstPlace->m_Offset - m_GohstParent->m_Offset;
 
-		m_GohstParent->Connections.
+		m_GohstParent->Connections[m_GohstSide] = false;
 
+		m_GohstSide = -1;
 		m_GohstPlace = nullptr;
 		m_GohstParent = nullptr;
 	}
@@ -256,10 +260,23 @@ void EditorLayer::OnImGuiRender()
 	if (m_HoveredShop)
 	{
 		ImGui::BeginTooltip();
-		ImGui::TextUnformatted("Test");
 		ImGui::TextUnformatted(m_HoveredShop->Name);
 		ImGui::EndTooltip();
 	}
+
+	ImGui::Begin("Ship stats");
+	if (ImGui::Button("Launch!"))
+	{
+		Hazel::LayerStack& layerStack = Hazel::Application::Get().GetLayerStack();
+		layerStack.PushLayer(new WorldLayer(m_ActiveShip));
+		layerStack.PopLayer(this);
+	}
+	static char name[128];
+	if (ImGui::InputTextWithHint("Ship name", "Saturn V", name, sizeof(name)))
+	{
+		m_ActiveShip->GetName() = name;
+	}
+	ImGui::End();
 }
 
 void EditorLayer::Render()
