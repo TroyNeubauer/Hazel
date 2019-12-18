@@ -35,6 +35,7 @@ void Parts::Init()
 	MK1Capsule->Resources.Maxes[ResourceType::FUEL] = 1000;
 	MK1Capsule->Connections.Bottom = true;
 	MK1Capsule->Connections.Left = true;
+	MK1Capsule->Connections.Top = true;
 	MK1Capsule->Connections.Right = true;
 
 	MK2Capsule->Resources.Maxes[ResourceType::FUEL] = 200;
@@ -44,16 +45,20 @@ void Parts::Init()
 	MK2Capsule->Connections.Right = true;
 
 	Parts::MK1Engine.reset(new EnginePartDef{ "MK1 Engine", 10.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 16, 0 }, { 14, 7 }), 2.5f, 20.0f });
-	MK1Engine->ISP = 305.0f;
+	MK1Engine->ISP = 105.0f;
 	MK1Engine->MassBurn = 10.0f;
 	MK1Engine->Friction = 0.1f;
 	MK1Engine->Connections.Top = true;
+	MK1Engine->Connections.Bottom = true;
+	MK1Engine->GimbalLimit = 7.5f;
 	
 	Parts::MK2Engine.reset(new EnginePartDef{ "MK2 Engine", 10.0f, Hazel::AnimationDef2D::Create(RocketComponents, { 16, 0 }, { 14, 7 }), 5.0f, 20.0f });
-	MK2Engine->ISP = 421.0f;
+	MK2Engine->ISP = 161.0f;
 	MK2Engine->MassBurn = 30.5f;
 	MK2Engine->Friction = 0.1f;
 	MK2Engine->Connections.Top = true;
+	MK2Engine->Connections.Bottom = true;
+	MK2Engine->GimbalLimit = 15.0f;
 
 	Parts::Decoupler1.reset(new DecouplerPartDef{"Decoupler 1", 40, Hazel::AnimationDef2D::Create(RocketComponents, {48,  0}, {16, 3}), 11.0f / 3});
 	Decoupler1->ReleaseForce = 10.0f;
@@ -125,7 +130,7 @@ void EnginePart::Update(Hazel::Timestep ts, World& world, Ship& ship)
 		if (thrust > 0.0f) m_Emitter.SetPPS(m_Throttle * BASE_ENGINE_PPS);
 		else m_Emitter.Stop();
 
-		float rot = GetTotalRotation() + ship.GetRotation();
+		float rot = GetTotalRotation() + ship.GetRotation() + glm::radians(m_Gimbal);
 		glm::vec2 force = { 0.0f, thrust };
 		force = glm::rotate(force, rot);
 		ship.GetPhsicsBody()->ApplyForce(v2b2(force), v2b2(partPosition), true);
@@ -151,7 +156,7 @@ void EnginePart::Update(Hazel::Timestep ts, World& world, Ship& ship)
 void EnginePart::Render(const Hazel::Camera& camera, Ship& ship)
 {
 	float shipRot = ship.GetRotation();
-	float rotation = shipRot + GetTotalRotation();
+	float rotation = shipRot + GetTotalRotation() + glm::radians(m_Gimbal);
 	Hazel::Ref<PartDef>& def = GetEditorPart()->Def;
 	Hazel::Renderer2D::Renderable renderable;
 
@@ -176,6 +181,11 @@ float EnginePart::GetExitVelocity()
 float EnginePart::GetThrust(float massLoss)
 {
 	return GetExitVelocity() * massLoss;
+}
+
+float EnginePart::GetGimbal() const
+{
+	return m_Gimbal;
 }
 
 void EnginePart::SetThrottle(float throttle)

@@ -6,7 +6,6 @@
 #include <imgui.h>
 #include <random>
 
-
 WorldLayer::WorldLayer(Hazel::Ref<EditorShip>& originShip) : Hazel::Layer("World Layer"), m_Camera(new WorldCameraController())
 {
 	m_World.reset(new World(m_Camera));
@@ -44,6 +43,22 @@ void WorldLayer::OnUpdate(Hazel::Timestep ts)
 	}
 
 	m_Camera.ForceUpdate();
+
+	Ship* ship = m_Ship.get();
+	
+	m_Ship->ForEachPartIfType<EnginePart>([ship, ts](EnginePart& part) {
+		float change = 0.0f;
+		if (Hazel::Input::IsKeyPressed(HZ_KEY_A)) change -= ts.Seconds() * 5.0f;
+		if (Hazel::Input::IsKeyPressed(HZ_KEY_D)) change += ts.Seconds() * 5.0f;
+
+		if (change == 0.0f)
+		{
+			change = -part.GetGimbal() * 80.0f * ts.Seconds();
+		}
+		part.SetGimbal(part.GetGimbal() + change);
+		part.SetThrottle(ship->GetThrottle());
+	});
+	
 }
 
 void WorldLayer::OnEvent(Hazel::Event* event)
@@ -173,4 +188,6 @@ void WorldCameraController::Update(Hazel::Timestep ts, Hazel::Camera2D& camera)
 
 	if (camera.m_Zoom <= 0.00001f)
 		camera.m_Zoom = 0.00001f;
+
+
 }

@@ -68,6 +68,7 @@ public:
 
 	float GetExitVelocity();
 	float GetThrust(float massLoss);
+	float GetGimbal() const;
 	void SetThrottle(float throttle);
 	void SetGimbal(float gimbal);
 
@@ -79,6 +80,7 @@ private:
 	float m_Throttle = 0.0f;
 	Hazel::ParticleEmitter m_Emitter;
 	float m_Gimbal = 0.0f;
+	bool m_IsActive;
 };
 
 struct DecouplerPartDef;
