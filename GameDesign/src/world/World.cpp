@@ -18,7 +18,7 @@ World::World(Hazel::Camera2D& camera) : m_Camera(camera), m_Camera2(nullptr)
 	camera.SetRotation(0.0f);
 	camera.SetZoom(10.0f);
 
-#if defined(HZ_DEBUG) && 1
+#if defined(HZ_DEBUG) && 0
 	m_DebugDraw.reset(new Hazel::B2D_DebugDraw());
 	m_DebugDraw->SetFlags(b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit);
 	m_World->SetDebugDraw(m_DebugDraw.get());

@@ -31,6 +31,9 @@ void Parts::Init()
 	Parts::MK1LeftWing.reset(new PartDef{ "Left Wing",   15, Hazel::AnimationDef2D::Create(RocketComponents,	{16, 16}, { 7, 11}), 7.0f / 3 });
 	Parts::MK1RightWing.reset(new PartDef{ "Right Wing", 15, Hazel::AnimationDef2D::Create(RocketComponents,	{23, 16}, { 7, 11}), 7.0f / 3 });
 
+	MK1LeftWing->Connections.Right = true;
+	MK1RightWing->Connections.Left = true;
+
 	MK1Capsule->Friction = 0.1f;
 	MK1Capsule->Resources.Maxes[ResourceType::FUEL] = 1000;
 	MK1Capsule->Connections.Bottom = true;
