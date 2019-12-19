@@ -49,7 +49,7 @@ struct EnginePartDef : public PartDef {
 
 #define SubPartDefCreatePartMethod(ClassName)inline virtual Part* CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart) const override { return new ClassName(world, ship, editorPart); }
 
-#define SubPartGetPartDef(PartDefClassName)inline PartDefClassName* GetPartDef() const { return reinterpret_cast<PartDefClassName*>(GetEditorPart()->m_Def.get()); } friend struct PartDefClassName
+#define SubPartGetPartDef(PartDefClassName)inline PartDefClassName* GetPartDef() const { return reinterpret_cast<PartDefClassName*>(GetEditorPart()->Def.get()); } friend struct PartDefClassName
 
 #define SubPartConstructor(ClassName)inline ClassName(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart) : Part(world, ship, editorPart) {}
 
@@ -68,6 +68,7 @@ public:
 
 	float GetExitVelocity();
 	float GetThrust(float massLoss);
+	float GetGimbal() const;
 	void SetThrottle(float throttle);
 	void SetGimbal(float gimbal);
 
@@ -79,6 +80,7 @@ private:
 	float m_Throttle = 0.0f;
 	Hazel::ParticleEmitter m_Emitter;
 	float m_Gimbal = 0.0f;
+	bool m_IsActive;
 };
 
 struct DecouplerPartDef;

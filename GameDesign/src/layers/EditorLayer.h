@@ -28,7 +28,6 @@ public:
 
 private:
 	void RenderPartsList();
-	Hazel::Ref<EditorPart> FindOverlap();
 
 private:
 	Hazel::Ref<EditorShip> m_ActiveShip;
@@ -37,7 +36,9 @@ private:
 
 	Hazel::Ref<PartDef> m_HoveredShop;
 	Hazel::Ref<EditorPart> m_HoveredReal;
-	Hazel::Ref<EditorPart> m_DraggedReal;
+	Hazel::Ref<EditorPart> m_HeldPart;
 	Hazel::Ref<EditorPart> m_GohstPlace, m_GohstParent;
+	int m_GohstSide;
+
 
 };

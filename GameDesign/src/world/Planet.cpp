@@ -23,7 +23,7 @@ Planet::Planet(World& world, float radius, float surfaceGravity, glm::vec4 groun
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.density = GetDensity(surfaceGravity);
-	fixtureDef.friction = 8.0f;
+	fixtureDef.friction = 2.0f;
 	fixtureDef.restitution = 0.01f;
 
 	b2CircleShape circle;

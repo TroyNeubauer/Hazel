@@ -40,9 +40,29 @@ struct Resources
 	ResourceDef& Def;
 };
 
+const int TOP_INDEX = 0;
+const int RIGHT_INDEX = 1;
+const int BOTTOM_INDEX = 2;
+const int LEFT_INDEX = 3;
+
 struct PartConnections
 {
-	unsigned int Top : 1, Right : 1, Bottom : 1, Left : 1;
+	PartConnections() = default;
+	PartConnections(const PartConnections& other) = default;
+
+	bool Top, Right, Bottom, Left;
+
+	bool& operator[] (int index)
+	{
+		switch (index)
+		{
+		case TOP_INDEX: return Top;
+		case RIGHT_INDEX: return Right;
+		case BOTTOM_INDEX: return Bottom;
+		case LEFT_INDEX: return Left;
+		default: HZ_ASSERT(false, "Failed to find side");
+		}
+	}
 };
 
 struct PartDef
@@ -77,23 +97,24 @@ public:
 
 struct EditorPart
 {
-	EditorPart() : m_ParentPart(nullptr) {}
+	EditorPart() : ParentPart(nullptr) {}
 
 	//Cloned parts have no parent by default
 	EditorPart(const EditorPart& other)
-		: m_Offset(other.m_Offset), m_RotOffset(other.m_RotOffset), m_Def(other.m_Def), m_ParentPart(nullptr) {}
+		: m_Offset(other.m_Offset), m_RotOffset(other.m_RotOffset), Def(other.Def), ParentPart(nullptr), Connections(other.Connections) {}
 
 	inline EditorPart(const Hazel::Ref<EditorPart>& other) : EditorPart(*other.get()) {}
 
 	glm::vec2 m_Offset = { 0.0f, 0.0f };
 	float m_RotOffset = 0.0f;//Radians
 
-	Hazel::Ref<PartDef> m_Def;
-	Hazel::Ref<EditorPart> m_ParentPart;
+	Hazel::Ref<PartDef> Def;
+	Hazel::Ref<EditorPart> ParentPart;
+	PartConnections Connections;
 
 public:
 	void Render(const Hazel::Camera& camera, uint32_t color = 0xFFFFFFFF);
-	inline bool IsRoot() const { return m_ParentPart.get() == nullptr; }
+	inline bool IsRoot() const { return ParentPart.get() == nullptr; }
 
 	glm::vec2 GetTotalOffset(float initalRotation = 0.0f) const;
 	float GetTotalRotation() const;
@@ -112,7 +133,7 @@ public:
 	//Parts cannot be copied because issues with Box2D fixture ownership
 	Part(const Part& other) = delete;
 	Part(World& world, Ship& ship, const Hazel::Ref<EditorPart>& editorPart)
-		: m_EditorPart(editorPart), m_Animation(editorPart->m_Def->Animation), m_Resources(editorPart->m_Def->Resources) {}
+		: m_EditorPart(editorPart), m_Animation(editorPart->Def->Animation), m_Resources(editorPart->Def->Resources) {}
 
 	inline const Hazel::Ref<EditorPart>& GetEditorPart() const { return m_EditorPart; }
 	inline bool IsRoot() const { return m_ParentPart.get() == nullptr; }

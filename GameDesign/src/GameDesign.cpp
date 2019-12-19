@@ -11,13 +11,16 @@
 
 Hazel::Ref<Hazel::AudioSource> sound;
 
+GameDesign* GameDesign::s_Instance;
+
 GameDesign::GameDesign()
 {
 	s_Instance = this;
 
 	Parts::Init();
 	Ships::Init();
-	PushOverlay(new Hazel::DebugLayer());
+	//PushOverlay(new Hazel::DebugLayer());
+
 	PushLayer(new EditorLayer());
 	sound = Hazel::AudioManager::Load("assets/audio/computers_have_control.mp3");
 
@@ -44,6 +47,11 @@ void GameDesign::Render()
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+}
+
+Hazel::Ref<EditorShip>& GameDesign::CreateShip()
+{
+	return m_EditorShips.emplace_back(new EditorShip());
 }
 
 GameDesign::~GameDesign()

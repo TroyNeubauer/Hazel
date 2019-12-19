@@ -22,12 +22,12 @@ EditorShip::EditorShip(const EditorShip& other)
 	{
 		const Hazel::Ref<EditorPart>& otherPart = other.m_Parts[i];
 		Hazel::Ref<EditorPart>& part = m_Parts[i];
-		if (otherPart->m_ParentPart != nullptr)
+		if (otherPart->ParentPart != nullptr)
 		{
 			std::unordered_map<Hazel::Ref<EditorPart>, Hazel::Ref<EditorPart>>::iterator it = partLinking.find(otherPart);
 			HZ_ASSERT(it != partLinking.end(), "Invalid parent part is not on this ship!");
 			Hazel::Ref<EditorPart>& parentPart = it->second;
-			part->m_ParentPart = parentPart;
+			part->ParentPart = parentPart;
 		}
 
 	}
@@ -46,16 +46,16 @@ Ship::Ship(World& world, const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, f
 	std::unordered_map<Hazel::Ref<EditorPart>, Hazel::Ref<Part>> partLinking(shipDef->GetParts().size());
 	for (const Hazel::Ref<EditorPart>& partDef : shipDef->GetParts())
 	{
-		Hazel::Ref<Part>& part = m_Parts.emplace_back(partDef->m_Def->CreatePart(world, *this, partDef));
+		Hazel::Ref<Part>& part = m_Parts.emplace_back(partDef->Def->CreatePart(world, *this, partDef));
 		partLinking[partDef] = part;
 	}
 
 
 	for (Hazel::Ref<Part>& part : m_Parts)
 	{
-		if (part->m_EditorPart->m_ParentPart != nullptr)
+		if (part->m_EditorPart->ParentPart != nullptr)
 		{
-			std::unordered_map<Hazel::Ref<EditorPart>, Hazel::Ref<Part>>::iterator it = partLinking.find(part->m_EditorPart->m_ParentPart);
+			std::unordered_map<Hazel::Ref<EditorPart>, Hazel::Ref<Part>>::iterator it = partLinking.find(part->m_EditorPart->ParentPart);
 			HZ_ASSERT(it != partLinking.end(), "Invalid parent part is not on this ship!");
 			Hazel::Ref<Part>& parentPart = it->second;
 			part->m_ParentPart = parentPart;

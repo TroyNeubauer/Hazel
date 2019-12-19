@@ -32,7 +32,7 @@ private:
 class World
 {
 public:
-	World();
+	World(Hazel::Camera2D& camera);
 
 	struct Constants {
 		const static double G;
@@ -43,15 +43,15 @@ public:
 	void Render();
 	void RenderImpl(bool fullRender, const Hazel::Camera2D& camera);
 
-	Ship& AddShip(const Hazel::Ref<EditorShip>& partDef, glm::vec2 pos, float rot = 0.0f);
+	Hazel::Ref<Ship>& AddShip(const Hazel::Ref<EditorShip>& partDef, glm::vec2 pos, float rot = 0.0f);
 	void AddShip(Ship* ship);//Takes ownership
 	void Remove(Body* body);
 
 	inline LinkedListIterator BodiesBegin() { return m_World->GetBodyList();  }
 	inline LinkedListIterator BodiesEnd() { return nullptr; }
 
+	inline const std::vector<Hazel::Ref<Ship>>& GetShips() const { return m_Ships; }
 	inline b2World* GetWorld() { return m_World.get(); }
-	inline Hazel::Camera2D& GetCamera() { return m_Camera; }
 
 	inline void SetBodyRemovedCallback(std::function<void(Body*)> func) { m_OnRemovedFunction = func; }
 
@@ -70,20 +70,15 @@ public:
 	inline Hazel::B2D_DebugDraw* GetDebugDraw() { return m_DebugDraw.get(); }
 
 private:
-	std::vector<Hazel::Scope<Ship>> m_Ships;
+	std::vector<Hazel::Ref<Ship>> m_Ships;
 	Hazel::Scope<b2World> m_World;
-	Hazel::Camera2D m_Camera, m_Camera2;
+	Hazel::Camera2D& m_Camera;
+	Hazel::Camera2D m_Camera2;
 	std::function<void(Body*)> m_OnRemovedFunction;
 
 	Hazel::Scope<Hazel::B2D_DebugDraw> m_DebugDraw;
 	Hazel::Ref<Hazel::Shader> m_PlanetShader;
 	Hazel::Ref<Hazel::FBO> m_MapFBO, m_DefaultFBO;
-};
-
-class WorldCameraController : public Hazel::CameraController2D
-{
-	friend class Hazel::Camera2D;
-	virtual void Update(Hazel::Timestep ts, Hazel::Camera2D& camera) override;
 };
 
 

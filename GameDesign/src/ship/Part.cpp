@@ -54,14 +54,14 @@ Part* PartDef::CreatePart(World& world, Ship& ship, const Hazel::Ref<EditorPart>
 void EditorPart::Render(const Hazel::Camera& camera, uint32_t color)
 {
 
-	std::pair<glm::vec2, glm::vec2> frame = m_Def->Animation->GetFirstFrame();
+	std::pair<glm::vec2, glm::vec2> frame = Def->Animation->GetFirstFrame();
 
 	Hazel::Renderer2D::Renderable renderable;
 
-	renderable.Position = { GetTotalOffset() + m_Def->SpriteOffset, 0.0f };
-	renderable.Size = m_Def->SpriteSize;
+	renderable.Position = { GetTotalOffset() + Def->SpriteOffset, 0.0f };
+	renderable.Size = Def->SpriteSize;
 	renderable.Rotation = GetTotalRotation();
-	renderable.Texture = m_Def->Animation->m_Texture;
+	renderable.Texture = Def->Animation->m_Texture;
 	renderable.TextureTop = frame.first;
 	renderable.TextureBottom = frame.second;
 	renderable.Color = color;
@@ -75,9 +75,9 @@ glm::vec2 EditorPart::GetTotalOffset(float initalRotation) const
 	const EditorPart* part = this;
 	while (part)
 	{
-		if (!part->IsRoot())//Root parts don't care about the offset
-			result += glm::rotate(part->m_Offset, GetTotalRotation());
-		part = part->m_ParentPart.get();
+		//if (!part->IsRoot())//Root parts don't care about the offset
+		result += glm::rotate(part->m_Offset, GetTotalRotation());
+		part = part->ParentPart.get();
 	}
 	result = glm::rotate(result, initalRotation);
 	return result;
@@ -91,7 +91,7 @@ float EditorPart::GetTotalRotation() const
 	{
 		if (!part->IsRoot())
 			result += part->m_RotOffset;
-		part = part->m_ParentPart.get();
+		part = part->ParentPart.get();
 	}
 	return result;
 }
@@ -171,12 +171,12 @@ void Part::AddFixtures(b2Body* body)
 	if (!IsRoot()) angle = GetTotalRotation();
 
 	glm::vec2 glmOffset = GetTotalOffset();
-	rect.SetAsBox(m_EditorPart->m_Def->HitboxSize.x / 2.0f, m_EditorPart->m_Def->HitboxSize.y / 2.0f, v2b2(glmOffset), angle);
+	rect.SetAsBox(m_EditorPart->Def->HitboxSize.x / 2.0f, m_EditorPart->Def->HitboxSize.y / 2.0f, v2b2(glmOffset), angle);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &rect;
-	fixtureDef.friction = m_EditorPart->m_Def->Friction;
-	fixtureDef.restitution = m_EditorPart->m_Def->Restitution;
+	fixtureDef.friction = m_EditorPart->Def->Friction;
+	fixtureDef.restitution = m_EditorPart->Def->Restitution;
 	m_Fixtures.push_back(body->CreateFixture(&fixtureDef));
 
 	RecalculateMass();
@@ -196,7 +196,7 @@ void Part::RecalculateMass()
 	HZ_ASSERT(m_Fixtures.size() == 1, "Only 1 fixture per part is supported for now!");
 	b2Fixture* fixture = m_Fixtures[0];
 
-	float mass = m_EditorPart->m_Def->DryMass;
+	float mass = m_EditorPart->Def->DryMass;
 	for (auto& resource : m_Resources.Values)
 	{
 		mass += resource.second;
@@ -218,7 +218,7 @@ void Part::Render(const Hazel::Camera& camera, Ship& ship)
 {
 	float shipRot = ship.GetRotation();
 	float rotation = shipRot + GetTotalRotation();
-	Hazel::Ref<PartDef>& def = GetEditorPart()->m_Def;
+	Hazel::Ref<PartDef>& def = GetEditorPart()->Def;
 	Hazel::Renderer2D::Renderable renderable;
 
 	renderable.Position = { ship.GetPosition() + GetTotalOffset(shipRot) + glm::rotate(def->SpriteOffset, rotation), 0.0f };

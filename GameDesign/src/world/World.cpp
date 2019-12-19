@@ -11,14 +11,14 @@ const float MARS_GRAVITY = 3.711f;//meters/s2
 
 const double World::Constants::G = 6.67430E-11;
 
-World::World() : m_Camera(new WorldCameraController()), m_Camera2(nullptr)
+World::World(Hazel::Camera2D& camera) : m_Camera(camera), m_Camera2(nullptr)
 {
 	m_World.reset(new b2World( {0.0f, 0.0f} ));//No gravity since we handle it ourselves
-	m_Camera.SetPosition(vec2(0.0, 0.0));
-	m_Camera.SetRotation(0.0f);
-	m_Camera.SetZoom(10.0f);
+	camera.SetPosition(vec2(0.0, 0.0));
+	camera.SetRotation(0.0f);
+	camera.SetZoom(10.0f);
 
-#if defined(HZ_DEBUG) && 1
+#if defined(HZ_DEBUG) && 0
 	m_DebugDraw.reset(new Hazel::B2D_DebugDraw());
 	m_DebugDraw->SetFlags(b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit);
 	m_World->SetDebugDraw(m_DebugDraw.get());
@@ -174,13 +174,12 @@ void World::AddShip(Ship* ship)
 	m_Ships.push_back(Hazel::S(ship));
 }
 
-Ship& World::AddShip(const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, float rot)
+Hazel::Ref<Ship>& World::AddShip(const Hazel::Ref<EditorShip>& shipDef, glm::vec2 pos, float rot)
 {
 	HZ_PROFILE_FUNCTION();
 
 	Ship* ship = new Ship(*this, shipDef, pos, rot);
-	m_Ships.push_back(Hazel::S(ship));
-	return *ship;
+	return m_Ships.emplace_back(ship);
 }
 
 void World::Remove(Body* body)
@@ -193,7 +192,7 @@ void World::Remove(Body* body)
 	m_World->DestroyBody(body->GetPhsicsBody());
 	for (auto it = m_Ships.begin(); it != m_Ships.end(); ++it)
 	{
-		Hazel::Scope<Ship>& ship = *it;
+		Hazel::Ref<Ship>& ship = *it;
 		if (ship->GetPhsicsBody() == body->GetPhsicsBody())
 		{
 			m_Ships.erase(it);
@@ -202,47 +201,3 @@ void World::Remove(Body* body)
 	}
 }
 
-
-const float ACCEL_SPEED = 25.0f;
-
-void WorldCameraController::Update(Hazel::Timestep ts, Hazel::Camera2D& camera)
-{
-	HZ_PROFILE_FUNCTION();
-
-	glm::vec2 move = { 0, 0 };
-	glm::vec2 right = glm::rotate(glm::vec2(1.0f, 0.0f), glm::radians(camera.m_Rot));
-	glm::vec2 up = glm::rotate(glm::vec2(0.0f, 1.0f), glm::radians(camera.m_Rot));
-	bool moving = false;
-
-	if (Hazel::Input::IsKeyPressed(HZ_KEY_W)) {
-		move += up; moving = true;
-	} if (Hazel::Input::IsKeyPressed(HZ_KEY_S)) {
-		move -= up; moving = true;
-	} if (Hazel::Input::IsKeyPressed(HZ_KEY_D)) {
-		move += right; moving = true;
-	} if (Hazel::Input::IsKeyPressed(HZ_KEY_A)) {
-		move -= right; moving = true;
-	}
-	float length = glm::length(move);
-	if (length > 0.0f)
-	{
-		move /= length;
-		move *= ACCEL_SPEED;
-	}
-
-	camera.m_ZoomVel -= Hazel::Input::GetScrollDelta() * 3.0f;
-
-	camera.m_Vel += move * ts.Seconds();
-	camera.m_Pos += camera.m_Vel * ts.Seconds();
-	if (!moving)
-	{
-		camera.m_Vel *= (1.0f - ts.Seconds() * 2.0f);
-	}
-
-	camera.m_Zoom += camera.m_ZoomVel * ts.Seconds();
-	camera.m_ZoomVel *= (1.0f - ts.Seconds() * 5.0f);
-
-	if (camera.m_Zoom <= 0.00001f)
-		camera.m_Zoom = 0.00001f;
-
-}

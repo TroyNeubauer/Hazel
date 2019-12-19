@@ -66,6 +66,7 @@ namespace Hazel {
 
 		while (m_Running)
 		{	
+			m_LayerStack.Update();
 			HZ_PROFILE_SCOPE("Application::Run()");
 			Engine::Update();
 			Timestep ts = Engine::GetDeltaTime();

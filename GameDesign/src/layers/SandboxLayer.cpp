@@ -9,6 +9,12 @@
 #include <imgui.h>
 #include <random>
 
+SandboxLayer::SandboxLayer()
+	: Hazel::Layer("Sandbox Layer"), m_Camera(new SandboxCameraController)
+{
+	m_World.reset(new World(m_Camera));
+}
+
 void SandboxLayer::OnAttach()
 {
     std::random_device rd;
@@ -32,7 +38,7 @@ void SandboxLayer::OnAttach()
 		}
 		
 	});
-	m_World->GetCamera().SetZoom(10.0f);
+	m_Camera.SetZoom(10.0f);
 }
 
 void SandboxLayer::OnDetach()
@@ -65,7 +71,7 @@ void SandboxLayer::OnUpdate(Hazel::Timestep ts)
 	if(update)
 		m_World->Update(ts);
 	else
-		m_World->GetCamera().Update(ts);
+		m_Camera.Update(ts);
 
 	if (m_DraggedBody && m_MouseDragged)
 	{
@@ -73,7 +79,7 @@ void SandboxLayer::OnUpdate(Hazel::Timestep ts)
 		if (Hazel::Input::DidMouseMove()) {
 			glm::vec2 delta = { Hazel::Input::GetMouseDelta().x, Hazel::Input::GetMouseDelta().y };
 			delta /= ts.Seconds();
-			glm::vec2 result = m_World->GetCamera().GetWorldDelta(delta);
+			glm::vec2 result = m_Camera.GetWorldDelta(delta);
 			velocity = { result.x, result.y };
 		}
 		
@@ -124,7 +130,7 @@ private:
 
 bool SandboxLayer::OnMousePressed(Hazel::MouseButtonPressedEvent* event)
 {
-	glm::vec2 worldCoords = m_World->GetCamera().ToWorldCoordinates(Hazel::Input::GetMousePosition());
+	glm::vec2 worldCoords = m_Camera.ToWorldCoordinates(Hazel::Input::GetMousePosition());
 	b2AABB aabb;
 	aabb.lowerBound.Set(worldCoords.x, worldCoords.y);
 	//aabb.upperBound.Set(worldCoords.x + 0.001f, worldCoords.y + 0.001f);
@@ -304,7 +310,7 @@ void SandboxLayer::OnImGuiRender()
 			ImGui::Text("Radius %fm", planet->GetRadius()); 
 			ImGui::Text("Acceleration at sea level %fm/s^2", World::GetAccelerationDueToGravity(planet->GetRadius(), planet->GetMass()));
 			glm::vec2 planetCenter = planet->GetCenterOfMass();
-			glm::vec2 camPos = m_World->GetCamera().GetPosition();
+			glm::vec2 camPos = m_Camera.GetPosition();
 			glm::vec2 dif = planetCenter - camPos;
 			ImGui::Text("Acceleration at current height %fm/s^2", World::GetAccelerationDueToGravity(sqrt(dif.x * dif.x + dif.y * dif.y), planet->GetMass()));
 		}
@@ -353,3 +359,48 @@ SandboxLayer::~SandboxLayer()
 {
 
 }
+
+const float ACCEL_SPEED = 25.0f;
+
+void SandboxCameraController::Update(Hazel::Timestep ts, Hazel::Camera2D& camera)
+{
+	HZ_PROFILE_FUNCTION();
+
+	glm::vec2 move = { 0, 0 };
+	glm::vec2 right = glm::rotate(glm::vec2(1.0f, 0.0f), glm::radians(camera.m_Rot));
+	glm::vec2 up = glm::rotate(glm::vec2(0.0f, 1.0f), glm::radians(camera.m_Rot));
+	bool moving = false;
+
+	if (Hazel::Input::IsKeyPressed(HZ_KEY_W)) {
+		move += up; moving = true;
+	} if (Hazel::Input::IsKeyPressed(HZ_KEY_S)) {
+		move -= up; moving = true;
+	} if (Hazel::Input::IsKeyPressed(HZ_KEY_D)) {
+		move += right; moving = true;
+	} if (Hazel::Input::IsKeyPressed(HZ_KEY_A)) {
+		move -= right; moving = true;
+	}
+	float length = glm::length(move);
+	if (length > 0.0f)
+	{
+		move /= length;
+		move *= ACCEL_SPEED;
+	}
+
+	camera.m_ZoomVel -= Hazel::Input::GetScrollDelta() * 3.0f;
+
+	camera.m_Vel += move * ts.Seconds();
+	camera.m_Pos += camera.m_Vel * ts.Seconds();
+	if (!moving)
+	{
+		camera.m_Vel *= (1.0f - ts.Seconds() * 2.0f);
+	}
+
+	camera.m_Zoom += camera.m_ZoomVel * ts.Seconds();
+	camera.m_ZoomVel *= (1.0f - ts.Seconds() * 5.0f);
+
+	if (camera.m_Zoom <= 0.00001f)
+		camera.m_Zoom = 0.00001f;
+
+}
+
