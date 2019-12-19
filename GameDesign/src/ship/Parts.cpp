@@ -113,7 +113,7 @@ void EnginePart::Update(Hazel::Timestep ts, World& world, Ship& ship)
 		{
 			Part* part = s_TempParts[i];
 			auto& resources = part->m_Resources.Values;
-			auto& it = resources.find(ResourceType::FUEL);
+			const auto& it = resources.find(ResourceType::FUEL);
 			if (it != resources.end())
 			{
 				float& fuelInTank = it->second;

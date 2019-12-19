@@ -239,7 +239,7 @@ float GetResourceDensity(ResourceType type)
 	RESOURCE_DENSITIES[ResourceType::FUEL] = 810.0f;
 	RESOURCE_DENSITIES[ResourceType::PASSENGERS] = 60.0f;//Each passenger weighs 60kg
 
-	if (type >= sizeof(RESOURCE_DENSITIES) / sizeof(RESOURCE_DENSITIES[0]))
+	if ((int) type >= sizeof(RESOURCE_DENSITIES) / sizeof(RESOURCE_DENSITIES[0]))
 		return 0.0f;
 	return RESOURCE_DENSITIES[type];
 }

@@ -178,7 +178,7 @@ protected:
 
 
 template<typename F>
-static int Part::FillInPartsUntil(const Part* leaf, F func)
+int Part::FillInPartsUntil(const Part* leaf, F func)
 {
 	int count = 0;
 	while (leaf && func(leaf))
