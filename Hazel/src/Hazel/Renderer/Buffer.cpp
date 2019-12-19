@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "Buffer.h"
 
+#include "Hazel/Core/glm.h"
 #include "Platform/NoAPI/NoAPI.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
@@ -99,38 +100,38 @@ namespace Hazel {
 		return 0;
 	}
 
-	template<> static ShaderDataType ToShaderDataType<float>()			{ return ShaderDataType::Float32; }
-	template<> static ShaderDataType ToShaderDataType<double>()			{ return ShaderDataType::Float64; }
-	template<> static ShaderDataType ToShaderDataType<glm::vec2>()		{ return ShaderDataType::Float32_2; }
-	template<> static ShaderDataType ToShaderDataType<glm::dvec2>()		{ return ShaderDataType::Float64_2; }
-	template<> static ShaderDataType ToShaderDataType<glm::vec3>()		{ return ShaderDataType::Float32_3; }
-	template<> static ShaderDataType ToShaderDataType<glm::dvec3>()		{ return ShaderDataType::Float64_3; }
-	template<> static ShaderDataType ToShaderDataType<glm::vec4>()		{ return ShaderDataType::Float32_4; }
-	template<> static ShaderDataType ToShaderDataType<glm::dvec4>()		{ return ShaderDataType::Float64_4; }
+	template<> ShaderDataType ToShaderDataType<float>()			{ return ShaderDataType::Float32; }
+	template<> ShaderDataType ToShaderDataType<double>()			{ return ShaderDataType::Float64; }
+	template<> ShaderDataType ToShaderDataType<glm::vec2>()		{ return ShaderDataType::Float32_2; }
+	template<> ShaderDataType ToShaderDataType<glm::dvec2>()		{ return ShaderDataType::Float64_2; }
+	template<> ShaderDataType ToShaderDataType<glm::vec3>()		{ return ShaderDataType::Float32_3; }
+	template<> ShaderDataType ToShaderDataType<glm::dvec3>()		{ return ShaderDataType::Float64_3; }
+	template<> ShaderDataType ToShaderDataType<glm::vec4>()		{ return ShaderDataType::Float32_4; }
+	template<> ShaderDataType ToShaderDataType<glm::dvec4>()		{ return ShaderDataType::Float64_4; }
 
-	template<> static ShaderDataType ToShaderDataType<uint8_t>()		{ return ShaderDataType::Int8; }
-	template<> static ShaderDataType ToShaderDataType<uint16_t>()		{ return ShaderDataType::Int16; }
-	template<> static ShaderDataType ToShaderDataType<uint32_t>()		{ return ShaderDataType::Int32; }
-	template<> static ShaderDataType ToShaderDataType<uint64_t>()		{ return ShaderDataType::Int64; }
+	template<> ShaderDataType ToShaderDataType<uint8_t>()		{ return ShaderDataType::Int8; }
+	template<> ShaderDataType ToShaderDataType<uint16_t>()		{ return ShaderDataType::Int16; }
+	template<> ShaderDataType ToShaderDataType<uint32_t>()		{ return ShaderDataType::Int32; }
+	template<> ShaderDataType ToShaderDataType<uint64_t>()		{ return ShaderDataType::Int64; }
 
-	template<> static ShaderDataType ToShaderDataType<glm::i8vec2>()	{ return ShaderDataType::Int8_2; }
-	template<> static ShaderDataType ToShaderDataType<glm::i16vec2>()	{ return ShaderDataType::Int16_2; }
-	template<> static ShaderDataType ToShaderDataType<glm::i32vec2>()	{ return ShaderDataType::Int32_2; }
-	template<> static ShaderDataType ToShaderDataType<glm::i64vec2>()	{ return ShaderDataType::Int64_2; }
+	template<> ShaderDataType ToShaderDataType<glm::i8vec2>()	{ return ShaderDataType::Int8_2; }
+	template<> ShaderDataType ToShaderDataType<glm::i16vec2>()	{ return ShaderDataType::Int16_2; }
+	template<> ShaderDataType ToShaderDataType<glm::i32vec2>()	{ return ShaderDataType::Int32_2; }
+	template<> ShaderDataType ToShaderDataType<glm::i64vec2>()	{ return ShaderDataType::Int64_2; }
 
-	template<> static ShaderDataType ToShaderDataType<glm::i8vec3>()	{ return ShaderDataType::Int8_3; }
-	template<> static ShaderDataType ToShaderDataType<glm::i16vec3>()	{ return ShaderDataType::Int16_3; }
-	template<> static ShaderDataType ToShaderDataType<glm::i32vec3>()	{ return ShaderDataType::Int32_3; }
-	template<> static ShaderDataType ToShaderDataType<glm::i64vec3>()	{ return ShaderDataType::Int64_3; }
+	template<> ShaderDataType ToShaderDataType<glm::i8vec3>()	{ return ShaderDataType::Int8_3; }
+	template<> ShaderDataType ToShaderDataType<glm::i16vec3>()	{ return ShaderDataType::Int16_3; }
+	template<> ShaderDataType ToShaderDataType<glm::i32vec3>()	{ return ShaderDataType::Int32_3; }
+	template<> ShaderDataType ToShaderDataType<glm::i64vec3>()	{ return ShaderDataType::Int64_3; }
 
-	template<> static ShaderDataType ToShaderDataType<glm::i8vec4>()	{ return ShaderDataType::Int8_4; }
-	template<> static ShaderDataType ToShaderDataType<glm::i16vec4>()	{ return ShaderDataType::Int16_4; }
-	template<> static ShaderDataType ToShaderDataType<glm::i32vec4>()	{ return ShaderDataType::Int32_4; }
-	template<> static ShaderDataType ToShaderDataType<glm::i64vec4>()	{ return ShaderDataType::Int64_4; }
+	template<> ShaderDataType ToShaderDataType<glm::i8vec4>()	{ return ShaderDataType::Int8_4; }
+	template<> ShaderDataType ToShaderDataType<glm::i16vec4>()	{ return ShaderDataType::Int16_4; }
+	template<> ShaderDataType ToShaderDataType<glm::i32vec4>()	{ return ShaderDataType::Int32_4; }
+	template<> ShaderDataType ToShaderDataType<glm::i64vec4>()	{ return ShaderDataType::Int64_4; }
 
-	template<> static ShaderDataType ToShaderDataType<glm::mat3>()		{ return ShaderDataType::Mat3; }
-	template<> static ShaderDataType ToShaderDataType<glm::mat4>()		{ return ShaderDataType::Mat4; }
-	template<> static ShaderDataType ToShaderDataType<bool>()			{ return ShaderDataType::Bool; }
+	template<> ShaderDataType ToShaderDataType<glm::mat3>()		{ return ShaderDataType::Mat3; }
+	template<> ShaderDataType ToShaderDataType<glm::mat4>()		{ return ShaderDataType::Mat4; }
+	template<> ShaderDataType ToShaderDataType<bool>()			{ return ShaderDataType::Bool; }
 
 	template<>
 	Ref<VertexBuffer> VertexBuffer::Create(float* data, uint64_t bytes)

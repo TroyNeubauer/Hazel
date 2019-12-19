@@ -118,13 +118,3 @@ namespace Hazel {
 	template<typename T>
 	inline Scope<T> S(T* t) { return Scope<T>(t); }
 }
-
-
-//Conditional defines
-
-
-#ifdef HZ_COMPILER_EMSCRIPTEN
-	#define HZ_USE_JS_AUDIO
-#else
-	#define HZ_USE_LAB_AUDIO
-#endif

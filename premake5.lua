@@ -39,6 +39,9 @@ workspace "Hazel"
 	defines
 	{
 		"HAZEL",
+		"HZ_USE_AUDIO_NONE",
+		--"HZ_COMPILER_EMSCRIPTEN",
+		--"HZ_USE_JS_AUDIO",
 	}
 
 	filter "system:windows"
@@ -143,9 +146,9 @@ local function HazelEXEDependencies()
 			"Onecore.lib",
 			"opengl32.lib",
 			"vulkan.lib",
-			"dsound.lib",
-			"dxguid.lib",
-			"winmm.lib",
+			--"dsound.lib",
+			--"dxguid.lib",
+			--"winmm.lib",
 		}
 
 	filter { "system:windows", "configurations:Debug" }
@@ -154,10 +157,10 @@ local function HazelEXEDependencies()
 		print("Using debug windows libs")
 		links
 		{
-			"LabSound_d.lib",
-			"libnyquist_d.lib",
-			"libopus_d.lib",
-			"libwavpack_d.lib",
+			--"LabSound_d.lib",
+			--"libnyquist_d.lib",
+			--"libopus_d.lib",
+			--"libwavpack_d.lib",
 		}
 
 	filter { "system:windows", "configurations:Release or configurations:Dist" }
@@ -166,10 +169,10 @@ local function HazelEXEDependencies()
 		print("Using release windows libs")
 		links
 		{
-			"LabSound.lib",
-			"libnyquist.lib",
-			"libopus.lib",
-			"libwavpack.lib",
+			--"LabSound.lib",
+			--"libnyquist.lib",
+			--"libopus.lib",
+			--"libwavpack.lib",
 		}
 
 	filter "system:linux"
@@ -191,10 +194,10 @@ local function HazelEXEDependencies()
 		
 		links
 		{
-			"LabSound_d",
-			"libnyquist_d",
-			"libopus_d",
-			"libwavpack_d",
+			--"LabSound_d",
+			--"libnyquist_d",
+			--"libopus_d",
+			--"libwavpack_d",
 		}
 
 	filter { "system:linux", "configurations:Release or configurations:Dist" }
@@ -202,10 +205,10 @@ local function HazelEXEDependencies()
 
 		links
 		{
-			"LabSound",
-			"libnyquist",
-			"libopus",
-			"libwavpack",
+			--"LabSound",
+			--"libnyquist",
+			--"libopus",
+			--"libwavpack",
 		}
 
 end

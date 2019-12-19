@@ -33,5 +33,3 @@ public:
 };
 
 extern Sandbox* sandbox;
-
-Hazel::Application* Hazel::CreateApplication(int argc, char** argv);
