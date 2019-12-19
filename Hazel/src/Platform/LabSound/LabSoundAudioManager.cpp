@@ -1,4 +1,7 @@
 #include "hzpch.h"
+
+#ifdef HZ_USE_LABSOUND_AUDIO
+
 #include "LabSoundAudioManager.h"
 
 namespace Hazel {
@@ -66,3 +69,5 @@ namespace Hazel {
 
 }
 
+
+#endif

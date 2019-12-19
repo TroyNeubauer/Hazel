@@ -1,11 +1,12 @@
 #include "hzpch.h"
+
+#ifdef HZ_USE_LABSOUND_AUDIO
 #include "LabSoundAudio.h"
 
 const std::string & Hazel::LabSoundAudioSource::GetPath()
 {
 	return Name;
 }
-
 
 
 bool Hazel::LabSoundPlayingAudio::IsPlaying()
@@ -51,3 +52,6 @@ void Hazel::LabSoundPlayingAudio::SetGain(float gain)
 {
 	m_Handle->gain()->setValue(gain);
 }
+
+#endif
+

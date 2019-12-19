@@ -2,6 +2,7 @@
 #include "AudioManager.h"
 
 #include "Platform/LabSound/LabSoundAudioManager.h"
+#include "Platform/NoAPI/NoAPIAudio.h"
 
 namespace Hazel {
 
@@ -11,12 +12,16 @@ namespace Hazel {
 	{
 		HZ_CORE_ASSERT(!s_Instance, "Audio Manager already exists!");
 
-	#ifdef HZ_USE_LAB_AUDIO
+#if defined(HZ_USE_AUDIO_NONE)
+		s_Instance.reset(new NoAPIAudioManager());
+#elif defined(HZ_USE_LABSOUND_AUDIO)
 		s_Instance.reset(new LabSoundAudioManager());
-	#else
+#elif defined(HZ_USE_JS_AUDIO)
 		#error JS not supported yet
 		s_Instance.reset(...);
-	#endif
+#else
+		#error No audio API selected
+#endif
 	}
 
 	void Hazel::AudioManager::Shutdown()

@@ -40,7 +40,7 @@ workspace "Hazel"
 	{
 		"HAZEL",
 		"HZ_USE_AUDIO_NONE",
-		--"HZ_COMPILER_EMSCRIPTEN",
+		--"HZ_USE_LABSOUND_AUDIO",
 		--"HZ_USE_JS_AUDIO",
 	}
 

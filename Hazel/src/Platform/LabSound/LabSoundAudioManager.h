@@ -1,4 +1,5 @@
 #pragma once
+#ifdef HZ_USE_LABSOUND_AUDIO
 
 #include "Hazel/Audio/AudioManager.h"
 #include "LabSoundAudio.h"
@@ -30,3 +31,4 @@ namespace Hazel {
 
 }
 
+#endif
