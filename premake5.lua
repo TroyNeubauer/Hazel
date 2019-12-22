@@ -139,18 +139,12 @@ local function HazelEXEDependencies()
 
 	filter "system:windows"
 
-		libdirs
-		{
-			"Hazel/vendor/Vulkan/lib",
-		}
-
 		links
 		{
 			"Pdh.lib",
 			"kernel32.lib",
 			"Onecore.lib",
 			"opengl32.lib",
-			"vulkan.lib",
 			--"dsound.lib",
 			--"dxguid.lib",
 			--"winmm.lib",
@@ -182,11 +176,6 @@ local function HazelEXEDependencies()
 
 	filter "system:linux"
 
-		libdirs
-		{
-			"Hazel/vendor/Vulkan/lib",
-		}
-
 		links
 		{
 			"GL",
@@ -196,8 +185,7 @@ local function HazelEXEDependencies()
 			"Xcursor",
 			"pthread",
 			"dl",
-			"vulkan",
-		}		
+		}
 
 	filter { "system:linux", "configurations:Debug" }
 		libdirs { "Hazel/vendor/LabSound/build/linux/Debug/bin" }
@@ -225,7 +213,6 @@ local function HazelEXEDependencies()
 
 		links
 		{
-			--"/Library/Frameworks/Vulkan.framework",
 			"/Library/Frameworks/Cocoa.framework",
 			"/Library/Frameworks/OpenGL.framework",
 			"/Library/Frameworks/IOKit.framework",
@@ -275,7 +262,7 @@ project "Hazel"
 	location "Hazel"
 	kind "StaticLib"
 
-	vectorextensions "AVX"
+	vectorextensions "AVX2"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")

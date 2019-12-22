@@ -11,6 +11,6 @@ namespace Hazel {
 
 		glm::vec4 ExpandColor(uint32_t color);
 
-		
+		//template<typename Src, typename D
 	}
 }

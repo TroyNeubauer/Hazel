@@ -5,6 +5,7 @@
 
 Hazel::Application* HZCreateApplication(int argc, char** argv)
 {
+	Hazel::GraphicsAPI::AddWantedAPI(Hazel::GraphicsAPIType::VULKAN);
 	return new GameDesign();
 }
 
