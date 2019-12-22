@@ -10,5 +10,7 @@ namespace Hazel {
 		inline uint32_t ToCompactColor(b2Color color) { return ToCompactColor(glm::vec4(color.r, color.g, color.b, color.a)); }
 
 		glm::vec4 ExpandColor(uint32_t color);
+
+		
 	}
 }
