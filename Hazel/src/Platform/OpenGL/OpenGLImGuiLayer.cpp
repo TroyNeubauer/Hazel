@@ -10,7 +10,7 @@
 
 #include "Hazel/Core/Application.h"
 
-#include <GLFW/glfw3.h>
+#include "Platform/GLFW/GLFW.h"
 #include <glad/glad.h>
 
 namespace Hazel {

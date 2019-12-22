@@ -17,7 +17,6 @@ project "freeimage"
 
 	includedirs
 	{
-		"../zlib/include",
 		"Source/",
 		"Source/FreeImage",
 		"Source/FreeImageToolkit",
@@ -31,9 +30,13 @@ project "freeimage"
 		"Source/OpenEXR/IlmImf",
 		"Source/OpenEXR/IlmThread",
 		"Source/OpenEXR/Imath",
-		"Source/ZLib",
 	}
 
+	sysincludedirs
+	{
+		"Source/ZLib",
+		"../zlib/include",
+	}
 	defines
 	{
 		"_HAS_AUTO_PTR_ETC=1",
@@ -46,20 +49,4 @@ project "freeimage"
 	links
 	{
 	}
-	
-	filter "configurations:Debug"
-		defines "HZ_DEBUG"
-		runtime "Debug"
-		symbols "on"
 
-	filter "configurations:Release"
-		defines "HZ_RELEASE"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"
-
-	filter "configurations:Dist"
-		defines "HZ_DIST"
-		runtime "Release"
-		optimize "speed"
-		inlining "auto"

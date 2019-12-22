@@ -7,6 +7,10 @@
 # Files
 *.user
 **/*.TMP
+**/*.xcodeproj
+**/*.xcworkspace
+
+**/.DS_Store
 
 #Hazel Files
 

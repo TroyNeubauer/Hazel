@@ -42,6 +42,10 @@ workspace "Hazel"
 		"HZ_USE_AUDIO_NONE",
 		--"HZ_USE_LABSOUND_AUDIO",
 		--"HZ_USE_JS_AUDIO",
+
+		"HZ_ENABLE_GRAPHICS_API_NONE",
+		"HZ_ENABLE_OPEN_GL",
+
 	}
 
 	filter "system:windows"
@@ -89,7 +93,8 @@ workspace "Hazel"
 
 --Adds the links needed by Hazel to premake
 local function HazelEXEDependencies()
-	includedirs
+
+	sysincludedirs
 	{
 		"Hazel/vendor/spdlog/include",
 		"Hazel/src",
@@ -131,13 +136,13 @@ local function HazelEXEDependencies()
 		"FREEIMAGE_LIB"
 	}
 
-	libdirs
-	{
-		"Hazel/vendor/Vulkan/lib",
-	}
-
 
 	filter "system:windows"
+
+		libdirs
+		{
+			"Hazel/vendor/Vulkan/lib",
+		}
 
 		links
 		{
@@ -176,7 +181,12 @@ local function HazelEXEDependencies()
 		}
 
 	filter "system:linux"
-	
+
+		libdirs
+		{
+			"Hazel/vendor/Vulkan/lib",
+		}
+
 		links
 		{
 			"GL",
@@ -209,6 +219,17 @@ local function HazelEXEDependencies()
 			--"libnyquist",
 			--"libopus",
 			--"libwavpack",
+		}
+
+	filter "system:macosx"
+
+		links
+		{
+			--"/Library/Frameworks/Vulkan.framework",
+			"/Library/Frameworks/Cocoa.framework",
+			"/Library/Frameworks/OpenGL.framework",
+			"/Library/Frameworks/IOKit.framework",
+			"/Library/Frameworks/CoreVideo.framework",
 		}
 
 end
@@ -270,9 +291,8 @@ project "Hazel"
 		"%{prj.name}/vendor/glm/glm/**.inl",
 	}
 
-	includedirs
+	sysincludedirs
 	{
-		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
@@ -292,6 +312,12 @@ project "Hazel"
 		"Hazel/vendor/freeimage/Source/LibPNG",
 		"Hazel/vendor/freeimage/Source/Metadata",
 		"Hazel/vendor/freeimage/Source/ZLib",
+		
+	}
+
+	includedirs
+	{
+		"%{prj.name}/src",
 	}
 
 
@@ -299,14 +325,11 @@ project "Hazel"
 
 	defines
 	{
-		"HZ_ENABLE_GRAPHICS_API_NONE",
-		"HZ_ENABLE_OPEN_GL",
-		--"HZ_ENABLE_VULKAN",
-		"GLFW_INCLUDE_NONE",
 		"GLM_FORCE_INTRINSICS",
 		"HZ_GLFW_INPUT",
 		"HZ_GLFW_WINDOW",
 		"FREEIMAGE_LIB",
+		
 	}
 
 	filter "system:windows"

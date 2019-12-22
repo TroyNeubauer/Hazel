@@ -16,6 +16,11 @@ project "Glad"
 	{
 		"include"
 	}
+
+	sysincludedirs
+	{
+		"include"
+	}
 	
 	filter "system:windows"
 		systemversion "latest"

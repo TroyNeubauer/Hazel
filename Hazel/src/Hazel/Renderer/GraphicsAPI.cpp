@@ -2,8 +2,6 @@
 #include "hzpch.h"
 #include "GraphicsAPI.h"
 
-#include <GLFW/glfw3.h>
-
 #ifdef HZ_ENABLE_VULKAN
 #include <vulkan/vulkan.h>
 #endif
@@ -145,8 +143,7 @@ namespace Hazel {
 #ifdef HZ_ENABLE_SOFTWARE_RENDERER
 			case Hazel::GraphicsAPIType::SOFTWARE:		return true;
 #endif
-			default:
-				return false;
+			default:									return false;
 		}
 	}
 }

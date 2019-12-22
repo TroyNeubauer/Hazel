@@ -37,28 +37,27 @@
 	#define HZ_LITTLE_ENDIAN
 
 #elif defined(__APPLE__) || defined(__MACH__)
-	#include <TargetConditionals.h>
-	/* TARGET_OS_MAC exists on all the platforms
-	 * so we must check all of them (in this order)
-	 * to ensure that we're running on MAC
-	 * and not some other Apple platform */
-	#define HZ_PLATFORM_APPLE
-	#define HZ_PLATFORM_UNIX
-	#if TARGET_IPHONE_SIMULATOR == 1
-		#error "IOS simulator is not supported!"
-	#elif TARGET_OS_IPHONE == 1
-		#define HZ_PLATFORM_IOS
-		#error "IOS is not supported!"
-	#elif TARGET_OS_MAC == 1
-		#define HZ_PLATFORM_MACOS
-		#error "MacOS is not supported!"
-	#else
-		#error "Unknown Apple platform!"
-	#endif
-	#error Apple is not supported for now!
+    #include <TargetConditionals.h>
+    /* TARGET_OS_MAC exists on all the platforms
+     * so we must check all of them (in this order)
+     * to ensure that we're running on MAC
+     * and not some other Apple platform */
+    #define HZ_PLATFORM_APPLE
+    #define HZ_PLATFORM_UNIX
+
+    #if TARGET_IPHONE_SIMULATOR == 1
+        #error "IOS simulator is not supported!"
+    #elif TARGET_OS_IPHONE == 1
+        #define HZ_PLATFORM_IOS
+        #error "IOS is not supported!"
+    #elif TARGET_OS_MAC == 1
+        #define HZ_PLATFORM_MACOS
+    #else
+        #error "Unknown Apple platform!"
+    #endif
 
 
-#elif defined(__linux__)//Defined after android to target desktop linux
+#elif defined(__linux__)//Defined after android to isolate desktop linux
 	#define HZ_PLATFORM_UNIX
 	#define HZ_PLATFORM_LINUX
 	#define HZ_LITTLE_ENDIAN
@@ -71,6 +70,7 @@
 		// debug break
 	#if defined(HZ_PLATFORM_WINDOWS)
 		#define HZ_DEBUGBREAK() __debugbreak()
+
 	#elif defined(HZ_PLATFORM_UNIX)
 		#include <signal.h>
 		#define HZ_DEBUGBREAK() raise(SIGTRAP)
@@ -118,3 +118,5 @@ namespace Hazel {
 	template<typename T>
 	inline Scope<T> S(T* t) { return Scope<T>(t); }
 }
+
+

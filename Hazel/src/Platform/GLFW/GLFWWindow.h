@@ -1,7 +1,7 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
-#include "../../Hazel/Core/Window.h"
+#include "GLFW.h"
+#include "Hazel/Core/Window.h"
 
 namespace Hazel {
 

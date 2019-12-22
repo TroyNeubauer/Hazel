@@ -5,7 +5,8 @@
 #include "Hazel/Core/Application.h"
 #include "Hazel/Core/KeyCodes.h"
 
-#include <GLFW/glfw3.h>
+#include "GLFW.h"
+
 #include <bitset>
 
 namespace Hazel {

@@ -45,6 +45,8 @@ const int RIGHT_INDEX = 1;
 const int BOTTOM_INDEX = 2;
 const int LEFT_INDEX = 3;
 
+static bool INVALID = false;
+
 struct PartConnections
 {
 	PartConnections() = default;
@@ -56,12 +58,13 @@ struct PartConnections
 	{
 		switch (index)
 		{
-		case TOP_INDEX: return Top;
-		case RIGHT_INDEX: return Right;
-		case BOTTOM_INDEX: return Bottom;
-		case LEFT_INDEX: return Left;
-		default: HZ_ASSERT(false, "Failed to find side");
+			case TOP_INDEX: return Top;
+			case RIGHT_INDEX: return Right;
+			case BOTTOM_INDEX: return Bottom;
+			case LEFT_INDEX: return Left;
+			default: HZ_ASSERT(false, "Failed to find side");
 		}
+		return INVALID;
 	}
 };
 
