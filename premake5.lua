@@ -27,6 +27,7 @@ workspace "Hazel"
 	intrinsics "on"
 	systemversion "latest"
 	staticruntime "off"
+	vectorextensions "AVX2"
 	
 
 	configurations
@@ -63,6 +64,12 @@ workspace "Hazel"
 		libdirs
 		{
 			"/usr/lib/x86_64-linux-gnu/",
+		}
+
+	filter "system:macosx"
+		buildoptions
+		{
+			"-mmacosx-version-min=10.12"
 		}
 
 
@@ -262,12 +269,10 @@ project "Hazel"
 	location "Hazel"
 	kind "StaticLib"
 
-	vectorextensions "AVX2"
-
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	pchheader "hzpch.h"
+	pchheader "src/hzpch.h"
 	pchsource "Hazel/src/hzpch.cpp"
 
 	files

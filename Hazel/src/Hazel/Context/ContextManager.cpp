@@ -19,8 +19,10 @@ namespace Hazel {
 			GraphicsAPI::AddListener(OnGraphicsAPIChange);
 #if defined(HZ_PLATFORM_WINDOWS)
 			s_Instance = new WindowsContextManager();
-#elif defined(HZ_PLATFORM_LINUX)
+#elif defined(HZ_PLATFORM_UNIX)
 			s_Instance = new UnixContextManager();
+#else
+	#error No context manager avilable for the selected platform!
 #endif
 		}
 		return s_Instance;

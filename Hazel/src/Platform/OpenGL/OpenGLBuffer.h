@@ -33,7 +33,8 @@ namespace Hazel {
 	public:
 		OpenGLBuffer(T* data, uint64_t bytes)
 		{
-			glCreateBuffers(1, &m_BufferID);
+			//glCreateBuffers(1, &m_BufferID); FIXME
+			glGenBuffers(1, &m_BufferID);
 			glBindBuffer(GetTarget(TYPE), m_BufferID);
 			SetData(data, bytes, GL_STATIC_DRAW);
 			if (TYPE == BufferType::INDEX)
@@ -48,7 +49,8 @@ namespace Hazel {
 
 		OpenGLBuffer(uint64_t bytes)
 		{
-			glCreateBuffers(1, &m_BufferID);
+			//glCreateBuffers(1, &m_BufferID); FIXME
+			glGenBuffers(1, &m_BufferID);
 			glBindBuffer(GetTarget(TYPE), m_BufferID);
 			SetData(nullptr, bytes, GL_DYNAMIC_DRAW);
 		}

@@ -19,7 +19,7 @@ GameDesign::GameDesign()
 
 	Parts::Init();
 	Ships::Init();
-	//PushOverlay(new Hazel::DebugLayer());
+	PushOverlay(new Hazel::DebugLayer());
 
 	PushLayer(new EditorLayer());
 	sound = Hazel::AudioManager::Load("assets/audio/computers_have_control.mp3");

@@ -27,7 +27,7 @@ namespace Hazel {
 		glEnable(GL_MULTISAMPLE);
 
 #if HZ_DEBUG_GRAPHICS_CONTEXT
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		/*glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
 			const char* typeStr;
@@ -58,7 +58,7 @@ namespace Hazel {
 				HZ_CORE_LOG(level, "GL CALLBACK: type {} (0x{:x}), severity {} (0x{:x}): {}\n", typeStr, type, severityStr, severity, message);
 			HZ_CORE_ASSERT(severity != GL_DEBUG_SEVERITY_HIGH, "Severe OpenGL Error");
 
-		}, this);
+		}, this);*/
 #endif
 	}
 
