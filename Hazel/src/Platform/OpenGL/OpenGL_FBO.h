@@ -1,4 +1,5 @@
 #pragma once
+#ifdef HZ_ENABLE_OPEN_GL
 
 #include "Hazel/Renderer/FBO.h"
 #include "OpenGLTexture.h"
@@ -20,6 +21,8 @@ namespace Hazel {
 
 		virtual void CreateColorBuffer(TextureBuilder builder) override;
 		virtual void CreateDepthBuffer() override;
+
+		virtual ~OpenGL_FBO() {}
 
 	private:
 		inline OpenGLTexture2D* GetTextureImpl() const { return reinterpret_cast<OpenGLTexture2D*>(m_Texture.get()); }
@@ -49,3 +52,5 @@ namespace Hazel {
 	};
 
 }
+
+#endif

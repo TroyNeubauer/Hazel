@@ -13,20 +13,25 @@
 #include "HazelExterns.h"
 
 //========== COMPILER detect ==========
-#if defined(_MSC_VER)
+#if defined(__EMSCRIPTEN__ )
+	#define HZ_COMPILER_EMSCRIPTEN
+#elif defined(_MSC_VER)
 	#define HZ_COMPILER_MSVC
 #elif defined(__GNUC__)
 	#define HZ_COMPILER_GCC
 #elif defined(__clang__)
 	#define HZ_COMPILER_CLANG
-#elif defined(__EMSCRIPTEN__ )
-	#define HZ_COMPILER_EMSCRIPTEN
+
 #else
 	#error Unsupported compiler
 #endif
 
 //========== PLATFORM detect ==========
-#if defined(__ANDROID__)
+#if defined(HZ_COMPILER_EMSCRIPTEN)
+	#define HZ_PLATFORM_EMSCRIPTEN
+	#include <emscripten/emscripten.h>
+
+#elif defined(__ANDROID__)
 	#define HZ_PLATFORM_ANDROID
 	#define HZ_PLATFORM_UNIX
 	#define HZ_PLATFORM_LINUX
@@ -74,7 +79,10 @@
 	#elif defined(HZ_PLATFORM_UNIX)
 		#include <signal.h>
 		#define HZ_DEBUGBREAK() raise(SIGTRAP)
+	#elif defined(HZ_PLATFORM_EMSCRIPTEN)
+		void EmscriptenDebugBreak();
 
+		#define HZ_DEBUGBREAK() EmscriptenDebugBreak();
 	#else
 		#error No debug break!
 	#endif
@@ -94,8 +102,8 @@
 #endif
 
 
-//Enable debug graphics contexts by default in debug mode
-#if !defined(HZ_DEBUG_GRAPHICS_CONTEXT) && defined(HZ_DEBUG)
+//Enable debug graphics contexts by default in debug mode on desktop
+#if !defined(HZ_DEBUG_GRAPHICS_CONTEXT) && !defined(HZ_COMPILER_EMSCRIPTEN) && defined(HZ_DEBUG)
 	#define HZ_DEBUG_GRAPHICS_CONTEXT 1
 #endif
 

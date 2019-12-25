@@ -1,7 +1,7 @@
 #include "hzpch.h"
-#ifdef HZ_GLFW_WINDOW
+#ifdef HZ_GLFW3_WINDOW
 
-#include "GLFWWindow.h"
+#include "GLFW3Window.h"
 
 #include "Hazel/Core/Application.h"
 #include "Hazel/Events/ApplicationEvent.h"
@@ -16,20 +16,20 @@ namespace Hazel {
 	Window* Window::Create(const WindowProps& props)
 	{
 		HZ_PROFILE_FUNCTION();
-		return new GLFWWindow(props);
+		return new GLFW3Window(props);
 	}
 
-	GLFWWindow::GLFWWindow(const WindowProps& props)
+	GLFW3Window::GLFW3Window(const WindowProps& props)
 	{
 		Init(props);
 	}
 
-	GLFWWindow::~GLFWWindow()
+	GLFW3Window::~GLFW3Window()
 	{
 		Shutdown();
 	}
 
-	void GLFWWindow::Init(const WindowProps& props)
+	void GLFW3Window::Init(const WindowProps& props)
 	{
 		HZ_PROFILE_FUNCTION();
 
@@ -51,7 +51,7 @@ namespace Hazel {
 			if (api == GraphicsAPIType::OPEN_GL)
 			{
 				glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-				glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+				glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 				glfwWindowHint(GLFW_SAMPLES, 4);
 #if HZ_DEBUG_GRAPHICS_CONTEXT
 				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
@@ -78,7 +78,7 @@ namespace Hazel {
 
 			glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 			{
-				GLFWWindow* myWindow = (GLFWWindow*) glfwGetWindowUserPointer(window);
+				GLFW3Window* myWindow = (GLFW3Window*) glfwGetWindowUserPointer(window);
 				myWindow->m_Data.Width = width;
 				myWindow->m_Data.Height = height;
 
@@ -91,14 +91,14 @@ namespace Hazel {
 
 			glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 			{
-				GLFWWindow* myWindow = (GLFWWindow*) glfwGetWindowUserPointer(window);
+				GLFW3Window* myWindow = (GLFW3Window*) glfwGetWindowUserPointer(window);
 				WindowCloseEvent* event = new WindowCloseEvent();
 				myWindow->m_EventCallback(event);
 			});
 
 			glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
-				GLFWWindow* myWindow = (GLFWWindow*)glfwGetWindowUserPointer(window);
+				GLFW3Window* myWindow = (GLFW3Window*)glfwGetWindowUserPointer(window);
 
 				switch (action)
 				{
@@ -125,7 +125,7 @@ namespace Hazel {
 
 			glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
 			{
-				GLFWWindow* myWindow = (GLFWWindow*) glfwGetWindowUserPointer(window);
+				GLFW3Window* myWindow = (GLFW3Window*) glfwGetWindowUserPointer(window);
 				WindowData& data = *(WindowData*) glfwGetWindowUserPointer(window);
 
 				KeyTypedEvent* event = new KeyTypedEvent(keycode);
@@ -134,7 +134,7 @@ namespace Hazel {
 
 			glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 			{
-				GLFWWindow* myWindow = (GLFWWindow*)glfwGetWindowUserPointer(window);
+				GLFW3Window* myWindow = (GLFW3Window*)glfwGetWindowUserPointer(window);
 				switch (action)
 				{
 					case GLFW_PRESS:
@@ -154,7 +154,7 @@ namespace Hazel {
 
 			glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
 			{
-				GLFWWindow* myWindow = (GLFWWindow*)glfwGetWindowUserPointer(window);
+				GLFW3Window* myWindow = (GLFW3Window*)glfwGetWindowUserPointer(window);
 				MouseScrolledEvent* event = new MouseScrolledEvent((float)xOffset, (float)yOffset);
 				myWindow->m_EventCallback(event);
 				Input::s_ScrollDelta += glm::vec2(xOffset, yOffset);
@@ -162,14 +162,14 @@ namespace Hazel {
 
 			glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
 			{
-				GLFWWindow* myWindow = (GLFWWindow*)glfwGetWindowUserPointer(window);
+				GLFW3Window* myWindow = (GLFW3Window*)glfwGetWindowUserPointer(window);
 				MouseMovedEvent* event = new MouseMovedEvent((float)xPos, (float)yPos);
 				myWindow->m_EventCallback(event);
 			});
 		}
 	}
 
-	void GLFWWindow::ShowCursor(bool shown)
+	void GLFW3Window::ShowCursor(bool shown)
 	{
 		if (shown)
 		{
@@ -185,17 +185,17 @@ namespace Hazel {
 		}
 	}
 
-	void GLFWWindow::SetContextData(void* data)
+	void GLFW3Window::SetContextData(void* data)
 	{
 		m_ContextData = data;
 	}
 
-	void* GLFWWindow::GetContextData() const
+	void* GLFW3Window::GetContextData() const
 	{
 		return m_ContextData;
 	}
 
-	void GLFWWindow::Shutdown()
+	void GLFW3Window::Shutdown()
 	{
 		HZ_PROFILE_FUNCTION();
 
@@ -207,14 +207,14 @@ namespace Hazel {
 		}
 	}
 
-	void GLFWWindow::OnRender()
+	void GLFW3Window::OnRender()
 	{
 		HZ_PROFILE_FUNCTION();
 
 		ContextManager::Get()->GetContext()->SwapBuffers();
 	}
 
-	void GLFWWindow::OnUpdate()
+	void GLFW3Window::OnUpdate()
 	{
 		HZ_PROFILE_SCOPE("glfwPollEvents");
 		glfwPollEvents();

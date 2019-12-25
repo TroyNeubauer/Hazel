@@ -1,21 +1,30 @@
+print("Hazel premake starting...")
+print("System: "..os.host())
+print("Targetting: "..os.target())
+
+if os.target() == "emscripten" then
+	require("emscripten")
+end
 
 -- ====================########## HAZEL PREMAKE COMMAND LINE OPTIONS ##########====================
 newoption {
 	trigger     = "compiler",
-	value       = "compiler",
 	description = "Choose a compiler",
-	default     = "",
 	allowed =
 	{
 		{ "clang",    "Clang LLVM Compiler" },
 		{ "gcc",  "GNU Compiler" },
 		{ "msc",  "MSVC (Windows only)" },
+		{ "", "Default" }
 	}
 }
 
+GLESDebug = true
+
 -- ====================########## HAZEL WORKSPACE SETTINGS ##########====================
 workspace "Hazel"
-	if _OPTIONS["compiler"] ~= "" then
+
+	if _OPTIONS["compiler"] then
 		print("Using compiler ".._OPTIONS["compiler"])
 		toolset(_OPTIONS["compiler"])
 	end
@@ -27,7 +36,6 @@ workspace "Hazel"
 	intrinsics "on"
 	systemversion "latest"
 	staticruntime "off"
-	vectorextensions "AVX2"
 	
 
 	configurations
@@ -40,25 +48,49 @@ workspace "Hazel"
 	defines
 	{
 		"HAZEL",
-		"HZ_USE_AUDIO_NONE",
-		--"HZ_USE_LABSOUND_AUDIO",
-		--"HZ_USE_JS_AUDIO",
-
 		"HZ_ENABLE_GRAPHICS_API_NONE",
-		"HZ_ENABLE_OPEN_GL",
 
 	}
+
+	filter "system:windows or linux or macosx"
+		vectorextensions "AVX2"
 
 	filter "system:windows"
 		defines 
 		{
 			"_CRT_SECURE_NO_WARNINGS",
 			"_GLFW_WIN32",
+			"HZ_USE_LABSOUND_AUDIO",
 		}
+
+		if GLESDebug then
+			defines
+			{
+				"HZ_USE_SDL_CONTEXT_MANAGER",
+				"HZ_ENABLE_OPEN_GLES",
+				"HZ_SDL_INPUT",
+				"HZ_SDL_WINDOW",
+			}
+		else
+			defines 
+			{
+				"HZ_USE_GLFW3_CONTEXT_MANAGER",
+				"HZ_ENABLE_OPEN_GL",
+				"HZ_GLFW3_INPUT",
+				"HZ_GLFW3_WINDOW",
+
+			}
+		end
+
 	filter "system:linux"
 		defines
 		{
 			"_GLFW_X11",
+			"HZ_USE_AUDIO_NONE",
+			"HZ_USE_GLFW3_CONTEXT_MANAGER",
+			"HZ_ENABLE_OPEN_GL",
+			"HZ_GLFW3_INPUT",
+			"HZ_GLFW3_WINDOW",
 		}
 
 		libdirs
@@ -67,9 +99,26 @@ workspace "Hazel"
 		}
 
 	filter "system:macosx"
-		buildoptions
+
+		defines
 		{
-			"-mmacosx-version-min=10.12"
+			"HZ_USE_GLFW3_CONTEXT_MANAGER",
+			"HZ_USE_AUDIO_NONE",
+			"HZ_ENABLE_OPEN_GL",
+			"HZ_GLFW3_INPUT",
+			"HZ_GLFW3_WINDOW",
+		}
+
+	filter "system:emscripten"
+
+		defines
+		{
+			"HZ_USE_SDL_CONTEXT_MANAGER",
+			"HZ_USE_AUDIO_NONE",
+			--"HZ_USE_JS_AUDIO"
+			"HZ_ENABLE_OPEN_GLES",
+			"HZ_SDL_INPUT",
+			"HZ_SDL_WINDOW",
 		}
 
 
@@ -83,16 +132,16 @@ workspace "Hazel"
 	filter "configurations:Release"
 		defines "HZ_RELEASE"
 		runtime "Release"
-		optimize "speed"
-		inlining "auto"
+		optimize "Speed"
+		inlining "Auto"
 		floatingpoint "Fast"
 
 
 	filter "configurations:Dist"
 		defines "HZ_DIST"
 		runtime "Release"
-		optimize "speed"
-		inlining "auto"
+		optimize "Speed"
+		inlining "Auto"
 		floatingpoint "Fast"
 
 
@@ -100,6 +149,9 @@ workspace "Hazel"
 
 --Adds the links needed by Hazel to premake
 local function HazelEXEDependencies()
+	print("Adding hazel dependencies for project ")
+
+	kind "ConsoleApp"
 
 	sysincludedirs
 	{
@@ -117,11 +169,6 @@ local function HazelEXEDependencies()
 
 		"Hazel/vendor/freeimage/Source/",
 		"Hazel/vendor/freeimage/Source/FreeImage",
-		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
-		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
-		"Hazel/vendor/freeimage/Source/LibPNG",
-		"Hazel/vendor/freeimage/Source/Metadata",
-		"Hazel/vendor/freeimage/Source/ZLib",
 	}
 
 	links 
@@ -131,17 +178,28 @@ local function HazelEXEDependencies()
 		"ImGui",
 		"FastNoiseSIMD",
 		"Box2D",
-		"freeimage",
-		"glad",
 		"zlib",
 		"glfw",
+		"freeimage-core",
+		"freeimage-libjpeg",
+		"freeimage-libopenjpeg",
+		"freeimage-libpng",
+		"freeimage-metadata",
+		"freeimage-toolkit",
 	}
 
 	defines
 	{
 		"GLM_FORCE_INTRINSICS",
-		"FREEIMAGE_LIB"
+		"FREEIMAGE_LIB",
 	}
+
+	--No glad on emscripten
+	filter "system:windows or macosx or linux"
+		links
+		{
+			"glad",
+		}
 
 
 	filter "system:windows"
@@ -226,6 +284,20 @@ local function HazelEXEDependencies()
 			"/Library/Frameworks/CoreVideo.framework",
 		}
 
+	filter "system:emscripten"
+
+		links
+		{
+			"GLESv2",
+			"EGL",
+			"glfw",
+		}
+
+		linkoptions
+		{
+			"-s USE_WEBGL2=1"
+		}
+
 end
 
 
@@ -250,8 +322,11 @@ IncludeDir["Box2D"] = "Hazel/vendor/Box2D"
 IncludeDir["LabSound"] = "Hazel/vendor/LabSound/include"
 
 include "Hazel/vendor/zlib"
-include "Hazel/vendor/GLFW"
-include "Hazel/vendor/Glad"
+if os.target() ~= "emscripten" then
+	include "Hazel/vendor/GLFW"
+	include "Hazel/vendor/Glad"
+end
+
 include "Hazel/vendor/imgui"
 include "Hazel/vendor/freeimage"
 include "Hazel/vendor/FastNoiseSIMD"
@@ -271,9 +346,6 @@ project "Hazel"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	pchheader "src/hzpch.h"
-	pchsource "Hazel/src/hzpch.cpp"
 
 	files
 	{
@@ -304,8 +376,16 @@ project "Hazel"
 		"Hazel/vendor/freeimage/Source/LibPNG",
 		"Hazel/vendor/freeimage/Source/Metadata",
 		"Hazel/vendor/freeimage/Source/ZLib",
-		
 	}
+
+	if GLESDebug then
+		emsdkPath = os.getenv("EMSDK").."/upstream/emscripten/system/include"
+		print("emsdk path: "..emsdkPath)
+		sysincludedirs
+		{
+			emsdkPath,
+		}
+	end
 
 	includedirs
 	{
@@ -313,16 +393,22 @@ project "Hazel"
 	}
 
 
-
-
 	defines
 	{
 		"GLM_FORCE_INTRINSICS",
-		"HZ_GLFW_INPUT",
-		"HZ_GLFW_WINDOW",
 		"FREEIMAGE_LIB",
 		
 	}
+
+	filter "system:macosx or system:windows or system:linux"
+		pchsource "Hazel/src/hzpch.cpp"
+	
+	filter "system:windows or system:linux"
+		pchheader "hzpch.h"
+
+	filter "system:macosx"
+		pchheader "src/hzpch.h"--Why XCode
+
 
 	filter "system:windows"
 
@@ -337,14 +423,12 @@ project "Hazel"
 		
 		defines
 		{
-
 		}
 
 	filter "system:macosx"
 
 		defines
 		{
-
 		}
 
 
@@ -352,7 +436,6 @@ project "Hazel"
 
 project "Sandbox"
 	location "Sandbox"
-	kind "ConsoleApp"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -369,7 +452,7 @@ project "Sandbox"
 		"%{prj.name}/src/",
 	}
 
-	HazelEXEDependencies()
+	HazelEXEDependencies(prj)
 
 
 
@@ -378,7 +461,6 @@ project "Sandbox"
 
 project "GameDesign"
 	location "GameDesign"
-	kind "ConsoleApp"
 
 	targetdir ("bin/" .. outputdir .. "/Opportunity2024")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -394,7 +476,7 @@ project "GameDesign"
 		"%{prj.name}/src/",
 	}
 
-	HazelEXEDependencies()
+	HazelEXEDependencies(prj)
 
 
 -- ##########============================== OTHER ==============================##########

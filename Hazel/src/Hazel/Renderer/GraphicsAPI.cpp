@@ -62,7 +62,7 @@ namespace Hazel {
 		if (it != s_APIPriority.end()) {
 			s_APIPriority.erase(it);
 		}
-		s_APIPriority.insert(s_APIPriority.begin(), type);
+		s_APIPriority.insert(s_APIPriority.end(), type);
 	}
 
 	bool GraphicsAPI::Set(GraphicsAPIType newAPI)
@@ -89,6 +89,7 @@ namespace Hazel {
 			case GraphicsAPIType::NONE:			return "None";
 			case GraphicsAPIType::NOT_CHOSEN:	return "Not Chosen";
 			case GraphicsAPIType::OPEN_GL:		return "Open GL";
+			case GraphicsAPIType::OPEN_GLES:	return "Open GLES";
 			case GraphicsAPIType::VULKAN:		return "Vulkan";
 			case GraphicsAPIType::DIRECTX_12:	return "DirectX 12";
 			case GraphicsAPIType::METAL:		return "Metal";
@@ -130,6 +131,9 @@ namespace Hazel {
 #endif
 #ifdef HZ_ENABLE_OPEN_GL
 			case Hazel::GraphicsAPIType::OPEN_GL:		return true;
+#endif
+#ifdef HZ_ENABLE_OPEN_GLES
+			case Hazel::GraphicsAPIType::OPEN_GLES:		return true;
 #endif
 #ifdef HZ_ENABLE_VULKAN
 			case Hazel::GraphicsAPIType::VULKAN:		return IsVulkanSupported();

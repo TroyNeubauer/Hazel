@@ -1,11 +1,11 @@
 #include "hzpch.h"
-#ifdef HZ_GLFW_INPUT
+#ifdef HZ_GLFW3_INPUT
 
 #include "Hazel/Core/Input.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Core/KeyCodes.h"
 
-#include "GLFW.h"
+#include "GLFW3.h"
 
 #include <bitset>
 

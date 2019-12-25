@@ -1,8 +1,8 @@
 #include "hzpch.h"
 #include "ContextManager.h"
 
-#include "Platform/Windows/WindowsContextManager.h"
-#include "Platform/Unix/UnixContextManager.h"
+#include "Platform/GLFW3/GLFW3ContextManager.h"
+#include "Platform/GLFW2/GLFW2ContextManager.h"
 #include "Hazel/Renderer/GraphicsAPI.h"
 
 namespace Hazel {
@@ -17,10 +17,10 @@ namespace Hazel {
 	{
 		if (s_Instance == nullptr) {
 			GraphicsAPI::AddListener(OnGraphicsAPIChange);
-#if defined(HZ_PLATFORM_WINDOWS)
-			s_Instance = new WindowsContextManager();
-#elif defined(HZ_PLATFORM_UNIX)
-			s_Instance = new UnixContextManager();
+#if defined(HZ_USE_GLFW3_CONTEXT_MANAGER)
+			s_Instance = new GLFW3ContextManager();
+#elif defined(HZ_USE_GLFW2_CONTEXT_MANAGER)
+			s_Instance = new GLFW2ContextManager();
 #else
 	#error No context manager avilable for the selected platform!
 #endif

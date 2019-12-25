@@ -1,8 +1,10 @@
 #include "hzpch.h"
+#ifdef HZ_ENABLE_OPEN_GL
+
 #include "OpenGL_FBO.h"
 #include "Hazel/Core/Application.h"
 
-#include <glad/glad.h>
+#include "OpenGL.h"
 
 namespace Hazel {
 
@@ -87,3 +89,4 @@ namespace Hazel {
 	}
 }
 
+#endif

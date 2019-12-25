@@ -2,7 +2,6 @@
 #ifdef HZ_ENABLE_OPEN_GL
 
 #include "OpenGLShader.h"
-#include "OpenGLMacro.h"
 #include "OpenGLUtils.h"
 
 #include "Hazel/Core/Core.h"

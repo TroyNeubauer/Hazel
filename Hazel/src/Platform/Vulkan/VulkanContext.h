@@ -24,7 +24,7 @@ namespace Hazel {
 		virtual void RemoveWindow(Window* window) override;
 		virtual ImGuiLayer* CreateImGuiLayer() override;
 
-		inline std::vector<Window*>& GetWindows() { return m_Handles; }
+		inline std::vector<Window*>& GetWindows() override { return m_Handles; }
 
 		virtual GraphicsAPIType GetAPIType();
 

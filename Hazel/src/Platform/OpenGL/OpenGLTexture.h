@@ -1,9 +1,9 @@
 #pragma once
+#ifdef HZ_ENABLE_OPEN_GL
 
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Core/TUtil.h"
-#include "OpenGLMacro.h"
-
+#include "OpenGL.h"
 
 namespace Hazel {
 
@@ -26,5 +26,6 @@ namespace Hazel {
 
 		friend class OpenGL_FBO;
 	};
-
 }
+
+#endif

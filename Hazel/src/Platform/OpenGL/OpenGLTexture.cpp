@@ -1,4 +1,6 @@
 #include "hzpch.h"
+#ifdef HZ_ENABLE_OPEN_GL
+
 #include "OpenGLTexture.h"
 #include "OpenGLUtils.h"
 
@@ -54,3 +56,4 @@ namespace Hazel {
 
 }
 
+#endif

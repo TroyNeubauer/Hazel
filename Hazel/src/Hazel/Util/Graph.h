@@ -10,7 +10,7 @@
 
 namespace Hazel {
 
-	enum GraphDisplayMode
+	enum class GraphDisplayMode
 	{
 		Linear, Log
 	};

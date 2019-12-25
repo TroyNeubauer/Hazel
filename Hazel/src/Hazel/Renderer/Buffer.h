@@ -2,10 +2,10 @@
 
 #include <string>
 #include <vector>
-#include <glad/glad.h>
 
 #include "Hazel/Core/Core.h"
 #include "GraphicsAPI.h"
+#include "Hazel/Util/Utils.h"
 
 namespace Hazel {
 
@@ -100,7 +100,7 @@ namespace Hazel {
 		virtual void Unmap(void* buffer) = 0;
 
 		//Returns the number of elements in this buffer (usually index count or vertex count)
-		inline uint32_t Count() const { return Bytes() / GetLayout().GetStride(); }
+		inline uint32_t Count() const { return Utils::ConvertInt<uint32_t>(Bytes() / GetLayout().GetStride()); }
 		
 		virtual uint64_t Bytes() const = 0;
 

@@ -5,7 +5,7 @@
 namespace Hazel {
 	enum class GraphicsAPIType
 	{
-		NOT_CHOSEN, NONE, OPEN_GL, VULKAN, DIRECTX_12, METAL, SOFTWARE
+		NOT_CHOSEN, NONE, OPEN_GL, OPEN_GLES, VULKAN, DIRECTX_12, METAL, SOFTWARE
 	};
 
 	class GraphicsAPI {

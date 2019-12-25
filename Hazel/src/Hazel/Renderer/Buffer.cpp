@@ -4,6 +4,7 @@
 #include "Hazel/Core/glm.h"
 #include "Platform/NoAPI/NoAPI.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
+#include "Platform/OpenGLES/OpenGLESBuffer.h"
 
 namespace Hazel {
 	uint32_t SizeOfShaderDataType(ShaderDataType type)
@@ -144,6 +145,9 @@ namespace Hazel {
 #ifdef HZ_ENABLE_OPEN_GL
 			case GraphicsAPIType::OPEN_GL:	return Ref<VertexBuffer>(new OpenGLBuffer<float, BufferType::VERTEX>(data, bytes));
 #endif
+#ifdef HZ_ENABLE_OPEN_GLES
+			case GraphicsAPIType::OPEN_GLES:	return Ref<VertexBuffer>(new OpenGLESBuffer<float, BufferType::VERTEX>(data, bytes));
+#endif
 			default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
 		}
 		return nullptr;
@@ -159,6 +163,9 @@ namespace Hazel {
 #endif
 #ifdef HZ_ENABLE_OPEN_GL
 			case GraphicsAPIType::OPEN_GL:	return Ref<IndexBuffer>(new OpenGLBuffer<uint32_t, BufferType::INDEX>(data, bytes));
+#endif
+#ifdef HZ_ENABLE_OPEN_GLES
+			case GraphicsAPIType::OPEN_GLES:	return Ref<IndexBuffer>(new OpenGLESBuffer<uint32_t, BufferType::INDEX>(data, bytes));
 #endif
 			default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
 		}
@@ -176,6 +183,9 @@ namespace Hazel {
 #ifdef HZ_ENABLE_OPEN_GL
 			case GraphicsAPIType::OPEN_GL:	return Ref<VertexBuffer>(new OpenGLBuffer<float, BufferType::VERTEX>(bytes));
 #endif
+#ifdef HZ_ENABLE_OPEN_GLES
+			case GraphicsAPIType::OPEN_GLES:	return Ref<VertexBuffer>(new OpenGLESBuffer<float, BufferType::VERTEX>(bytes));
+#endif
 			default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
 		}
 		return nullptr;
@@ -192,6 +202,9 @@ namespace Hazel {
 #endif
 #ifdef HZ_ENABLE_OPEN_GL
 			case GraphicsAPIType::OPEN_GL:	return Ref<IndexBuffer>(new OpenGLBuffer<uint32_t, BufferType::INDEX>(bytes));
+#endif
+#ifdef HZ_ENABLE_OPEN_GLES
+			case GraphicsAPIType::OPEN_GLES:	return Ref<IndexBuffer>(new OpenGLESBuffer<uint32_t, BufferType::INDEX>(bytes));
 #endif
 			default: HZ_CORE_ASSERT(false, "Buffer cannot be created from graphics API");
 		}

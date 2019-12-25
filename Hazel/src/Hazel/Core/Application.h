@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef HZ_COMPILER_EMSCRIPTEN
+	#include <emscripten/emscripten.h>
+#endif
+
 #include "Hazel/Layer/LayerStack.h"
 #include "Hazel/Events/Event.h"
 #include "Hazel/Events/ApplicationEvent.h"
@@ -17,6 +21,7 @@ namespace Hazel {
 	public:
 		Application();
 		void Run();
+		void RunFrame();
 
 		virtual ~Application();
 

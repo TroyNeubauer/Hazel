@@ -2,9 +2,8 @@
 #ifdef HZ_ENABLE_OPEN_GL
 
 #include "OpenGLRendererAPI.h"
-#include "OpenGLMacro.h"
 
-#include <glad/glad.h>
+#include "OpenGL.h"
 
 namespace Hazel {
 	void OpenGLRendererAPI::Init()

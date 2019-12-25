@@ -1,9 +1,10 @@
 #include "hzpch.h"
+#ifdef HZ_ENABLE_OPEN_GL
+
 #include "OpenGLUtils.h"
 #include "Hazel/Core/TUtil.h"
 
 #include "FreeImage.h"
-#include "OpenGLMacro.h"
 
 namespace Hazel {
 
@@ -321,3 +322,4 @@ namespace Hazel {
 
 }
 
+#endif

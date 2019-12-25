@@ -11,6 +11,12 @@ namespace Hazel {
 
 		glm::vec4 ExpandColor(uint32_t color);
 
-		//template<typename Src, typename D
+		template<typename R, typename T>
+		R ConvertInt(T src)
+		{
+			HZ_CORE_ASSERT(src <= std::numeric_limits<R>::max(), "{} falls outside the range", src);
+			HZ_CORE_ASSERT(src >= std::numeric_limits<R>::min(), "{} falls outside the range", src);
+			return static_cast<R>(src);
+		}
 	}
 }

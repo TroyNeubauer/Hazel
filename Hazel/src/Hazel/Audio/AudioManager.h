@@ -23,7 +23,7 @@ namespace Hazel {
 		{
 			return s_Instance->Load(path);
 		}
-		static inline Ref<PlayingAudio> Play(Ref<AudioSource> source)
+		static inline Ref<PlayingAudio> Play(Ref<AudioSource>& source)
 		{
 			return s_Instance->Play(source);
 		}

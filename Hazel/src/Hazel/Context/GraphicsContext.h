@@ -28,6 +28,7 @@ namespace Hazel {
 		virtual void Destroy() = 0;
 		virtual void AddWindow(Window* window) = 0;
 		virtual void RemoveWindow(Window* window) = 0;
+		virtual std::vector<Window*>& GetWindows() = 0;
 
 		virtual ImGuiLayer* CreateImGuiLayer() = 0;
 

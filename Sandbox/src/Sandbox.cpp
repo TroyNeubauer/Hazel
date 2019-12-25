@@ -27,13 +27,13 @@ Sandbox::Sandbox()
 	};
 
 
-	//Hazel::Ref<Hazel::Shader> shader = Hazel::Shader::Create("assets/shaders/test.glsl");
+	Hazel::Ref<Hazel::Shader> shader = Hazel::Shader::Create("assets/shaders/test.glsl");
 
 	m_Camera.reset(new Hazel::FPSCamera(50.0f));
 	m_Camera->SetPosition(vec3(0.0f, 0.0f, 5.0f));
 	m_Camera->RecalculateViewMatrix();
 
-	//m_terrain = new Terrain(shader, -3000.0f, 3000.0f, -3000.0f, 3000.0f, -2.0f, 8, 100.0f);
+	m_terrain = new Terrain(shader, -3000.0f, 3000.0f, -3000.0f, 3000.0f, -2.0f, 8, 100.0f);
 
 
 	std::vector<const char*> pbrAssets = { "./assets/material/aluminum", "./assets/material/planet", "./assets/material/rock_streaks", "./assets/material/rusted_iron" };
@@ -70,13 +70,8 @@ void Sandbox::Render()
 	Hazel::RenderCommand::Clear();
 
 
-	//Hazel::Renderer::Submit(*m_terrain);
+	Hazel::Renderer::Submit(*m_terrain);
 
-	if (Hazel::Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_5) || Hazel::Input::IsKeyPressed(HZ_KEY_H))
-	{
-		glPolygonMode(GL_FRONT, GL_LINE);
-		glPolygonMode(GL_BACK, GL_LINE);
-	}
 	if (Hazel::Input::IsKeyFired(HZ_KEY_R))
 	{
 		HZ_TRACE("Reloading shader...");
@@ -99,8 +94,6 @@ void Sandbox::Render()
 
 		Hazel::Renderer::Submit(*mesh);
 	}
-	glPolygonMode(GL_FRONT, GL_FILL);
-	glPolygonMode(GL_BACK, GL_FILL);
 	
 	Hazel::Renderer::EndScene();
 	//Hazel::Renderer::Flush();

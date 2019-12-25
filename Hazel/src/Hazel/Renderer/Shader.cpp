@@ -2,6 +2,7 @@
 #include "Shader.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "Platform/OpenGLES/OpenGLESShader.h"
 #include "Platform/NoAPI/NoAPI.h"
 
 namespace Hazel {
@@ -34,6 +35,9 @@ namespace Hazel {
 #ifdef HZ_ENABLE_OPEN_GL
 			case Hazel::GraphicsAPIType::OPEN_GL:	result = new OpenGLShader(shaderFile); break;
 #endif
+#ifdef HZ_ENABLE_OPEN_GLES
+			case Hazel::GraphicsAPIType::OPEN_GLES:	result = new OpenGLESShader(shaderFile); break;
+#endif
 			default:
 				HZ_CORE_ASSERT(false, "Unsupported graphics API for creating a shader: {0}", GraphicsAPI::ToString(api));
 		}
@@ -53,6 +57,9 @@ namespace Hazel {
 #endif
 #ifdef HZ_ENABLE_OPEN_GL
 		case Hazel::GraphicsAPIType::OPEN_GL:	result = new OpenGLShader(vertex, fragment); break;
+#endif
+#ifdef HZ_ENABLE_OPEN_GLES
+		case Hazel::GraphicsAPIType::OPEN_GLES:	result = new OpenGLESShader(vertex, fragment); break;
 #endif
 		default:
 			HZ_CORE_ASSERT(false, "Unsupported graphics API for creating a shader: {0}", GraphicsAPI::ToString(api));

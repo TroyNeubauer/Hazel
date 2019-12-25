@@ -10,8 +10,9 @@
 
 #include "Hazel/Core/Application.h"
 
-#include "Platform/GLFW/GLFW.h"
-#include <glad/glad.h>
+#include "Platform/GLFW3/GLFW3.h"
+#include "OpenGL.h"
+
 
 namespace Hazel {
 

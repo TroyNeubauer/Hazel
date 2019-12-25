@@ -39,7 +39,7 @@ void WorldLayer::OnUpdate(Hazel::Timestep ts)
 	else
 	{
 		m_Camera.SetPosition(m_Ship->GetCenterOfMass());
-		m_Camera.SetZoom(m_Camera.GetZoom() * pow(1.2, Hazel::Input::GetScrollDelta()));
+		m_Camera.SetZoom(m_Camera.GetZoom() * pow(1.2f, Hazel::Input::GetScrollDelta()));
 	}
 
 	m_Camera.ForceUpdate();

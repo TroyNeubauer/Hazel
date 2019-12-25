@@ -2,10 +2,10 @@
 #ifdef HZ_ENABLE_OPEN_GL
 
 #include <map>
-#include <glad/glad.h>
-
-#include "Hazel/Renderer/Shader.h"
 #include <string_view>
+
+#include "OpenGL.h"
+#include "Hazel/Renderer/Shader.h"
 
 namespace Hazel {
 	class OpenGLShader : public Shader

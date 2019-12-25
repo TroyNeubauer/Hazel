@@ -26,7 +26,11 @@ namespace Hazel {
 
 	Application::Application()
 	{
+		GraphicsAPI::AddWantedAPI(GraphicsAPIType::METAL);
+		GraphicsAPI::AddWantedAPI(GraphicsAPIType::DIRECTX_12);
+		GraphicsAPI::AddWantedAPI(GraphicsAPIType::VULKAN);
 		GraphicsAPI::AddWantedAPI(GraphicsAPIType::OPEN_GL);
+		GraphicsAPI::AddWantedAPI(GraphicsAPIType::OPEN_GLES);
 		HZ_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		
@@ -63,26 +67,35 @@ namespace Hazel {
 	void Application::Run()
 	{
 		HZ_PROFILE_FUNCTION();
-
+#ifdef HZ_COMPILER_EMSCRIPTEN
+		emscripten_set_main_loop_arg([](void* userData) { reinterpret_cast<Hazel::Application*>(userData)->RunFrame(); }, this, 60, 0);
+#else
 		while (m_Running)
 		{	
-			m_LayerStack.Update();
-			HZ_PROFILE_SCOPE("Application::Run()");
-			Engine::Update();
-			Timestep ts = Engine::GetDeltaTime();
-#ifndef HZ_DIST
-			AllocTracker::BeginFrame();//Begin tracking for the next frame
-#endif
-			DispatchEvents();
-			Update(ts);
-			{
-				HZ_PROFILE_SCOPE("Update Layerstacks");
-				for (Layer* layer : m_LayerStack)
-					layer->OnUpdate(ts);
-			}
-			DoRenderPass();
-			Input::NextFrame();
+			RunFrame();
 		}
+#endif
+	}
+
+	void Application::RunFrame()
+	{
+		HZ_PROFILE_FUNCTION();
+
+		m_LayerStack.Update();
+		Engine::Update();
+		Timestep ts = Engine::GetDeltaTime();
+#ifndef HZ_DIST
+		AllocTracker::BeginFrame();//Begin tracking for the next frame
+#endif
+		DispatchEvents();
+		Update(ts);
+		{
+			HZ_PROFILE_SCOPE("Update Layerstacks");
+			for (Layer* layer : m_LayerStack)
+				layer->OnUpdate(ts);
+		}
+		DoRenderPass();
+		Input::NextFrame();
 	}
 
 	void Application::DoRenderPass() {

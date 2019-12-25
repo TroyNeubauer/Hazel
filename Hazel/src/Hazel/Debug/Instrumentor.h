@@ -62,8 +62,9 @@ namespace Hazel {
 	};
 }
 
-#if !defined(HZ_PROFILE) && defined(HZ_DEBUG)
-#define HZ_PROFILE
+//Automatically enable profiling by default on desktop-debug systems when a value hasnt been already picked
+#if !defined(HZ_PROFILE) && defined(HZ_DEBUG) && !defined(HZ_PLATFORM_EMSCRIPTEN)
+	#define HZ_PROFILE
 #endif
 
 #ifdef HZ_PROFILE

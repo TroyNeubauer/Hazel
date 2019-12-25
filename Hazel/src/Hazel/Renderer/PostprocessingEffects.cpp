@@ -89,10 +89,7 @@ namespace Hazel {
 		std::memcpy(map, vertices, sizeof(vertices));
 		s_Data->VB->Unmap(map);
 		
-		glDisable(GL_DEPTH_TEST);
 		RenderCommand::DrawIndexed(s_Data->VA);
-		//OpenGL_FBO* glFBO = reinterpret_cast<OpenGL_FBO*>(fbo.get());
-		//glBlitNamedFramebuffer(glFBO->m_FBO, 0, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
 	}
 

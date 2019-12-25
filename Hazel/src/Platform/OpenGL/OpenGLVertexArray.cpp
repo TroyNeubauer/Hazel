@@ -5,9 +5,8 @@
 #include "OpenGLUtils.h"
 
 #include "Hazel/Core/Core.h"
-#include "OpenGLMacro.h"
+#include "OpenGL.h"
 
-#include <glad/glad.h>
 #include <string>
 
 namespace Hazel {
@@ -60,7 +59,7 @@ namespace Hazel {
 				OpenGLUtils::ShaderDataTypeToGLType(element.Type),
 				element.Normalized,
 				layout.GetStride(),
-				reinterpret_cast<const void*>(element.Offset));
+				reinterpret_cast<const int*>(element.Offset));
 			index++;
 		}
 		m_VertexBuffers.push_back(vertexBuffer);

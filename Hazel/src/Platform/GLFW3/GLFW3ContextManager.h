@@ -1,15 +1,17 @@
 #pragma once
-#ifdef HZ_PLATFORM_WINDOWS
+#include "../../Hazel/Core/Core.h"
+#ifdef HZ_USE_GLFW3_CONTEXT_MANAGER
 
 #include "Hazel/Context/ContextManager.h"
 
 namespace Hazel {
-	class WindowsContextManager : public ContextManager
+	class GLFW3ContextManager : public ContextManager
 	{
 	public:
-		WindowsContextManager();
+		GLFW3ContextManager();
 		virtual GraphicsContext* GetContext() override;
-		virtual ~WindowsContextManager();
+
+		virtual ~GLFW3ContextManager();
 
 	private:
 		GraphicsContext* m_Context = nullptr;

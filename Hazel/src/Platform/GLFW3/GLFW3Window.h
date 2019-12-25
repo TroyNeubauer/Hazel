@@ -1,7 +1,10 @@
 #pragma once
+#ifdef HZ_GLFW3_WINDOW
 
-#include "GLFW.h"
+#include "GLFW3.h"
 #include "Hazel/Core/Window.h"
+
+struct GLFWwindow;
 
 namespace Hazel {
 
@@ -12,11 +15,11 @@ namespace Hazel {
 		bool VSync;
 	};
 
-	class GLFWWindow : public Window
+	class GLFW3Window : public Window
 	{
 	public:
-		GLFWWindow(const WindowProps& props);
-		virtual ~GLFWWindow();
+		GLFW3Window(const WindowProps& props);
+		virtual ~GLFW3Window();
 
 		virtual void OnUpdate() override;
 		virtual void OnRender() override;
@@ -51,3 +54,4 @@ namespace Hazel {
 
 }
 
+#endif

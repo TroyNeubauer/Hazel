@@ -1,10 +1,11 @@
 #pragma once
+#ifdef HZ_ENABLE_OPEN_GL
 
 #include "Hazel/Renderer/Buffer.h"
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Core/TUtil.h"
 
-#include <glad/glad.h>
+#include "OpenGL.h"
 
 namespace Hazel {
 
@@ -22,3 +23,5 @@ namespace Hazel {
 		static const char* GetGLShaderTypeString(GLenum type);
 	};
 }
+
+#endif

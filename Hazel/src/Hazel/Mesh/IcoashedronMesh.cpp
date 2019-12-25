@@ -149,8 +149,8 @@ namespace Hazel {
 
 		
 			CalculateTexCoords(vertices);
-			vertexBuffer->SetData(vertices);
-			indexBuffer->SetData(indices);
+			vertexBuffer->Unmap(oldVertices);
+			indexBuffer->Unmap(oldIndices);
 
 		}
 

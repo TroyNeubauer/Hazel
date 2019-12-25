@@ -4,7 +4,6 @@
 #include "ship/Part.h"
 
 #include <map>
-#include <glad/glad.h>
 
 const float MARS_RADIUS = 33895.0f;//meters
 const float MARS_GRAVITY = 3.711f;//meters/s2

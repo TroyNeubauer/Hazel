@@ -2,32 +2,36 @@
 #include "hzpch.h"
 #ifdef HZ_ENABLE_OPEN_GL
 
+#if !defined(HZ_USE_GLFW3_CONTEXT_MANAGER)
+	#error The GLFW3 context maneger is required to use OpenGL!
+#endif
+
 #include "OpenGLContext.h"
-#include "OpenGLMacro.h"
 #include "Platform/OpenGL/OpenGLImGuiLayer.h"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-//#include <GL/gletx.h>
-
+#include "OpenGL.h"
+#include "Platform/GLFW3/GLFW3.h"
+#include "Hazel/Core/Input.h"
+#include "Hazel/Core/KeyCodes.h"
 
 namespace Hazel {
 
 	void OpenGLContext::Init()
 	{
+#ifndef HZ_COMPILER_EMSCRIPTEN
 		HZ_PROFILE_FUNCTION();
 		{
 			HZ_PROFILE_SCOPE("gladLoadGLLoader");
 			int status = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 			HZ_CORE_ASSERT(status, "Failed to initialize Glad!");
 		}
-		
+#endif
 		glfwSwapInterval(0);
 		HZ_CORE_INFO("Created OpenGL Context, Version: {}", glGetString(GL_VERSION));
 		glEnable(GL_MULTISAMPLE);
 
 #if HZ_DEBUG_GRAPHICS_CONTEXT
-		/*glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
 			const char* typeStr;
@@ -58,7 +62,7 @@ namespace Hazel {
 				HZ_CORE_LOG(level, "GL CALLBACK: type {} (0x{:x}), severity {} (0x{:x}): {}\n", typeStr, type, severityStr, severity, message);
 			HZ_CORE_ASSERT(severity != GL_DEBUG_SEVERITY_HIGH, "Severe OpenGL Error");
 
-		}, this);*/
+		}, this);
 #endif
 	}
 
@@ -91,6 +95,17 @@ namespace Hazel {
 			}
 		}
 #endif
+
+#ifdef HZ_DEBUG
+		if (Hazel::Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_5) || Hazel::Input::IsKeyPressed(HZ_KEY_H))
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+		else
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+#endif
 	}
 	void OpenGLContext::OnWindowResize(Window* window, int width, int height)
 	{
@@ -113,8 +128,8 @@ namespace Hazel {
 	void OpenGLContext::RemoveWindow(Window* window)
 	{
 		auto it = std::find(m_Handles.begin(), m_Handles.end(), window);
-		if (it != m_Handles.end())
-			m_Handles.erase(it);
+		HZ_CORE_ASSERT(it != m_Handles.end(), "Unable to remove window!");
+		m_Handles.erase(it);
 	}
 
 	GraphicsAPIType OpenGLContext::GetAPIType() { return GraphicsAPIType::OPEN_GL; }

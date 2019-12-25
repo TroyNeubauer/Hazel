@@ -3,7 +3,7 @@
 
 #include "Hazel/Core/Core.h"
 #include "Hazel/Core/Log.h"
-#include "OpenGLMacro.h"
+#include "OpenGL.h"
 
 #include <stdlib.h>
 
@@ -72,7 +72,7 @@ namespace Hazel {
 				case MapAccess::READ_WRITE: glAccess = GL_READ_WRITE;	break;
 				default: HZ_CORE_ASSERT(false, "");
 			}
-			uint8_t* result = (uint8_t*) glMapBuffer(GetTarget(TYPE), glAccess);
+			void* result = glMapBuffer(GetTarget(TYPE), glAccess);
 			HZ_CORE_ASSERT(result, "Unable to map buffer!")
 			return result;
 		}

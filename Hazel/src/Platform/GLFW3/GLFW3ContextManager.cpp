@@ -1,6 +1,6 @@
 #include "hzpch.h"
-#ifdef HZ_PLATFORM_UNIX
-#include "UnixContextManager.h"
+#ifdef HZ_USE_GLFW3_CONTEXT_MANAGER
+#include "GLFW3ContextManager.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
 #include "Platform/Vulkan/VulkanContext.h"
@@ -16,7 +16,7 @@ namespace Hazel {
 		//HZ_CORE_ASSERT(false, "");
 	}
 
-	UnixContextManager::UnixContextManager()
+	GLFW3ContextManager::GLFW3ContextManager()
 	{
 		if (GraphicsAPI::Get() != GraphicsAPIType::NONE) {
 			HZ_PROFILE_SCOPE("glfwInit()");
@@ -26,7 +26,7 @@ namespace Hazel {
 		}
 	}
 
-	GraphicsContext* UnixContextManager::GetContext()
+	GraphicsContext* GLFW3ContextManager::GetContext()
 	{
 		if (!m_Context) {
 			switch (GraphicsAPI::Get())
@@ -37,6 +37,9 @@ namespace Hazel {
 #ifdef HZ_ENABLE_OPEN_GL
 				case GraphicsAPIType::OPEN_GL:	return m_Context = new OpenGLContext();
 #endif
+#ifdef HZ_ENABLE_OPEN_GLES
+				case GraphicsAPIType::OPEN_GLES:return m_Context = new OpenGLESContext();
+#endif
 #ifdef HZ_ENABLE_VULKAN
 				case GraphicsAPIType::VULKAN:	return m_Context = new VulkanContext();
 #endif
@@ -46,7 +49,7 @@ namespace Hazel {
 		return m_Context;
 	}
 
-	UnixContextManager::~UnixContextManager()
+	GLFW3ContextManager::~GLFW3ContextManager()
 	{
 		if (m_Context) {
 			delete m_Context;

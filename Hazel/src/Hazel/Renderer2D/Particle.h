@@ -13,6 +13,8 @@ namespace Hazel {
 	{
 	public:
 		virtual glm::vec2 Generate() = 0;
+
+		virtual ~ParticleSpawn() {}
 	};
 
 	struct ParticleDef

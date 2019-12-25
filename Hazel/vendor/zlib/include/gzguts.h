@@ -19,6 +19,11 @@
 #endif
 
 #include <stdio.h>
+#ifdef __EMSCRIPTEN__
+    #include <unistd.h>
+#endif
+
+
 #include "zlib.h"
 #ifdef STDC
 #  include <string.h>

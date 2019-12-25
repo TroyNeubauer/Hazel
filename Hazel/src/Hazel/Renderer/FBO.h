@@ -24,6 +24,8 @@ namespace Hazel {
 		inline int GetWidth() const { return m_Width; }
 		inline int GetHeight() const { return m_Height; }
 
+		virtual ~FBO() {}
+
 	protected:
 		int m_Width, m_Height;
 	};
