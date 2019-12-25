@@ -47,21 +47,20 @@ namespace Hazel {
 
 
 		if (api != GraphicsAPIType::NONE) {
+			HZ_PROFILE_SCOPE("SDL_CreateWindow");
+
 			HZ_CORE_INFO("Creating window \"{0}\" ({1}, {2})", props.Title, props.Width, props.Height);
 
-			HZ_PROFILE_CALL(m_Window = glfwOpenWindow(props.Width, props.Height, 0, 0, 0, 8, 16, 0, GLFW_FULLSCREEN));
+			SDL_DisplayMode displayMode;
+			SDL_GetCurrentDisplayMode(0, &displayMode);
+
+			SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_ALLOW_HIGHDPI);
+			m_Window = SDL_CreateWindow("Dear ImGui Emscripten example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, displayMode.w, displayMode.h, window_flags);
+			m_Context = SDL_GL_CreateContext(m_Window);
 		}
 		context->AddWindow(this);
 		context->EnsureInit();
-		if (api == GraphicsAPIType::NONE)
-			return;//The rest of this method is glfw stuff
 
-
-		// Set GLFW callbacks
-		{
-			HZ_PROFILE_SCOPE("GLFW Callbacks");
-
-		}
 	}
 
 	void SDLWindow::ShowCursor(bool shown)
@@ -87,7 +86,8 @@ namespace Hazel {
 		{
 			HZ_PROFILE_SCOPE("glfwCloseWindow");
 
-			glfwCloseWindow();
+			SDL_DestroyWindow(m_Window);
+			SDL_GL_DeleteContext(m_Context);
 		}
 	}
 
@@ -96,90 +96,14 @@ namespace Hazel {
 		HZ_PROFILE_FUNCTION();
 
 		ContextManager::Get()->GetContext()->SwapBuffers();
+		SDL_GL_SwapWindow(m_Window);
 	}
 
 	void SDLWindow::OnUpdate()
 	{
-		HZ_PROFILE_SCOPE("glfwPollEvents");
-		glfwPollEvents();
+		HZ_PROFILE_SCOPE("SDL_GL_MakeCurrent");
+		SDL_GL_MakeCurrent(m_Window, m_Context);
 	}
-
-	void WindowSizeCallback(int width, int height)
-	{
-		s_CurrentWindow->m_Data.Width = width;
-		s_CurrentWindow->m_Data.Height = height;
-
-		ContextManager::Get()->GetContext()->OnWindowResize(s_CurrentWindow, width, height);
-
-		WindowResizeEvent* event = new WindowResizeEvent(width, height);
-		s_CurrentWindow->m_EventCallback(event);
-
-	}
-
-	int WindowCloseCallback()
-	{
-		WindowCloseEvent* event = new WindowCloseEvent();
-		s_CurrentWindow->m_EventCallback(event);
-
-		return GL_TRUE;//Close the window
-	};
-
-	void KeyCallback(int key, int action)
-	{
-		switch (action)
-		{
-			case GLFW_PRESS:
-			{
-				KeyPressedEvent* event = new KeyPressedEvent(key, 0);
-				s_CurrentWindow->m_EventCallback(event);
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				KeyReleasedEvent* event = new KeyReleasedEvent(key);
-				s_CurrentWindow->m_EventCallback(event);
-				break;
-			}
-		}
-	};
-
-	void CharCallback(int character, int action)
-	{
-		KeyTypedEvent* event = new KeyTypedEvent(character);
-		s_CurrentWindow->m_EventCallback(event);
-	};
-
-	void MouseButtonCallback(int button, int action)
-	{
-		switch (action)
-		{
-			case GLFW_PRESS:
-			{
-				MouseButtonPressedEvent* event = new MouseButtonPressedEvent(button);
-				s_CurrentWindow->m_EventCallback(event);
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				MouseButtonReleasedEvent* event = new MouseButtonReleasedEvent(button);
-				s_CurrentWindow->m_EventCallback(event);
-				break;
-			}
-		}
-	};
-
-	void MouseWheelCallback(int yOffset)
-	{
-		MouseScrolledEvent* event = new MouseScrolledEvent(0.0f, yOffset);
-		s_CurrentWindow->m_EventCallback(event);
-		Input::s_ScrollDelta += glm::vec2(0.0f, yOffset);
-	};
-
-	void MousePosCallback(int xPos, int yPos)
-	{
-		MouseMovedEvent* event = new MouseMovedEvent(xPos, yPos);
-		s_CurrentWindow->m_EventCallback(event);
-	};
 }
 
 

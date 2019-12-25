@@ -4,7 +4,7 @@
 	#define IMGUI_IMPL_OPENGL_LOADER_GLAD
 	#include "examples/imgui_impl_opengl3.cpp"
 #elif defined(HZ_ENABLE_OPEN_GLES)
-	#include "examples/imgui_impl_opengl3.cpp"
+	#include "examples/imgui_impl_sdl.cpp"
 
 #endif
 

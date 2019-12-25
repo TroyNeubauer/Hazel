@@ -121,6 +121,28 @@ workspace "Hazel"
 			"HZ_SDL_WINDOW",
 		}
 
+		linkoptions
+		{
+			"-s USE_WEBGL2=1",
+			"-s USE_SDL=2",
+			"-s WASM=1",
+			"-s ALLOW_MEMORY_GROWTH=1",
+			"-s DISABLE_EXCEPTION_CATCHING=1",
+			"-s NO_EXIT_RUNTIME=0",
+			"-s ASSERTIONS=1",
+		}
+
+		buildoptions
+		{
+			"-s USE_WEBGL2=1",
+			"-s USE_SDL=2",
+			"-s WASM=1",
+			"-s ALLOW_MEMORY_GROWTH=1",
+			"-s DISABLE_EXCEPTION_CATCHING=1",
+			"-s NO_EXIT_RUNTIME=0",
+			"-s ASSERTIONS=1",
+		}
+
 
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
@@ -290,12 +312,6 @@ local function HazelEXEDependencies()
 		{
 			"GLESv2",
 			"EGL",
-			"glfw",
-		}
-
-		linkoptions
-		{
-			"-s USE_WEBGL2=1"
 		}
 
 end

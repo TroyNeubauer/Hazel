@@ -6,6 +6,7 @@
 
 #include "Hazel/Core/Application.h"
 #include "Platform/SDL/SDL.h"
+#include "Platform/SDL/SDLWindow.h"
 #include "OpenGLES.h"
 
 #include <imgui.h>
@@ -27,8 +28,8 @@ namespace Hazel {
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		//No viewports on GLES
+		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		{
 			HZ_PROFILE_SCOPE("ImGui::StyleColorsDark()");
 			ImGui::StyleColorsDark();
@@ -42,11 +43,11 @@ namespace Hazel {
 		SDL_Window* window = reinterpret_cast<SDL_Window*>(Application::Get().GetWindow().GetNativeWindow());
 		{
 			HZ_PROFILE_SCOPE("ImGui_ImplGlfw_InitForOpenGL()");
-			ImGui_ImplSDL2_InitForOpenGL(window, false);
+			ImGui_ImplSDL2_InitForOpenGL(window, reinterpret_cast<Hazel::SDLWindow*>(&Application::Get().GetWindow())->m_Context);
 		}
 		{
-			HZ_PROFILE_SCOPE("ImGui_ImplOpenGL3_Init(\"#version 300 es\")");
-			ImGui_ImplOpenGL3_Init("#version 300 es");
+			HZ_PROFILE_SCOPE("ImGui_ImplOpenGL3_Init(\"#version 100 es\")");
+			ImGui_ImplOpenGL3_Init("#version 100 es");
 		}
 	}
 
@@ -70,6 +71,11 @@ namespace Hazel {
 		if (flags & (EventCategory::EventCategoryMouse | EventCategory::EventCategoryMouseButton))
 		{
 			if (io.WantCaptureMouse)
+				event->Handled = true;
+		}
+		else if (flags & (EventCategory::EventCategoryKeyboard))
+		{
+			if (io.WantCaptureKeyboard)
 				event->Handled = true;
 		}
 	}

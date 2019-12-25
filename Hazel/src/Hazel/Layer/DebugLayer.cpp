@@ -7,7 +7,6 @@
 #include "Hazel/Core/TUtil.h"
 
 #include <imgui.h>
-#include <GLFW/glfw3.h>
 #include <inttypes.h>
 
 

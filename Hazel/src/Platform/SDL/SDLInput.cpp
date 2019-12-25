@@ -49,6 +49,7 @@ namespace Hazel {
 		while (SDL_PollEvent(&event)) {
 			Event* hzEvent = nullptr;
 
+			int buttonID;
 			switch (event.type) {
 				case SDL_MOUSEMOTION:
 
@@ -57,9 +58,8 @@ namespace Hazel {
 					s_MouseDelta = s_MousePos - s_LastMousePos;
 					hzEvent = new MouseMovedEvent(event.motion.x, event.motion.y);
 					break;
-
+					
 				case SDL_MOUSEBUTTONUP:
-					int buttonID;
 					if (event.button.which == SDL_TOUCH_MOUSEID) buttonID = 0;
 					else buttonID = event.button.which;
 
@@ -69,7 +69,6 @@ namespace Hazel {
 					break;
 
 				case SDL_MOUSEBUTTONDOWN:
-					int buttonID;
 					if (event.button.which == SDL_TOUCH_MOUSEID) buttonID = 0;
 					else buttonID = event.button.which;
 
@@ -102,15 +101,19 @@ namespace Hazel {
 
 				case SDL_WINDOWEVENT_RESIZED:
 					hzEvent = new WindowResizeEvent(event.window.data1, event.window.data2);
+					for (Window* window : ContextManager::Get()->GetContext()->GetWindows())
+					{
+						if (SDL_GetWindowID(reinterpret_cast<SDL_Window*>(window->GetNativeWindow())) == event.window.windowID)
+						{
+							ContextManager::Get()->GetContext()->OnWindowResize(window, event.window.data1, event.window.data2);
+						}
+					}
 					break;
 
 				case SDL_WINDOWEVENT_CLOSE:
-					for (Window* window : ContextManager::Get()->GetContext().GetWindows())
-					{
-
-					}
+					hzEvent = new WindowCloseEvent();
 					break;
-#
+
 
 			}
 			if (hzEvent) Application::Get().GetWindow().GetEventCallback()(hzEvent);

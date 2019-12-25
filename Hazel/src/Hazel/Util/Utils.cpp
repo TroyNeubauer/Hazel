@@ -1,8 +1,6 @@
 #include "hzpch.h"
 #include "Utils.h"
 
-#include <GLFW/glfw3.h>
-
 namespace Hazel {
 	uint32_t Utils::ToCompactColor(glm::vec4 color)
 	{

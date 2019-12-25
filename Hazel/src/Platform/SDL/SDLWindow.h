@@ -31,8 +31,7 @@ namespace Hazel {
 
 		virtual void ShowCursor(bool shown) override;
 
-		//There is no GLFWWindow* in GLFW 2
-		inline virtual void* GetNativeWindow() const override { return nullptr; }
+		inline virtual void* GetNativeWindow() const override { return m_Window; }
 		virtual void SetContextData(void* data) override;
 		virtual void* GetContextData() const override;
 
@@ -42,20 +41,16 @@ namespace Hazel {
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown();
 	private:
-		int m_Window;
+		SDL_Window* m_Window;
+		SDL_GLContext m_Context;
+
 		void* m_ContextData = nullptr;
 
 		WindowData m_Data;
 
 		EventCallbackFn m_EventCallback;
 
-		friend void WindowSizeCallback(int width, int height);
-		friend int WindowCloseCallback();
-		friend void KeyCallback(int key, int action);
-		friend void CharCallback(int keycode, int action);
-		friend void MouseButtonCallback(int button, int action);
-		friend void MouseWheelCallback(int yOffset);
-		friend void MousePosCallback(int xPos, int yPos);
+		friend class OpenGLESImGuiLayer;
 	};
 
 }
