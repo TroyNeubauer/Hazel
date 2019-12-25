@@ -64,23 +64,24 @@ namespace Hazel {
 		{
 			HZ_PROFILE_FUNCTION();
 
-			GLenum glAccess;
-			switch (access)
-			{
-				case MapAccess::READ_ONLY:	glAccess = GL_MAP_READ_BIT;	break;
-				case MapAccess::WRITE_ONLY: glAccess = GL_MAP_WRITE_BIT; break;
-				case MapAccess::READ_WRITE: glAccess = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT; break;
-				default: HZ_CORE_ASSERT(false, "Invalid access flag!");
-			}
-			if (access == MapAccess::WRITE_ONLY)
-				glAccess |= GL_MAP_INVALIDATE_BUFFER_BIT;
+			if (access != MapAccess::WRITE_ONLY)
+				HZ_CORE_ASSERT(false, "Only write only buffers are supported for now");
 
-			void* result = glMapBufferRange(GetTarget(TYPE), 0, Bytes(), glAccess);
-			HZ_CORE_ASSERT(result, "Unable to map buffer!");
-				return result;
+			if (m_Map.capacity() == 0) m_Map.reserve(Bytes());
+
+			while (m_Map.capacity() < Bytes())//Double until
+			{
+				m_Map.reserve(m_Map.capacity() * 2);
+			}
+
+			return m_Map.data();
 		}
 
-		virtual void Unmap(void* buffer) override { HZ_PROFILE_FUNCTION(); glUnmapBuffer(GetTarget(TYPE)); }
+		virtual void Unmap(void* buffer) override
+		{
+			HZ_PROFILE_FUNCTION();
+			SetData(m_Map.data(), Bytes());
+		}
 
 		virtual void Bind() const override { HZ_PROFILE_FUNCTION(); glBindBuffer(GetTarget(TYPE), m_BufferID); }
 
@@ -114,6 +115,7 @@ namespace Hazel {
 		uint64_t m_Bytes;
 		BufferLayout m_Layout;
 		std::vector<uint8_t> m_Map;
+		
 	};
 
 }

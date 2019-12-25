@@ -19,7 +19,7 @@ newoption {
 	}
 }
 
-GLESDebug = true
+GLESDebug = false
 
 -- ====================########## HAZEL WORKSPACE SETTINGS ##########====================
 workspace "Hazel"
@@ -60,7 +60,8 @@ workspace "Hazel"
 		{
 			"_CRT_SECURE_NO_WARNINGS",
 			"_GLFW_WIN32",
-			"HZ_USE_LABSOUND_AUDIO",
+			"HZ_USE_AUDIO_NONE",
+			--"HZ_USE_LABSOUND_AUDIO",
 		}
 
 		if GLESDebug then

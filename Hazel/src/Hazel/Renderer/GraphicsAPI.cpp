@@ -139,13 +139,13 @@ namespace Hazel {
 			case Hazel::GraphicsAPIType::VULKAN:		return IsVulkanSupported();
 #endif
 #ifdef HZ_ENABLE_DIRECTX_12
-			case Hazel::GraphicsAPIType::DIRECTX_12:	return true;
+			case Hazel::GraphicsAPIType::DIRECTX_12:	return false;//TODO
 #endif
 #ifdef HZ_ENABLE_METAL
-			case Hazel::GraphicsAPIType::METAL:			return true;
+			case Hazel::GraphicsAPIType::METAL:			return false;//TODO
 #endif
 #ifdef HZ_ENABLE_SOFTWARE_RENDERER
-			case Hazel::GraphicsAPIType::SOFTWARE:		return true;
+			case Hazel::GraphicsAPIType::SOFTWARE:		return false;//TODO
 #endif
 			default:									return false;
 		}

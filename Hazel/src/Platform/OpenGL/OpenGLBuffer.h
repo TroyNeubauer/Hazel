@@ -67,13 +67,16 @@ namespace Hazel {
 			GLenum glAccess;
 			switch (access)
 			{
-				case MapAccess::READ_ONLY:	glAccess = GL_READ_ONLY;	break;
-				case MapAccess::WRITE_ONLY: glAccess = GL_WRITE_ONLY;	break;
-				case MapAccess::READ_WRITE: glAccess = GL_READ_WRITE;	break;
-				default: HZ_CORE_ASSERT(false, "");
+			case MapAccess::READ_ONLY:	glAccess = GL_MAP_READ_BIT;	break;
+			case MapAccess::WRITE_ONLY: glAccess = GL_MAP_WRITE_BIT; break;
+			case MapAccess::READ_WRITE: glAccess = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT; break;
+			default: HZ_CORE_ASSERT(false, "Invalid access flag!");
 			}
-			void* result = glMapBuffer(GetTarget(TYPE), glAccess);
-			HZ_CORE_ASSERT(result, "Unable to map buffer!")
+			if (access == MapAccess::WRITE_ONLY)
+				glAccess |= GL_MAP_INVALIDATE_BUFFER_BIT;
+
+			void* result = glMapBufferRange(GetTarget(TYPE), 0, Bytes(), glAccess);
+			HZ_CORE_ASSERT(result, "Unable to map buffer!");
 			return result;
 		}
 

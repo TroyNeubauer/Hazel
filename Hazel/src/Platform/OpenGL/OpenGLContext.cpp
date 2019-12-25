@@ -12,7 +12,6 @@
 #include "OpenGL.h"
 #include "Platform/GLFW3/GLFW3.h"
 #include "Hazel/Core/Input.h"
-#include "Hazel/Core/KeyCodes.h"
 
 namespace Hazel {
 
