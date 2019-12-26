@@ -133,8 +133,8 @@ namespace Hazel {
 			data->VB->Bind();
 			data->VA->Bind();
 
-#if 0
-			data->VertexBuffer->SetData(data->Vertices, data->VertexCount * sizeof(VertexData));
+#if 1
+			data->VB->SetData(data->Vertices, data->VertexCount * sizeof(VertexData));
 #else
 			VertexData* glData = reinterpret_cast<VertexData*>(data->VB->Map(MapAccess::WRITE_ONLY));
 			{

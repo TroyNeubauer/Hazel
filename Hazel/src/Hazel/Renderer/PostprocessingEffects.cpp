@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "PostprocessingEffects.h"
 
+#include "Hazel/Renderer/GraphicsAPI.h"
 #include "RenderCommand.h"
 #include "Platform/OpenGL/OpenGL_FBO.h"
 
@@ -12,8 +13,10 @@ namespace Hazel {
 	{
 		HZ_CORE_ASSERT(!s_Data, "PostprocessingEffects already initalized")
 		s_Data = new PostprocessingEffectsData();
-
-		s_Data->CopyShader = Shader::Create(/*Vertex Shader:*/R"(
+		GraphicsAPIType api = GraphicsAPI::Get();
+		if (api == GraphicsAPIType::OPEN_GL)
+		{
+			s_Data->CopyShader = Shader::Create(/*Vertex Shader:*/R"(
 			#version 330 core
 			layout (location = 0) in vec2 aPos;
 			layout (location = 1) in vec2 aTexCoords;
@@ -26,20 +29,55 @@ namespace Hazel {
 				TexCoords = aTexCoords;
 			}  
 
-		)",	/*Fragment Shader:*/ R"(
-			#version 330 core
-			out vec4 FragColor;
+			)",	/*Fragment Shader:*/ R"(
+				#version 330 core
+				out vec4 FragColor;
   
-			in vec2 TexCoords;
+				in vec2 TexCoords;
 
-			uniform sampler2D screenTexture;
+				uniform sampler2D screenTexture;
+
+				void main()
+				{ 
+					FragColor = texture(screenTexture, TexCoords);
+				}
+
+			)");
+		}
+		else if (api == GraphicsAPIType::OPEN_GLES)
+		{
+			s_Data->CopyShader = Shader::Create(/*Vertex Shader:*/R"(
+			precision mediump float;
+
+			attribute vec2 aPos;
+			attribute vec2 aTexCoords;
+
+			varying vec2 v_TexCoords;
 
 			void main()
-			{ 
-				FragColor = texture(screenTexture, TexCoords);
-			}
+			{
+				gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0); 
+				v_TexCoords = aTexCoords;
+			}  
 
-		)");
+			)",	/*Fragment Shader:*/ R"(
+				precision mediump float;
+
+				varying vec2 v_TexCoords;
+
+				uniform sampler2D screenTexture;
+
+				void main()
+				{
+					gl_FragColor = texture2D(screenTexture, v_TexCoords);
+				}
+
+			)");
+		}
+		else
+		{
+			HZ_ASSERT(false, "No api");
+		}
 
 		float vertices[] =
 		{

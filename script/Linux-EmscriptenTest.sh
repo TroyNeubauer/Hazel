@@ -1,1 +1,1 @@
-node NodeWebServer.js "../bin/Debug-emscripten-x86_64"
+node NodeWebServer.js "../bin/"

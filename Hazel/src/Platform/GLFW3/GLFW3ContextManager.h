@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Hazel/Core/Core.h"
+#include "Hazel/Core/Core.h"
 #ifdef HZ_USE_GLFW3_CONTEXT_MANAGER
 
 #include "Hazel/Context/ContextManager.h"

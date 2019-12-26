@@ -3,6 +3,7 @@
 
 #include "OpenGLESVertexArray.h"
 #include "OpenGLESUtils.h"
+#include "OpenGLESMacro.h"
 
 #include "Hazel/Core/Core.h"
 #include "OpenGLES.h"
@@ -15,15 +16,15 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glGenVertexArrays(1, &m_ID);
-		glBindVertexArray(m_ID);
+		GLCall(glGenVertexArrays(1, &m_ID));
+		GLCall(glBindVertexArray(m_ID));
 	}
 
 	void OpenGLESVertexArray::Bind() const
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glBindVertexArray(m_ID);
+		GLCall(glBindVertexArray(m_ID));
 	}
 
 	void OpenGLESVertexArray::Unbind() const
@@ -53,13 +54,13 @@ namespace Hazel {
 		const auto& layout = vertexBuffer->GetLayout();
 		for (const auto& element : layout) {
 			HZ_PROFILE_SCOPE("glVertexAttribPointer");
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index,
+			GLCall(glEnableVertexAttribArray(index));
+			GLCall(glVertexAttribPointer(index,
 				element.GetElementCount(),
 				OpenGLESUtils::ShaderDataTypeToGLType(element.Type),
 				element.Normalized,
 				layout.GetStride(),
-				reinterpret_cast<const int*>(element.Offset));
+				reinterpret_cast<const int*>(element.Offset)));
 			index++;
 		}
 		m_VertexBuffers.push_back(vertexBuffer);

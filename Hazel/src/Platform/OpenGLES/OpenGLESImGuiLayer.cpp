@@ -7,7 +7,9 @@
 #include "Hazel/Core/Application.h"
 #include "Platform/SDL/SDL.h"
 #include "Platform/SDL/SDLWindow.h"
+
 #include "OpenGLES.h"
+#include "OpenGLESMacro.h"
 
 #include <imgui.h>
 #include <examples/imgui_impl_sdl.h>
@@ -46,8 +48,8 @@ namespace Hazel {
 			ImGui_ImplSDL2_InitForOpenGL(window, reinterpret_cast<Hazel::SDLWindow*>(&Application::Get().GetWindow())->m_Context);
 		}
 		{
-			HZ_PROFILE_SCOPE("ImGui_ImplOpenGL3_Init(\"#version 100 es\")");
-			ImGui_ImplOpenGL3_Init("#version 100 es");
+			HZ_PROFILE_SCOPE("ImGui_ImplOpenGL3_Init(\"#version 100\")");
+			ImGui_ImplOpenGL3_Init("#version 100");
 		}
 	}
 
@@ -85,7 +87,7 @@ namespace Hazel {
 		HZ_PROFILE_FUNCTION();
 		{
 			HZ_PROFILE_SCOPE("ImGui_ImplOpenGL3_NewFrame");
-			ImGui_ImplOpenGL3_NewFrame();
+			GLCall(ImGui_ImplOpenGL3_NewFrame());
 		}
 		{
 			HZ_PROFILE_SCOPE("ImGui_ImplSDL2_NewFrame");

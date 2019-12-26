@@ -4,6 +4,7 @@
 #include <TUtil/FileSystem.h>
 #include <TUtil/System.h>
 
+#include "Hazel/Core/Core.h"
 #include "Hazel/Core/Engine.h"
 #include "Hazel/Core/Input.h"
 #include "Hazel/Core/Log.h"
@@ -31,6 +32,7 @@ namespace Hazel {
 		GraphicsAPI::AddWantedAPI(GraphicsAPIType::VULKAN);
 		GraphicsAPI::AddWantedAPI(GraphicsAPIType::OPEN_GL);
 		GraphicsAPI::AddWantedAPI(GraphicsAPIType::OPEN_GLES);
+
 		HZ_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		
@@ -67,8 +69,10 @@ namespace Hazel {
 	void Application::Run()
 	{
 		HZ_PROFILE_FUNCTION();
+		HZ_CORE_TRACE("Run");
+
 #ifdef HZ_COMPILER_EMSCRIPTEN
-		emscripten_set_main_loop_arg([](void* userData) { reinterpret_cast<Hazel::Application*>(userData)->RunFrame(); }, this, 60, 0);
+		emscripten_set_main_loop_arg([](void* userData) { reinterpret_cast<Hazel::Application*>(userData)->RunFrame(); }, this, -1, 1);
 #else
 		while (m_Running)
 		{	
@@ -81,33 +85,28 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		m_LayerStack.Update();
 		Engine::Update();
 		Timestep ts = Engine::GetDeltaTime();
+		Input::NextFrame();
+		DispatchEvents();
+		Update(ts);
+
+		m_LayerStack.Update();
 #ifndef HZ_DIST
 		AllocTracker::BeginFrame();//Begin tracking for the next frame
 #endif
-		DispatchEvents();
-		Update(ts);
 		{
 			HZ_PROFILE_SCOPE("Update Layerstacks");
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(ts);
 		}
 		DoRenderPass();
-		Input::NextFrame();
 	}
 
 	void Application::DoRenderPass() {
 		HZ_PROFILE_FUNCTION();
 
 		Render();
-		{
-			HZ_PROFILE_SCOPE("Render (Layerstacks)");
-			for (Layer* layer : m_LayerStack)
-				layer->Render();
-		}
-
 		m_ImGuiLayer->Begin();
 		{
 			HZ_PROFILE_SCOPE("ImGui Render (Layerstacks)");
@@ -115,6 +114,13 @@ namespace Hazel {
 				layer->OnImGuiRender();
 		}
 		m_ImGuiLayer->End();
+
+		{
+			HZ_PROFILE_SCOPE("Render (Layerstacks)");
+			for (Layer* layer : m_LayerStack)
+				layer->Render();
+		}
+
 		
 		m_Window->OnRender();
 	}

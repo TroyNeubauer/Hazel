@@ -3,6 +3,7 @@
 
 #include "OpenGLESTexture.h"
 #include "OpenGLESUtils.h"
+#include "OpenGLESMacro.h"
 
 namespace Hazel {
 

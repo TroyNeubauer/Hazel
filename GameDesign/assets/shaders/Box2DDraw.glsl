@@ -1,30 +1,29 @@
 // Basic Texture Shader
 
 #type vertex
-#version 330 core
+precision mediump float;
 
-layout(location = 0) in vec2 a_Position;
-layout(location = 1) in vec4 a_Color;
+attribute vec2 a_Position;
+attribute vec4 a_Color;
 
 uniform mat4 u_ViewProjection;
 
-out vec4 v_Color;
+varying vec4 v_Color;
 
 void main()
 {
 	v_Color = a_Color;
-	gl_Position = u_ViewProjection * vec4(a_Position, 0.0f, 1.0f);
+	gl_Position = u_ViewProjection * vec4(a_Position, 0.0, 1.0);
 }
 
 #type fragment
-#version 330 core
 
-layout(location = 0) out vec4 color;
+precision mediump float;
 
-in vec4 v_Color;
+varying vec4 v_Color;
 
 void main()
 {
-	color = vec4(v_Color.rgb, 1.0f);
+	gl_FragColor = vec4(v_Color.rgb, 1.0);
 }
 

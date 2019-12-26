@@ -2,6 +2,8 @@
 #ifdef HZ_ENABLE_OPEN_GLES
 
 #include "OpenGLESUtils.h"
+#include "OpenGLESMacro.h"
+
 #include "Hazel/Core/TUtil.h"
 
 #include "FreeImage.h"
@@ -248,27 +250,27 @@ namespace Hazel {
 		GLuint id;
 		{
 			HZ_PROFILE_SCOPE("glGenTextures");
-			glGenTextures(1, &id);
+			GLCall(glGenTextures(1, &id));
 		}
 		{
 			HZ_PROFILE_SCOPE("glBindTexture");
-			glBindTexture(GL_TEXTURE_2D, id);
+			GLCall(glBindTexture(GL_TEXTURE_2D, id));
 		}
 
 		//store the texture data for OpenGL use
 		GLenum gpuFormat = TextureFormatTGLType(builder.GetFormat());
 		{
 			HZ_PROFILE_SCOPE("glTexImage2D");
-			glTexImage2D(GL_TEXTURE_2D, 0, gpuFormat, width, height, 0, imageFormat, imageType, data);
+			GLCall(glTexImage2D(GL_TEXTURE_2D, 0, gpuFormat, width, height, 0, imageFormat, imageType, data));
 		}
 		if (builder.IsMipmap()) {
 			{
 				HZ_PROFILE_SCOPE("glGenerateMipmap");
-				glGenerateMipmap(GL_TEXTURE_2D);
+				GLCall(glGenerateMipmap(GL_TEXTURE_2D));
 			}
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
 			//Not supported on GLES
 			/*if (builder.IsAnisotropic()) {
 				HZ_PROFILE_SCOPE("glTexParameterf Anisotropic Parameters");
@@ -279,27 +281,27 @@ namespace Hazel {
 		else if (builder.IsNearest())
 		{
 			HZ_PROFILE_SCOPE("glTexParameteri GL_NEAREST");
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
 		}
 		else
 		{
 			HZ_PROFILE_SCOPE("glTexParameteri GL_LINEAR");
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 		}
 
 		if (builder.IsClampEdges())
 		{
 			HZ_PROFILE_SCOPE("glTexParameteri GL_CLAMP_TO_EDGE");
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 		}
 		else
 		{
 			HZ_PROFILE_SCOPE("glTexParameteri (REPEAT)");
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+			GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
 		}
 		return id;
 	}

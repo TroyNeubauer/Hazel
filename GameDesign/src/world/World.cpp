@@ -10,6 +10,8 @@ const float MARS_GRAVITY = 3.711f;//meters/s2
 
 const double World::Constants::G = 6.67430E-11;
 
+#define WORLD_DEBUG || 1
+
 World::World(Hazel::Camera2D& camera) : m_Camera(camera), m_Camera2(nullptr)
 {
 	m_World.reset(new b2World( {0.0f, 0.0f} ));//No gravity since we handle it ourselves
@@ -17,7 +19,7 @@ World::World(Hazel::Camera2D& camera) : m_Camera(camera), m_Camera2(nullptr)
 	camera.SetRotation(0.0f);
 	camera.SetZoom(10.0f);
 
-#if defined(HZ_DEBUG) && 0
+#if defined(HZ_DEBUG) WORLD_DEBUG
 	m_DebugDraw.reset(new Hazel::B2D_DebugDraw());
 	m_DebugDraw->SetFlags(b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit);
 	m_World->SetDebugDraw(m_DebugDraw.get());

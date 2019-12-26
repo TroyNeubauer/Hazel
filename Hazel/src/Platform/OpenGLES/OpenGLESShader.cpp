@@ -3,6 +3,7 @@
 
 #include "OpenGLESShader.h"
 #include "OpenGLESUtils.h"
+#include "OpenGLESMacro.h"
 
 #include "Hazel/Core/Core.h"
 
@@ -60,7 +61,7 @@ namespace Hazel {
 		HZ_PROFILE_FUNCTION();
 
 		glUseProgram(0);
-		glDeleteProgram(m_ID);
+		GLCall(glDeleteProgram(m_ID));
 	}
 
 	int OpenGLESShader::GetUniformLocation(const char* name)
@@ -117,7 +118,7 @@ namespace Hazel {
 	void OpenGLESShader::Compile(const std::unordered_map<GLenum, const char*>& shaders)
 	{
 		HZ_PROFILE_FUNCTION();
-
+		HZ_CORE_TRACE("Compiling shader: {}", m_Path);
 
 		std::vector<GLuint> shaderIDs;
 		for (auto& kv : shaders)
@@ -126,8 +127,8 @@ namespace Hazel {
 			const char* source = kv.second;
 			const GLchar* const sourceArray[1] = { source };
 			GLuint shader = glCreateShader(type);
-			glShaderSource(shader, 1, sourceArray, 0);
-			glCompileShader(shader);
+			GLCall(glShaderSource(shader, 1, sourceArray, 0));
+			GLCall(glCompileShader(shader));
 
 			GLint isCompiled = 0;
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
@@ -137,7 +138,7 @@ namespace Hazel {
 				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
 				std::vector<GLchar> infoLog(maxLength);
-				glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog.data());
+				GLCall(glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog.data()));
 
 				shaderIDs.push_back(shader);
 				for (auto shaderID : shaderIDs)
@@ -146,7 +147,7 @@ namespace Hazel {
 				}
 
 				HZ_CORE_ERROR("Shader compilation error");
-				HZ_CORE_ASSERT(false, "{0}", infoLog.data());
+				HZ_CORE_ASSERT(false, "Type {}:{}", type, infoLog.data());
 				return;
 			}
 			shaderIDs.push_back(shader);
@@ -155,7 +156,7 @@ namespace Hazel {
 		GLuint program = glCreateProgram();
 		for (auto shaderID : shaderIDs)
 			glAttachShader(program, shaderID);
-		glLinkProgram(program);
+		GLCall(glLinkProgram(program));
 
 		// Note the different functions here: glGetProgram* instead of glGetShader*.
 		GLint isLinked = 0;
@@ -210,6 +211,7 @@ namespace Hazel {
 			m_UniformTypes[std::string(name, length)] = type;
 #endif
 		}
+		HZ_CORE_TRACE("Finished compiling shader: {}", m_Path);
 	}
 
 

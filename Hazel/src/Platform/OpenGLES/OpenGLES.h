@@ -1,7 +1,6 @@
 #pragma once
 #include "Hazel/Core/Core.h"
 
-
 #ifdef HZ_ENABLE_OPEN_GLES
     //Pull Open GL ES platform header files
     #if defined(HZ_COMPILER_EMSCRIPTEN)

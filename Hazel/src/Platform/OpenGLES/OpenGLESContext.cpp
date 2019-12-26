@@ -10,6 +10,7 @@
 #include "Platform/OpenGLES/OpenGLESImGuiLayer.h"
 
 #include "OpenGLES.h"
+#include "OpenGLESMacro.h"
 #include "Platform/SDL/SDL.h"
 
 
@@ -18,7 +19,7 @@ namespace Hazel {
 	void OpenGLESContext::Init()
 	{
 
-		SDL_GL_SetSwapInterval(0);
+		//SDL_GL_SetSwapInterval(0);
 		HZ_CORE_INFO("Created OpenGL ES Context, Version: {}", glGetString(GL_VERSION));
 
 	}

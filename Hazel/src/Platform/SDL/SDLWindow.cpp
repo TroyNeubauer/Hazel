@@ -54,8 +54,19 @@ namespace Hazel {
 			SDL_DisplayMode displayMode;
 			SDL_GetCurrentDisplayMode(0, &displayMode);
 
-			SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_ALLOW_HIGHDPI);
-			m_Window = SDL_CreateWindow("Dear ImGui Emscripten example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, displayMode.w, displayMode.h, window_flags);
+			SDL_WindowFlags window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+#ifdef HZ_PLATFORM_EMSCRIPTEN
+			int width = static_cast<int>(displayMode.w * 0.5);
+			int height = static_cast<int>(displayMode.h * 0.5);
+
+#else// Fullscreen on IOS and Android
+			window_flags |= SDL_WINDOW_FULLSCREEN;
+			int width = displayMode.w;
+			int height = displayMode.h;
+
+#endif
+
+			m_Window = SDL_CreateWindow(props.Title, 0, 0, width, height, window_flags);
 			m_Context = SDL_GL_CreateContext(m_Window);
 		}
 		context->AddWindow(this);

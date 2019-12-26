@@ -4,27 +4,28 @@
 #include "OpenGLESRendererAPI.h"
 
 #include "OpenGLES.h"
+#include "OpenGLESMacro.h"
 
 namespace Hazel {
 	void OpenGLESRendererAPI::Init()
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 	}
 
 	void OpenGLESRendererAPI::Clear()
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 	}
 
 	void OpenGLESRendererAPI::SetClearColor(const glm::vec4 & color)
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glClearColor(color.r, color.g, color.b, color.a);
+		GLCall(glClearColor(color.r, color.g, color.b, color.a));
 	}
 
 	void OpenGLESRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count, GPUPrimitive primitive)
@@ -38,7 +39,7 @@ namespace Hazel {
 			case GPUPrimitive::LINES: mode = GL_LINES; break;
 			default: HZ_CORE_ASSERT(false, "Unsupported primitive");
 		}
-		glDrawElements(mode, count, GL_UNSIGNED_INT, nullptr);
+		GLCall(glDrawElements(mode, count, GL_UNSIGNED_INT, nullptr));
 	}
 
 	void OpenGLESRendererAPI::ApplyBlendMode(BlendMode mode)
@@ -48,7 +49,7 @@ namespace Hazel {
 
 		switch (mode)
 		{
-			case BlendMode::ADDATIVE: glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); break;
+			case BlendMode::ADDATIVE: GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)); break;
 			case BlendMode::NONE: break;
 		}
 	}

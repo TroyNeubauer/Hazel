@@ -131,6 +131,7 @@ workspace "Hazel"
 			"-s DISABLE_EXCEPTION_CATCHING=1",
 			"-s NO_EXIT_RUNTIME=0",
 			"-s ASSERTIONS=1",
+			"-s DEMANGLE_SUPPORT=1",
 		}
 
 		buildoptions
@@ -142,6 +143,7 @@ workspace "Hazel"
 			"-s DISABLE_EXCEPTION_CATCHING=1",
 			"-s NO_EXIT_RUNTIME=0",
 			"-s ASSERTIONS=1",
+			"-s DEMANGLE_SUPPORT=1",
 		}
 
 
@@ -491,6 +493,11 @@ project "GameDesign"
 	includedirs
 	{
 		"%{prj.name}/src/",
+	}
+
+	linkoptions
+	{
+		"--preload-file assets"
 	}
 
 	HazelEXEDependencies(prj)
