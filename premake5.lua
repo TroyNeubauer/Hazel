@@ -55,6 +55,7 @@ workspace "Hazel"
 	filter "system:windows or linux or macosx"
 		vectorextensions "AVX2"
 
+
 	filter "system:windows"
 		defines 
 		{
@@ -277,6 +278,11 @@ local function HazelEXEDependencies()
 			"dl",
 		}
 
+		linkoptions
+		{
+			"-fPIE",
+		}
+
 	filter { "system:linux", "configurations:Debug" }
 		libdirs { "Hazel/vendor/LabSound/build/linux/Debug/bin" }
 		
@@ -495,12 +501,13 @@ project "GameDesign"
 		"%{prj.name}/src/",
 	}
 
-	linkoptions
-	{
-		"--preload-file assets"
-	}
-
 	HazelEXEDependencies(prj)
+
+	filter "system:emscripten"
+		linkoptions
+		{
+			"--preload-file assets"
+		}
 
 
 -- ##########============================== OTHER ==============================##########

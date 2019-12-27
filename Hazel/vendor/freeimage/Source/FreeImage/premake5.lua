@@ -25,4 +25,9 @@ project "freeimage-core"
 		"../",
 		"../../../zlib/include/",--/Hazel/vendor/zlib
 	}
+
+	links
+	{
+		"zlib"
+	}
 	

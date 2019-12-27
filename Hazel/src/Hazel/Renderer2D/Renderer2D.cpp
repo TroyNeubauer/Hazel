@@ -74,7 +74,7 @@ namespace Hazel {
 			return data;
 		}
 
-		BufferLayout Renderer2D::Layout =
+		BufferLayout Layout =
 		{
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float2, "a_TexCoord" },
