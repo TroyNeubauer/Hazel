@@ -48,8 +48,8 @@ namespace Hazel {
 			ImGui_ImplSDL2_InitForOpenGL(window, reinterpret_cast<Hazel::SDLWindow*>(&Application::Get().GetWindow())->m_Context);
 		}
 		{
-			HZ_PROFILE_SCOPE("ImGui_ImplOpenGL3_Init(\"#version 100\")");
-			ImGui_ImplOpenGL3_Init("#version 100");
+			HZ_PROFILE_SCOPE("ImGui_ImplOpenGL3_Init(\"#version 300 es\")");
+			ImGui_ImplOpenGL3_Init("#version 300 es");
 		}
 	}
 

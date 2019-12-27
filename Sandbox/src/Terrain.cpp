@@ -35,13 +35,13 @@ Terrain::Terrain(Hazel::Ref<Hazel::Shader> shader, float minX, float maxX, float
 	uint64_t vertexCount = verticesPerSide * verticesPerSide;
 	uint64_t indexCount = 6 * rowsPerSide * rowsPerSide;//6 vertices per square
 	uint64_t floatsPerVertex = layout.GetStride() / sizeof(float);
-	Hazel::Scope<float> heights = Hazel::S(new float[Integer::RoundUp(vertexCount, 512 / (sizeof(float) * CHAR_BIT))]);// FillNoiseSet works in mutiples of 512 bits so we need to make sure we have enough space!
+	float* heights = FastNoiseSIMD::GetEmptySet(vertexCount);
 	noise->SetNoiseType(FastNoiseSIMD::NoiseType::SimplexFractal);
-	noise->FillNoiseSet(heights.get(), 0, 0, 0, verticesPerSide, 1, verticesPerSide);
+	noise->FillNoiseSet(heights, 0, 0, 0, verticesPerSide, 1, verticesPerSide);
 
-	Hazel::Scope<float> initalVertices = Hazel::S(new float[vertexCount * floatsPerVertex]);
+	float* initalVertices = FastNoiseSIMD::GetEmptySet(vertexCount * floatsPerVertex);
 	Hazel::Scope<uint32_t> initalIndices = Hazel::S(new uint32_t[indexCount]);
-	float* vertices = initalVertices.get();
+	float* vertices = initalVertices;
 	uint32_t* indices = initalIndices.get();
 	
 	float centerX = (minX + maxX) / 2.0f, centerZ = (minZ + maxZ) / 2.0f;
@@ -55,7 +55,7 @@ Terrain::Terrain(Hazel::Ref<Hazel::Shader> shader, float minX, float maxX, float
 		u = 0.0f;
 		for (unsigned int xIt = 0; xIt < verticesPerSide; xIt++) {
 			float x = Lerp(-rangeX / 2.0f, rangeX / 2.0f, (float) xIt / (float) rowsPerSide);
-			float y = 100.0f * heights.get()[heightIndex];
+			float y = 100.0f * heights[heightIndex];
 			float z = Lerp(-rangeZ / 2.0f, rangeZ / 2.0f, (float) zIt / (float) rowsPerSide);
 
 			*vertices++ = x;
@@ -66,7 +66,7 @@ Terrain::Terrain(Hazel::Ref<Hazel::Shader> shader, float minX, float maxX, float
 			*vertices++ = 0.0f;
 			*vertices++ = u;
 			*vertices++ = v;
-			*vertices++ = heights.get()[heightIndex];
+			*vertices++ = heights[heightIndex];
 			
 			u += texIncrement;
 			heightIndex++;
@@ -90,7 +90,7 @@ Terrain::Terrain(Hazel::Ref<Hazel::Shader> shader, float minX, float maxX, float
 		}
 	}
 
-	auto vertexBuffer = Hazel::VertexBuffer::Create(initalVertices.get(), vertexCount * layout.GetStride());
+	auto vertexBuffer = Hazel::VertexBuffer::Create(initalVertices, vertexCount * layout.GetStride());
 	vertexBuffer->SetLayout(layout);
 	MeshVertexArray->AddVertexBuffer(vertexBuffer);
 
@@ -98,7 +98,10 @@ Terrain::Terrain(Hazel::Ref<Hazel::Shader> shader, float minX, float maxX, float
 	MeshVertexArray->CalculateNormals();
 
 	MeshMaterial->Albedo = Hazel::Texture2D::Load("assets/img/grass.png");
-	HZ_CORE_WARN("Finished generating {} vertices, {} bytes of memory", vertexCount, indexCount * sizeof(uint32_t) + vertexCount * layout.GetStride());
-	timer.Stop().Print("Generating terrain took");
+
+	FastNoiseSIMD::FreeNoiseSet(heights);
+	FastNoiseSIMD::FreeNoiseSet(initalVertices);
+
+	HZ_CORE_WARN("Finished generating {} vertices, {} bytes of memory. Took {}ms", vertexCount, indexCount * sizeof(uint32_t) + vertexCount * layout.GetStride(), timer.Stop().Millis());
 
 }

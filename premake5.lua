@@ -126,6 +126,7 @@ workspace "Hazel"
 		linkoptions
 		{
 			"-s USE_WEBGL2=1",
+			"-s FULL_ES3=1",
 			"-s USE_SDL=2",
 			"-s WASM=1",
 			"-s ALLOW_MEMORY_GROWTH=1",
@@ -478,6 +479,12 @@ project "Sandbox"
 	}
 
 	HazelEXEDependencies(prj)
+
+	filter "system:emscripten"
+		linkoptions
+		{
+			"--preload-file assets"
+		}
 
 
 

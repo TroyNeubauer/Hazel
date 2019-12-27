@@ -15,6 +15,7 @@ namespace Hazel {
 		{
 			result = Texture2D::Load(path, builder);
 			if (result) return result;
+			else HZ_CRITICAL("Failed to load texture after it was confirmed to exist!");
 		}
 		result = Texture2D::Create(1, 1, &color, format, builder);
 		return result;
