@@ -95,10 +95,6 @@ workspace "Hazel"
 			"HZ_GLFW3_WINDOW",
 		}
 
-		libdirs
-		{
-			"/usr/lib/x86_64-linux-gnu/",
-		}
 
 	filter "system:macosx"
 
@@ -276,6 +272,7 @@ local function HazelEXEDependencies()
 			"Xinerama",
 			"Xcursor",
 			"pthread",
+			"z",
 			"dl",
 		}
 

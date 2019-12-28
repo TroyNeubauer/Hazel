@@ -59,7 +59,6 @@ namespace Hazel {
 					hzEvent = new MouseMovedEvent(event.motion.x, event.motion.y);
 					int tempX, tempY;
 					SDL_GetMouseState(&tempX, &tempY);
-					HZ_CORE_INFO("SDL_GetMouseState: [{}, {}], Hazel [{}, {}]", tempX, tempY, event.motion.x, event.motion.y);
 					break;
 					
 				case SDL_MOUSEBUTTONUP:

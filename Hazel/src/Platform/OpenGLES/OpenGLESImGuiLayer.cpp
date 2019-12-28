@@ -118,7 +118,7 @@ namespace Hazel {
 
 	void OpenGLESImGuiLayer::OnImGuiRender()
 	{
-		ImGui::ShowDemoWindow();
+		
 	}
 
 }

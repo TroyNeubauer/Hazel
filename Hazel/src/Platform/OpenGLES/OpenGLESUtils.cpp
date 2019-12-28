@@ -177,6 +177,7 @@ namespace Hazel {
 						if (bpp == 24) {
 							if (blueM == 0xFF0000 && greenM == 0xFF00 && redM == 0xFF) {
 								imageFormat = GL_RGB;
+								
 								FreeImage_ConvertToRGBF(dib);
 							}
 							else if (redM == 0xFF0000 && greenM == 0xFF00 && blueM == 0xFF) {

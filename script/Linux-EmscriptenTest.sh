@@ -1,1 +1,1 @@
-node NodeWebServer.js "../bin/"
+node "script/NodeWebServer.js" "bin/"

@@ -49,24 +49,24 @@ namespace Hazel {
 		if (api != GraphicsAPIType::NONE) {
 			HZ_PROFILE_SCOPE("SDL_CreateWindow");
 
-			HZ_CORE_INFO("Creating window \"{0}\" ({1}, {2})", props.Title, props.Width, props.Height);
 
 			SDL_DisplayMode displayMode;
 			SDL_GetCurrentDisplayMode(0, &displayMode);
 
 			SDL_WindowFlags window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 #ifdef HZ_PLATFORM_EMSCRIPTEN
-			int width = static_cast<int>(displayMode.w * 0.5);
-			int height = static_cast<int>(displayMode.h * 0.5);
+			m_Data.Width = static_cast<int>(displayMode.w * 0.5);
+			m_Data.Height = static_cast<int>(displayMode.h * 0.5);
 
 #else// Fullscreen on IOS and Android
 			window_flags |= SDL_WINDOW_FULLSCREEN;
-			int width = displayMode.w;
-			int height = displayMode.h;
+			m_Data.Width = displayMode.w;
+			m_Data.Height = displayMode.h;
 
 #endif
 
-			m_Window = SDL_CreateWindow(props.Title, 0, 0, width, height, window_flags);
+			HZ_CORE_INFO("Creating window \"{0}\" ({1}, {2})", props.Title, m_Data.Width, m_Data.Height);
+			m_Window = SDL_CreateWindow(props.Title, 0, 0, m_Data.Width, m_Data.Height, window_flags);
 			m_Context = SDL_GL_CreateContext(m_Window);
 		}
 		context->AddWindow(this);
