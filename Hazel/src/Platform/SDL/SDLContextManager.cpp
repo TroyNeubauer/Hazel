@@ -14,9 +14,9 @@ namespace Hazel {
 	SDLContextManager::SDLContextManager()
 	{
 		if (GraphicsAPI::Get() != GraphicsAPIType::NONE) {
-			HZ_PROFILE_SCOPE("glfwInit()");
+			HZ_PROFILE_SCOPE("SDL_Init()");
 			int success = SDL_Init(SDL_INIT_VIDEO);
-			HZ_CORE_ASSERT(success >= 0, "Could not intialize GLFW!");
+			HZ_CORE_ASSERT(success >= 0, "Could not intialize SDL!");
 		}
 	}
 

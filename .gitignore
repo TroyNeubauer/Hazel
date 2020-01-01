@@ -3,6 +3,7 @@
 **/bin/
 !vendor/bin/
 **/bin-int/
+**/peda-session*
 
 # Files
 *.user

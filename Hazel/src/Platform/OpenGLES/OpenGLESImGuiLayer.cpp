@@ -63,6 +63,8 @@ namespace Hazel {
 	}
 
 	void OpenGLESImGuiLayer::OnEvent(Event* event) {
+		ImGuiLayer::OnEvent(event);
+		
 		ImGuiIO& io = ImGui::GetIO();
 		int flags = event->GetCategoryFlags();
 		if (flags & EventCategory::EventCategoryKeyboard)

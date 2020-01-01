@@ -57,11 +57,10 @@ namespace Hazel {
 					s_MousePos.y = event.motion.y;
 					s_MouseDelta = s_MousePos - s_LastMousePos;
 					hzEvent = new MouseMovedEvent(event.motion.x, event.motion.y);
-					int tempX, tempY;
-					SDL_GetMouseState(&tempX, &tempY);
 					break;
 					
 				case SDL_MOUSEBUTTONUP:
+					HZ_CORE_INFO("SDL_MOUSEBUTTONUP {}", event.button.which);
 					if (event.button.which == SDL_TOUCH_MOUSEID) buttonID = 0;
 					else buttonID = event.button.which;
 
@@ -71,6 +70,7 @@ namespace Hazel {
 					break;
 
 				case SDL_MOUSEBUTTONDOWN:
+					HZ_CORE_INFO("SDL_MOUSEBUTTONDOWN {}", event.button.which);
 					if (event.button.which == SDL_TOUCH_MOUSEID) buttonID = 0;
 					else buttonID = event.button.which;
 
@@ -80,6 +80,7 @@ namespace Hazel {
 					break;
 
 				case SDL_MOUSEWHEEL:
+					HZ_CORE_INFO("SDL_MOUSEWHEEL {} {}", event.wheel.x, event.wheel.y);
 					s_ScrollDelta = { event.wheel.x, event.wheel.y };
 
 					hzEvent = new MouseScrolledEvent(event.wheel.x, event.wheel.y);
@@ -87,10 +88,12 @@ namespace Hazel {
 
 				case SDL_KEYDOWN:
 					newKeys[event.key.keysym.sym] = true;
+					HZ_CORE_INFO("SDL_KEYDOWN {} ({} times)", event.key.keysym.sym, event.key.repeat);
 					hzEvent = new KeyPressedEvent(event.key.keysym.sym, event.key.repeat);
 					break;
 
 				case SDL_KEYUP:
+					HZ_CORE_INFO("SDL_KEYUP {}", event.key.keysym.sym);
 					newKeys[event.key.keysym.sym] = false;
 					hzEvent = new KeyReleasedEvent(event.key.keysym.sym);
 					break;
@@ -99,10 +102,13 @@ namespace Hazel {
 					break;
 
 				case SDL_TEXTINPUT:
+					hzEvent = new TextTypedEvent(event.text.text);
+					HZ_CORE_INFO("SDL_TEXTINPUT {}", event.text.text);
 					break;
 
 				case SDL_WINDOWEVENT_RESIZED:
 					hzEvent = new WindowResizeEvent(event.window.data1, event.window.data2);
+					HZ_CORE_INFO("SDL_WINDOWEVENT_RESIZED {} {}", event.window.data1, event.window.data2);
 					for (Window* window : ContextManager::Get()->GetContext()->GetWindows())
 					{
 						if (SDL_GetWindowID(reinterpret_cast<SDL_Window*>(window->GetNativeWindow())) == event.window.windowID)
@@ -114,6 +120,7 @@ namespace Hazel {
 
 				case SDL_WINDOWEVENT_CLOSE:
 					hzEvent = new WindowCloseEvent();
+					HZ_CORE_INFO("SDL_WINDOWEVENT_RESIZED ");
 					break;
 
 

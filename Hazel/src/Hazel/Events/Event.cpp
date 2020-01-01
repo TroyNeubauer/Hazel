@@ -17,7 +17,7 @@ namespace Hazel {
 
 		MemoryPool<sizeof(KeyPressedEvent)>::Clear();
 		MemoryPool<sizeof(KeyReleasedEvent)>::Clear();
-		MemoryPool<sizeof(KeyTypedEvent)>::Clear();
+		MemoryPool<sizeof(TextTypedEvent)>::Clear();
 
 		MemoryPool<sizeof(MouseButtonPressedEvent)>::Clear();
 		MemoryPool<sizeof(MouseButtonReleasedEvent)>::Clear();
