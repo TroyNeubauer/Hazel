@@ -1,178 +1,179 @@
-print("Hazel premake starting...")
-print("System: "..os.host())
-print("Targetting: "..os.target())
+function hazelWorkspace(workspaceName)
+	print("Hazel premake starting...")
+	print("System: "..os.host())
+	print("Targetting: "..os.target())
 
-if os.target() == "emscripten" then
-	require("emscripten")
-end
-
--- ====================########## HAZEL PREMAKE COMMAND LINE OPTIONS ##########====================
-newoption {
-	trigger     = "compiler",
-	description = "Choose a compiler",
-	allowed =
-	{
-		{ "clang",    "Clang LLVM Compiler" },
-		{ "gcc",  "GNU Compiler" },
-		{ "msc",  "MSVC (Windows only)" },
-		{ "", "Default" }
-	}
-}
-
-GLESDebug = false
-
--- ====================########## HAZEL WORKSPACE SETTINGS ##########====================
-workspace "Hazel"
-
-	if _OPTIONS["compiler"] then
-		print("Using compiler ".._OPTIONS["compiler"])
-		toolset(_OPTIONS["compiler"])
+	if os.target() == "emscripten" then
+		require("emscripten")
 	end
 
-	architecture "x64"
-	startproject "GameDesign"
-	language "C++"
-	cppdialect "C++17"
-	intrinsics "on"
-	systemversion "latest"
-	staticruntime "off"
-	
-
-	configurations
-	{
-		"Debug",
-		"Release",
-		"Dist",
-	}
-
-	defines
-	{
-		"HAZEL",
-		"HZ_ENABLE_GRAPHICS_API_NONE",
-
-	}
-
-	filter "system:windows or linux or macosx"
-		vectorextensions "AVX2"
-
-
-	filter "system:windows"
-		defines 
+	-- ====================########## HAZEL PREMAKE COMMAND LINE OPTIONS ##########====================
+	newoption {
+		trigger     = "compiler",
+		description = "Choose a compiler",
+		allowed =
 		{
-			"_CRT_SECURE_NO_WARNINGS",
-			"_GLFW_WIN32",
-			"HZ_USE_AUDIO_NONE",
-			--"HZ_USE_LABSOUND_AUDIO",
+			{ "clang",    "Clang LLVM Compiler" },
+			{ "gcc",  "GNU Compiler" },
+			{ "msc",  "MSVC (Windows only)" },
+			{ "", "Default" }
+		}
+	}
+
+	GLESDebug = false
+	-- ====================########## HAZEL WORKSPACE SETTINGS ##########====================
+	workspace (workspaceName, projectName)
+		projectName = projectName or workspaceName
+		if _OPTIONS["compiler"] then
+			print("Using compiler ".._OPTIONS["compiler"])
+			toolset(_OPTIONS["compiler"])
+		end
+
+		architecture "x64"
+		startproject (projectName)
+		language "C++"
+		cppdialect "C++17"
+		intrinsics "on"
+		systemversion "latest"
+		staticruntime "off"
+		
+
+		configurations
+		{
+			"Debug",
+			"Release",
+			"Dist",
 		}
 
-		if GLESDebug then
-			defines
-			{
-				"HZ_USE_SDL_CONTEXT_MANAGER",
-				"HZ_ENABLE_OPEN_GLES",
-				"HZ_SDL_INPUT",
-				"HZ_SDL_WINDOW",
-			}
-		else
+		defines
+		{
+			"HAZEL",
+			"HZ_ENABLE_GRAPHICS_API_NONE",
+
+		}
+
+		filter "system:windows or linux or macosx"
+			vectorextensions "AVX2"
+
+
+		filter "system:windows"
 			defines 
 			{
+				"_CRT_SECURE_NO_WARNINGS",
+				"_GLFW_WIN32",
+				"HZ_USE_AUDIO_NONE",
+				--"HZ_USE_LABSOUND_AUDIO",
+			}
+
+			if GLESDebug then
+				defines
+				{
+					"HZ_USE_SDL_CONTEXT_MANAGER",
+					"HZ_ENABLE_OPEN_GLES",
+					"HZ_SDL_INPUT",
+					"HZ_SDL_WINDOW",
+				}
+			else
+				defines 
+				{
+					"HZ_USE_GLFW3_CONTEXT_MANAGER",
+					"HZ_ENABLE_OPEN_GL",
+					"HZ_GLFW3_INPUT",
+					"HZ_GLFW3_WINDOW",
+
+				}
+			end
+
+		filter "system:linux"
+			defines
+			{
+				"_GLFW_X11",
+				"HZ_USE_AUDIO_NONE",
 				"HZ_USE_GLFW3_CONTEXT_MANAGER",
 				"HZ_ENABLE_OPEN_GL",
 				"HZ_GLFW3_INPUT",
 				"HZ_GLFW3_WINDOW",
-
 			}
-		end
-
-	filter "system:linux"
-		defines
-		{
-			"_GLFW_X11",
-			"HZ_USE_AUDIO_NONE",
-			"HZ_USE_GLFW3_CONTEXT_MANAGER",
-			"HZ_ENABLE_OPEN_GL",
-			"HZ_GLFW3_INPUT",
-			"HZ_GLFW3_WINDOW",
-		}
 
 
-	filter "system:macosx"
+		filter "system:macosx"
 
-		defines
-		{
-			"HZ_USE_GLFW3_CONTEXT_MANAGER",
-			"HZ_USE_AUDIO_NONE",
-			"HZ_ENABLE_OPEN_GL",
-			"HZ_GLFW3_INPUT",
-			"HZ_GLFW3_WINDOW",
-		}
+			defines
+			{
+				"HZ_USE_GLFW3_CONTEXT_MANAGER",
+				"HZ_USE_AUDIO_NONE",
+				"HZ_ENABLE_OPEN_GL",
+				"HZ_GLFW3_INPUT",
+				"HZ_GLFW3_WINDOW",
+			}
 
-	filter "system:emscripten"
+		filter "system:emscripten"
 
-		defines
-		{
-			"HZ_USE_SDL_CONTEXT_MANAGER",
-			"HZ_USE_AUDIO_NONE",
-			--"HZ_USE_JS_AUDIO"
-			"HZ_ENABLE_OPEN_GLES",
-			"HZ_SDL_INPUT",
-			"HZ_SDL_WINDOW",
-		}
+			defines
+			{
+				"HZ_USE_SDL_CONTEXT_MANAGER",
+				"HZ_USE_AUDIO_NONE",
+				--"HZ_USE_JS_AUDIO"
+				"HZ_ENABLE_OPEN_GLES",
+				"HZ_SDL_INPUT",
+				"HZ_SDL_WINDOW",
+			}
 
-		linkoptions
-		{
-			"-s USE_WEBGL2=1",
-			"-s FULL_ES3=1",
-			"-s USE_SDL=2",
-			"-s WASM=1",
-			"-s ALLOW_MEMORY_GROWTH=1",
-			"-s DISABLE_EXCEPTION_CATCHING=1",
-			"-s NO_EXIT_RUNTIME=0",
-			"-s ASSERTIONS=1",
-			"-s DEMANGLE_SUPPORT=1",
-		}
+			linkoptions
+			{
+				"-s USE_WEBGL2=1",
+				"-s FULL_ES3=1",
+				"-s USE_SDL=2",
+				"-s WASM=1",
+				"-s ALLOW_MEMORY_GROWTH=1",
+				"-s DISABLE_EXCEPTION_CATCHING=1",
+				"-s NO_EXIT_RUNTIME=0",
+				"-s ASSERTIONS=1",
+				"-s DEMANGLE_SUPPORT=1",
+			}
 
-		buildoptions
-		{
-			"-s USE_WEBGL2=1",
-			"-s USE_SDL=2",
-			"-s WASM=1",
-			"-s ALLOW_MEMORY_GROWTH=1",
-			"-s DISABLE_EXCEPTION_CATCHING=1",
-			"-s NO_EXIT_RUNTIME=0",
-			"-s ASSERTIONS=1",
-			"-s DEMANGLE_SUPPORT=1",
-		}
-
-
-	filter "configurations:Debug"
-		defines "HZ_DEBUG"
-		runtime "Debug"
-		symbols "on"
-		floatingpoint "Strict"
+			buildoptions
+			{
+				"-s USE_WEBGL2=1",
+				"-s USE_SDL=2",
+				"-s WASM=1",
+				"-s ALLOW_MEMORY_GROWTH=1",
+				"-s DISABLE_EXCEPTION_CATCHING=1",
+				"-s NO_EXIT_RUNTIME=0",
+				"-s ASSERTIONS=1",
+				"-s DEMANGLE_SUPPORT=1",
+			}
 
 
-	filter "configurations:Release"
-		defines "HZ_RELEASE"
-		runtime "Release"
-		optimize "Speed"
-		inlining "Auto"
-		floatingpoint "Fast"
+		filter "configurations:Debug"
+			defines "HZ_DEBUG"
+			runtime "Debug"
+			symbols "on"
+			floatingpoint "Strict"
 
 
-	filter "configurations:Dist"
-		defines "HZ_DIST"
-		runtime "Release"
-		optimize "Speed"
-		inlining "Auto"
-		floatingpoint "Fast"
+		filter "configurations:Release"
+			defines "HZ_RELEASE"
+			runtime "Release"
+			optimize "Speed"
+			inlining "Auto"
+			floatingpoint "Fast"
 
+
+		filter "configurations:Dist"
+			defines "HZ_DIST"
+			runtime "Release"
+			optimize "Speed"
+			inlining "Auto"
+			floatingpoint "Fast"
+end
+
+hazelWorkspace("Hazel")
 
 -- ====================########## HAZEL DEPENDENCIES (FOR USE BY EXECUTABLES PROJECTS USING HAZEL) ##########====================
 
 --Adds the links needed by Hazel to premake
-local function HazelEXEDependencies()
-	print("Adding hazel dependencies for project ")
+local function HazelDependencies()
 
 	kind "ConsoleApp"
 
@@ -344,19 +345,20 @@ IncludeDir["TUtil"] = "Hazel/vendor/TUtil/TUtil/include"
 IncludeDir["Box2D"] = "Hazel/vendor/Box2D"
 IncludeDir["LabSound"] = "Hazel/vendor/LabSound/include"
 
-include "Hazel/vendor/zlib"
-if os.target() ~= "emscripten" then
-	include "Hazel/vendor/GLFW"
-	include "Hazel/vendor/Glad"
-end
+group "Dependencies"
+	include "Hazel/vendor/zlib"
+	if os.target() ~= "emscripten" then
+		include "Hazel/vendor/GLFW"
+		include "Hazel/vendor/Glad"
+	end
 
-include "Hazel/vendor/imgui"
-include "Hazel/vendor/freeimage"
-include "Hazel/vendor/FastNoiseSIMD"
+	include "Hazel/vendor/imgui"
+	include "Hazel/vendor/freeimage"
+	include "Hazel/vendor/FastNoiseSIMD"
 
-include "Hazel/vendor/TUtil/TUtil_project.lua"
-include "Hazel/vendor/Box2D/Box2D_project.lua"
-
+	include "Hazel/vendor/TUtil/TUtil_project.lua"
+	include "Hazel/vendor/Box2D/Box2D_project.lua"
+group ""
 
 
 
@@ -475,7 +477,7 @@ project "Sandbox"
 		"%{prj.name}/src/",
 	}
 
-	HazelEXEDependencies(prj)
+	HazelDependencies()
 
 	filter "system:emscripten"
 		linkoptions
@@ -505,7 +507,7 @@ project "GameDesign"
 		"%{prj.name}/src/",
 	}
 
-	HazelEXEDependencies(prj)
+	HazelDependencies()
 
 	filter "system:emscripten"
 		linkoptions
@@ -564,80 +566,5 @@ project "ImGuiTest"
 			"Pdh.lib",
 		}
 
-		
 
-project "Sandbox2"--The same as sandbox. Used for general testing purposes
-	location "Sandbox2"
-	kind "ConsoleApp"
-
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
-
-	includedirs
-	{
-		"Hazel/vendor/spdlog/include",
-		"Hazel/src",
-		"Hazel/vendor",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.freeimage}",
-		"%{IncludeDir.str}",
-
-		"Hazel/vendor/freeimage/Source/",
-		"Hazel/vendor/freeimage/Source/FreeImage",
-		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
-		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
-		"Hazel/vendor/freeimage/Source/LibPNG",
-		"Hazel/vendor/freeimage/Source/Metadata",
-		"Hazel/vendor/freeimage/Source/ZLib",
-	}
-
-	links 
-	{
-		"Hazel",
-	}
-
-	defines
-	{
-		"GLM_FORCE_INTRINSICS",
-		"FREEIMAGE_LIB",
-	}
-
-	filter "system:windows"
-
-		libdirs
-		{
-			"Hazel/vendor/Vulkan/lib"
-		}
-
-		links
-		{
-			"kernel32.lib",
-			"Onecore.lib",
-			"opengl32.lib",
-			"vulkan.lib",
-		}
-
-	filter "system:linux"
-		
-		libdirs
-		{
-			"/usr/lib/x86_64-linux-gnu/",
-		}
-
-		defines
-		{
-		}
-		
-		links
-		{
-
-		}
 ]]--
