@@ -1,9 +1,10 @@
 # Directories
 **/.vs/
 **/bin/
-!vendor/bin/
+!vendor/premake/bin/
 **/bin-int/
 **/peda-session*
+**/node_modules/
 
 # Files
 *.user
@@ -16,18 +17,7 @@
 #Hazel Files
 
 **/imgui.ini
-Sandbox/imgui_log.txt
-Sandbox/test.dat
-Sandbox/1page.dat
-Sandbox/logs/
-script/node_modules
 
-Sandbox/pics/
-Sandbox/pics - OLD/
-Sandbox/pics.zip
-Test/
-
-ImGui Test/imgui.ini
 **/logs/
 
 **/*.hzp.json

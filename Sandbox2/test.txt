@@ -1,3 +1,0 @@
-
-If you are seeing this, then reading recursive zip files works!
-
