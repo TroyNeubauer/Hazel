@@ -176,6 +176,7 @@ end
 
 if _OPTIONS["HazelCI"] then
 	hazelWorkspace("Hazel")
+	setupHazel()
 end
 
 -- ====================########## HAZEL DEPENDENCIES (FOR USE BY EXECUTABLES PROJECTS USING HAZEL) ##########====================
