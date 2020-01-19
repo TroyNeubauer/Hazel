@@ -1,0 +1,29 @@
+language: cpp
+compiler: gcc
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-9
+      - g++-9
+
+before_install:
+  - wget https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz -O premake.tar.gz
+  - tar -xf premake.tar.gz
+  - chmod +x premake5
+install:
+
+script:
+  - export CC=/usr/bin/gcc-9
+  - export CXX=/usr/bin/g++-9
+# Check versions of gcc and g++
+  - gcc -v && g++ -v --version
+# Create the project files
+  - ./Linux-GCC-GenProjects.sh
+# Compile and run release
+  - make config=release
+  - make config=dist
+  - make config=debug
+  
