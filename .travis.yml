@@ -21,7 +21,7 @@ script:
 # Check versions of gcc and g++
   - gcc -v && g++ -v --version
 # Create the project files
-  - ./script/Linux-GCC-GenProjects.sh
+  - premake5 --os=linux --compiler=gcc --HazelCI gmake2
 # Compile and run release
   - make config=release
   - make config=dist

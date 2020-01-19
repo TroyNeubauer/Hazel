@@ -1,3 +1,21 @@
+-- ====================########## HAZEL PREMAKE COMMAND LINE OPTIONS ##########====================
+newoption {
+	trigger     = "compiler",
+	description = "Choose a compiler",
+	allowed =
+	{
+		{ "clang",    "Clang LLVM Compiler" },
+		{ "gcc",  "GNU Compiler" },
+		{ "msc",  "MSVC (Windows only)" },
+		{ "", "Default" }
+	}
+}
+
+newoption {
+	trigger     = "HazelCI",
+}
+
+
 function hazelWorkspace(workspaceName)
 	print("Hazel premake starting...")
 	print("System: "..os.host())
@@ -6,19 +24,6 @@ function hazelWorkspace(workspaceName)
 	if os.target() == "emscripten" then
 		require("emscripten")
 	end
-
-	-- ====================########## HAZEL PREMAKE COMMAND LINE OPTIONS ##########====================
-	newoption {
-		trigger     = "compiler",
-		description = "Choose a compiler",
-		allowed =
-		{
-			{ "clang",    "Clang LLVM Compiler" },
-			{ "gcc",  "GNU Compiler" },
-			{ "msc",  "MSVC (Windows only)" },
-			{ "", "Default" }
-		}
-	}
 
 	GLESDebug = false
 	-- ====================########## HAZEL WORKSPACE SETTINGS ##########====================
@@ -166,6 +171,10 @@ function hazelWorkspace(workspaceName)
 			optimize "Speed"
 			inlining "Auto"
 			floatingpoint "Fast"
+end
+
+if _OPTIONS["HazelCI"] then
+	hazelWorkspace("Hazel")
 end
 
 -- ====================########## HAZEL DEPENDENCIES (FOR USE BY EXECUTABLES PROJECTS USING HAZEL) ##########====================
