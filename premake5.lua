@@ -168,12 +168,10 @@ function hazelWorkspace(workspaceName)
 			floatingpoint "Fast"
 end
 
-hazelWorkspace("Hazel")
-
 -- ====================########## HAZEL DEPENDENCIES (FOR USE BY EXECUTABLES PROJECTS USING HAZEL) ##########====================
 
 --Adds the links needed by Hazel to premake
-local function HazelDependencies()
+function HazelDependencies()
 
 	kind "ConsoleApp"
 
@@ -242,7 +240,6 @@ local function HazelDependencies()
 	filter { "system:windows", "configurations:Debug" }
 		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Debug" }
 		
-		print("Using debug windows libs")
 		links
 		{
 			--"LabSound_d.lib",
@@ -254,7 +251,6 @@ local function HazelDependencies()
 	filter { "system:windows", "configurations:Release or configurations:Dist" }
 		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
 
-		print("Using release windows libs")
 		links
 		{
 			--"LabSound.lib",
@@ -345,173 +341,116 @@ IncludeDir["TUtil"] = "Hazel/vendor/TUtil/TUtil/include"
 IncludeDir["Box2D"] = "Hazel/vendor/Box2D"
 IncludeDir["LabSound"] = "Hazel/vendor/LabSound/include"
 
-group "Dependencies"
-	include "Hazel/vendor/zlib"
-	if os.target() ~= "emscripten" then
-		include "Hazel/vendor/GLFW"
-		include "Hazel/vendor/Glad"
-	end
 
-	include "Hazel/vendor/imgui"
-	include "Hazel/vendor/freeimage"
-	include "Hazel/vendor/FastNoiseSIMD"
+function setupHazel()
+	group "Dependencies"
+		include "Hazel/vendor/zlib"
+		if os.target() ~= "emscripten" then
+			include "Hazel/vendor/GLFW"
+			include "Hazel/vendor/Glad"
+		end
 
-	include "Hazel/vendor/TUtil/TUtil_project.lua"
-	include "Hazel/vendor/Box2D/Box2D_project.lua"
-group ""
+		include "Hazel/vendor/imgui"
+		include "Hazel/vendor/freeimage"
+		include "Hazel/vendor/FastNoiseSIMD"
+
+		include "Hazel/vendor/TUtil/TUtil_project.lua"
+		include "Hazel/vendor/Box2D/Box2D_project.lua"
+	group ""
 
 
 
 
--- ====================########## HAZEL ##########====================
+	-- ====================########## HAZEL ##########====================
 
-project "Hazel"
-	location "Hazel"
-	kind "StaticLib"
+	project "Hazel"
+		location "Hazel"
+		kind "StaticLib"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		"%{prj.name}/vendor/glm/glm/**.hpp",
-		"%{prj.name}/vendor/glm/glm/**.inl",
-	}
+		files
+		{
+			"%{prj.name}/src/**.h",
+			"%{prj.name}/src/**.cpp",
+			"%{prj.name}/vendor/glm/glm/**.hpp",
+			"%{prj.name}/vendor/glm/glm/**.inl",
+		}
 
-	sysincludedirs
-	{
-		"%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.Vulkan}",
-		"%{IncludeDir.freeimage}",
-		"%{IncludeDir.FastNoiseSIMD}",
-		"%{IncludeDir.TUtil}",
-		"%{IncludeDir.Box2D}",
-		"%{IncludeDir.LabSound}",
-
-		"Hazel/vendor/freeimage/Source/",
-		"Hazel/vendor/freeimage/Source/FreeImage",
-		"Hazel/vendor/freeimage/Source/FreeImageToolkit",
-		"Hazel/vendor/freeimage/Source/LibOpenJPEG",
-		"Hazel/vendor/freeimage/Source/LibPNG",
-		"Hazel/vendor/freeimage/Source/Metadata",
-		"Hazel/vendor/freeimage/Source/ZLib",
-	}
-
-	if GLESDebug then
-		emsdkPath = os.getenv("EMSDK").."/upstream/emscripten/system/include"
-		print("emsdk path: "..emsdkPath)
 		sysincludedirs
 		{
-			emsdkPath,
+			"%{prj.name}/vendor/spdlog/include",
+			"%{IncludeDir.GLFW}",
+			"%{IncludeDir.Glad}",
+			"%{IncludeDir.ImGui}",
+			"%{IncludeDir.glm}",
+			"%{IncludeDir.Vulkan}",
+			"%{IncludeDir.freeimage}",
+			"%{IncludeDir.FastNoiseSIMD}",
+			"%{IncludeDir.TUtil}",
+			"%{IncludeDir.Box2D}",
+			"%{IncludeDir.LabSound}",
+
+			"Hazel/vendor/freeimage/Source/",
+			"Hazel/vendor/freeimage/Source/FreeImage",
+			"Hazel/vendor/freeimage/Source/FreeImageToolkit",
+			"Hazel/vendor/freeimage/Source/LibOpenJPEG",
+			"Hazel/vendor/freeimage/Source/LibPNG",
+			"Hazel/vendor/freeimage/Source/Metadata",
+			"Hazel/vendor/freeimage/Source/ZLib",
 		}
-	end
 
-	includedirs
-	{
-		"%{prj.name}/src",
-	}
+		if GLESDebug then
+			emsdkPath = os.getenv("EMSDK").."/upstream/emscripten/system/include"
+			print("emsdk path: "..emsdkPath)
+			sysincludedirs
+			{
+				emsdkPath,
+			}
+		end
+
+		includedirs
+		{
+			"%{prj.name}/src",
+		}
 
 
-	defines
-	{
-		"GLM_FORCE_INTRINSICS",
-		"FREEIMAGE_LIB",
+		defines
+		{
+			"GLM_FORCE_INTRINSICS",
+			"FREEIMAGE_LIB",
+			
+		}
+
+		filter "system:macosx or system:windows or system:linux"
+			pchsource "Hazel/src/hzpch.cpp"
 		
-	}
+		filter "system:windows or system:linux"
+			pchheader "hzpch.h"
 
-	filter "system:macosx or system:windows or system:linux"
-		pchsource "Hazel/src/hzpch.cpp"
-	
-	filter "system:windows or system:linux"
-		pchheader "hzpch.h"
-
-	filter "system:macosx"
-		pchheader "src/hzpch.h"--Why XCode
+		filter "system:macosx"
+			pchheader "src/hzpch.h"--Why XCode
 
 
-	filter "system:windows"
+		filter "system:windows"
 
-		defines
-		{
-			"VK_USE_PLATFORM_WIN32_KHR",
-			"HZ_ENABLE_DIRECTX_12",
-		}
-
-
-	filter "system:linux"
-		
-		defines
-		{
-		}
-
-	filter "system:macosx"
-
-		defines
-		{
-		}
+			defines
+			{
+				"VK_USE_PLATFORM_WIN32_KHR",
+				"HZ_ENABLE_DIRECTX_12",
+			}
 
 
--- ====================########## SANDBOX ##########====================
+		filter "system:linux"
+			
+			defines
+			{
+			}
 
-project "Sandbox"
-	location "Sandbox"
+		filter "system:macosx"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
-
-
-	includedirs
-	{
-		"%{prj.name}/src/",
-	}
-
-	HazelDependencies()
-
-	filter "system:emscripten"
-		linkoptions
-		{
-			"--preload-file assets"
-		}
-
-
-
--- ====================########## GAME DESIGN ##########====================
-
-
-project "GameDesign"
-	location "GameDesign"
-
-	targetdir ("bin/" .. outputdir .. "/Opportunity2024")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
-
-	includedirs
-	{
-		"%{prj.name}/src/",
-	}
-
-	HazelDependencies()
-
-	filter "system:emscripten"
-		linkoptions
-		{
-			"--preload-file assets"
-		}
-
+			defines
+			{
+			}
+end

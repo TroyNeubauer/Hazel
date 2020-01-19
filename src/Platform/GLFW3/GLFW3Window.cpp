@@ -11,6 +11,8 @@
 #include "Hazel/Core/Input.h"
 
 
+thread_local char tempChars[16];
+
 namespace Hazel {
 
 	Window* Window::Create(const WindowProps& props)
@@ -127,8 +129,10 @@ namespace Hazel {
 			{
 				GLFW3Window* myWindow = (GLFW3Window*) glfwGetWindowUserPointer(window);
 				WindowData& data = *(WindowData*) glfwGetWindowUserPointer(window);
-
-				KeyTypedEvent* event = new KeyTypedEvent(keycode);
+				HZ_CORE_ASSERT(keycode <= 255, "Unsupported keycode");
+				tempChars[0] = keycode;
+				tempChars[1] = '\0';
+;				TextTypedEvent* event = new TextTypedEvent(tempChars);
 				myWindow->m_EventCallback(event);
 			});
 
