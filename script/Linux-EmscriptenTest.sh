@@ -1,1 +1,1 @@
-node "script/NodeWebServer.js" "bin/"
+node "Hazel/script/NodeWebServer.js" "bin/"

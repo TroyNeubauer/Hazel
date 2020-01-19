@@ -126,7 +126,7 @@ namespace Hazel {
 			float* oldVertices = (float*) vertexBuffer->Map(MapAccess::READ_ONLY);
 			uint32_t* oldIndices = (uint32_t*) indexBuffer->Map(MapAccess::READ_ONLY);
 
-			std::vector<float> vertices(oldVertices, oldVertices + vertexBuffer->Count());//Start with existing points
+			std::vector<float> vertices(oldVertices, oldVertices + vertexBuffer->Count() * 8);//Start with existing points. x8 because were converting from vertex count to float count
 			std::vector<uint32_t> indices;
 
 			Lookup lookup;

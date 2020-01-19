@@ -1,2 +1,2 @@
 #!/bin/sh
-premake5 --os=emscripten "--scripts=vendor/premake/scripts" gmake2
+premake5 --os=emscripten "--scripts=Hazel/vendor/premake/scripts" gmake2
