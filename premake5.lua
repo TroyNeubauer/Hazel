@@ -13,6 +13,7 @@ newoption {
 
 newoption {
 	trigger     = "HazelCI",
+	description = "Boolean that indicates weather or not this build system is Continous Integration",
 }
 
 
