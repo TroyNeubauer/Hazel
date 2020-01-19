@@ -174,11 +174,6 @@ function hazelWorkspace(workspaceName)
 			floatingpoint "Fast"
 end
 
-if _OPTIONS["HazelCI"] then
-	hazelWorkspace("Hazel")
-	setupHazel()
-end
-
 -- ====================########## HAZEL DEPENDENCIES (FOR USE BY EXECUTABLES PROJECTS USING HAZEL) ##########====================
 
 --Adds the links needed by Hazel to premake
@@ -464,4 +459,11 @@ function setupHazel()
 			defines
 			{
 			}
+end
+
+
+--Provide a fake Hazel workspace when running on a CI server
+if _OPTIONS["HazelCI"] then
+	hazelWorkspace("Hazel")
+	setupHazel()
 end
