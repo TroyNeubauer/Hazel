@@ -11,11 +11,6 @@ newoption {
 	}
 }
 
-newoption {
-	trigger     = "HazelCI",
-	description = "Boolean that indicates weather or not this build system is Continous Integration",
-}
-
 
 function hazelWorkspace(workspaceName)
 	print("Hazel premake starting...")
@@ -459,11 +454,4 @@ function setupHazel()
 			defines
 			{
 			}
-end
-
-
---Provide a fake Hazel workspace when running on a CI server
-if _OPTIONS["HazelCI"] then
-	hazelWorkspace("Hazel")
-	setupHazel()
 end
