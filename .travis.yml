@@ -21,7 +21,7 @@ script:
 # Check versions of gcc and g++
   - gcc -v && g++ -v --version
 # Create the project files
-  - ./Linux-GCC-GenProjects.sh
+  - ./script/Linux-GCC-GenProjects.sh
 # Compile and run release
   - make config=release
   - make config=dist
