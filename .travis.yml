@@ -29,10 +29,6 @@ matrix:
     - os: windows
       env: BUILD_CONFIG=dist
 
-os:
-  - linux
-  - windows
-
 addons:
   apt:
     sources:
@@ -64,6 +60,8 @@ install:
 
 script:
 # Create the project files
+  - echo $TRAVIS_OS_NAME
+  - echo $BUILD_CONFIG
   - cp -r .github/CI\ Project/* ..
   - cd ..
   - |
