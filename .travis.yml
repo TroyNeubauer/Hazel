@@ -10,13 +10,8 @@ addons:
       - g++-9
 
 before_install:
-  - sudo apt install xorg-dev
-  - sudo apt install e2fslibs-dev
-  - sudo apt install nettle-dev
-  - sudo apt install acl-dev
-  - sudo apt install libghc-bzlib-dev
-  - sudo apt install lzma-dev
-  - sudo apt install libroslz4-dev
+  - sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+  - sudo apt install xorg-dev e2fslibs-dev nettle-dev acl-dev libghc-bzlib-dev lzma-dev libroslz4-dev
   - wget https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz -O premake.tar.gz
   - tar -xf premake.tar.gz
   - chmod +x premake5
