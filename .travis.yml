@@ -4,14 +4,23 @@ matrix:
   include:
     # Linux:
     - os: linux
-      env: BUILD_CONFIG=debug
-      compiler: gcc
+      env:
+        - BUILD_CONFIG=debug
+        - CC=gcc-9
+        - CXX=g++-9
+        - COMPILER=gcc
     - os: linux
-      env: BUILD_CONFIG=release
-      compiler: gcc
+      env:
+        - BUILD_CONFIG=release
+        - CC=gcc-9
+        - CXX=g++-9
+        - COMPILER=gcc
     - os: linux
-      env: BUILD_CONFIG=dist
-      compiler: gcc
+      env:
+        - BUILD_CONFIG=dist
+        - CC=gcc-9
+        - CXX=g++-9
+        - COMPILER=gcc
     # Windows:
     - os: windows
       env: BUILD_CONFIG=dist
@@ -50,8 +59,6 @@ install:
       tar -xf premake.tar.gz
       chmod +x premake5
       export PATH=$PATH:$(pwd)
-      export CC=/usr/bin/gcc-9
-      export CXX=/usr/bin/g++-9
       gcc -v && g++ -v --version
     fi
 
@@ -67,5 +74,5 @@ script:
     elif [$TRAVIS_OS_NAME == "windows"]
     then
       echo "Building on windows!"
-      premake5 --os=windows --compiler=msvc vs2019
+      premake5 --os=windows --compiler=msvc vs2017
     fi
