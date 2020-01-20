@@ -33,7 +33,7 @@ matrix:
     - os: linux
       env:
         - BUILD_CONFIG=dist
-        - PREMAKE_CMD="premake5 --scripts=Hazel/vendor/premake/scripts --os=emscripten gmake2"
+        - PREMAKE_CMD="premake5 --os=emscripten --scripts=Hazel/vendor/premake/scripts gmake2"
     # Windows:
     - os: windows
       env:
@@ -94,6 +94,7 @@ script:
   - cp -r .github/CI\ Project/* ..
   - cd ..
   - echo Running... $PREMAKE_CMD
+  - echo commands... $CC $CXX $AR
   - $PREMAKE_CMD
   - |
     if [ $TRAVIS_OS_NAME == "linux" ]
