@@ -200,7 +200,6 @@ function HazelDependencies()
 		"ImGui",
 		"FastNoiseSIMD",
 		"Box2D",
-		"zlib",
 		"glfw",
 		"freeimage-core",
 		"freeimage-libjpeg",
@@ -208,6 +207,7 @@ function HazelDependencies()
 		"freeimage-libpng",
 		"freeimage-metadata",
 		"freeimage-toolkit",
+		"zlib",
 	}
 
 	defines
@@ -269,7 +269,6 @@ function HazelDependencies()
 			"Xinerama",
 			"Xcursor",
 			"pthread",
-			"z",
 			"dl",
 		}
 
