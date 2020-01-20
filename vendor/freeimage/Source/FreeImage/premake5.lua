@@ -23,6 +23,11 @@ project "freeimage-core"
 	includedirs
 	{
 		"../",
-		_OPTIONS["use-system-zlib"] and "" or "../../../zlib/include/",--/Hazel/vendor/zlib
+		"../../../zlib/include/",--/Hazel/vendor/zlib
+	}
+
+	links
+	{
+		"zlib"
 	}
 	

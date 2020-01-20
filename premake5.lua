@@ -11,11 +11,6 @@ newoption {
 	}
 }
 
-newoption {
-	trigger     = "use-system-zlib",
-	description = "Uses zlib installed in the system instead of compiling it",
-}
-
 function hazelWorkspace(workspaceName)
 	print("Hazel premake starting...")
 	print("System: "..os.host())
@@ -205,7 +200,7 @@ function HazelDependencies()
 		"ImGui",
 		"FastNoiseSIMD",
 		"Box2D",
-		_OPTIONS["use-system-zlib"] and "z" or "zlib",
+		"zlib",
 		"glfw",
 		"freeimage-core",
 		"freeimage-libjpeg",
@@ -349,10 +344,7 @@ IncludeDir["LabSound"] = "Hazel/vendor/LabSound/include"
 
 function setupHazel()
 	group "Dependencies"
-		if not _OPTIONS["use-system-zlib"] then
-			include "Hazel/vendor/zlib"
-		end
-
+		include "Hazel/vendor/zlib"
 		if os.target() ~= "emscripten" then
 			include "Hazel/vendor/GLFW"
 			include "Hazel/vendor/Glad"
@@ -406,7 +398,7 @@ function setupHazel()
 			"Hazel/vendor/freeimage/Source/LibOpenJPEG",
 			"Hazel/vendor/freeimage/Source/LibPNG",
 			"Hazel/vendor/freeimage/Source/Metadata",
-			_OPTIONS["use-system-zlib"] and "" or "Hazel/vendor/freeimage/Source/ZLib",
+			"Hazel/vendor/freeimage/Source/ZLib",
 		}
 
 		if GLESDebug then

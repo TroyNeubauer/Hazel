@@ -28,7 +28,8 @@ script:
   - cd ..
   - premake5 --os=linux --compiler=gcc --use-system-zlib gmake2
   # Compile and 
+  - make config=debug
+  - objdump -d bin/Debug-linux-x86_64/zlib/zlib.a
   - make config=release
   - make config=dist
-  - make config=debug
   

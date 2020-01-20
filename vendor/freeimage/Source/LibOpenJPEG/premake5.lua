@@ -20,6 +20,6 @@ project "freeimage-libopenjpeg"
 
 	includedirs
 	{
-		_OPTIONS["use-system-zlib"] and "" or "../../../zlib/include/",--Use /Hazel/vendor/zlib headers
+		"../../../zlib/include/",--Use /Hazel/vendor/zlib headers
 	}
 	
