@@ -14,6 +14,6 @@ project "freeimage-libpng"
 
 	includedirs
 	{
-		"../../../zlib/include/",--/Hazel/vendor/zlib
+		_OPTIONS["use-system-zlib"] and "" or "../../../zlib/include/",--/Hazel/vendor/zlib
 	}
 	
