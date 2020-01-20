@@ -10,18 +10,21 @@ matrix:
         - COMPILER=gcc
         - PREMAKE_OS=linux
         - PREMAKE_TARGET=gmake2
+        - PREMAKE_CMD=premake5
     - os: linux
       env:
         - BUILD_CONFIG=release
         - COMPILER=gcc
         - PREMAKE_OS=linux
         - PREMAKE_TARGET=gmake2
+        - PREMAKE_CMD=premake5
     - os: linux
       env:
         - BUILD_CONFIG=dist
         - COMPILER=gcc
         - PREMAKE_OS=linux
         - PREMAKE_TARGET=gmake2
+        - PREMAKE_CMD=premake5
     #Linux - Clang
     - os: linux
       env:
@@ -29,17 +32,20 @@ matrix:
         - COMPILER=clang
         - PREMAKE_OS=linux
         - PREMAKE_TARGET=gmake2
+        - PREMAKE_CMD=premake5
     - os: linux
       env:
         - BUILD_CONFIG=release
         - COMPILER=clang
         - PREMAKE_OS=linux
         - PREMAKE_TARGET=gmake2
+        - PREMAKE_CMD=premake5
     - os: linux
       env:
         - BUILD_CONFIG=dist
         - COMPILER=clang
         - PREMAKE_TARGET=gmake2
+        - PREMAKE_CMD=premake5
     #Linux - Emscripten
     - os: linux
       env:
@@ -47,6 +53,7 @@ matrix:
         - COMPILER=emcc
         - PREMAKE_OS=emscripten
         - PREMAKE_TARGET=gmake2
+        - PREMAKE_CMD="premake5 --scripts=vendor/premake/scripts"
     # Windows:
     - os: windows
       env:
@@ -54,18 +61,21 @@ matrix:
         - COMPILER=msc
         - PREMAKE_OS=windows
         - PREMAKE_TARGET=vs2017
+        - PREMAKE_CMD=vendor\premake\bin\premake5.exe
     - os: windows
       env:
         - BUILD_CONFIG=release
         - COMPILER=msc
         - PREMAKE_OS=windows
         - PREMAKE_TARGET=vs2017
+        - PREMAKE_CMD=vendor\premake\bin\premake5.exe
     - os: windows
       env:
         - BUILD_CONFIG=dist
         - COMPILER=msc
         - PREMAKE_OS=windows
         - PREMAKE_TARGET=vs2017
+        - PREMAKE_CMD=vendor\premake\bin\premake5.exe
 
 addons:
   apt:
@@ -103,6 +113,7 @@ install:
       emsdk-master/emsdk update
       emsdk-master/emsdk install latest-fastcomp
       emsdk-master/emsdk activate latest-fastcomp
+      source emsdk-master/emsdk_env.sh
     fi
 
 script:
@@ -114,7 +125,7 @@ script:
   - echo $PREMAKE_TARGET
   - cp -r .github/CI\ Project/* ..
   - cd ..
-  - premake5 --os=$PREMAKE_OS --compiler=$COMPILER $PREMAKE_TARGET
+  - $PREMAKE_CMD --os=$PREMAKE_OS --compiler=$COMPILER $PREMAKE_TARGET
   - |
     if [ $TRAVIS_OS_NAME == "linux" ]
     then
