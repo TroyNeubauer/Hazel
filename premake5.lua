@@ -205,7 +205,7 @@ function HazelDependencies()
 		"ImGui",
 		"FastNoiseSIMD",
 		"Box2D",
-		"zlib",
+		_OPTIONS["use-system-zlib"] and "z" or "zlib",
 		"glfw",
 		"freeimage-core",
 		"freeimage-libjpeg",
@@ -406,7 +406,7 @@ function setupHazel()
 			"Hazel/vendor/freeimage/Source/LibOpenJPEG",
 			"Hazel/vendor/freeimage/Source/LibPNG",
 			"Hazel/vendor/freeimage/Source/Metadata",
-			"Hazel/vendor/freeimage/Source/ZLib",
+			_OPTIONS["use-system-zlib"] and "" or "Hazel/vendor/freeimage/Source/ZLib",
 		}
 
 		if GLESDebug then
