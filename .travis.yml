@@ -10,7 +10,6 @@ addons:
       - g++-9
 
 before_install:
-  - sudo apt install tree
   - wget https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz -O premake.tar.gz
   - tar -xf premake.tar.gz
   - chmod +x premake5
@@ -23,8 +22,7 @@ install:
 
 script:
 # Create the project files
-  - tree
-  - ls -la
+  - ls -la .github
   - cp -r ".github/CI Project/*" ..
   - cd ..
   - pwd
