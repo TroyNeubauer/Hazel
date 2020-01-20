@@ -109,6 +109,9 @@ script:
 # Create the project files
   - echo $TRAVIS_OS_NAME
   - echo $BUILD_CONFIG
+  - echo $PREMAKE_OS
+  - echo $COMPILER
+  - echo $PREMAKE_TARGET
   - cp -r .github/CI\ Project/* ..
   - cd ..
   - premake5 --os=$PREMAKE_OS --compiler=$COMPILER $PREMAKE_TARGET
@@ -118,6 +121,6 @@ script:
       make -j2 config=$BUILD_CONFIG
     elif [$TRAVIS_OS_NAME == "windows"]
     then
-
+      echo "Building on windows!"
     fi
   - ls
