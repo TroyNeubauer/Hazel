@@ -19,12 +19,12 @@ namespace Hazel {
 			float x = vertices[i++];
 			float y = vertices[i++];
 			float z = vertices[i++];
-			vec3 pos(x, y, z);
-			pos = normalize(pos);
+			glm::vec3 pos(x, y, z);
+			pos = glm::normalize(pos);
 			i += 3;//Skip normal			
 
 			float u = 0.5 + atan2(pos.z, pos.x) / (2 * M_PI);
-			float v = 0.5 - asin(pos.y) / M_PI;
+			float v = 0.5 - glm::asin(pos.y) / M_PI;
 
 			vertices[i++] = u;
 			vertices[i++] = v;
@@ -86,10 +86,10 @@ namespace Hazel {
 
 	using Lookup=std::map<std::pair<uint32_t, uint32_t>, uint32_t>;
 
-	vec3 GetPosition(std::vector<float>& vertices, int index)
+	glm::vec3 GetPosition(std::vector<float>& vertices, int index)
 	{
 		index *= 8;//8 floats per vertex
-		return vec3(vertices[index], vertices[index + 1], vertices[index + 2]);
+		return glm::vec3(vertices[index], vertices[index + 1], vertices[index + 2]);
 	}
 
 	uint32_t vertex_for_edge(Lookup& lookup, std::vector<float>& vertices, uint32_t first, uint32_t second, float radius)
@@ -101,9 +101,9 @@ namespace Hazel {
 		auto inserted = lookup.insert({ key, vertices.size() / 8 });
 		if (inserted.second)//The vertex doesnt exist
 		{
-			vec3 edge0 = GetPosition(vertices, first);
-			vec3 edge1 = GetPosition(vertices, second);
-			vec3 point = radius * normalize(edge0 + edge1);
+			glm::vec3 edge0 = GetPosition(vertices, first);
+			glm::vec3 edge1 = GetPosition(vertices, second);
+			glm::vec3 point = radius * normalize(edge0 + edge1);
 			
 			vertices.push_back(point.x);
 			vertices.push_back(point.y);

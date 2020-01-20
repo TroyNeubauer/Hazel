@@ -7,20 +7,14 @@ matrix:
     - os: linux
       env:
         - BUILD_CONFIG=debug
-        - CC=gcc-9
-        - CXX=g++-9
         - COMPILER=gcc
     - os: linux
       env:
         - BUILD_CONFIG=release
-        - CC=gcc-9
-        - CXX=g++-9
         - COMPILER=gcc
     - os: linux
       env:
         - BUILD_CONFIG=dist
-        - CC=gcc-9
-        - CXX=g++-9
         - COMPILER=gcc
     #Linux - Clang
     - os: linux
