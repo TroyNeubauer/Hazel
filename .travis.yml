@@ -1,9 +1,25 @@
 language: cpp
-compiler: gcc
-env:
-  - MAKE_CONFIG=debug
-  - MAKE_CONFIG=release
-  - MAKE_CONFIG=dist
+
+matrix:
+  include:
+    # Linux:
+    - os: linux
+      env: BUILD_CONFIG=debug
+      compiler: gcc
+    - os: linux
+      env: BUILD_CONFIG=release
+      compiler: gcc
+    - os: linux
+      env: BUILD_CONFIG=dist
+      compiler: gcc
+    # Windows:
+    - os: windows
+      env: BUILD_CONFIG=dist
+    - os: windows
+      env: BUILD_CONFIG=release
+    - os: windows
+      env: BUILD_CONFIG=dist
+
 os:
   - linux
   - windows
@@ -27,18 +43,29 @@ addons:
       - libroslz4-dev
 
 install:
-  - wget https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz -O premake.tar.gz
-  - tar -xf premake.tar.gz
-  - chmod +x premake5
-  - export PATH=$PATH:$(pwd)
-  - export CC=/usr/bin/gcc-9
-  - export CXX=/usr/bin/g++-9
-# Check versions of gcc and g++
-  - gcc -v && g++ -v --version
+  - |
+    if [ $TRAVIS_OS_NAME == "linux" ]
+    then
+      wget https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz -O premake.tar.gz
+      tar -xf premake.tar.gz
+      chmod +x premake5
+      export PATH=$PATH:$(pwd)
+      export CC=/usr/bin/gcc-9
+      export CXX=/usr/bin/g++-9
+      gcc -v && g++ -v --version
+    fi
 
 script:
 # Create the project files
   - cp -r .github/CI\ Project/* ..
   - cd ..
-  - premake5 --os=linux --compiler=gcc gmake2
-  - make -j2 config=$MAKE_CONFIG
+  - |
+    if [ $TRAVIS_OS_NAME == "linux" ]
+    then
+      premake5 --os=linux --compiler=gcc gmake2
+      make -j2 config=$BUILD_CONFIG
+    elif [$TRAVIS_OS_NAME == "windows"]
+    then
+      echo "Building on windows!"
+      premake5 --os=windows --compiler=msvc vs2019
+    fi
