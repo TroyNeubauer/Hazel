@@ -3,6 +3,7 @@ language: cpp
 matrix:
   include:
     # Linux:
+    #Linux - GCC
     - os: linux
       env:
         - BUILD_CONFIG=debug
@@ -21,9 +22,22 @@ matrix:
         - CC=gcc-9
         - CXX=g++-9
         - COMPILER=gcc
+    #Linux - Clang
+    - os: linux
+      env:
+        - BUILD_CONFIG=debug
+        - COMPILER=clang
+    - os: linux
+      env:
+        - BUILD_CONFIG=release
+        - COMPILER=clang
+    - os: linux
+      env:
+        - BUILD_CONFIG=dist
+        - COMPILER=clang
     # Windows:
     - os: windows
-      env: BUILD_CONFIG=dist
+      env: BUILD_CONFIG=debug
     - os: windows
       env: BUILD_CONFIG=release
     - os: windows
@@ -67,7 +81,7 @@ script:
   - |
     if [ $TRAVIS_OS_NAME == "linux" ]
     then
-      premake5 --os=linux --compiler=gcc gmake2
+      premake5 --os=linux --compiler=$COMPILER gmake2
       make -j2 config=$BUILD_CONFIG
     elif [$TRAVIS_OS_NAME == "windows"]
     then
