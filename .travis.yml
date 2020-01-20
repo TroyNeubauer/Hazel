@@ -11,7 +11,8 @@ addons:
 
 before_install:
   - sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
-  - sudo apt install xorg-dev e2fslibs-dev nettle-dev acl-dev libghc-bzlib-dev lzma-dev libroslz4-dev libz-dev
+  - sudo apt install xorg-dev e2fslibs-dev nettle-dev acl-dev libghc-bzlib-dev lzma-dev libroslz4-dev
+  - sudo apt remove zlib*
   - wget https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz -O premake.tar.gz
   - tar -xf premake.tar.gz
   - chmod +x premake5
