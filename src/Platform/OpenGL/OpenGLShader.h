@@ -2,7 +2,6 @@
 #ifdef HZ_ENABLE_OPEN_GL
 
 #include <map>
-#include <string_view>
 
 #include "OpenGL.h"
 #include "Hazel/Renderer/Shader.h"

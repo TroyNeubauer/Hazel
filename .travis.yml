@@ -8,34 +8,64 @@ matrix:
       env:
         - BUILD_CONFIG=debug
         - COMPILER=gcc
+        - PREMAKE_OS=linux
+        - PREMAKE_TARGET=gmake2
     - os: linux
       env:
         - BUILD_CONFIG=release
         - COMPILER=gcc
+        - PREMAKE_OS=linux
+        - PREMAKE_TARGET=gmake2
     - os: linux
       env:
         - BUILD_CONFIG=dist
         - COMPILER=gcc
+        - PREMAKE_OS=linux
+        - PREMAKE_TARGET=gmake2
     #Linux - Clang
     - os: linux
       env:
         - BUILD_CONFIG=debug
         - COMPILER=clang
+        - PREMAKE_OS=linux
+        - PREMAKE_TARGET=gmake2
     - os: linux
       env:
         - BUILD_CONFIG=release
         - COMPILER=clang
+        - PREMAKE_OS=linux
+        - PREMAKE_TARGET=gmake2
     - os: linux
       env:
         - BUILD_CONFIG=dist
         - COMPILER=clang
+        - PREMAKE_TARGET=gmake2
+    #Linux - Emscripten
+    - os: linux
+      env:
+        - BUILD_CONFIG=dist
+        - COMPILER=emcc
+        - PREMAKE_OS=emscripten
+        - PREMAKE_TARGET=gmake2
     # Windows:
     - os: windows
-      env: BUILD_CONFIG=debug
+      env:
+        - BUILD_CONFIG=debug
+        - COMPILER=msc
+        - PREMAKE_OS=windows
+        - PREMAKE_TARGET=vs2017
     - os: windows
-      env: BUILD_CONFIG=release
+      env:
+        - BUILD_CONFIG=release
+        - COMPILER=msc
+        - PREMAKE_OS=windows
+        - PREMAKE_TARGET=vs2017
     - os: windows
-      env: BUILD_CONFIG=dist
+      env:
+        - BUILD_CONFIG=dist
+        - COMPILER=msc
+        - PREMAKE_OS=windows
+        - PREMAKE_TARGET=vs2017
 
 addons:
   apt:
@@ -65,6 +95,15 @@ install:
       export PATH=$PATH:$(pwd)
       gcc -v && g++ -v --version
     fi
+  - |
+    if [ $COMPILER == "emcc" ]
+    then
+      wget -q https://github.com/emscripten-core/emsdk/archive/master.tar.gz
+      tar -xvf master.tar.gz
+      emsdk-master/emsdk update
+      emsdk-master/emsdk install latest-fastcomp
+      emsdk-master/emsdk activate latest-fastcomp
+    fi
 
 script:
 # Create the project files
@@ -72,13 +111,13 @@ script:
   - echo $BUILD_CONFIG
   - cp -r .github/CI\ Project/* ..
   - cd ..
+  - premake5 --os=$PREMAKE_OS --compiler=$COMPILER $PREMAKE_TARGET
   - |
     if [ $TRAVIS_OS_NAME == "linux" ]
     then
-      premake5 --os=linux --compiler=$COMPILER gmake2
       make -j2 config=$BUILD_CONFIG
     elif [$TRAVIS_OS_NAME == "windows"]
     then
-      echo "Building on windows!"
-      premake5 --os=windows --compiler=msvc vs2017
+
     fi
+  - ls
