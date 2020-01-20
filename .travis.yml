@@ -4,6 +4,9 @@ env:
   - MAKE_CONFIG=debug
   - MAKE_CONFIG=release
   - MAKE_CONFIG=dist
+os:
+  - linux
+  - windows
 
 addons:
   apt:
@@ -23,7 +26,7 @@ addons:
       - lzma-dev
       - libroslz4-dev
 
-before_install:
+install:
   - wget https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz -O premake.tar.gz
   - tar -xf premake.tar.gz
   - chmod +x premake5
@@ -32,7 +35,6 @@ before_install:
   - export CXX=/usr/bin/g++-9
 # Check versions of gcc and g++
   - gcc -v && g++ -v --version
-install:
 
 script:
 # Create the project files
