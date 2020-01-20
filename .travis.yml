@@ -53,7 +53,7 @@ matrix:
         - COMPILER=emcc
         - PREMAKE_OS=emscripten
         - PREMAKE_TARGET=gmake2
-        - PREMAKE_CMD="premake5 --scripts=vendor/premake/scripts"
+        - PREMAKE_CMD="premake5 --scripts=Hazel/vendor/premake/scripts"
     # Windows:
     - os: windows
       env:
@@ -126,6 +126,7 @@ script:
   - echo $PREMAKE_TARGET
   - cp -r .github/CI\ Project/* ..
   - cd ..
+  - echo Running... $PREMAKE_CMD --os=$PREMAKE_OS --compiler=$COMPILER $PREMAKE_TARGET
   - $PREMAKE_CMD --os=$PREMAKE_OS --compiler=$COMPILER $PREMAKE_TARGET
   - |
     if [ $TRAVIS_OS_NAME == "linux" ]
