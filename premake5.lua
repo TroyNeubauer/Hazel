@@ -11,6 +11,10 @@ newoption {
 	}
 }
 
+newoption {
+	trigger     = "use-system-zlib",
+	description = "Uses zlib installed in the system instead of compiling it",
+}
 
 function hazelWorkspace(workspaceName)
 	print("Hazel premake starting...")
@@ -345,7 +349,10 @@ IncludeDir["LabSound"] = "Hazel/vendor/LabSound/include"
 
 function setupHazel()
 	group "Dependencies"
-		include "Hazel/vendor/zlib"
+		if not _OPTIONS["use-system-zlib"] then
+			include "Hazel/vendor/zlib"
+		end
+
 		if os.target() ~= "emscripten" then
 			include "Hazel/vendor/GLFW"
 			include "Hazel/vendor/Glad"
