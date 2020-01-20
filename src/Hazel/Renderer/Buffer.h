@@ -90,8 +90,8 @@ namespace Hazel {
 	{
 	public:
 		Buffer() {}
-		inline void SetData(T* data, uint64_t bytes) { SetData(reinterpret_cast<void*>(data), bytes); };
-		virtual void SetData(void* data, uint64_t bytes) = 0;
+		inline void SetData(T* data, std::uint64_t bytes) { SetData(reinterpret_cast<void*>(data), bytes); };
+		virtual void SetData(void* data, std::uint64_t bytes) = 0;
 		inline void SetData(std::vector<T>& vec) { SetData(vec.data(), sizeof(T) * vec.size()); }
 
 		virtual void Bind() const = 0;
@@ -102,18 +102,18 @@ namespace Hazel {
 		//Returns the number of elements in this buffer (usually index count or vertex count)
 		inline uint32_t Count() const { return Utils::ConvertInt<uint32_t>(Bytes() / GetLayout().GetStride()); }
 		
-		virtual uint64_t Bytes() const = 0;
+		virtual std::uint64_t Bytes() const = 0;
 
 		//Sets this buffer to have the desired layout and uses the structSize parameter (is specified) to verify that the size of the layout
 		//requested and the size of the c++ struct maps to that data are the same size
 		virtual void SetLayout(const BufferLayout& layout, size_t structSize = 0) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
-		static Ref<Buffer<float, BufferType::VERTEX>> Create(float* data, uint64_t bytes);
-		static Ref<Buffer<uint32_t, BufferType::INDEX>> Create(uint32_t* data, uint64_t bytes);
+		static Ref<Buffer<float, BufferType::VERTEX>> Create(float* data, std::uint64_t bytes);
+		static Ref<Buffer<uint32_t, BufferType::INDEX>> Create(uint32_t* data, std::uint64_t bytes);
 
-		static Ref<Buffer<float, BufferType::VERTEX>> CreateVertex(uint64_t bytes);
-		static Ref<Buffer<uint32_t, BufferType::INDEX>> CreateIndex(uint64_t bytes);
+		static Ref<Buffer<float, BufferType::VERTEX>> CreateVertex(std::uint64_t bytes);
+		static Ref<Buffer<uint32_t, BufferType::INDEX>> CreateIndex(std::uint64_t bytes);
 
 		virtual ~Buffer() {}
 	};

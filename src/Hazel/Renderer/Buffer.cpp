@@ -113,7 +113,7 @@ namespace Hazel {
 	template<> ShaderDataType ToShaderDataType<uint8_t>()		{ return ShaderDataType::Int8; }
 	template<> ShaderDataType ToShaderDataType<uint16_t>()		{ return ShaderDataType::Int16; }
 	template<> ShaderDataType ToShaderDataType<uint32_t>()		{ return ShaderDataType::Int32; }
-	template<> ShaderDataType ToShaderDataType<uint64_t>()		{ return ShaderDataType::Int64; }
+	template<> ShaderDataType ToShaderDataType<std::uint64_t>()		{ return ShaderDataType::Int64; }
 
 	template<> ShaderDataType ToShaderDataType<glm::i8vec2>()	{ return ShaderDataType::Int8_2; }
 	template<> ShaderDataType ToShaderDataType<glm::i16vec2>()	{ return ShaderDataType::Int16_2; }
@@ -135,7 +135,7 @@ namespace Hazel {
 	template<> ShaderDataType ToShaderDataType<bool>()			{ return ShaderDataType::Bool; }
 
 	template<>
-	Ref<VertexBuffer> VertexBuffer::Create(float* data, uint64_t bytes)
+	Ref<VertexBuffer> VertexBuffer::Create(float* data, std::uint64_t bytes)
 	{
 		switch (GraphicsAPI::Get())
 		{
@@ -154,7 +154,7 @@ namespace Hazel {
 	}
 
 	template<>
-	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* data, uint64_t bytes)
+	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* data, std::uint64_t bytes)
 	{
 		switch (GraphicsAPI::Get())
 		{
@@ -173,7 +173,7 @@ namespace Hazel {
 	}
 
 	template<>
-	Ref<VertexBuffer> VertexBuffer::CreateVertex(uint64_t bytes)
+	Ref<VertexBuffer> VertexBuffer::CreateVertex(std::uint64_t bytes)
 	{
 		switch (GraphicsAPI::Get())
 		{
@@ -193,7 +193,7 @@ namespace Hazel {
 
 
 	template<>
-	Ref<IndexBuffer> IndexBuffer::CreateIndex(uint64_t bytes)
+	Ref<IndexBuffer> IndexBuffer::CreateIndex(std::uint64_t bytes)
 	{
 		switch (GraphicsAPI::Get())
 		{

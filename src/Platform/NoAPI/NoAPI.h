@@ -45,16 +45,16 @@ namespace Hazel {
 	class NoAPIBuffer : public Buffer<T, type>
 	{
 	public:
-		NoAPIBuffer(T* data, uint64_t bytes) {}
-		NoAPIBuffer(uint64_t bytes) {}
+		NoAPIBuffer(T* data, std::uint64_t bytes) {}
+		NoAPIBuffer(std::uint64_t bytes) {}
 
-		virtual void SetData(void* data, uint64_t bytes) override {}
+		virtual void SetData(void* data, std::uint64_t bytes) override {}
 		virtual void* Map(MapAccess access) override { return nullptr; }
 		virtual void Unmap(void* buffer) override {}
 
 		virtual void Bind() const override {}
 		virtual void Unbind() const override {}
-		virtual uint64_t Bytes() const override { return 0; }
+		virtual std::uint64_t Bytes() const override { return 0; }
 		virtual void SetLayout(const BufferLayout& layout, size_t structSize) override {}
 		virtual const BufferLayout& GetLayout() const override { return layout; }
 

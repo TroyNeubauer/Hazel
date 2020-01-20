@@ -66,7 +66,7 @@ namespace Hazel {
 		m_VertexBuffers.push_back(vertexBuffer);
 	}
 
-	static uint64_t OffsetOf(const std::string& name, const BufferLayout& layout)
+	static std::uint64_t OffsetOf(const std::string& name, const BufferLayout& layout)
 	{
 		for (auto element : layout.GetElements())
 		{
@@ -79,12 +79,12 @@ namespace Hazel {
 		return -1;
 	}
 
-	static vec3& GetVec3(uint8_t* data, uint64_t stride, uint64_t index)
+	static vec3& GetVec3(uint8_t* data, std::uint64_t stride, std::uint64_t index)
 	{
 		return *(vec3*) (data + index * stride);
 	}
 
-	static vec3* GetVec3Ptr(uint8_t* data, uint64_t stride, uint64_t index)
+	static vec3* GetVec3Ptr(uint8_t* data, std::uint64_t stride, std::uint64_t index)
 	{
 		return (vec3*)(data + index * stride);
 	}
@@ -100,9 +100,9 @@ namespace Hazel {
 		const BufferLayout& layout = buffer.GetLayout();
 		HZ_CORE_ASSERT(layout.GetElements().size(), "Buffer has no layout!");
 
-		uint64_t stride = layout.GetStride();
-		uint64_t normalsOffset = OffsetOf("a_Normal", layout);
-		uint64_t positionsOffset = OffsetOf("a_Position", layout);
+		std::uint64_t stride = layout.GetStride();
+		std::uint64_t normalsOffset = OffsetOf("a_Normal", layout);
+		std::uint64_t positionsOffset = OffsetOf("a_Position", layout);
 
 		if (normalsOffset == -1 || positionsOffset == -1) {
 			HZ_CORE_WARN("Vertex Buffer either doesnt have a_Normal, a_Position or both!");
@@ -113,8 +113,8 @@ namespace Hazel {
 		uint8_t* data = (uint8_t*) buffer.Map(MapAccess::READ_WRITE);
 		float* dataView = (float*) data;
 
-		uint64_t triangleCount = m_IndexBuffer->Count() / 3;
-		uint64_t vertexCount = buffer.Bytes() / buffer.GetLayout().GetStride();
+		std::uint64_t triangleCount = m_IndexBuffer->Count() / 3;
+		std::uint64_t vertexCount = buffer.Bytes() / buffer.GetLayout().GetStride();
 		vec3* faceNormals = new vec3[triangleCount];
 
 		uint8_t* positions = data + positionsOffset;

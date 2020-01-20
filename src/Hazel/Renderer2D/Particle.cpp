@@ -81,7 +81,7 @@ namespace Hazel {
 
 	Particle& ParticleEmitter::CreateParticle()
 	{
-		uint64_t index = m_PoolIndex++ % m_PoolCapacity;
+		std::uint64_t index = m_PoolIndex++ % m_PoolCapacity;
 		Particle& particle = m_Pool[index];
 		particle.Alive = true;
 		particle.Age = 0.0f;

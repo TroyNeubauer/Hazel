@@ -11,7 +11,7 @@ namespace Hazel {
 	struct ProfileResult
 	{
 		const char* Name;
-		uint64_t Start, End;
+		std::uint64_t Start, End;
 		uint32_t ThreadID;
 	};
 

@@ -80,7 +80,7 @@
             typedef void GLvoid;
             typedef struct __GLsync* GLsync;
             typedef int64_t GLint64;
-            typedef uint64_t GLuint64;
+            typedef std::uint64_t GLuint64;
             typedef unsigned int GLenum;
             typedef unsigned int GLuint;
             typedef char GLchar;

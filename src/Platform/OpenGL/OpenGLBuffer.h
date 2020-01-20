@@ -22,7 +22,7 @@ namespace Hazel {
 	template<typename T, BufferType TYPE>
 	class OpenGLBuffer : public Buffer<T, TYPE> {
 	private:
-		void SetData(void* data, uint64_t bytes, GLenum usage)
+		void SetData(void* data, std::uint64_t bytes, GLenum usage)
 		{
 			HZ_PROFILE_FUNCTION();
 
@@ -31,7 +31,7 @@ namespace Hazel {
 		}
 
 	public:
-		OpenGLBuffer(T* data, uint64_t bytes)
+		OpenGLBuffer(T* data, std::uint64_t bytes)
 		{
 			//glCreateBuffers(1, &m_BufferID); FIXME
 			glGenBuffers(1, &m_BufferID);
@@ -47,7 +47,7 @@ namespace Hazel {
 			}
 		}
 
-		OpenGLBuffer(uint64_t bytes)
+		OpenGLBuffer(std::uint64_t bytes)
 		{
 			//glCreateBuffers(1, &m_BufferID); FIXME
 			glGenBuffers(1, &m_BufferID);
@@ -55,7 +55,7 @@ namespace Hazel {
 			SetData(nullptr, bytes, GL_DYNAMIC_DRAW);
 		}
 
-		virtual void SetData(void* data, uint64_t bytes) override
+		virtual void SetData(void* data, std::uint64_t bytes) override
 		{
 			SetData(data, bytes, GL_DYNAMIC_DRAW);
 		}
@@ -86,7 +86,7 @@ namespace Hazel {
 
 		virtual void Unbind() const override { HZ_PROFILE_FUNCTION(); glBindBuffer(GetTarget(TYPE), 0); }
 
-		virtual uint64_t Bytes() const override { return m_Bytes; }
+		virtual std::uint64_t Bytes() const override { return m_Bytes; }
 
 		virtual void SetLayout(const BufferLayout& layout, size_t structSize) override
 		{
@@ -111,7 +111,7 @@ namespace Hazel {
 
 	private:
 		uint32_t m_BufferID;
-		uint64_t m_Bytes;
+		std::uint64_t m_Bytes;
 		BufferLayout m_Layout;
 	};
 

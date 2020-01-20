@@ -87,7 +87,7 @@ namespace Hazel {
 		Particle& CreateParticle();
 
 	private:
-		uint64_t m_PoolIndex = 0, m_PoolCapacity;
+		std::uint64_t m_PoolIndex = 0, m_PoolCapacity;
 		Hazel::Scope<Particle[]> m_Pool;
 		Hazel::Scope<ParticleSpawn> m_Spawner;
 
