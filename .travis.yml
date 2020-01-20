@@ -18,14 +18,14 @@ before_install:
   - export CXX=/usr/bin/g++-9
 # Check versions of gcc and g++
   - gcc -v && g++ -v --version
-	- (pwd; cd ..; pwd)
+  - (pwd; cd ..; pwd)
 install:
 
 script:
 # Create the project files
-	- cp -r ".github/CI Project/*" ..
+  - cp -r ".github/CI Project/*" ..
   - (cd ..; premake5 --os=linux --compiler=gcc --HazelCI gmake2
-	# Compile and 
+  # Compile and 
   - make config=release
   - make config=dist
   - make config=debug
