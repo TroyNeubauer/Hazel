@@ -119,6 +119,7 @@ install:
 script:
 # Create the project files
   - echo $TRAVIS_OS_NAME
+  - echo $PREMAKE_CMD
   - echo $BUILD_CONFIG
   - echo $PREMAKE_OS
   - echo $COMPILER
