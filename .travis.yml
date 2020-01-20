@@ -7,75 +7,46 @@ matrix:
     - os: linux
       env:
         - BUILD_CONFIG=debug
-        - COMPILER=gcc
-        - PREMAKE_OS=linux
-        - PREMAKE_TARGET=gmake2
-        - PREMAKE_CMD=premake5
+        - PREMAKE_CMD="premake5 --os=linux --compiler=gcc gmake2"
     - os: linux
       env:
         - BUILD_CONFIG=release
-        - COMPILER=gcc
-        - PREMAKE_OS=linux
-        - PREMAKE_TARGET=gmake2
-        - PREMAKE_CMD=premake5
+        - PREMAKE_CMD="premake5 --os=linux --compiler=gcc gmake2"
     - os: linux
       env:
         - BUILD_CONFIG=dist
-        - COMPILER=gcc
-        - PREMAKE_OS=linux
-        - PREMAKE_TARGET=gmake2
-        - PREMAKE_CMD=premake5
+        - PREMAKE_CMD="premake5 --os=linux --compiler=gcc gmake2"
     #Linux - Clang
     - os: linux
       env:
         - BUILD_CONFIG=debug
-        - COMPILER=clang
-        - PREMAKE_OS=linux
-        - PREMAKE_TARGET=gmake2
-        - PREMAKE_CMD=premake5
+        - PREMAKE_CMD="premake5 --os=linux --compiler=clang gmake2"
     - os: linux
       env:
         - BUILD_CONFIG=release
-        - COMPILER=clang
-        - PREMAKE_OS=linux
-        - PREMAKE_TARGET=gmake2
-        - PREMAKE_CMD=premake5
+        - PREMAKE_CMD="premake5 --os=linux --compiler=clang gmake2"
     - os: linux
       env:
         - BUILD_CONFIG=dist
-        - COMPILER=clang
-        - PREMAKE_TARGET=gmake2
-        - PREMAKE_CMD=premake5
+        - PREMAKE_CMD="premake5 --os=linux --compiler=clang gmake2"
     #Linux - Emscripten
     - os: linux
       env:
         - BUILD_CONFIG=dist
-        - COMPILER=emcc
-        - PREMAKE_OS=emscripten
-        - PREMAKE_TARGET=gmake2
-        - PREMAKE_CMD="premake5 --scripts=Hazel/vendor/premake/scripts"
+        - PREMAKE_CMD="premake5 --scripts=Hazel/vendor/premake/scripts --os=emscripten gmake2"
     # Windows:
     - os: windows
       env:
         - BUILD_CONFIG=debug
-        - COMPILER=msc
-        - PREMAKE_OS=windows
-        - PREMAKE_TARGET=vs2017
-        - PREMAKE_CMD=vendor\premake\bin\premake5.exe
+        - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
     - os: windows
       env:
         - BUILD_CONFIG=release
-        - COMPILER=msc
-        - PREMAKE_OS=windows
-        - PREMAKE_TARGET=vs2017
-        - PREMAKE_CMD=vendor\premake\bin\premake5.exe
+        - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
     - os: windows
       env:
         - BUILD_CONFIG=dist
-        - COMPILER=msc
-        - PREMAKE_OS=windows
-        - PREMAKE_TARGET=vs2017
-        - PREMAKE_CMD=vendor\premake\bin\premake5.exe
+        - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
 
 addons:
   apt:
@@ -119,15 +90,11 @@ install:
 script:
 # Create the project files
   - echo $TRAVIS_OS_NAME
-  - echo $PREMAKE_CMD
-  - echo $BUILD_CONFIG
-  - echo $PREMAKE_OS
-  - echo $COMPILER
   - echo $PREMAKE_TARGET
   - cp -r .github/CI\ Project/* ..
   - cd ..
-  - echo Running... $PREMAKE_CMD --os=$PREMAKE_OS --compiler=$COMPILER $PREMAKE_TARGET
-  - $PREMAKE_CMD --os=$PREMAKE_OS --compiler=$COMPILER $PREMAKE_TARGET
+  - echo Running... $PREMAKE_CMD
+  - $PREMAKE_CMD
   - |
     if [ $TRAVIS_OS_NAME == "linux" ]
     then
