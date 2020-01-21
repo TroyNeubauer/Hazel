@@ -1,12 +1,25 @@
 import sys
 import os
 
-def run(command):
-	ret = os.system(command)
-	if ret != 0:
-		print('Command ' + command + ' failed')
-		print('Expected error code 0, got ' + ret)
+def run(command, in_env):
+	process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=in_env)
+
+	# Poll process for new output until finished
+	while True:
+		nextline = process.stdout.readline()
+		if nextline == '' and process.poll() is not None:
+			break
+		sys.stdout.write(nextline)
+		sys.stdout.flush()
+
+	exitCode = process.returncode
+
+	if exitCode != 0:
+		print('Command \'' + command + '\' failed!')
+		print('Expected error code 0, got ' + str(exitCode))
 		sys.exit(1)
+
+
 
 if len(sys.argv) != 4:
 	raise Exception('Build script must have three args! Args are ' + str(sys.argv))
