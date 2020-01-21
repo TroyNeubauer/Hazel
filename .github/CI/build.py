@@ -1,6 +1,13 @@
 import sys
 import os
 
+def run(command):
+	ret = os.system(command)
+	if ret != 0:
+		print('Command ' + command + ' failed')
+		print('Expected error code 0, got ' + ret)
+		sys.exit(1)
+
 if len(sys.argv) != 4:
 	raise Exception('Build script must have three args! Args are ' + str(sys.argv))
 
@@ -14,8 +21,8 @@ print('compiler ' + compiler)
 print('buildConfiguration ' + buildConfiguration)
 
 if (compiler == 'emcc'):
-	os.system('source emsdk-master/emsdk_env.sh')
-os.system('cp -r .github/CI/CI\\ Project/* ..')
+	run('source emsdk-master/emsdk_env.sh')
+run('cp -r .github/CI/CI\\ Project/* ..')
 #move to the new root of the project
 os.chdir('..')
 
@@ -54,7 +61,18 @@ else:
 	sys.exit(1)
 
 print('running premake: \"' + premakeCommand + '\"')
-os.system(premakeCommand)
+run(premakeCommand)
+
+
+
+if osName == 'windows':
+	command = 'msbuild /p:Configuration=' + buildConfiguration
+else
+	command = 'make -j' + os.cpu_count() + ' config=' + buildConfiguration
+
+print('running: ' + command)	
+print('compiling...')
+run(command)
 
 #We dont need these vars. The makefile runs the right compiler anyway
 #unset CC
@@ -64,13 +82,8 @@ os.system(premakeCommand)
 #- |
 #if [ $TRAVIS_OS_NAME == "linux" ]
 #then
-#make -j2 config=$BUILD_CONFIG
+#
 #elif [ $TRAVIS_OS_NAME == "windows" ]
 #then
-#msbuild /p:Configuration=$BUILD_CONFIG
+#$BUILD_CONFIG
 #fi
-
-#        - PREMAKE_CMD='" --os=emscripten --scripts=Hazel/vendor/premake/scripts gmake2"'
-#        - PREMAKE_CMD='"Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"'
-#        - PREMAKE_CMD='"premake5 --os=linux --compiler=gcc gmake2"'
-#        - PREMAKE_CMD='"premake5 --os=linux --compiler=clang gmake2"'
