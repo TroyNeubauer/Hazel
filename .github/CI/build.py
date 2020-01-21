@@ -105,6 +105,10 @@ origionalPath = env["PATH"]
 env["PATH"] =  os.path.join(os.getcwd(), 'Hazel/emsdk-master') + s;
 env["PATH"] += os.path.join(os.getcwd(), 'Hazel/emsdk-master/node/12.9.1_64bit/bin') + s
 env["PATH"] += os.path.join(os.getcwd(), 'Hazel/emsdk-master/fastcomp/emscripten') + s
+
+if osName == 'windows':
+	env["PATH"] += "c:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin" + s
+
 env["PATH"] += origionalPath
 
 env.pop("CC", None)
