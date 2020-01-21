@@ -1,16 +1,14 @@
 import sys
 import os
 
-if len(sys.argv) != 5:
-	raise Exception('Build script must have four args! Args are ' + str(sys.argv))
+if len(sys.argv) != 4:
+	raise Exception('Build script must have three args! Args are ' + str(sys.argv))
 
 
-premakeCommand = sys.argv[1]
-osName = sys.argv[2]
-compiler = sys.argv[3]
-buildConfiguration = sys.argv[4]
+osName = sys.argv[1]
+compiler = sys.argv[2]
+buildConfiguration = sys.argv[3]
 
-print('premake command ' + premakeCommand)
 print('osName ' + osName)
 print('compiler ' + compiler)
 print('buildConfiguration ' + buildConfiguration)
@@ -35,3 +33,7 @@ os.system('pwd')
 #msbuild /p:Configuration=$BUILD_CONFIG
 #fi
 
+#        - PREMAKE_CMD='"premake5 --os=emscripten --scripts=Hazel/vendor/premake/scripts gmake2"'
+#        - PREMAKE_CMD='"Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"'
+#        - PREMAKE_CMD='"premake5 --os=linux --compiler=gcc gmake2"'
+#        - PREMAKE_CMD='"premake5 --os=linux --compiler=clang gmake2"'
