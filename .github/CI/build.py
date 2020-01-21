@@ -38,7 +38,7 @@ print('buildConfiguration ' + buildConfiguration)
 path = '.github/CI/CI Project/'
 for file in os.listdir(path):
 	print('loopin file ' + path + file)
-	shutil.copytree(path + file, '..', dirs_exist_ok=True)
+	shutil.copytree(path + file, '..')
 #move to the new root of the project
 os.chdir('..')
 run('ls')
