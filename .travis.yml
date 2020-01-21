@@ -34,6 +34,7 @@ matrix:
       env:
         - BUILD_CONFIG=dist
         - PREMAKE_CMD="premake5 --os=emscripten --scripts=Hazel/vendor/premake/scripts gmake2"
+        - COMPILER=emcc
     # Windows:
     - os: windows
       env:
