@@ -13,41 +13,50 @@ matrix:
       env:
         - BUILD_CONFIG=debug
         - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
+        - COMPILER=msvc
     - os: windows
       env:
         - BUILD_CONFIG=release
         - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
+        - COMPILER=msvc
     - os: windows
       env:
         - BUILD_CONFIG=dist
         - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
+        - COMPILER=msvc
     # Desktop Linux:
     #Linux - GCC
     - os: linux
       env:
         - BUILD_CONFIG=debug
         - PREMAKE_CMD="premake5 --os=linux --compiler=gcc gmake2"
+        - COMPILER=gcc
     - os: linux
       env:
         - BUILD_CONFIG=release
         - PREMAKE_CMD="premake5 --os=linux --compiler=gcc gmake2"
+        - COMPILER=gcc
     - os: linux
       env:
         - BUILD_CONFIG=dist
         - PREMAKE_CMD="premake5 --os=linux --compiler=gcc gmake2"
+        - COMPILER=gcc
     #Linux - Clang
     - os: linux
       env:
         - BUILD_CONFIG=debug
         - PREMAKE_CMD="premake5 --os=linux --compiler=clang gmake2"
+        - COMPILER=clang
     - os: linux
       env:
         - BUILD_CONFIG=release
         - PREMAKE_CMD="premake5 --os=linux --compiler=clang gmake2"
+        - COMPILER=gcc
     - os: linux
       env:
         - BUILD_CONFIG=dist
         - PREMAKE_CMD="premake5 --os=linux --compiler=clang gmake2"
+        - COMPILER=gcc
 
 
 addons:
@@ -86,33 +95,7 @@ install:
       emsdk-master/emsdk update
       emsdk-master/emsdk install latest-fastcomp
       emsdk-master/emsdk activate latest-fastcomp
-      source emsdk-master/emsdk_env.sh
     fi
 
 script:
-# Create the project files
-  - echo $TRAVIS_OS_NAME
-  - echo $PREMAKE_TARGET
-  - |
-    if [ $COMPILER == "emcc" ]
-    then
-      source emsdk-master/emsdk_env.sh
-    fi
-  - cp -r .github/CI\ Project/* ..
-  - cd ..
-  #We dont need these vars. The makefile runs the right compiler anyway
-  - unset CC
-  - unset CXX
-  - unset AR
-  - echo Running... $PREMAKE_CMD
-  - echo commands... $CC $CXX $AR
-  - $PREMAKE_CMD
-  - |
-    if [ $TRAVIS_OS_NAME == "linux" ]
-    then
-      make -j2 config=$BUILD_CONFIG
-    elif [$TRAVIS_OS_NAME == "windows"]
-    then
-      msbuild /p:Configuration=$BUILD_CONFIG
-    fi
-  - ls
+  - python .github/CI/build.py $PREMAKE_CMD $TRAVIS_OS_NAME $COMPILER $BUILD_CONFIG
