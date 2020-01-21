@@ -67,7 +67,7 @@ run(premakeCommand)
 
 if osName == 'windows':
 	command = 'msbuild /p:Configuration=' + buildConfiguration
-else
+else:
 	command = 'make -j' + os.cpu_count() + ' config=' + buildConfiguration
 
 print('running: ' + command)	
