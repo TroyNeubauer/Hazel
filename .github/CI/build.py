@@ -46,6 +46,9 @@ elif compiler == 'gcc':
 elif compiler == 'clang':
 	premakeCommand += '--os=' + osName + ' --compiler=gcc gmake2'
 
+elif compiler == 'emcc':
+	premakeCommand += '--os=emscripten --scripts=Hazel/vendor/premake/scripts gmake2'
+
 else:
 	print('Unknown compiler! ' + compiler)
 	sys.exit(1)
