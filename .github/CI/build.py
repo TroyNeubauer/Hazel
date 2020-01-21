@@ -29,8 +29,9 @@ def copyALlInDir(src, dest):
 			print('loop dir ' + root + ' ' + name)
 			mkpath(os.path.join(root, name))
 		for name in files:
-			print('loop file ' + root + ' ' + name)
-			copy_file(os.path.join(root, name), os.path.join(dest, name))
+			destFile = os.path.join(os.path.join(dest, root[len(src):]), name)
+			print('loop file ' + root + ' ' + name + ' cp to ' + destFile)
+			copy_file(os.path.join(root, name), destFile)
 
 
 if len(sys.argv) != 4:
@@ -55,7 +56,7 @@ if osName == 'linux':
 	premakeCommand += 'premake5 '
 
 elif osName == 'windows':
-	premakeCommand += 'Hazel/vendor/premake/bin/premake5.exe '
+	premakeCommand += 'call Hazel\\vendor\\premake\\bin\\premake5.exe '
 
 elif osName == 'macosx':
 	print('osx is unsupported for now!')
