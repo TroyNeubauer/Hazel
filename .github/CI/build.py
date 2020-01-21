@@ -2,7 +2,7 @@ import sys
 import os
 import subprocess
 import shutil
-import distutils.file_util
+from distutils.file_util import copy_file
 
 def run(command, in_env = None):
 	process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=in_env)
@@ -29,7 +29,7 @@ def copyALlInDir(src, dest):
 			os.mkpath(os.path.join(root, name))
 		for name in files:
 			print('loop file ' + root + ' ' + name)
-			file_util.copy_file(os.path.join(root, name), os.path.join(dest, name))
+			copy_file(os.path.join(root, name), os.path.join(dest, name))
 
 
 if len(sys.argv) != 4:
