@@ -95,7 +95,23 @@ else:
 
 print('running: ' + command)	
 print('compiling...')
-run(command)
+
+s = os.path.sep
+
+env = os.environ.copy()
+origionalPath = env["PATH"]
+env["PATH"] =  os.path.join(os.getcwd(), 'Hazel/emsdk-master') + s;
+env["PATH"] += os.path.join(os.getcwd(), 'Hazel/emsdk-master/node/12.9.1_64bit/bin') + s
+env["PATH"] += os.path.join(os.getcwd(), 'Hazel/emsdk-master/fastcomp/emscripten') + s
+env["PATH"] += origionalPath
+
+env.pop("CC", None)
+env.pop("CXX", None)
+env.pop("AR", None)
+
+print('env: ' + str(env))
+
+run(command, env)
 
 #We dont need these vars. The makefile runs the right compiler anyway
 #unset CC
