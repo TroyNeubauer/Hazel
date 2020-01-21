@@ -6,56 +6,56 @@ matrix:
     - os: linux
       env:
         - BUILD_CONFIG=dist
-        - PREMAKE_CMD="'premake5 --os=emscripten --scripts=Hazel/vendor/premake/scripts gmake2'"
+        - PREMAKE_CMD='"premake5 --os=emscripten --scripts=Hazel/vendor/premake/scripts gmake2"'
         - COMPILER=emcc
     # Windows:
     - os: windows
       env:
         - BUILD_CONFIG=debug
-        - PREMAKE_CMD="'Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017'"
+        - PREMAKE_CMD='"Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"'
         - COMPILER=msvc
     - os: windows
       env:
         - BUILD_CONFIG=release
-        - PREMAKE_CMD="'Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017'"
+        - PREMAKE_CMD='"Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"'
         - COMPILER=msvc
     - os: windows
       env:
         - BUILD_CONFIG=dist
-        - PREMAKE_CMD="'Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017'"
+        - PREMAKE_CMD='"Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"'
         - COMPILER=msvc
     # Desktop Linux:
     #Linux - GCC
     - os: linux
       env:
         - BUILD_CONFIG=debug
-        - PREMAKE_CMD="'premake5 --os=linux --compiler=gcc gmake2'"
+        - PREMAKE_CMD='"premake5 --os=linux --compiler=gcc gmake2"'
         - COMPILER=gcc
     - os: linux
       env:
         - BUILD_CONFIG=release
-        - PREMAKE_CMD="'premake5 --os=linux --compiler=gcc gmake2'"
+        - PREMAKE_CMD='"premake5 --os=linux --compiler=gcc gmake2"'
         - COMPILER=gcc
     - os: linux
       env:
         - BUILD_CONFIG=dist
-        - PREMAKE_CMD="'premake5 --os=linux --compiler=gcc gmake2'"
+        - PREMAKE_CMD='"premake5 --os=linux --compiler=gcc gmake2"'
         - COMPILER=gcc
     #Linux - Clang
     - os: linux
       env:
         - BUILD_CONFIG=debug
-        - PREMAKE_CMD="'premake5 --os=linux --compiler=clang gmake2'"
+        - PREMAKE_CMD='"premake5 --os=linux --compiler=clang gmake2"'
         - COMPILER=clang
     - os: linux
       env:
         - BUILD_CONFIG=release
-        - PREMAKE_CMD="'premake5 --os=linux --compiler=clang gmake2'"
+        - PREMAKE_CMD='"premake5 --os=linux --compiler=clang gmake2"'
         - COMPILER=gcc
     - os: linux
       env:
         - BUILD_CONFIG=dist
-        - PREMAKE_CMD="'premake5 --os=linux --compiler=clang gmake2'"
+        - PREMAKE_CMD='"premake5 --os=linux --compiler=clang gmake2"'
         - COMPILER=gcc
 
 
