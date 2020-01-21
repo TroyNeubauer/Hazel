@@ -23,7 +23,7 @@ os.system('pwd')
 #unset CXX
 #unset AR
 #$PREMAKE_CMD
-- |
+#- |
 #if [ $TRAVIS_OS_NAME == "linux" ]
 #then
 #make -j2 config=$BUILD_CONFIG
