@@ -1,3 +1,6 @@
+import sys
+import os
+
 if len(sys.argv) != 5:
 	raise Exception('Build script must have four args! Args are ' + str(sys.argv))
 
