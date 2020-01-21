@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 
 def run(command, in_env = None):
 	process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=in_env)
