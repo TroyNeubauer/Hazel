@@ -25,12 +25,10 @@ def run(command, in_env = None):
 
 def copyALlInDir(src, dest):
 	for root, dirs, files in os.walk(src, topdown=False):
-		for name in dirs:
-			print('loop dir ' + root + ' ' + name)
-			mkpath(os.path.join(root, name))
 		for name in files:
 			destFile = os.path.join(os.path.join(dest, root[len(src):]), name)
 			print('loop file ' + root + ' ' + name + ' cp to ' + destFile)
+			mkpath(os.path.abspath(os.path.join(destFile, '..')))
 			copy_file(os.path.join(root, name), destFile)
 
 
