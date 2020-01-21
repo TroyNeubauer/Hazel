@@ -1,6 +1,7 @@
 import sys
 import os
 import subprocess
+import shutil
 
 def run(command, in_env = None):
 	process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=in_env)
@@ -34,10 +35,13 @@ print('osName ' + osName)
 print('compiler ' + compiler)
 print('buildConfiguration ' + buildConfiguration)
 
-run('cp -r \".github/CI/CI Project/*\" ..')
+path = '.github/CI/CI Project/'
+for file in os.listdir(path):
+	print('loopin file ' + path + file)
+	shutil.copytree(path + file, '..')
 #move to the new root of the project
 os.chdir('..')
-
+run('ls')
 
 premakeCommand = ''
 if osName == 'linux':
