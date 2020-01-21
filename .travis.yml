@@ -91,6 +91,11 @@ script:
 # Create the project files
   - echo $TRAVIS_OS_NAME
   - echo $PREMAKE_TARGET
+  - |
+    if [ $COMPILER == "emcc" ]
+    then
+      source emsdk-master/emsdk_env.sh
+    fi
   - cp -r .github/CI\ Project/* ..
   - cd ..
   #We dont need these vars. The makefile runs the right compiler anyway

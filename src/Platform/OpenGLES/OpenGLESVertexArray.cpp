@@ -79,14 +79,14 @@ namespace Hazel {
 		return -1;
 	}
 
-	static vec3& GetVec3(uint8_t* data, std::uint64_t stride, std::uint64_t index)
+	static glm::vec3& GetVec3(uint8_t* data, std::uint64_t stride, std::uint64_t index)
 	{
-		return *(vec3*) (data + index * stride);
+		return *(glm::vec3*) (data + index * stride);
 	}
 
-	static vec3* GetVec3Ptr(uint8_t* data, std::uint64_t stride, std::uint64_t index)
+	static glm::vec3* GetVec3Ptr(uint8_t* data, std::uint64_t stride, std::uint64_t index)
 	{
-		return (vec3*)(data + index * stride);
+		return (glm::vec3*)(data + index * stride);
 	}
 
 	void OpenGLESVertexArray::CalculateNormals()
@@ -115,7 +115,7 @@ namespace Hazel {
 
 		std::uint64_t triangleCount = m_IndexBuffer->Count() / 3;
 		std::uint64_t vertexCount = buffer.Bytes() / buffer.GetLayout().GetStride();
-		vec3* faceNormals = new vec3[triangleCount];
+		glm::vec3* faceNormals = new glm::vec3[triangleCount];
 
 		uint8_t* positions = data + positionsOffset;
 		uint8_t* normals = data + normalsOffset;
@@ -124,24 +124,24 @@ namespace Hazel {
 		
 		for (int face = 0; face < triangleCount; face++)
 		{
-			vec3& a = GetVec3(positions, stride, indices[3 * face + 0]);
-			vec3& b = GetVec3(positions, stride, indices[3 * face + 1]);
-			vec3& c = GetVec3(positions, stride, indices[3 * face + 2]);
+			glm::vec3& a = GetVec3(positions, stride, indices[3 * face + 0]);
+			glm::vec3& b = GetVec3(positions, stride, indices[3 * face + 1]);
+			glm::vec3& c = GetVec3(positions, stride, indices[3 * face + 2]);
 			//Calculate edges of triangle
-			vec3 u = b - a, v = c - a;
+			glm::vec3 u = b - a, v = c - a;
 			faceNormals[face] = cross(u, v);//Normal is the cross product of the edges
 		}
 		for (int i = 0; i < vertexCount; i++) {//Zero out all the normals
-			vec3& vertexNormal = GetVec3(normals, stride, i);
+			glm::vec3& vertexNormal = GetVec3(normals, stride, i);
 			vertexNormal.x = vertexNormal.y = vertexNormal.z = 0.0f;
 		}
 		for (uint32_t i = 0; i < m_IndexBuffer->Count(); i++) {
 			int index = indices[i];
-			vec3& vertexNormal = GetVec3(normals, stride, index);
+			glm::vec3& vertexNormal = GetVec3(normals, stride, index);
 			vertexNormal += faceNormals[i / 3];
 		}
 		for (int i = 0; i < vertexCount; i++) {//Normalize the new normals
-			vec3* vertexNormal = GetVec3Ptr(normals, stride, i);
+			glm::vec3* vertexNormal = GetVec3Ptr(normals, stride, i);
 			*vertexNormal = normalize(*vertexNormal);
 		}
 
