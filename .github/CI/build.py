@@ -1,7 +1,7 @@
 import sys
 import os
 
-def run(command, in_env):
+def run(command, in_env = None):
 	process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=in_env)
 
 	# Poll process for new output until finished
