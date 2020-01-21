@@ -46,7 +46,7 @@ elif compiler == 'gcc':
 elif compiler == 'clang':
 	premakeCommand += '--os=' + osName + ' --compiler=gcc gmake2'
 
-else
+else:
 	print('Unknown compiler! ' + compiler)
 	sys.exit(1)
 
