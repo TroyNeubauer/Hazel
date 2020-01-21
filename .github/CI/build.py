@@ -96,7 +96,10 @@ else:
 print('running: ' + command)	
 print('compiling...')
 
-s = os.path.sep
+if osName == 'windows':
+	s = ';'
+else:
+	s = ':'
 
 env = os.environ.copy()
 origionalPath = env["PATH"]
