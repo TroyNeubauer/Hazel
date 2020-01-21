@@ -3,6 +3,7 @@ import os
 import subprocess
 import shutil
 from distutils.file_util import copy_file
+from distutils.dir_util import mkpath
 
 def run(command, in_env = None):
 	process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=in_env)
@@ -26,7 +27,7 @@ def copyALlInDir(src, dest):
 	for root, dirs, files in os.walk(src, topdown=False):
 		for name in dirs:
 			print('loop dir ' + root + ' ' + name)
-			os.mkpath(os.path.join(root, name))
+			mkpath(os.path.join(root, name))
 		for name in files:
 			print('loop file ' + root + ' ' + name)
 			copy_file(os.path.join(root, name), os.path.join(dest, name))
