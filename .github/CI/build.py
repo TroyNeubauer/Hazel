@@ -34,9 +34,7 @@ print('osName ' + osName)
 print('compiler ' + compiler)
 print('buildConfiguration ' + buildConfiguration)
 
-if (compiler == 'emcc'):
-	run('source emsdk-master/emsdk_env.sh')
-run('cp -r .github/CI/CI\\ Project/* ..')
+run('cp -r \".github/CI/CI Project/*\" ..')
 #move to the new root of the project
 os.chdir('..')
 
@@ -82,7 +80,7 @@ run(premakeCommand)
 if osName == 'windows':
 	command = 'msbuild /p:Configuration=' + buildConfiguration
 else:
-	command = 'make -j' + os.cpu_count() + ' config=' + buildConfiguration
+	command = 'make -j2 config=' + buildConfiguration
 
 print('running: ' + command)	
 print('compiling...')

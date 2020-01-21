@@ -42,11 +42,11 @@ matrix:
     - os: linux
       env:
         - BUILD_CONFIG=release
-        - COMPILER=gcc
+        - COMPILER=clang
     - os: linux
       env:
         - BUILD_CONFIG=dist
-        - COMPILER=gcc
+        - COMPILER=clang
 
 
 addons:
