@@ -21,6 +21,14 @@ def run(command, in_env = None):
 		print('Expected error code 0, got ' + str(exitCode))
 		sys.exit(1)
 
+def copyALlInDir(src, dest):
+	for root, dirs, files in os.walk(src, topdown=False):
+		for name in dirs:
+			print('loop dir ' + root + ' ' + name)
+			os.mkpath(os.path.join(root, name))
+		for name in files:
+			print('loop file ' + root + ' ' + name)
+			os.copy_file(os.path.join(root, name), os.path.join(dest, name))
 
 
 if len(sys.argv) != 4:
@@ -35,10 +43,7 @@ print('osName ' + osName)
 print('compiler ' + compiler)
 print('buildConfiguration ' + buildConfiguration)
 
-path = '.github/CI/CI Project/'
-for file in os.listdir(path):
-	print('loopin file ' + path + file)
-	shutil.copytree(path + file, '..')
+copyALlInDir('.github/CI/CI Project/', '..')
 #move to the new root of the project
 os.chdir('..')
 run('ls')
