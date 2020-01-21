@@ -2,7 +2,26 @@ language: cpp
 
 matrix:
   include:
-    # Linux:
+    #Linux - Emscripten
+    - os: linux
+      env:
+        - BUILD_CONFIG=dist
+        - PREMAKE_CMD="premake5 --os=emscripten --scripts=Hazel/vendor/premake/scripts gmake2"
+        - COMPILER=emcc
+    # Windows:
+    - os: windows
+      env:
+        - BUILD_CONFIG=debug
+        - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
+    - os: windows
+      env:
+        - BUILD_CONFIG=release
+        - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
+    - os: windows
+      env:
+        - BUILD_CONFIG=dist
+        - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
+    # Desktop Linux:
     #Linux - GCC
     - os: linux
       env:
@@ -29,25 +48,7 @@ matrix:
       env:
         - BUILD_CONFIG=dist
         - PREMAKE_CMD="premake5 --os=linux --compiler=clang gmake2"
-    #Linux - Emscripten
-    - os: linux
-      env:
-        - BUILD_CONFIG=dist
-        - PREMAKE_CMD="premake5 --os=emscripten --scripts=Hazel/vendor/premake/scripts gmake2"
-        - COMPILER=emcc
-    # Windows:
-    - os: windows
-      env:
-        - BUILD_CONFIG=debug
-        - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
-    - os: windows
-      env:
-        - BUILD_CONFIG=release
-        - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
-    - os: windows
-      env:
-        - BUILD_CONFIG=dist
-        - PREMAKE_CMD="Hazel\vendor\premake\bin\premake5.exe --os=windows --compiler=msc vs2017"
+
 
 addons:
   apt:
@@ -112,6 +113,6 @@ script:
       make -j2 config=$BUILD_CONFIG
     elif [$TRAVIS_OS_NAME == "windows"]
     then
-      echo "Building on windows!"
+      msbuild /p:Configuration=$BUILD_CONFIG
     fi
   - ls
