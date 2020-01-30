@@ -7,7 +7,7 @@
 
 namespace Hazel {
 
-	template <uint64_t SIZE>//No use of T here since we want all objects of the same size to be grouped togther
+	template <std::uint64_t SIZE>//No use of T here since we want all objects of the same size to be grouped togther
 	class MemoryPool {
 	public:
 		static void Init() {
@@ -36,7 +36,7 @@ namespace Hazel {
 		static void DoubleSize() {
 
 			char* oldPool = m_Pool;
-			uint64_t oldCapacity = m_Capacity, newCapacity = m_Capacity * 2;
+			std::uint64_t oldCapacity = m_Capacity, newCapacity = m_Capacity * 2;
 			char* newPool = new char[newCapacity];
 			memcpy(newPool, oldPool, oldCapacity);
 
@@ -47,17 +47,17 @@ namespace Hazel {
 
 	private:
 		static char* m_Pool;
-		static uint64_t m_Capacity;//Size of bytes of the pool
-		static uint64_t m_Offset;//How many bytes the next object is into the pool
+		static std::uint64_t m_Capacity;//Size of bytes of the pool
+		static std::uint64_t m_Offset;//How many bytes the next object is into the pool
 	};
 
-	template<uint64_t SIZE>
+	template<std::uint64_t SIZE>
 	char* MemoryPool<SIZE>::m_Pool = nullptr;
 
-	template<uint64_t SIZE>
-	uint64_t MemoryPool<SIZE>::m_Capacity;
+	template<std::uint64_t SIZE>
+	std::uint64_t MemoryPool<SIZE>::m_Capacity;
 
-	template<uint64_t SIZE>
-	uint64_t MemoryPool<SIZE>::m_Offset;
+	template<std::uint64_t SIZE>
+	std::uint64_t MemoryPool<SIZE>::m_Offset;
 
 }

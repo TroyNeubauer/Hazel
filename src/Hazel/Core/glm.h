@@ -7,5 +7,3 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/matrix_interpolation.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-using namespace glm;

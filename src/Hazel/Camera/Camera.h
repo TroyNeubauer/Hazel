@@ -10,15 +10,14 @@
 #include "CameraProjection.h"
 
 
-using namespace glm;
 namespace Hazel {
 
 	class Camera
 	{
 	public:
-		virtual const mat4& GetViewMatrix() const = 0;
-		virtual const mat4& GetProjectionMatrix() const = 0;
-		virtual const mat4& GetViewProjectionMatrix() const = 0;
+		virtual const glm::mat4& GetViewMatrix() const = 0;
+		virtual const glm::mat4& GetProjectionMatrix() const = 0;
+		virtual const glm::mat4& GetViewProjectionMatrix() const = 0;
 
 		virtual ~Camera() {}
 	};
@@ -26,20 +25,20 @@ namespace Hazel {
 	class Camera3D : public Camera
 	{
 	public:
-		virtual const mat4& GetViewMatrix() const override = 0;
-		virtual const mat4& GetProjectionMatrix() const override = 0;
-		virtual const mat4& GetViewProjectionMatrix() const override = 0;
+		virtual const glm::mat4& GetViewMatrix() const override = 0;
+		virtual const glm::mat4& GetProjectionMatrix() const override = 0;
+		virtual const glm::mat4& GetViewProjectionMatrix() const override = 0;
 
 		virtual void ForceUpdate() = 0;
 		virtual void Update(Hazel::Timestep ts) = 0;
 
-		virtual const vec3 GetPosition() = 0;
-		virtual const quat GetRotation() = 0;
-		virtual const vec3 GetEulerAngles() = 0;
+		virtual const glm::vec3 GetPosition() = 0;
+		virtual const glm::quat GetRotation() = 0;
+		virtual const glm::vec3 GetEulerAngles() = 0;
 
-		virtual void SetRotation(const quat& rotation) = 0;
-		virtual void SetPosition(const vec3& position) = 0;
-		virtual void SetEulerAngles(const vec3& rotation) = 0;
+		virtual void SetRotation(const glm::quat& rotation) = 0;
+		virtual void SetPosition(const glm::vec3& position) = 0;
+		virtual void SetEulerAngles(const glm::vec3& rotation) = 0;
 
 		virtual void RecalculateProjectionMatrix() = 0;
 		virtual void RecalculateViewMatrix() = 0;
@@ -54,9 +53,9 @@ namespace Hazel {
 
 		inline void Update (Hazel::Timestep ts) { HZ_PROFILE_FUNCTION(); if (m_Controller) { m_Controller->Update(ts, *this); } ForceUpdate();  }
 
-		inline const mat4& GetViewMatrix() const override { return m_ViewMatrix; }
-		inline const mat4& GetProjectionMatrix() const override { return m_ProjectionMatrix; }
-		inline const mat4& GetViewProjectionMatrix() const override { return m_VPMatrix; }
+		inline const glm::mat4& GetViewMatrix() const override { return m_ViewMatrix; }
+		inline const glm::mat4& GetProjectionMatrix() const override { return m_ProjectionMatrix; }
+		inline const glm::mat4& GetViewProjectionMatrix() const override { return m_VPMatrix; }
 
 		inline void ForceUpdate()
 		{
@@ -67,27 +66,27 @@ namespace Hazel {
 			m_VPMatrix = m_ProjectionMatrix * m_ViewMatrix;
 		}
 
-		inline const vec2 GetPosition() { return m_Pos; }
+		inline const glm::vec2 GetPosition() { return m_Pos; }
 		inline float GetRotation() { return m_Rot; }
 		inline float GetZoom() {return m_Zoom; }
 
 		inline void SetRotation(float rotation) { m_Rot = rotation; }
-		inline void SetPosition(const vec2& position) { m_Pos = position; }
+		inline void SetPosition(const glm::vec2& position) { m_Pos = position; }
 		inline void SetZoom(float zoom) { m_Zoom = zoom; }
 		inline CameraController2D& GetController() { return *m_Controller; }
 
 		inline void RecalculateProjectionMatrix()
 		{
 			float aspect = static_cast<float>(Application::Get().GetWindow().GetWidth()) / static_cast<float>(Application::Get().GetWindow().GetHeight());
-			m_ProjectionMatrix = ortho(m_Zoom * -aspect, m_Zoom * aspect, -m_Zoom, m_Zoom, -1.0f, 1.0f);
+			m_ProjectionMatrix = glm::ortho(m_Zoom * -aspect, m_Zoom * aspect, -m_Zoom, m_Zoom, -1.0f, 1.0f);
 		}
 		inline void RecalculateViewMatrix()
 		{
-			mat4 transform =
-				translate(mat4(1.0f), vec3(m_Pos, 0.0f)) *
-				rotate(mat4(1.0f), radians(m_Rot), vec3(0, 0, 1));
+			glm::mat4 transform =
+				glm::translate(glm::mat4(1.0f), glm::vec3(m_Pos, 0.0f)) *
+				glm::rotate(glm::mat4(1.0f), glm::radians(m_Rot), glm::vec3(0, 0, 1));
 
-			m_ViewMatrix = inverse(transform);
+			m_ViewMatrix = glm::inverse(transform);
 		}
 
 		inline glm::vec2 ToWorldCoordinates(glm::ivec2 screenPos) const
@@ -111,11 +110,11 @@ namespace Hazel {
 		}
 
 	public:
-		mat4 m_ProjectionMatrix;
-		mat4 m_ViewMatrix;
-		mat4 m_VPMatrix;
+		glm::mat4 m_ProjectionMatrix;
+		glm::mat4 m_ViewMatrix;
+		glm::mat4 m_VPMatrix;
 		float m_Rot = 0.0f, m_Zoom = 1.0f, m_ZoomVel = 0.0f;
-		vec2 m_Pos = {0, 0}, m_Vel = {0, 0};
+		glm::vec2 m_Pos = {0, 0}, m_Vel = {0, 0};
 
 		std::unique_ptr<CameraController2D> m_Controller;
 
@@ -147,21 +146,21 @@ namespace Hazel {
 		virtual void RecalculateProjectionMatrix() override { m_Projection->RecalculateProjectionMatrix(); UpdateViewProjectionMatrix(); }
 		virtual void RecalculateViewMatrix() override { m_Storage->RecalculateViewMatrix(); UpdateViewProjectionMatrix(); }
 
-		virtual const vec3 GetPosition() override { return m_Storage->GetPosition(); }
-		virtual const quat GetRotation() override { return m_Storage->GetRotation(); }
-		virtual const vec3 GetEulerAngles() override { return m_Storage->GetEulerAngles(); }
+		virtual const glm::vec3 GetPosition() override { return m_Storage->GetPosition(); }
+		virtual const glm::quat GetRotation() override { return m_Storage->GetRotation(); }
+		virtual const glm::vec3 GetEulerAngles() override { return m_Storage->GetEulerAngles(); }
 
-		virtual void SetRotation(const quat& rotation) override { m_Storage->SetRotation(rotation); }
-		virtual void SetPosition(const vec3& position) override { m_Storage->SetPosition(position); }
-		virtual void SetEulerAngles(const vec3& rotation) override { m_Storage->SetEulerAngles(rotation); }
+		virtual void SetRotation(const glm::quat& rotation) override { m_Storage->SetRotation(rotation); }
+		virtual void SetPosition(const glm::vec3& position) override { m_Storage->SetPosition(position); }
+		virtual void SetEulerAngles(const glm::vec3& rotation) override { m_Storage->SetEulerAngles(rotation); }
 
 		inline CameraController3D& GetController() const { return *m_Controller.get(); }
 		inline CameraStorage3D& GetStorage() const { return *m_Storage.get(); }
 		inline CameraProjection3D& GetProjection() const { return *m_Projection.get(); }
 
-		inline virtual const mat4& GetViewMatrix() const override { return m_Storage->GetViewMatrix(); }
-		inline virtual const mat4& GetProjectionMatrix() const override { return m_Projection->GetProjectionMatrix(); }
-		inline virtual const mat4& GetViewProjectionMatrix() const override { return m_ViewProjectionMatrix; }
+		inline virtual const glm::mat4& GetViewMatrix() const override { return m_Storage->GetViewMatrix(); }
+		inline virtual const glm::mat4& GetProjectionMatrix() const override { return m_Projection->GetProjectionMatrix(); }
+		inline virtual const glm::mat4& GetViewProjectionMatrix() const override { return m_ViewProjectionMatrix; }
 
 		virtual ~DefaultCamera3D() {}
 
@@ -172,7 +171,7 @@ namespace Hazel {
 
 
 	protected:
-		mat4 m_ViewProjectionMatrix;
+		glm::mat4 m_ViewProjectionMatrix;
 		std::unique_ptr<CameraController3D> m_Controller;
 		std::unique_ptr<CameraStorage3D> m_Storage;
 		std::unique_ptr<CameraProjection3D> m_Projection;

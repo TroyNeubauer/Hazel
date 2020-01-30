@@ -15,13 +15,13 @@ namespace Hazel {
 	public:
 		Mesh() : Position(0.0f) {}
 
-		Mesh(Ref<Material> material, Ref<VertexArray> vertexArray, Ref<Shader> meshShader, vec3& position)
+		Mesh(Ref<Material> material, Ref<VertexArray> vertexArray, Ref<Shader> meshShader, glm::vec3& position)
 			: MeshMaterial(material), MeshVertexArray(vertexArray), MeshShader(meshShader), Position(position) {}
 
 		Ref<VertexArray> MeshVertexArray;
 		Ref<Shader> MeshShader;
 		Ref<Material> MeshMaterial;
-		vec3 Position;
+		glm::vec3 Position;
 	};
 
 }

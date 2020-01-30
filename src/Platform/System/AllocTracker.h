@@ -13,18 +13,18 @@ namespace Hazel {
 		static void* Alloc(size_t bytes);
 		static void Delete(void* pointer);
 
-		static inline uint64_t GetTotalAllocCount() { return m_Tracker.GetTotalStarted(); }
-		static inline uint64_t GetTotalFreeCount() { return m_Tracker.GetTotalFinished(); }
+		static inline std::uint64_t GetTotalAllocCount() { return m_Tracker.GetTotalStarted(); }
+		static inline std::uint64_t GetTotalFreeCount() { return m_Tracker.GetTotalFinished(); }
 
-		static inline uint64_t GetAllocCountSec() { return m_Tracker.GetStartedSec(); }
-		static inline uint64_t GetFreeCountSec() { return m_Tracker.GetFinishedSec(); }
+		static inline std::uint64_t GetAllocCountSec() { return m_Tracker.GetStartedSec(); }
+		static inline std::uint64_t GetFreeCountSec() { return m_Tracker.GetFinishedSec(); }
 
-		static inline uint64_t GetAllocsPerFrame() { return m_Tracker.GetStartedSection(); }
-		static inline uint64_t GetFreesPerFrame() { return m_Tracker.GetFinishedSection(); }
+		static inline std::uint64_t GetAllocsPerFrame() { return m_Tracker.GetStartedSection(); }
+		static inline std::uint64_t GetFreesPerFrame() { return m_Tracker.GetFinishedSection(); }
 
 		static inline void BeginFrame() { m_Tracker.BeginSection(); }
 		
-		static inline uint64_t GetCurrentAllocCount() { return GetTotalAllocCount() - GetTotalFreeCount(); }
+		static inline std::uint64_t GetCurrentAllocCount() { return GetTotalAllocCount() - GetTotalFreeCount(); }
 
 
 	private:

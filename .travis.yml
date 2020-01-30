@@ -1,0 +1,91 @@
+language: cpp
+
+matrix:
+  include:
+    #Linux - Emscripten
+    - os: linux
+      env:
+        - BUILD_CONFIG=dist
+        - COMPILER=emcc
+    # Windows:
+    - os: windows
+      env:
+        - BUILD_CONFIG=debug
+        - COMPILER=msvc
+    - os: windows
+      env:
+        - BUILD_CONFIG=release
+        - COMPILER=msvc
+    - os: windows
+      env:
+        - BUILD_CONFIG=dist
+        - COMPILER=msvc
+    # Desktop Linux:
+    #Linux - GCC
+    - os: linux
+      env:
+        - BUILD_CONFIG=debug
+        - COMPILER=gcc
+    - os: linux
+      env:
+        - BUILD_CONFIG=release
+        - COMPILER=gcc
+    - os: linux
+      env:
+        - BUILD_CONFIG=dist
+        - COMPILER=gcc
+    #Linux - Clang
+    - os: linux
+      env:
+        - BUILD_CONFIG=debug
+        - COMPILER=clang
+    - os: linux
+      env:
+        - BUILD_CONFIG=release
+        - COMPILER=clang
+    - os: linux
+      env:
+        - BUILD_CONFIG=dist
+        - COMPILER=clang
+
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-9
+      - g++-9
+      - libglu1-mesa-dev
+      - freeglut3-dev
+      - mesa-common-dev
+      - xorg-dev
+      - e2fslibs-dev
+      - nettle-dev
+      - acl-dev
+      - libghc-bzlib-dev
+      - lzma-dev
+      - libroslz4-dev
+
+install:
+  - |
+    if [ $TRAVIS_OS_NAME == "linux" ]
+    then
+      wget https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz -O premake.tar.gz
+      tar -xf premake.tar.gz
+      chmod +x premake5
+      export PATH=$PATH:$(pwd)
+      gcc -v && g++ -v --version
+    fi
+  - |
+    if [ $COMPILER == "emcc" ]
+    then
+      wget -q https://github.com/emscripten-core/emsdk/archive/master.tar.gz
+      tar -xvf master.tar.gz
+      emsdk-master/emsdk update
+      emsdk-master/emsdk install latest-fastcomp
+      emsdk-master/emsdk activate latest-fastcomp
+    fi
+
+script:
+  - python .github/CI/build.py $TRAVIS_OS_NAME $COMPILER $BUILD_CONFIG

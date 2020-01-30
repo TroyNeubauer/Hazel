@@ -25,8 +25,8 @@ namespace Hazel {
 	private:
 		struct SceneData
 		{
-			mat4 ViewProjectionMatrix;
-			vec3 CameraPos;
+			glm::mat4 ViewProjectionMatrix;
+			glm::vec3 CameraPos;
 		};
 
 		static SceneData* s_SceneData;

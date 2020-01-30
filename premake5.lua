@@ -1,3 +1,16 @@
+-- ====================########## HAZEL PREMAKE COMMAND LINE OPTIONS ##########====================
+newoption {
+	trigger     = "compiler",
+	description = "Choose a compiler",
+	allowed =
+	{
+		{ "clang",    "Clang LLVM Compiler" },
+		{ "gcc",  "GNU Compiler" },
+		{ "msc",  "MSVC (Windows only)" },
+		{ "", "Default" }
+	}
+}
+
 function hazelWorkspace(workspaceName)
 	print("Hazel premake starting...")
 	print("System: "..os.host())
@@ -6,19 +19,6 @@ function hazelWorkspace(workspaceName)
 	if os.target() == "emscripten" then
 		require("emscripten")
 	end
-
-	-- ====================########## HAZEL PREMAKE COMMAND LINE OPTIONS ##########====================
-	newoption {
-		trigger     = "compiler",
-		description = "Choose a compiler",
-		allowed =
-		{
-			{ "clang",    "Clang LLVM Compiler" },
-			{ "gcc",  "GNU Compiler" },
-			{ "msc",  "MSVC (Windows only)" },
-			{ "", "Default" }
-		}
-	}
 
 	GLESDebug = false
 	-- ====================########## HAZEL WORKSPACE SETTINGS ##########====================
@@ -200,7 +200,6 @@ function HazelDependencies()
 		"ImGui",
 		"FastNoiseSIMD",
 		"Box2D",
-		"zlib",
 		"glfw",
 		"freeimage-core",
 		"freeimage-libjpeg",
@@ -208,6 +207,7 @@ function HazelDependencies()
 		"freeimage-libpng",
 		"freeimage-metadata",
 		"freeimage-toolkit",
+		"zlib",
 	}
 
 	defines
@@ -269,7 +269,6 @@ function HazelDependencies()
 			"Xinerama",
 			"Xcursor",
 			"pthread",
-			"z",
 			"dl",
 		}
 

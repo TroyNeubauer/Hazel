@@ -15,7 +15,7 @@ namespace Hazel {
 		//Re-creates the projection matrix based on the new parameters
 		virtual void RecalculateProjectionMatrix() = 0;
 		
-		inline const mat4& GetProjectionMatrix() { return m_ProjectionMatrix; }
+		inline const glm::mat4& GetProjectionMatrix() { return m_ProjectionMatrix; }
 		inline float GetNearPlane() { return m_NearPlane; }
 		inline float GetFarPlane() { return m_FarPlane; }
 
@@ -25,7 +25,7 @@ namespace Hazel {
 
 	protected:
 		float m_NearPlane, m_FarPlane;
-		mat4 m_ProjectionMatrix;
+		glm::mat4 m_ProjectionMatrix;
 	};
 
 	class PerspectiveCameraProjection : public CameraProjection3D
@@ -38,7 +38,7 @@ namespace Hazel {
 		{
 			Window& window = Application::Get().GetWindow();
 			
-			m_ProjectionMatrix = infinitePerspective(radians(m_FOV), (float) window.GetWidth() / (float) window.GetHeight(), m_NearPlane/*, m_FarPlane*/);
+			m_ProjectionMatrix = glm::infinitePerspective(glm::radians(m_FOV), (float) window.GetWidth() / (float) window.GetHeight(), m_NearPlane/*, m_FarPlane*/);
 		}
 
 		inline float GetFOV() { return m_FOV; }
@@ -56,7 +56,7 @@ namespace Hazel {
 
 		inline virtual void RecalculateProjectionMatrix()
 		{
-			m_ProjectionMatrix = ortho(m_Left, m_Right, m_Bottom, m_Top, m_NearPlane, m_FarPlane);
+			m_ProjectionMatrix = glm::ortho(m_Left, m_Right, m_Bottom, m_Top, m_NearPlane, m_FarPlane);
 		}
 
 	private:

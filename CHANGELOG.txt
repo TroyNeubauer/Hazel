@@ -13,6 +13,6 @@ For building installing on linux, the:
  *acl-dev
  *libghc-bzlib-dev
  *lzma-dev
- *lz4
+ *libroslz4-dev
 
 packages must be installed.

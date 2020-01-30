@@ -19,13 +19,13 @@ namespace Hazel {
 
 	void ParticleEmitter::Render()
 	{
-		for (int i = 0; i < min(m_PoolIndex, m_PoolCapacity); i++)
+		for (int i = 0; i < glm::min(m_PoolIndex, m_PoolCapacity); i++)
 		{
 			Particle& particle = m_Pool[i];
 			if (particle.Alive)
 			{
 				Hazel::Renderer2D::Renderable renderable;
-				renderable.Position = vec3(particle.Position, -0.1f);
+				renderable.Position = glm::vec3(particle.Position, -0.1f);
 				renderable.Size = particle.Size;
 				const ParticleDef& particleDef = *m_Def->Def.get();
 				float ageRatio = particle.GetAgeRatio();
@@ -43,7 +43,7 @@ namespace Hazel {
 
 	void ParticleEmitter::Update(Timestep ts)
 	{
-		for (int i = 0; i < min(m_PoolIndex, m_PoolCapacity); i++)
+		for (int i = 0; i < glm::min(m_PoolIndex, m_PoolCapacity); i++)
 		{
 			Particle& particle = m_Pool[i];
 			particle.Update(ts);
@@ -81,7 +81,7 @@ namespace Hazel {
 
 	Particle& ParticleEmitter::CreateParticle()
 	{
-		uint64_t index = m_PoolIndex++ % m_PoolCapacity;
+		std::uint64_t index = m_PoolIndex++ % m_PoolCapacity;
 		Particle& particle = m_Pool[index];
 		particle.Alive = true;
 		particle.Age = 0.0f;
@@ -93,7 +93,7 @@ namespace Hazel {
 			std::normal_distribution<float> angleLengthPercent(m_Def->IVErrorPercentMean, m_Def->IvErrorPercentStdDev);
 
 			initalVelocity = glm::rotate(initalVelocity, glm::radians(angleError(rng)));
-			initalVelocity *= max(1.0f - angleLengthPercent(rng), 0.0f);//No negitive lengths
+			initalVelocity *= glm::max(1.0f - angleLengthPercent(rng), 0.0f);//No negitive lengths
 		}
 
 		particle.Velocity = initalVelocity;

@@ -10,20 +10,20 @@
 
 namespace Hazel {
 
-	const float ROT_AMOUNT = radians(1.0f), MOVE_AMOUNT = 10, PI_2 = pi<float>() / 2.0f;
+	const float ROT_AMOUNT = glm::radians(1.0f), MOVE_AMOUNT = 10, PI_2 = glm::pi<float>() / 2.0f;
 
 	bool AdvancedCameraController::Update(Hazel::Timestep ts, CameraStorage3D& camera)
 	{
 		bool update = false;
-		vec3 pos = camera.GetPosition();
-		quat rot = camera.GetRotation();
+		glm::vec3 pos = camera.GetPosition();
+		glm::quat rot = camera.GetRotation();
 
-		mat3 matRot = toMat3(rot);
-		vec3 forward = rot * vec3(0.0f, 0.0f, -1.0f), up = rot * vec3(0.0f, 1.0f, 0.0f), right = rot * vec3(1.0f, 0.0f, 0.0f), move(0, 0, 0);
+		glm::mat3 matRot = toMat3(rot);
+		glm::vec3 forward = rot * glm::vec3(0.0f, 0.0f, -1.0f), up = rot * glm::vec3(0.0f, 1.0f, 0.0f), right = rot * glm::vec3(1.0f, 0.0f, 0.0f), move(0, 0, 0);
 
 		//rot.x += mouseMove.y * ROT_AMOUNT / 10.0f;
 		//rot.y += mouseMove.x * ROT_AMOUNT / 10.0f;
-		vec2 mouseMove = Hazel::Input::GetMouseDelta();
+		glm::vec2 mouseMove = Hazel::Input::GetMouseDelta();
 		if (mouseMove.x || mouseMove.y)
 			update = true;
 
@@ -68,25 +68,25 @@ namespace Hazel {
 	bool FPSCameraController::Update(Hazel::Timestep ts, CameraStorage3D& camera)
 	{
 		bool update = false;
-		vec3 pos = camera.GetPosition();
-		vec3 rot = camera.GetEulerAngles();
+		glm::vec3 pos = camera.GetPosition();
+		glm::vec3 rot = camera.GetEulerAngles();
 		float pitch = rot.x, yaw = rot.y;
 
-		vec3 forward = vec3(sin(yaw), 0.0f, -cos(yaw)),
-			up = vec3(0.0f, 1.0f, 0.0f), move(0, 0, 0),
-			right = vec3(sin(yaw + PI_2), 0.0f, -cos(yaw + PI_2));
+		glm::vec3 forward = glm::vec3(sin(yaw), 0.0f, -cos(yaw)),
+			up = glm::vec3(0.0f, 1.0f, 0.0f), move(0, 0, 0),
+			right = glm::vec3(sin(yaw + PI_2), 0.0f, -cos(yaw + PI_2));
 
-		vec2 mouseMove = Hazel::Input::GetMouseDelta();
+		glm::vec2 mouseMove = Hazel::Input::GetMouseDelta();
 		if (mouseMove.x || mouseMove.y)
 			update = true;
 
 		pitch -= mouseMove.y * ROT_AMOUNT / 10.0f;
 		yaw += mouseMove.x * ROT_AMOUNT / 10.0f;
 
-		pitch = clamp(pitch, radians<float>(-110.0f), radians<float>(90.0f));
-		yaw = mod(yaw, radians<float>(360));
+		pitch = glm::clamp(pitch, glm::radians<float>(-110.0f), glm::radians<float>(90.0f));
+		yaw = glm::mod(yaw, glm::radians<float>(360));
 
-		camera.SetEulerAngles(vec3(pitch, yaw, rot.z));
+		camera.SetEulerAngles(glm::vec3(pitch, yaw, rot.z));
 
 
 		if (Hazel::Input::IsKeyPressed(HZ_KEY_W)) {
