@@ -172,49 +172,49 @@ end
 
 --Adds the links needed by Hazel to premake
 function HazelDependencies()
+	filter "system:*"
+		kind "ConsoleApp"
 
-	kind "ConsoleApp"
+		sysincludedirs
+		{
+			"Hazel/vendor/spdlog/include",
+			"Hazel/src",
+			"Hazel/vendor",
+			"%{IncludeDir.glm}",
+			"%{IncludeDir.GLFW}",
+			"%{IncludeDir.Glad}",
+			"%{IncludeDir.freeimage}",
+			"%{IncludeDir.TUtil}",
+			"%{IncludeDir.Box2D}",
+			"%{IncludeDir.ImGui}",
+			"%{IncludeDir.LabSound}",
 
-	sysincludedirs
-	{
-		"Hazel/vendor/spdlog/include",
-		"Hazel/src",
-		"Hazel/vendor",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.freeimage}",
-		"%{IncludeDir.TUtil}",
-		"%{IncludeDir.Box2D}",
-		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.LabSound}",
+			"Hazel/vendor/freeimage/Source/",
+			"Hazel/vendor/freeimage/Source/FreeImage",
+		}
 
-		"Hazel/vendor/freeimage/Source/",
-		"Hazel/vendor/freeimage/Source/FreeImage",
-	}
+		links 
+		{
+			"Hazel",
+			"TUtil",
+			"ImGui",
+			"FastNoiseSIMD",
+			"Box2D",
+			"glfw",
+			"freeimage-core",
+			"freeimage-libjpeg",
+			"freeimage-libopenjpeg",
+			"freeimage-libpng",
+			"freeimage-metadata",
+			"freeimage-toolkit",
+			"zlib",
+		}
 
-	links 
-	{
-		"Hazel",
-		"TUtil",
-		"ImGui",
-		"FastNoiseSIMD",
-		"Box2D",
-		"glfw",
-		"freeimage-core",
-		"freeimage-libjpeg",
-		"freeimage-libopenjpeg",
-		"freeimage-libpng",
-		"freeimage-metadata",
-		"freeimage-toolkit",
-		"zlib",
-	}
-
-	defines
-	{
-		"GLM_FORCE_INTRINSICS",
-		"FREEIMAGE_LIB",
-	}
+		defines
+		{
+			"GLM_FORCE_INTRINSICS",
+			"FREEIMAGE_LIB",
+		}
 
 	--No glad on emscripten
 	filter "system:windows or macosx or linux"
