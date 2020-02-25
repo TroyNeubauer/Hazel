@@ -171,27 +171,32 @@ end
 -- ====================########## HAZEL DEPENDENCIES (FOR USE BY EXECUTABLES PROJECTS USING HAZEL) ##########====================
 
 --Adds the links needed by Hazel to premake
+function HazelIncludes()
+	sysincludedirs
+	{
+		"Hazel/vendor/spdlog/include",
+		"Hazel/src",
+		"Hazel/vendor",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.freeimage}",
+		"%{IncludeDir.TUtil}",
+		"%{IncludeDir.Box2D}",
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.LabSound}",
+
+		"Hazel/vendor/freeimage/Source/",
+		"Hazel/vendor/freeimage/Source/FreeImage",
+	}
+
+
+end
+
 function HazelDependencies()
 	filter "system:*"
 		kind "ConsoleApp"
-
-		sysincludedirs
-		{
-			"Hazel/vendor/spdlog/include",
-			"Hazel/src",
-			"Hazel/vendor",
-			"%{IncludeDir.glm}",
-			"%{IncludeDir.GLFW}",
-			"%{IncludeDir.Glad}",
-			"%{IncludeDir.freeimage}",
-			"%{IncludeDir.TUtil}",
-			"%{IncludeDir.Box2D}",
-			"%{IncludeDir.ImGui}",
-			"%{IncludeDir.LabSound}",
-
-			"Hazel/vendor/freeimage/Source/",
-			"Hazel/vendor/freeimage/Source/FreeImage",
-		}
+		HazelIncludes()
 
 		links 
 		{
