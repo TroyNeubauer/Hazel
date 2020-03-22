@@ -3,8 +3,8 @@ project "zlib"
 	language "C"
 	systemversion "latest"
 	
-	targetdir ("../../../bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("../../../bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir (binLocationOverride.."bin/" .. outputdir .. "/%{prj.name}")
+	objdir (binLocationOverride.."bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{

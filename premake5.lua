@@ -12,7 +12,7 @@ newoption {
 }
 
 hazelRoot = debug.getinfo(1).source:match("@?(.*/)")
-print("Hazel root at: "..hazelRoot)
+binLocationOverride = hazelClientLocation
 
 function hazelWorkspace(workspaceName)
 	print("Hazel premake starting...")
@@ -374,8 +374,8 @@ function setupHazel()
 		location "Hazel"
 		kind "StaticLib"
 
-		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+		targetdir (binLocationOverride.."bin/" .. outputdir .. "/%{prj.name}")
+		objdir (binLocationOverride.."bin-int/" .. outputdir .. "/%{prj.name}")
 
 		files
 		{

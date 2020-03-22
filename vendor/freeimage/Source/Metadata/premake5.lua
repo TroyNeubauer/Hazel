@@ -4,8 +4,8 @@ project "freeimage-metadata"
 	cppdialect "C++11"
 	systemversion "latest"
 	
-	targetdir ("../../../../../bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("../../../../../bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir (binLocationOverride.."bin/" .. outputdir .. "/%{prj.name}")
+	objdir (binLocationOverride.."bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
