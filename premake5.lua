@@ -14,8 +14,14 @@ newoption {
 hazelRoot = debug.getinfo(1).source:match("@?(.*/)")
 binLocationOverride = hazelClientLocation
 
+
 if binLocationOverride == nil then
 	binLocationOverride = "./"
+	hazelRelativePath = ""
+else
+	hazelRelativePath = string.sub(hazelRoot, string.len(binLocationOverride) + 1)
+	print("hazelRelativePath: "..hazelRelativePath)
+	
 end
 
 function hazelWorkspace(workspaceName)
@@ -375,7 +381,7 @@ function setupHazel()
 	-- ====================########## HAZEL ##########====================
 
 	project "Hazel"
-		location "Hazel"
+		location (hazelRelativePath)
 		kind "StaticLib"
 
 		targetdir (binLocationOverride.."bin/" .. outputdir .. "/%{prj.name}")
