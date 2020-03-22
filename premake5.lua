@@ -11,6 +11,9 @@ newoption {
 	}
 }
 
+hazelRoot = debug.getinfo(1).source:match("@?(.*/)")
+print("Hazel root at: "..hazelRoot)
+
 function hazelWorkspace(workspaceName)
 	print("Hazel premake starting...")
 	print("System: "..os.host())
@@ -174,9 +177,9 @@ end
 function HazelIncludes()
 	sysincludedirs
 	{
-		"Hazel/vendor/spdlog/include",
-		"Hazel/src",
-		"Hazel/vendor",
+		hazelRoot.."src",
+		hazelRoot.."vendor",
+		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
@@ -186,8 +189,8 @@ function HazelIncludes()
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.LabSound}",
 
-		"Hazel/vendor/freeimage/Source/",
-		"Hazel/vendor/freeimage/Source/FreeImage",
+		hazelRoot.."vendor/freeimage/Source/",
+		hazelRoot.."vendor/freeimage/Source/FreeImage",
 	}
 
 
@@ -243,7 +246,7 @@ function HazelDependencies()
 		}
 
 	filter { "system:windows", "configurations:Debug" }
-		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Debug" }
+		libdirs { "vendor/LabSound/build/windows/bin/Debug" }
 		
 		links
 		{
@@ -254,7 +257,7 @@ function HazelDependencies()
 		}
 
 	filter { "system:windows", "configurations:Release or configurations:Dist" }
-		libdirs { "Hazel/vendor/LabSound/build/windows/bin/Release" }
+		libdirs { hazelRoot.."vendor/LabSound/build/windows/bin/Release" }
 
 		links
 		{
@@ -283,7 +286,7 @@ function HazelDependencies()
 		}
 
 	filter { "system:linux", "configurations:Debug" }
-		libdirs { "Hazel/vendor/LabSound/build/linux/Debug/bin" }
+		libdirs { hazelRoot.."vendor/LabSound/build/linux/Debug/bin" }
 		
 		links
 		{
@@ -294,7 +297,7 @@ function HazelDependencies()
 		}
 
 	filter { "system:linux", "configurations:Release or configurations:Dist" }
-		libdirs { "Hazel/vendor/LabSound/build/linux/Release/bin" }
+		libdirs { hazelRoot.."vendor/LabSound/build/linux/Release/bin" }
 
 		links
 		{
@@ -334,32 +337,32 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
-IncludeDir["GLFW"] = "Hazel/vendor/GLFW/include"
-IncludeDir["Glad"] = "Hazel/vendor/Glad/include"
-IncludeDir["ImGui"] = "Hazel/vendor/imgui"
-IncludeDir["glm"] = "Hazel/vendor/glm"
-IncludeDir["Vulkan"] = "Hazel/vendor/Vulkan/include"
-IncludeDir["freeimage"] = "Hazel/vendor/freeimage/Source"
-IncludeDir["FastNoiseSIMD"] = "Hazel/vendor/FastNoiseSIMD/FastNoiseSIMD"
-IncludeDir["TUtil"] = "Hazel/vendor/TUtil/TUtil/include"
-IncludeDir["Box2D"] = "Hazel/vendor/Box2D"
-IncludeDir["LabSound"] = "Hazel/vendor/LabSound/include"
-
+IncludeDir["GLFW"] = hazelRoot.."vendor/GLFW/include"
+IncludeDir["Glad"] = hazelRoot.."vendor/Glad/include"
+IncludeDir["ImGui"] = hazelRoot.."vendor/imgui"
+IncludeDir["glm"] = hazelRoot.."vendor/glm"
+IncludeDir["Vulkan"] = hazelRoot.."vendor/Vulkan/include"
+IncludeDir["freeimage"] = hazelRoot.."vendor/freeimage/Source"
+IncludeDir["FastNoiseSIMD"] = hazelRoot.."vendor/FastNoiseSIMD/FastNoiseSIMD"
+IncludeDir["TUtil"] = hazelRoot.."vendor/TUtil/TUtil/include"
+IncludeDir["Box2D"] = hazelRoot.."vendor/Box2D"
+IncludeDir["LabSound"] = hazelRoot.."vendor/LabSound/include"
+IncludeDir["spdlog"] = hazelRoot.."vendor/spdlog/include"
 
 function setupHazel()
-	group "Dependencies"
-		include "Hazel/vendor/zlib"
+	group "Hazel-Dependencies"
+		include (hazelRoot.."vendor/zlib")
 		if os.target() ~= "emscripten" then
-			include "Hazel/vendor/GLFW"
-			include "Hazel/vendor/Glad"
+			include (hazelRoot.."vendor/GLFW")
+			include (hazelRoot.."vendor/Glad")
 		end
 
-		include "Hazel/vendor/imgui"
-		include "Hazel/vendor/freeimage"
-		include "Hazel/vendor/FastNoiseSIMD"
+		include (hazelRoot.."vendor/imgui")
+		include (hazelRoot.."vendor/freeimage")
+		include (hazelRoot.."vendor/FastNoiseSIMD")
 
-		include "Hazel/vendor/TUtil/TUtil_project.lua"
-		include "Hazel/vendor/Box2D/Box2D_project.lua"
+		include (hazelRoot.."vendor/TUtil/TUtil_project.lua")
+		include (hazelRoot.."vendor/Box2D/Box2D_project.lua")
 	group ""
 
 
@@ -376,15 +379,15 @@ function setupHazel()
 
 		files
 		{
-			"%{prj.name}/src/**.h",
-			"%{prj.name}/src/**.cpp",
-			"%{prj.name}/vendor/glm/glm/**.hpp",
-			"%{prj.name}/vendor/glm/glm/**.inl",
+			hazelRoot.."src/**.h",
+			hazelRoot.."src/**.cpp",
+			hazelRoot.."vendor/glm/glm/**.hpp",
+			hazelRoot.."vendor/glm/glm/**.inl",
 		}
 
 		sysincludedirs
 		{
-			"%{prj.name}/vendor/spdlog/include",
+			"%{IncludeDir.spdlog}",
 			"%{IncludeDir.GLFW}",
 			"%{IncludeDir.Glad}",
 			"%{IncludeDir.ImGui}",
@@ -396,13 +399,13 @@ function setupHazel()
 			"%{IncludeDir.Box2D}",
 			"%{IncludeDir.LabSound}",
 
-			"Hazel/vendor/freeimage/Source/",
-			"Hazel/vendor/freeimage/Source/FreeImage",
-			"Hazel/vendor/freeimage/Source/FreeImageToolkit",
-			"Hazel/vendor/freeimage/Source/LibOpenJPEG",
-			"Hazel/vendor/freeimage/Source/LibPNG",
-			"Hazel/vendor/freeimage/Source/Metadata",
-			"Hazel/vendor/freeimage/Source/ZLib",
+			hazelRoot.."vendor/freeimage/Source/",
+			hazelRoot.."vendor/freeimage/Source/FreeImage",
+			hazelRoot.."vendor/freeimage/Source/FreeImageToolkit",
+			hazelRoot.."vendor/freeimage/Source/LibOpenJPEG",
+			hazelRoot.."vendor/freeimage/Source/LibPNG",
+			hazelRoot.."vendor/freeimage/Source/Metadata",
+			hazelRoot.."vendor/freeimage/Source/ZLib",
 		}
 
 		if GLESDebug then
@@ -416,7 +419,7 @@ function setupHazel()
 
 		includedirs
 		{
-			"%{prj.name}/src",
+			hazelRoot.."src",
 		}
 
 
@@ -428,13 +431,13 @@ function setupHazel()
 		}
 
 		filter "system:macosx or system:windows or system:linux"
-			pchsource "Hazel/src/hzpch.cpp"
+			pchsource (hazelRoot.."src/hzpch.cpp")
 		
 		filter "system:windows or system:linux"
-			pchheader "hzpch.h"
+			pchheader ("hzpch.h")
 
 		filter "system:macosx"
-			pchheader "src/hzpch.h"--Why XCode
+			pchheader ("src/hzpch.h")--Why XCode
 
 
 		filter "system:windows"

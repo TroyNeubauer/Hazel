@@ -1,1 +1,0 @@
-node NodeWebServer.js "../../bin/"
