@@ -14,6 +14,10 @@ newoption {
 hazelRoot = debug.getinfo(1).source:match("@?(.*/)")
 binLocationOverride = hazelClientLocation
 
+if binLocationOverride == nil then
+	binLocationOverride = "./"
+end
+
 function hazelWorkspace(workspaceName)
 	print("Hazel premake starting...")
 	print("System: "..os.host())
