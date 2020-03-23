@@ -60,7 +60,7 @@ namespace Hazel {
 		ImGui::SetNextWindowViewport(viewport->ID);
 		if (ImGui::Begin("Video Performance Overlay", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs))
 		{
-			ImGui::Text("Average Frame Time %.2fms (FPS: %d) | Frame Time %.2fms (FPS: %.1f) ", lastSecondDelta / averageFPS * 1000.0f, averageFPS, Engine::GetDeltaTime().MilliSeconds(), 1.0f / Engine::GetDeltaTime().Seconds());
+			ImGui::Text("Average Frame Time %.2fms (FPS: %d) | Frame Time %.2fms (FPS: %.1f) ", lastSecondDelta / (float) averageFPS * 1000.0f, averageFPS, Engine::GetDeltaTime().MilliSeconds(), 1.0f / Engine::GetDeltaTime().Seconds());
 			ImGui::Text("Min FT: %.2fms (FPS: %.1f) | Max FT: %.2fms (FPS: %.1f)", min.MilliSeconds(), 1.0f / min.Seconds(), max.MilliSeconds(), 1.0f / max.Seconds());
 			
 #ifndef HZ_DIST
