@@ -25,6 +25,3 @@
 [submodule "Hazel/vendor/LabSound"]
 	path = vendor/LabSound
 	url = https://github.com/LabSound/LabSound.git
-[submodule "vendor/premake/scripts/emscripten"]
-	path = vendor/premake/scripts/emscripten
-	url = https://github.com/TroyNeubauer/premake-emscriptenplatform.git
