@@ -35,6 +35,7 @@ namespace Hazel {
 		inline LayerStack& GetLayerStack() { return m_LayerStack; }
 
 		inline static Application& Get() { return *s_Instance; }
+		inline bool IsRunning() const { return m_Running;  }
 
 	private:
 		void DoRenderPass();
