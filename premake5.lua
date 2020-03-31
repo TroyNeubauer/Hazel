@@ -24,14 +24,23 @@ else
 	
 end
 
-function hazelWorkspace(workspaceName)
+isAndroid = false
+isEmscripten = false
+
+if _ACTION == "android-studio" then
+	isAndroid = true
+	print("ANDROID")
+end
+
+if os.target() == "emscripten" then
+	isEmscripten = true
+end
+
+
+function HazelWorkspace(workspaceName)
 	print("Hazel premake starting...")
 	print("System: "..os.host())
 	print("Targetting: "..os.target())
-
-	if os.target() == "emscripten" then
-		require("emscripten")
-	end
 
 	GLESDebug = false
 	-- ====================########## HAZEL WORKSPACE SETTINGS ##########====================
@@ -62,12 +71,10 @@ function hazelWorkspace(workspaceName)
 		{
 			"HAZEL",
 			"HZ_ENABLE_GRAPHICS_API_NONE",
-
 		}
 
 		filter "system:windows or linux or macosx"
 			vectorextensions "AVX2"
-
 
 		filter "system:windows"
 			defines 
@@ -157,6 +164,34 @@ function hazelWorkspace(workspaceName)
 				"-s DEMANGLE_SUPPORT=1",
 			}
 
+		filter "action:android*"
+			print("ANdroid filter...")
+
+			defines
+			{
+				"HZ_USE_SDL_CONTEXT_MANAGER",
+				"HZ_USE_AUDIO_NONE",
+				"HZ_ENABLE_OPEN_GLES",
+				"HZ_SDL_INPUT",
+				"HZ_SDL_WINDOW",
+			}
+
+			androidabis
+			{
+				"armeabi",
+				"armeabi-v7a",
+				"arm64-v8a",
+				"x86",
+				"x86_64",
+			}
+
+			files
+			{
+				hazelRoot.."src/Android/src/manifest/AndroidManifest.xml",
+				hazelRoot.."src/Android/src/java/**",
+				hazelRoot.."src/Android/src/res/**",
+			}
+
 
 		filter "configurations:Debug"
 			defines "HZ_DEBUG"
@@ -191,8 +226,6 @@ function HazelIncludes()
 		hazelRoot.."vendor",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
 		"%{IncludeDir.freeimage}",
 		"%{IncludeDir.TUtil}",
 		"%{IncludeDir.Box2D}",
@@ -203,44 +236,50 @@ function HazelIncludes()
 		hazelRoot.."vendor/freeimage/Source/FreeImage",
 	}
 
+	if not isEmscripten and not isAndroid then
+		sysincludedirs
+		{
+			"%{IncludeDir.GLFW}",
+			"%{IncludeDir.Glad}",
+		}
+	end
+
 
 end
 
 function HazelDependencies()
-	filter "system:*"
-		kind "ConsoleApp"
-		HazelIncludes()
+	HazelIncludes()
 
-		links 
-		{
-			"Hazel",
-			"TUtil",
-			"ImGui",
-			"FastNoiseSIMD",
-			"Box2D",
-			"glfw",
-			"freeimage-core",
-			"freeimage-libjpeg",
-			"freeimage-libopenjpeg",
-			"freeimage-libpng",
-			"freeimage-metadata",
-			"freeimage-toolkit",
-			"zlib",
-		}
+	links 
+	{
+		"Hazel",
+		"TUtil",
+		"ImGui",
+		"FastNoiseSIMD",
+		"Box2D",
+		"freeimage-core",
+		"freeimage-libjpeg",
+		"freeimage-libopenjpeg",
+		"freeimage-libpng",
+		"freeimage-metadata",
+		"freeimage-toolkit",
+		"zlib",
+	}
 
-		defines
-		{
-			"GLM_FORCE_INTRINSICS",
-			"FREEIMAGE_LIB",
-		}
+	defines
+	{
+		"GLM_FORCE_INTRINSICS",
+		"FREEIMAGE_LIB",
+	}
 
-	--No glad on emscripten
-	filter "system:windows or macosx or linux"
+	if not isEmscripten and not isAndroid then
 		links
 		{
 			"glad",
-		}
+			"GLFW",
 
+		}
+	end
 
 	filter "system:windows"
 
@@ -338,6 +377,24 @@ function HazelDependencies()
 end
 
 
+function HazelExecutable()
+	if isAndroid then
+		kind "StaticLib"
+	else
+		kind "ConsoleApp"
+	end
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	language "C++"
+	cppdialect "C++17"
+	intrinsics "on"
+	systemversion "latest"
+
+	HazelDependencies()
+end
+
 
 
 
@@ -359,10 +416,10 @@ IncludeDir["Box2D"] = hazelRoot.."vendor/Box2D"
 IncludeDir["LabSound"] = hazelRoot.."vendor/LabSound/include"
 IncludeDir["spdlog"] = hazelRoot.."vendor/spdlog/include"
 
-function setupHazel()
+function SetupHazel()
 	group "Hazel-Dependencies"
 		include (hazelRoot.."vendor/zlib")
-		if os.target() ~= "emscripten" then
+		if not isEmscripten and not isAndroid then
 			include (hazelRoot.."vendor/GLFW")
 			include (hazelRoot.."vendor/Glad")
 		end
@@ -382,7 +439,12 @@ function setupHazel()
 
 	project "Hazel"
 		location (hazelRelativePath)
-		kind "StaticLib"
+		if isAndroid then
+			kind "WindowedApp"
+			print("Hazel is runnable app")
+		else
+			kind "StaticLib"
+		end
 
 		targetdir (binLocationOverride.."bin/" .. outputdir .. "/%{prj.name}")
 		objdir (binLocationOverride.."bin-int/" .. outputdir .. "/%{prj.name}")
