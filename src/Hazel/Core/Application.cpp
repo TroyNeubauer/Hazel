@@ -133,6 +133,7 @@ namespace Hazel {
 
 	Application::~Application()
 	{
+		m_Running = false;
 		Renderer::Shutdown();
 	}
 

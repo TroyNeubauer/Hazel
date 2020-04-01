@@ -5,6 +5,10 @@
 
 #include "Hazel/Core/Core.h"
 #include "Hazel/Core/HazelExterns.h"
+#include <Hazel/Core/Engine.h>
+#include <Hazel/Core/Application.h>
+
+#include <Hazel/Debug/Instrumentor.h>
 
 int main(int argc, char** argv)
 {

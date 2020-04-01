@@ -1,6 +1,9 @@
+hazelClientLocation = debug.getinfo(1).source:match("@?(.*/)")
+
 include "Hazel"
-hazelWorkspace("CITest")
-setupHazel()
+
+HazelWorkspace("CITest")
+SetupHazel()
 
 project "CITest"
 
@@ -18,4 +21,4 @@ project "CITest"
 		"src/",
 	}
 
-	HazelDependencies()
+	HazelExecutable()
