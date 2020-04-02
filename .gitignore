@@ -34,9 +34,17 @@
 **/.project
 **/.workspace
 **/Makefile
+**/CMakeLists.txt
 
 **/.gdb_history
 
 #Eclipse
 **/.cproject
 .settings/
+
+
+#Android
+**/AndroidManifest.xml
+.modules
+**/build.gradle
+
