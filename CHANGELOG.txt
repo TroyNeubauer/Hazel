@@ -6,7 +6,7 @@ Hazel is a high performanace cross platform C++ game engine that supports the fo
  *IOS (not started)
 
 
-For building installing on linux, the:
+For building installing on linux, the following apt packages need to be installed:
  * xorg-dev
  *e2fslibs-dev
  *nettle-dev
@@ -14,5 +14,3 @@ For building installing on linux, the:
  *libghc-bzlib-dev
  *lzma-dev
  *libroslz4-dev
-
-packages must be installed.
