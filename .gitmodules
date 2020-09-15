@@ -25,3 +25,6 @@
 [submodule "Hazel/vendor/LabSound"]
 	path = vendor/LabSound
 	url = https://github.com/LabSound/LabSound.git
+[submodule "vendor/premake"]
+	path = vendor/premake-core
+	url = https://github.com/TroyNeubauer/premake-core

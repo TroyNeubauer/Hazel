@@ -1,5 +1,7 @@
 -- ====================########## HAZEL PREMAKE COMMAND LINE OPTIONS ##########====================
-newoption {
+
+newoption
+{
 	trigger     = "compiler",
 	description = "Choose a compiler",
 	allowed =
@@ -7,13 +9,14 @@ newoption {
 		{ "clang",    "Clang LLVM Compiler" },
 		{ "gcc",  "GNU Compiler" },
 		{ "msc",  "MSVC (Windows only)" },
+		{ "mingw",    "Mingw Cross Compiler" },
 		{ "", "Default" }
 	}
 }
 
 hazelRoot = debug.getinfo(1).source:match("@?(.*/)")
 binLocationOverride = hazelClientLocation
-
+print("test inside")
 
 if binLocationOverride == nil then
 	binLocationOverride = "./"
@@ -74,7 +77,7 @@ function HazelWorkspace(workspaceName)
 		}
 
 		filter "system:windows or linux or macosx"
-			vectorextensions "AVX2"
+			vectorextensions "AVX"
 
 		filter "system:windows"
 			defines 
@@ -205,6 +208,7 @@ function HazelWorkspace(workspaceName)
 			runtime "Release"
 			optimize "Speed"
 			inlining "Auto"
+			symbols "on"
 			floatingpoint "Fast"
 
 
